@@ -1,0 +1,20 @@
+ \usetikzlibrary{calc, arrows, decorations.markings}
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 15ex, text centered
+  ]
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+\fill[gray!10] (-1.8,-.7) -- (1.8,-.7) -- (1.8,2.5) -- (-1.8,2.5);
+ \draw  node[rectangle, fill=blkcol] (x) {Physical system} ;
+  \draw node[rectangle, fill=blkcol, below of=x] (y) {Mathematical model};
+ \draw  node[rectangle, fill=blkcol, below of = y] (z) {Computer code};
+  \draw[postaction = decorate, very thick] (x) to node[midway, right, text width=20ex](az) {Simplifications, parametrizations} (y)  ;
+  \draw[postaction = decorate, very thick] (y) to node[midway,right,  text width=20ex] {Discretization implementation}(z);
+\draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Error on the parameters};
+\draw node[text width = 20ex] (nature) at (0ex, 10ex) {Natural variability};
+\draw[->] (nature) to (x);
+\draw[->] (tune) to  (25ex,-10ex);
+\draw[->] (tune) to  (25ex,-20ex);
+\end{tikzpicture}

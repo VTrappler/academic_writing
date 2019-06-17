@@ -1,0 +1,308 @@
+
+
+@phdthesis{boutet_estimation_2015,
+  author =        {Boutet, Martial},
+  school =        {Universit\'e d'Aix Marseille},
+  title =         {Estimation Du Frottement Sur Le Fond Pour La
+                   Mod\'elisation de La Mar\'ee Barotrope},
+  year =          {2015},
+}
+
+@article{das_estimation_1991,
+  author =        {Das, S. K. and Lardner, R. W.},
+  journal =       {Journal of Geophysical Research},
+  number =        {C8},
+  pages =         {15187},
+  title =         {On the Estimation of Parameters of Hydraulic Models
+                   by Assimilation of Periodic Tidal Data},
+  volume =        {96},
+  year =          {1991},
+  doi =           {10.1029/91JC01318},
+  issn =          {0148-0227},
+  language =      {en},
+}
+
+@article{das_variational_1992,
+  author =        {Das, S. K. and Lardner, R. W.},
+  journal =       {International Journal for Numerical Methods in
+                   Fluids},
+  month =         aug,
+  number =        {3},
+  pages =         {313-327},
+  title =         {Variational Parameter Estimation for a
+                   Two-Dimensional Numerical Tidal Model},
+  volume =        {15},
+  year =          {1992},
+  abstract =      {It is shown that the parameters in a two-dimensional
+                   (depth-averaged) numerical tidal model can be
+                   estimated accurately by assimilation of data from
+                   tide gauges. The tidal model considered is a
+                   semi-linearized one in which kinematical
+                   non-linearities are neglected but non-linear bottom
+                   friction is included. The parameters to be estimated
+                   (bottom friction coefficient and water depth) are
+                   assumed to be position-dependent and are approximated
+                   by piecewise linear interpolations between certain
+                   nodal values. The numerical scheme consists of a
+                   two-level leapfrog method. The adjoint scheme is
+                   constructed on the assumption that a certain norm of
+                   the difference between computed and observed
+                   elevations at the tide gauges should be minimized. It
+                   is shown that a satisfactory numerical minimization
+                   can be completed using either the
+                   Broyden-Fletcher-Goldfarb-Shanno (BFGS) quasi-Newton
+                   algorithm or Nash's truncated Newton algorithm. On
+                   the basis of a number of test problems, it is shown
+                   that very effective estimation of the nodal values of
+                   the parameters can be achieved provided the number of
+                   data stations is sufficiently large in relation to
+                   the number of nodes.},
+  doi =           {10.1002/fld.1650150305},
+  issn =          {1097-0363},
+  language =      {en},
+}
+
+@article{honnorat_identification_2010,
+  author =        {Honnorat, Marc and Monnier, J\'er\^ome and
+                   Rivi\`ere, Nicolas and Huot, \'Etienne and
+                   Le Dimet, Fran{\c c}ois-Xavier},
+  journal =       {Computing and Visualization in Science},
+  month =         mar,
+  number =        {3},
+  pages =         {111-119},
+  title =         {Identification of Equivalent Topography in an Open
+                   Channel Flow Using {{Lagrangian}} Data Assimilation},
+  volume =        {13},
+  year =          {2010},
+  abstract =      {We present a Lagrangian data assimilation experiment
+                   in an open channel flow above a broad-crested weir.
+                   The observations consist of trajectories of particles
+                   transported by the flow and extracted from a video
+                   film, in addition to classical water level
+                   measurements. However, the presence of vertical
+                   recirculations on both sides of the weir actually
+                   conducts to the identification of an equivalent
+                   topography corresponding to the lower limit of a
+                   surface jet. In addition, results on the
+                   identification of the Manning coefficient may allow
+                   to detect the presence of bottom reciruclations.},
+  doi =           {10.1007/s00791-009-0130-8},
+  issn =          {1432-9360, 1433-0369},
+  language =      {en},
+}
+
+@article{markowitz_portfolio_1952,
+  author =        {Markowitz, Harry},
+  journal =       {The journal of finance},
+  number =        {1},
+  pages =         {77--91},
+  title =         {Portfolio Selection},
+  volume =        {7},
+  year =          {1952},
+}
+
+@article{villemonteix_informational_2006,
+  author =        {Villemonteix, Julien and Vazquez, Emmanuel and
+                   Walter, Eric},
+  journal =       {arXiv:cs/0611143},
+  month =         nov,
+  title =         {An Informational Approach to the Global Optimization
+                   of Expensive-to-Evaluate Functions},
+  year =          {2006},
+  abstract =      {In many global optimization problems motivated by
+                   engineering applications, the number of function
+                   evaluations is severely limited by time or cost. To
+                   ensure that each evaluation contributes to the
+                   localization of good candidates for the role of
+                   global minimizer, a sequential choice of evaluation
+                   points is usually carried out. In particular, when
+                   Kriging is used to interpolate past evaluations, the
+                   uncertainty associated with the lack of information
+                   on the function can be expressed and used to compute
+                   a number of criteria accounting for the interest of
+                   an additional evaluation at any given point. This
+                   paper introduces minimizer entropy as a new
+                   Kriging-based criterion for the sequential choice of
+                   points at which the function should be evaluated.
+                   Based on stepwise uncertainty reduction, it accounts
+                   for the informational gain on the minimizer expected
+                   from a new evaluation. The criterion is approximated
+                   using conditional simulations of the Gaussian process
+                   model behind Kriging, and then inserted into an
+                   algorithm similar in spirit to the Efficient Global
+                   Optimization (EGO) algorithm. An empirical comparison
+                   is carried out between our criterion and expected
+                   improvement, one of the reference criteria in the
+                   literature. Experimental results indicate major
+                   evaluation savings over EGO. Finally, the method,
+                   which we call IAGO (for Informational Approach to
+                   Global Optimization) is extended to robust
+                   optimization problems, where both the factors to be
+                   tuned and the function evaluations are corrupted by
+                   noise.},
+  language =      {en},
+}
+
+@article{hennig_entropy_2011,
+  author =        {Hennig, Philipp and Schuler, Christian J.},
+  month =         dec,
+  title =         {Entropy {{Search}} for {{Information}}-{{Efficient
+                   Global Optimization}}},
+  year =          {2011},
+  language =      {en},
+}
+
+@article{walker_defining_2003,
+  author =        {Walker, Warren E. and Harremo\"es, Poul and
+                   Rotmans, Jan and {van der Sluijs}, Jeroen P. and
+                   {van Asselt}, Marjolein BA and Janssen, Peter and
+                   {Krayer von Krauss}, Martin P.},
+  journal =       {Integrated assessment},
+  number =        {1},
+  pages =         {5--17},
+  title =         {Defining Uncertainty: A Conceptual Basis for
+                   Uncertainty Management in Model-Based Decision
+                   Support},
+  volume =        {4},
+  year =          {2003},
+}
+
+@incollection{huber_robust_2011,
+  author =        {Huber, Peter J.},
+  booktitle =     {International {{Encyclopedia}} of {{Statistical
+                   Science}}},
+  pages =         {1248--1251},
+  publisher =     {{Springer}},
+  title =         {Robust Statistics},
+  year =          {2011},
+}
+
+@article{berger_overview_1994,
+  author =        {Berger, James O. and Moreno, El\'ias and
+                   Pericchi, Luis Raul and Bayarri, M. Jes\'us and
+                   Bernardo, Jos\'e M. and Cano, Juan A. and
+                   {De la Horra}, Juli\'an and Mart\'in, Jacinto and
+                   {R\'ios-Ins\'ua}, David and Betr\`o, Bruno},
+  journal =       {Test},
+  number =        {1},
+  pages =         {5--124},
+  title =         {An Overview of Robust {{Bayesian}} Analysis},
+  volume =        {3},
+  year =          {1994},
+}
+
+@article{lehman_designing_2004,
+  author =        {Lehman, Jeffrey S. and Santner, Thomas J. and
+                   Notz, William I.},
+  journal =       {Statistica Sinica},
+  pages =         {571--590},
+  title =         {Designing Computer Experiments to Determine Robust
+                   Control Variables},
+  year =          {2004},
+}
+
+@phdthesis{baudoui_optimisation_2012,
+  author =        {Baudoui, Vincent},
+  school =        {Toulouse, ISAE},
+  title =         {Optimisation Robuste Multiobjectifs Par Mod\`eles de
+                   Substitution},
+  year =          {2012},
+}
+
+@article{parzen_estimation_1962,
+  author =        {Parzen, Emanuel},
+  journal =       {The annals of mathematical statistics},
+  number =        {3},
+  pages =         {1065--1076},
+  title =         {On Estimation of a Probability Density Function and
+                   Mode},
+  volume =        {33},
+  year =          {1962},
+}
+
+@book{bishop_pattern_2006,
+  author =        {Bishop, Christopher M.},
+  publisher =     {{springer}},
+  title =         {Pattern Recognition and Machine Learning},
+  year =          {2006},
+}
+
+@article{dempster_maximum_1977,
+  author =        {Dempster, Arthur P. and Laird, Nan M. and
+                   Rubin, Donald B.},
+  journal =       {Journal of the royal statistical society. Series B
+                   (methodological)},
+  pages =         {1--38},
+  title =         {Maximum Likelihood from Incomplete Data via the
+                   {{EM}} Algorithm},
+  year =          {1977},
+}
+
+@article{borman_expectation_2004,
+  author =        {Borman, Sean},
+  journal =       {Submitted for publication},
+  pages =         {1--9},
+  title =         {The Expectation Maximization Algorithm-a Short
+                   Tutorial},
+  year =          {2004},
+}
+
+@article{scott_optimal_1979,
+  author =        {Scott, David W.},
+  journal =       {Biometrika},
+  month =         dec,
+  number =        {3},
+  pages =         {605},
+  title =         {On {{Optimal}} and {{Data}}-{{Based Histograms}}},
+  volume =        {66},
+  year =          {1979},
+  abstract =      {In thispaper the formulaforthe optimalhistogrambin
+                   widthis derivedwhichasymptotically minimizesthe
+                   integratedmean squared error.Monte Carlo methodsare
+                   used to verify the usefulnessofthisformulaforsmall
+                   samples. A data-based procedureforchoosingthe bin
+                   widthparameteris proposed,whichassumes a Gaussian
+                   referencestandard and requiresonly the sample size
+                   and an estimateofthe standard deviation. The
+                   sensitivityofthe procedureis investigatedusingseveral
+                   probabilitymodelswhichviolate the Gaussian
+                   assumption.},
+  doi =           {10.2307/2335182},
+  issn =          {00063444},
+  language =      {en},
+}
+
+@article{ginsbourger_bayesian_2014,
+  author =        {Ginsbourger, David and Baccou, Jean and
+                   Chevalier, Cl\'ement and Perales, Fr\'ed\'eric and
+                   Garland, Nicolas and Monerie, Yann},
+  journal =       {SIAM/ASA Journal on Uncertainty Quantification},
+  month =         jan,
+  number =        {1},
+  pages =         {490-510},
+  title =         {Bayesian {{Adaptive Reconstruction}} of {{Profile
+                   Optima}} and {{Optimizers}}},
+  volume =        {2},
+  year =          {2014},
+  abstract =      {Given a function depending both on decision
+                   parameters and nuisance variables, we consider the
+                   issue of estimating and quantifying uncertainty on
+                   profile optima and/or optimal points as functions of
+                   the nuisance variables. The proposed methods base on
+                   interpolations of the objective function constructed
+                   from a finite set of evaluations. Here the functions
+                   of interest are reconstructed relying on a kriging
+                   model, but also using Gaussian field conditional
+                   simulations, that allow a quantification of
+                   uncertainties in the Bayesian framework. Besides, we
+                   elaborate a variant of the Expected Improvement
+                   criterion, that proves efficient for adaptively
+                   learning the set of profile optima and optimizers.
+                   The results are illustrated on a toy example and
+                   through a physics case study on the optimal packing
+                   of polydisperse frictionless spheres.},
+  doi =           {10.1137/130949555},
+  issn =          {2166-2525},
+  language =      {en},
+}
+

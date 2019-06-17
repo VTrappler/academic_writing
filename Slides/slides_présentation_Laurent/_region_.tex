@@ -1,0 +1,110 @@
+\message{ !name(slides_laurent_15_06.tex)}\documentclass[11pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{tikzmark,decorations.pathreplacing,calligraphy}
+\usepackage{subfig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\usetikzlibrary{positioning}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+\graphicspath{{../Figures/}}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+% \definecolor{BlueTOL}{HTML}{222255}
+% \definecolor{BrownTOL}{HTML}{666633}
+% \definecolor{GreenTOL}{HTML}{225522}
+% \setbeamercolor{normal text}{fg=BlueTOL,bg=white}
+% \setbeamercolor{alerted text}{fg=BrownTOL}
+% \setbeamercolor{example text}{fg=GreenTOL}
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+
+\title{Parameter control in the presence of uncertainties}
+\author{{\large Victor Trappler } \\ Supervisors: Élise Arnaud, Laurent Debreu, Arthur Vidard}
+\institute{AIRSEA Research team (Inria)-- Laboratoire Jean Kuntzmann \\
+ \begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}
+}
+
+\date{\today}
+\setcounter{tocdepth}{1}
+
+
+\begin{document}
+
+\message{ !name(slides_laurent_15_06.tex) !offset(59) }
+\section{Estimation sous incertitudes}
+\frame[t]{
+\frametitle{Incertitudes dans un code déterministe}
+$\bm{U}$ est maintenant une variable aléatoire (densité $\pi(\bm{u})$) \\ $\yobs$ a été générée avec $\bm{u}_{\mathrm{ref}}$, échantillon de $\bm{U}$
+\vfill
+% \only<1>{\input{../Figures/inv_prob.pgf}}
+\only<1>{\input{../Figures/comp_code_unc_inv_noalert.pgf}}
+
+\begin{itemize}
+\item $M(\bm{k}) \quad \text{devient} \quad M(\bm{k},\bm{u})$ ($\bm{u}$ est une entrée du modèle)
+\item Fonction coût: $J(\bm{k},\bm{u}) =  \frac12\|M(\bm{k},\bm{u}) - \yobs\|^2$ + \text{Régul}
+\end{itemize}
+}
+\begin{frame}
+  \frametitle{Estimateur robuste ?}
+  On veut pouvoir trouver une valeur $\kest$, tel que $M(\kest,\bm{U})$ soit relativement semblable à $\yobs$
+
+  
+
+  Idéalement, $M(\kest,\cdot)$
+  \begin{itemize}
+  \item reste assez performant pour fournir des prédictions acceptables
+  \item ne varie pas trop avec $\bm{U}$
+  \end{itemize}
+\end{frame}
+\frame{
+\frametitle{Approche variationnelle ou Bayésienne ?}
+\begin{itemize}
+\item<1-> \textbf{Variationnelle}: Variable aléatoire indexée par $\bm{k}$: $\bm{k} \mapsto J(\bm{k},\bm{U})$, \\ Extrema des moments ? $\Ex[J(\bm{K},\bm{U})|\bm{K} = \bm{k}] \dots$
+\item<1-> \textbf{Bayésienne}:  $e^{-J(\bm{k},\bm{u})} \propto p(\yobs|\bm{k},\bm{u})$= Vraisemblance  \\ Inférence bayésienne, marginalisation, Estimation bayésienne
+\end{itemize}
+\onslide<1-> Mais
+\begin{itemize}
+\item Estimer efficacement moments ?
+\item Quelle connaissance de $\bm{U}$ ?
+\item Gérer le coût de calcul du modèle
+\end{itemize}
+}
+%\frame{
+%\frametitle{Issues raised}
+%%Random variable : $J(\bm{X}_e,K)$
+%\begin{tabular}{ll}
+%Influence of $\bm{X}_e$ ? & \onslide<2->{ $\longrightarrow$ Sensitivity analysis}\\
+%Computational cost ? & \onslide<2->{ $\longrightarrow$ Use of surrogate}
+%\end{tabular}
+%}
+
+
+
+\message{ !name(slides_laurent_15_06.tex) !offset(266) }
+
+\end{document}

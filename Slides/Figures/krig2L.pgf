@@ -1,0 +1,44 @@
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+     text centered, rounded corners, minimum width=1cm]
+
+\begin{tikzpicture}[node distance=3cm]
+\draw [fill=red!10] (6.2,2) rectangle (12.85,-2) node[below] {\emph{2nd layer}};
+\draw [fill=red!10] (1.35,0.8) rectangle (5.3,-0.8) node[below] {\emph{1st layer}};
+
+\node [block] (jfun) {$j$};
+% \node [block, right of =jfun] (jfuneval2) {$j(\mathcal{P}_{K_2})$};
+% \node [block, above of = jfuneval2] (jfuneval1) {$j(\mathcal{P}_{K_1})$};
+% \node [block,below of = jfuneval2] (jfuneval3) {$j(\mathcal{P}_{K_3})$};
+\node[block] (jfuneval)  at (2,0) {$j(\mathcal{P})$};
+\node [block] (krig1) at (4.3,0) {$\bar{j}(\mathbf{x}_e,K)$};
+\node [block] (void2) at (7,0) {$\bar{j}(\mathcal{P}_{2L})$};
+\node [block] (mu) at (8.3,1.5){$\{\hat{\mu}_{2L}(K_i)\}_{1 \leq i \leq n_{K,2L}}$};
+\node [block] (sigma)at (8.3,-1.5) {$\{\hat{\sigma}^ 2_{2L}(K_i)\}_{1 \leq i \leq n_{K,2L}}$};
+\node[block] (mu2L) at (12,1.5) {$\bar{\mu}_{2L}(K)$};
+\node[block] (sigma2L) at (12,-1.5)  {$\bar{\sigma}^2_{2L}(K)$};
+\node[right of = void2](void3){};
+\node[block](pareto) at (14.2,0) {Pareto front};
+
+% \node[block, above of = void1] (muhat){$\{\hat{\mu}(K_i)\}_{1\leq i \leq N_K}$};
+% \node[block, right of = jfuneval, below of =jfuneval] (sigmahat){$\{\hat{\sigma}^2(K_i)\}_{1\leq i \leq N_K}$};
+% \node[block, right of = muhat](mu1L) {$\bar{\mu}(K)$};
+% \node[block, right of = sigmahat](sigma1L) {$\bar{\sigma}^2(K)$};
+% \node[block, right of = void2](pareto) {Pareto front};
+
+\draw [->] (jfun) -- (jfuneval) node [above,midway] {LHS};
+\draw [->] (jfuneval) -- (krig1) node [above,midway] {Krig.};
+% \node at (4.8,0.5) {Krig.};
+\draw [->] (krig1) -- (void2)  node [above,midway] {LHS};
+\draw [->] (void2) -- (mu);
+\draw [->] (void2) -- (sigma);
+\draw [->] (mu) -- (mu2L)  node [below,midway] {Krig.};
+\draw [->] (sigma) -- (sigma2L)  node [above,midway] {Krig.};
+\draw [->] (mu2L) -- (pareto);
+\draw [->] (sigma2L) -- (pareto);
+% \draw [->] (muhat) -- (mu1L);
+% \draw [->] (sigmahat) -- (sigma1L);
+% \draw [->] (sigma1L) -- (pareto);
+% \draw [->] (mu1L) -- (pareto);
+
+\end{tikzpicture}
+

@@ -1,0 +1,49 @@
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [rectangle, draw, fill=blue!30, 
+    text centered, minimum width=10em] 
+%  \tikzstyle{block} = [rectangle, draw, fill=blkcol, 
+%       text centered, minimum width=3em]
+
+% \tikzstyle{block2} = [rectangle, draw, fill=blkcol2, 
+%      text centered, rounded corners, minimum width=3em]
+% 
+% \tikzstyle{block2} = [rectangle, draw, fill=blkcol2, 
+%      text centered, rounded corners, minimum width=3em]
+
+\tikzstyle{LHS}=[rectangle, draw, text centered]
+
+\begin{tikzpicture}[node distance= 2em]
+
+%\node [align = center] at (0,0) (input) {Control variable \\$\mathbf{k} \in \mathcal{K}$};
+\node [align = center]  (input) {Control variable \\${k} \in \mathcal{K}$};
+\node[block ,right =  of input](code){Direct Simulation};
+%\node [align = center, above =of  code ] (envir) {Environmental variables \\$\mathbf{u} \in \mathcal{U}$ fixed};
+\node [align = center, above = of code] (envir) {Environmental variables \\${u} \in \mathcal{U}$ fixed};
+
+
+
+
+%\node[align = center, right =of  code] (output) {$W(\mathbf{k})$};
+\node[align = center, right = of code]  (output) {$W({k})$};
+%\node [align = center, right =of  inv, below = of output]  (obs) {$\mathbf{y}$};
+\node[block, below =of code] (inv) {Inverse Problem};
+\node [align = center, right = of inv,  below =  of output] (obs) {$y{obs}$};
+
+\draw[->] (input) -- (code);
+\draw[->] (envir) -- (code);
+\draw[->] (code) -- (output);
+
+ % \node [align = center] at (0,0) (input) {$Y = \mathcal{H}W(K_{\mathrm{ref}})$};
+ % \node [align = center] at (4,1.5) (envir) {Environmental variables \\$X_e$ r.v.};
+
+ % \node[block] at (4,0)(code){"Inverse Problem"};
+
+% \node[align = center] at (8,0) (output) {$K$};
+
+\draw[->] (input) -- (code);
+% \draw[->] (envir) -- (code);
+\draw[->] (code) -- (output);
+\draw[->] (output) -- (obs) ;
+\draw[->] (inv) -|(input) ;
+\draw[->] (obs) -- (inv);
+\end{tikzpicture}

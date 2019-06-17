@@ -1,0 +1,40 @@
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+     text centered, rounded corners, minimum width=1cm]
+
+\begin{tikzpicture}[node distance=3cm]
+% \draw [fill=red!10] (4.8,2.2) rectangle (10.3,-2.2) node[midway] {\emph{Kriging Layer}};
+\node [block] (jfun)  {$j$};
+% \node [block, right of =jfun] (jfuneval2) {$j(\mathcal{P}_{K_2})$};
+% \node [block, above of = jfuneval2] (jfuneval1) {$j(\mathcal{P}_{K_1})$};
+% \node [block,below of = jfuneval2] (jfuneval3) {$j(\mathcal{P}_{K_3})$};
+\node[block, right of = jfun] (jfuneval) {$\{j(\mathcal{P}_{K_i})\}_{1 \leq i \leq N}$};
+\node [right of = jfuneval] (void1) {};
+\node [right of = void1] (void2) {};
+\node[block] at (6.5,1.5) (muhat){$\{\hat{\mu}(K_i)\}_{1\leq i \leq N}$};
+\node[block] (sigmahat) at (6.5,-1.5) {$\{\hat{\sigma}^2(K_i)\}_{1\leq i \leq N}$};
+\node[block, right of = void1](mu1L) {$\bar{\mu}_N(K)$};
+\node[block, right of = mu1L] (KG) {$K_{N+1}$};
+\node[above of = mu1L] (abmu) {};
+\node[below of= mu1L]  (bemu) {};
+% \node[block, right of = sigmahat](sigma1L) {$\bar{\sigma}^2(K)$};
+% \node[block, right of = void2](pareto) {Pareto front};
+\draw [->] (jfun) -- (jfuneval) node [above,midway] {LHS};
+\draw [->] (jfuneval) -- (muhat);
+\draw [->] (jfuneval) -- (sigmahat);
+\draw [->] (muhat) -- (mu1L);b
+\draw[->](sigmahat) -- (mu1L);
+
+\draw[->] (mu1L) -- (KG) node [above, midway] {$KG$};
+\node[block, align = left] (newpoints) at (3,2) {$K_{N+1}$ added\\$N \gets N+1$};
+\node[block] (adding) at (3,-2) {$\mathcal{P}_{K_i}$ augmented};
+\draw[->] (KG) --(12,2) node[near end, left, align=right] {above \\threshold}-- (newpoints);
+\draw[->] (newpoints) -- (jfuneval);
+\draw[->] (KG) --(12,-2) node[near end, left, align=right] {below \\threshold} -- (adding);
+\draw[->] (adding) -- (jfuneval);
+\node (krig) at (7.8,0) {Krig.};
+% \draw [->] (sigmahat) -- (sigma1L) node [above,midway] {Krig.};
+% \draw [->] (sigma1L) -- (pareto);
+% \draw [->] (mu1L) -- (pareto);
+
+\end{tikzpicture}
+

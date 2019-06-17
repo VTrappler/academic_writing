@@ -1,0 +1,28 @@
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+     text centered, rounded corners, minimum width=1cm]
+
+\begin{tikzpicture}[node distance=2cm]
+\draw [fill=lightgray] (-0.75,0.75) node[above] {\emph{Simulation}} rectangle (0.75,-2.75);
+\node [block] (jfun) {$j$};
+\node [block, below of = jfun] (gradj) {$\nabla j$};
+\node [block, right of = jfun, right] (Jcoef) {$\hat{J}_{\bm{\alpha}}$};
+\node [block, right of = gradj,right] (Gcoef) {$\hat{G}_{\bm{\alpha}}$};
+\node[block, above of = Jcoef] (EJ) {$\Ex[J]$};
+\node[block] (VJ) at (4,1){$\Var[J]$};
+\node[block, below of = Gcoef] (EG) {$\Ex[G] = \nabla \Ex[J]$};
+\node[block] (VG) at (4,-3) {$\Var[G]$};
+\node[block] (gradVJ) at (4,-1)  {$\nabla \Var[J]$};
+
+\draw [->] (jfun) -- (Jcoef) node [midway, above]{PCE};
+\draw [->] (gradj) -- (Gcoef) node [midway, below]{PCE};
+
+\draw [->] (Gcoef) -- (EG);
+\draw [->] (Gcoef) -- (VG);
+
+\draw [->] (Jcoef) -- (EJ);
+\draw [->] (Jcoef) -- (VJ);
+
+\draw [->] (Jcoef) -- (gradVJ);
+\draw [->] (Gcoef) -- (gradVJ);
+
+\end{tikzpicture}

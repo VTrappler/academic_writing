@@ -1,0 +1,74 @@
+%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'testPS1D_en.eps' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{585bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.75384615)%
+    \put(0,0){\includegraphics[width=\unitlength]{testPS1D_en.eps}}%
+    \put(0.10436701,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.00}}}%
+    \put(0.23374701,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.05}}}%
+    \put(0.36270085,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.10}}}%
+    \put(0.49208034,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.15}}}%
+    \put(0.62103419,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.20}}}%
+    \put(0.75041368,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.25}}}%
+    \put(0.87936752,0.05380342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0.30}}}%
+    \put(0.50395385,0.02674684){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{K}}}%
+    \put(0.10868051,0.07057692){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{0}}}%
+    \put(0.11009624,0.1710906){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{1}}}%
+    \put(0.10950855,0.27160342){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{2}}}%
+    \put(0.10918803,0.37211624){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{3}}}%
+    \put(0.10811966,0.47262906){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{4}}}%
+    \put(0.10932154,0.57314188){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{5}}}%
+    \put(0.10870735,0.6736547){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{6}}}%
+    \put(0.09529915,0.30482051){\color[rgb]{0,0,0}\rotatebox{90}{\makebox(0,0)[lb]{\smash{Erreur relative}}}}%
+    \put(0.1258547,0.68444444){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{1e−14}}}%
+    \put(0.37128718,0.68786325){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Test du produit scalaire}}}%
+    \put(0.35589534,0.70499549){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Scalar product test}}}%
+    \put(0.08107345,0.3006951){\color[rgb]{0,0,0}\rotatebox{90}{\makebox(0,0)[lb]{\smash{Relative error}}}}%
+  \end{picture}%
+\endgroup%

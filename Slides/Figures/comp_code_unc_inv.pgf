@@ -1,0 +1,23 @@
+
+\tikzstyle{block} = [rectangle, draw, fill=blkcol, 
+     text centered, minimum width=1cm]
+\tikzstyle{block2} = [rectangle, draw, fill=blkcol2, 
+     text centered, rounded corners, minimum width=1cm]
+
+\tikzstyle{LHS}=[rectangle, draw, text centered]
+
+\begin{tikzpicture}[node distance=3cm]
+
+\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathcal{K}$};
+\node [align = center] at (4,1.5) (envir) {Environmental variables \\\alert<2>{$\bm{U}$ random}};
+\node[block] at (4,0)(code){Direct Simulation};
+\node[align = center] at (8,0) (output) {$\mathcal{M}(\bm{k},\alert<2>{\bm{U}})$};
+\node [align = center] at (8,-1) (obs) {$\yobs$};
+\node[block] at (4,-1) (inv) {Inverse Problem};
+\draw[->] (input) -- (code);
+\draw[->] (envir) -- (code);
+\draw[->] (code) -- (output);
+\draw[->] (inv) -|(input) ;
+\draw[->] (obs) -- (inv);
+\draw[->] (output) -- (obs);
+\end{tikzpicture}

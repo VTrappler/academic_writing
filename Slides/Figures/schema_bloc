@@ -1,0 +1,33 @@
+
+\begin{tikzpicture}
+\usetikzlibrary{positioning}
+\tikzstyle{block}=[draw, fill=blue!20, minimum size=2em]
+\tikzstyle{backblock}=[draw, fill = green!05]
+\tikzstyle{sumcircle}=[circle, draw = black, fill = white]
+
+\fill[gray!10] (-3.2,-1) -- (1.8,-1) -- (1.8,3) -- (-3.2,3);
+\fill[gray!10] (4.9,-1.5) -- (14.5,-1.5) -- (14.5,3) -- (4.9,3);
+
+\node [block](phy_model) {$\mathbf{u}\mapsto M^*(\mathbf{u})$};
+\node[above left =0cm and 0.cm of phy_model, text width = 2cm, text centered] (phy_text) {Physical Reality};
+\node[block,right=5cm, text width=5cm, text centered](proj_model){Theory: projected model \\$ \{ \mathbf{u}\mapsto M(\mathbf{k},\mathbf{u}), \mathbf{k} \in \mathcal{K}\}$};
+%\node[below of = proj_model]{Theory: projected model};
+\draw[->](phy_model)--(proj_model) node [sumcircle, midway] (rep_error){$+$};
+\node[below of = rep_error](delta_rep) {$\delta(\mathbf{u})$};
+\node[below of = delta_rep, text width = 3cm, text centered](rep_error_txt){Representativity  error};
+\draw[->] (delta_rep) -- (rep_error);
+\node[block,  right = 1cm of proj_model](best_model){$\mathbf{u}\mapsto M(\mathbf{k}^ *,\mathbf{u})$};
+\draw[->](proj_model)--(best_model);
+
+\node[block, above = .82cm of proj_model](obs){Observations: $\mathbf{y}^ {\mathrm{obs}}$};
+\node[block, above=  1cm of phy_model] (yreal) {Reality: $\mathbf{y}^ { \mathrm{reality}}$};
+%\node[below of = mid_obs](mid_bel){$\varepsilon$};
+%\draw[->](mid_obs)-|(mid_bel) -| (best_model);
+\draw[->] (yreal) -- (obs) node [circle,draw = black, midway, fill = white] (mid_obs){$+$} ;
+\node[above of = mid_obs](eps_obs) {$\varepsilon$};
+\node[above of = eps_obs,text width = 3cm, text centered] {Observation error};   
+\draw[->](eps_obs) -- (mid_obs);
+\draw[->] (phy_model) -- (yreal) ;
+\draw[->] (best_model) |- (obs);
+\draw[->] (obs) -- (proj_model);
+\end{tikzpicture}

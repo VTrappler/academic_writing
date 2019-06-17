@@ -1,0 +1,869 @@
+\documentclass[aspectratio=43]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\usepackage{booktabs}
+\usepackage{siunitx}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{multicol}
+%\usepackage{pgfpages}
+%\setbeameroption{show notes}
+%\setbeameroption{show notes on second screen=right}
+% Latin Modern
+\usepackage{lmodern}
+
+% Verdana font type
+%\usepackage{verdana}
+% Helvetica
+%\usepackage{helvet}
+% Times (text and math)
+%\usepackage{newtx, newtxmath}
+\graphicspath{{./Figures/}}
+\usetheme[department=aqua]{DTU}
+
+\title[Robust estimation of bottom friction]{Robust Estimation of bottom friction \\ \textit{Parameter control in the presence of uncertainties}}
+\author{\textsc{Victor Trappler} \\ s151431}
+\institute{Master Thesis Defence}
+\date{\today}
+	
+\newcommand{\tabitem}{{\color{dtured}$\bullet$} }
+\setcounter{tocdepth}{1}
+
+\begin{document}
+\frame{
+	\maketitle
+	\note{Hello ! Name, reason}
+}
+
+\section{Introduction}
+\subsection{AIRSEA team}
+\frame{
+\frametitle{The AIRSEA team, Grenoble, FRANCE}
+\begin{figure}[!h]
+  \centering
+  \subfloat{\includegraphics[width = 0.4\textwidth]{INRIA_SCIENTIFIQUE_UK_CMJN}}
+  \subfloat{\includegraphics[width = 0.4\textwidth]{ljk}}
+\end{figure}
+\pause
+\begin{itemize}
+\item Modelling Oceanic and Atmospheric flows: \alert<3->{parametrization} and  coupling of the equations
+\item Model reduction, multiscale algorithms
+\item High-performance computing
+\item \alert<3->{Dealing with uncertainties}
+\end{itemize}
+}
+\subsection{Context and scope of the project}
+\frame{
+%\frametitle{Parameter control and uncertainties}
+%\begin{itemize} \item Subgrid phenomena need \emph{parametrization}\pause
+%
+%\item \emph{Uncertainties} arise from: 
+%\begin{itemize}
+%\item physical model
+%\item numerical model
+%\item observations error 
+%\end{itemize}
+%\end{itemize}
+\begin{center}
+\input{./Figures/hauteureau.tikz}
+\end{center}
+}
+\frame{
+	\frametitle{Outline}
+	\tableofcontents
+}
+\setcounter{tocdepth}{2}
+\section{Deterministic Framework}
+\frame{
+\frametitle{Deterministic Framework}
+\tableofcontents[
+    currentsubsection, 
+    sectionstyle=show/shaded, 
+    subsectionstyle=show/hide,
+    hideothersubsections
+    ]
+}
+\subsection{The 1D Shallow Water Equations}
+\frame{
+\frametitle{The 1D Shallow Water Equations}
+	\begin{block}{1D-SWE}
+		\begin{align}
+			&\partial_t \alert<1>{h} + \partial_x \alert<1>{q} = 0 \tag{Conservation}\\
+			&\partial_t \alert<1>{q} + \partial_x \left(\frac{\alert<1>{q}^2}{\alert<1>{h}} + \frac{1}{2}g\alert<1>{h}^2\right) = -g\alert<1>{h} \partial_x Z - S \tag{Momentum}
+		\end{align}
+	\end{block}
+	\pause
+	\begin{block}{Quadratic Friction}
+	\begin{equation*}
+		S = - \alert<2>K|q|qh^{-\eta},\quad \eta = 7/3
+	\end{equation*}
+\end{block}
+$K$: control parameter. Either a scalar value or a vector
+}
+\frame{
+\frametitle{Computer code}
+\begin{itemize}
+	\item 1D Shallow water equations
+	\begin{itemize}
+		\item $K$: Bottom friction
+		\item Boundary conditions (considered fixed and known)
+	\end{itemize}
+	\item Output $W(K)$:\\ $W_i^n(K) = [h_i^n(K) \quad q_i^n(K)]^T$, for $0 \leq i \leq N_x$ and $0 \leq n \leq N_t$
+\end{itemize}
+\begin{figure}[!b]
+\centering
+\only<1>{\input{./Figures/comp_code.pgf}}
+%\only<2>{\input{./Figures/inv_prob.pgf}}
+\end{figure}
+}
+\frame{
+\frametitle{Data assimilation}
+
+$K_{\mathrm{ref}}$ and $\mathcal{H}$ observation operator\\
+We have $Y = \mathcal{H}W(K_{\mathrm{ref}}) = \{h_i^n(K_{\mathrm{ref}})\}_{i,n}$ 
+\begin{equation*}
+j(K) = \frac12 \|\mathcal{H}W(K) - Y \|^2
+\end{equation*} \pause
+\begin{equation*}
+\argmin_{K \in \mathcal{K}}j(K) ?
+\end{equation*}
+
+
+\begin{itemize}
+\item<2-> Gradient-free: Simulated annealing, Nelder-mead,\dots
+$\rightarrow$ High number of runs. Very expensive in practice
+
+\item<3-> Gradient-based: gradient-descent, (quasi-) Newton method \dots
+$\rightarrow$ Less number of runs, but need to derive adjoint code
+\end{itemize}
+}
+
+%\subsection{The Adjoint Model}
+%\frame{
+%\frametitle{Principle of the adjoint method}
+%Let us assume that we have the (formal) model
+%\begin{align*}
+%&\,j(K) \tag{Cost function} \\
+%\text{s.t.}&\,R(W(K),K) = 0 \tag{Model equation (SWE)}
+%\end{align*}
+%\begin{overprint}
+%\onslide<1->{\begin{equation*}
+%\frac{\mathrm{d}j}{\mathrm{d}K} = ?
+%\end{equation*}}
+%\pause
+%For a value $K$:
+%\begin{itemize}
+%\item<3-> solve $R(W(K),K) = 0$ for $W$ (direct run of the model)
+%\item<4-> solve $ \left(\frac{\partial R}{\partial W} \right)^T \lambda = 	\left( \frac{\partial J}{\partial W}\right)^T$ for $\lambda$ (adjoint run)
+%\item<5-> compute $\frac{\mathrm{d}j}{\mathrm{d}K}$ using $\lambda$
+%\end{itemize}
+%\end{overprint}
+%}
+\subsection{Adjoint-based optimization}
+\frame{
+\frametitle{Estimation procedure\\ no gradient}
+\begin{figure}[!h]
+\centering
+\scalebox{0.6}{\input{./Figures/min_no_jac.pgf}}
+\label{fig:optimdeter}
+\end{figure}
+}
+\frame{
+\frametitle{Estimation procedure \\ adjoint-based gradient}
+\begin{figure}[!h]
+\centering
+\scalebox{0.6}{\input{./Figures/min_adj.pgf}}
+\label{fig:optimdeteradj}
+\end{figure}
+}
+\frame{
+\begin{center}
+\only<1>{\input{./Figures/comp_code.pgf}}
+\only<2>{\input{./Figures/comp_code_unc.pgf}}
+%\only<3>{\input{./Figures/comp_code_unc_inv.pgf}}
+\end{center}
+}
+\frame{
+\frametitle{Introducing uncertainties}
+$\bm{X}_e$ random vector with realizations $\bm{x}_e \in \mathbb{X}$ 
+\scalebox{0.95}{
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|} \hline
+   Variable & \texttt{mean.h} & \texttt{ampli} & \texttt{period} & \texttt{phase} \\ \hline
+  $\bm{X}_e$ & $\mathcal{U}([19.5,20.5])$ & $\mathcal{U}([4.9,5.1])$ & $\mathcal{U}([49.9,50.1])$ & $\mathcal{U}([-0.001,0.001])$  \\
+   $\bm{x}_{e,\mathrm{ref}}$ & $20.0$ & $5.0$ & $50.0$ & $0.000$   \\ \hline
+  \end{tabular}
+  }
+\begin{equation*}
+    W(K) \quad \text{becomes} \quad W(\bm{x}_e,K)
+\end{equation*}
+We have $Y = \mathcal{H}W(\bm{x}_{e,\mathrm{ref}},K_{\mathrm{ref}})$  \\
+
+The (deterministic) quadratic error is now
+\begin{equation*}   
+   j(\bm{x}_e,K) =  \frac12\|\mathcal{H}W(\bm{x}_e,K) - Y\|^2
+\end{equation*}
+$\longrightarrow$ sample one $\bm{x}_e$ and min w.r.t. $K$ ?
+}
+\frame{
+\frametitle{Estimation procedure with uncertainties\\ no gradient}
+\begin{figure}[!h]
+\centering
+\scalebox{0.6}{\input{./Figures/min_uncertain_no_jac.pgf}}
+\label{fig:optimunc}
+\end{figure}
+}
+\frame{
+\frametitle{Estimation procedure with uncertainties\\ adjoint-based gradient}
+\begin{figure}[!h]
+\centering
+\scalebox{0.6}{\input{./Figures/opt_jac_uncertainties.pgf}}
+\label{fig:optimuncadj}
+\end{figure}
+}
+\frame{
+%Random variable : $J(\bm{X}_e,K)$
+\begin{tabular}{ll}
+Influence of $\bm{X}_e$ ? & \onslide<2->{ $\longrightarrow$ Sensitivity analysis}\\
+Minimizing $j(\bm{x}_e,K)$ wrt $K$ ? &\onslide<2->{ $\longrightarrow$ Robust optimization}\\
+Computational cost ? & \onslide<2->{ $\longrightarrow$ Use of surrogate}
+\end{tabular}
+}
+
+\section{Global sensitivity analysis}
+\frame{
+\frametitle{Sensitivity Analysis}
+\tableofcontents[
+    currentsubsection, 
+    sectionstyle=show/shaded, 
+    subsectionstyle=show/hide,
+    hideothersubsections
+    ]
+}
+\subsection{Definition}
+\frame{
+\frametitle{Sobol Indices \cite{sobol2001global}}
+Let $\mathcal{J} = J(\bm{X})$ a rv, with $\bm{X} = (X_1,\dots X_p)$ uniformly distributed on $[0;1]^p$ and components independent.
+\only<1>{\begin{equation*}
+	\Ex[\mathcal{J} | X_i = \alpha]
+	\end{equation*}}
+\only<2>{\begin{equation*}
+	\Var[\Ex[\mathcal{J} | X_i]]
+	\end{equation*}
+}
+\only<3->{\begin{equation*}
+	S_i = \frac{\Var[\Ex[\mathcal{J} | X_i]]}{\Var[\mathcal{J}]}
+	\end{equation*}
+}
+
+\onslide<4->{
+\begin{block}{Variance of the ANOVA decomposition}
+\begin{equation*}
+	1 = \underbrace{\sum_{i=1}^p S_i}_{\text{Single variable influence}} + \underbrace{\sum_{1\leq i < j \leq p} S_{ij}}_{\text{Interactions order 2}} + \cdots + \underbrace{S_{1\dots p}}_{\text{Interaction order }p}
+\end{equation*}
+\end{block}}
+
+\onslide<4->{\cite{rep_gilquin,sudretPCE2015}}
+}
+\subsection[Sensitivity analysis on the outputs]{SA of different outputs of the model}
+\frame{
+\frametitle{Sobol' indices of the cost function}
+$j(\bm{X}_e,K)$
+  \includegraphics[width = \textwidth, height = .92\textheight]{sobol_J_PCE}
+}
+\frame{
+\frametitle{Sobol' indices of the gradient of cost function}
+$\frac{\mathrm{d}j}{\mathrm{d}K}(\bm{X}_e,K)$
+  \includegraphics[width = \textwidth, height = .9\textheight]{sobol_G_PCE}
+}
+%\frame{
+%$\argmin_K j(\bm{X}_e,K)$
+%\frametitle{Sobol' indices of the output of the minimization procedure}
+%  \includegraphics[width = \textwidth, height = .9\textheight]{sobol_Kargmin}
+%}
+\section{Robust Optimization}
+\frame{
+\frametitle{Robust Optimization}
+\tableofcontents[
+    currentsubsection, 
+    sectionstyle=show/shaded, 
+    subsectionstyle=show/hide,
+    hideothersubsections
+    ]
+}
+
+\frame{
+	\frametitle{A first example}
+	$(x_e,K) \mapsto f(x_e,K) = \tilde{f}(x_e+K)$ and $X_e \sim \mathcal{N}(0,s^2)$ truncated on $[{-3};3]$
+	\begin{figure}[!h]
+	\centering
+	%\includegraphics[scale = 0.6]{./Figures/mean_worstcase_robustness1}
+	\end{figure}
+}
+\frame{
+	\frametitle{A first example}
+	$(x_e,K) \mapsto f(x_e,K) = \tilde{f}(x_e+K)$ and $X_e \sim \mathcal{N}(0,s^2)$ truncated on $[{-3};3]$
+	\begin{figure}[!h]
+	\centering
+	%\includegraphics[scale = 0.6]{./Figures/mean_worstcase_robustness2}
+	\end{figure}
+}
+\frame{
+	\frametitle{A first example}
+	$(x_e,K) \mapsto f(x_e,K) = \tilde{f}(x_e+K)$ and $X_e \sim \mathcal{N}(0,s^2)$ truncated on $[{-3};3]$
+	\begin{figure}[!h]
+	\centering
+	%\includegraphics[scale = 0.6]{./Figures/mean_worstcase_robustness3}
+	\end{figure}
+}
+\subsection{Concepts of robustness}
+\frame{
+\frametitle{Different Notions of robustness}
+\begin{itemize}
+\item<1-> Global Optimum: $ \min j(\bm{x}_e,K)$ $ \longrightarrow $ \alert<7->{EGO}
+\item<2-> Worst case: $ \min_K \max_{\bm{x}_e} j(\bm{x}_e,K)$ $ \longrightarrow $ \alert<7->{Explorative EGO}
+\item<3-> M-robustness: $\min \mu(K),\quad \text{constraint on } \sigma^2(K)$ $ \longrightarrow $ \alert<7->{iterated LHS}
+\item<4-> V-robustness: $\min \sigma^2(K),\quad\text{constraint on } \mu(K)$ $ \longrightarrow $ gradient-descent with PCE
+\item<5-> $\rho$-robustness: $\min \rho(\mu(K),\sigma^2(K))$ $\longrightarrow$ gradient-descent with PCE
+\item<6-> Multiobjective: choice within Pareto frontier $\longrightarrow$ 1L/2L kriging
+\end{itemize}
+}
+\subsection{Metamodeling}
+\frame{
+\frametitle{Why surrogates ?}
+\begin{itemize}
+\item Model $\longrightarrow$ expensive to run
+\item High dimensional problem + taking into account uncertainties ?
+\end{itemize}
+
+\begin{center}
+\only<1>{\input{./Figures/comp_code_surro.pgf}}
+\only<2>{\input{./Figures/surrogate.pgf}}
+\end{center}
+%\includegraphics[width = 0.6\textwidth]{./Figures/Krig_EI_exampleBIG_cropped.pdf}
+}
+\frame{
+\frametitle{Comparison between PCE and Kriging}
+\begin{tabular}{l|c|c|}
+ 			& Polynomial Chaos & \alert<2>{Kriging} \\ \hline
+Surrogate &  $J(\bm{X}) = \sum_{\bm{\alpha} \in \mathcal{A}} \hat{J}_{\bm{\alpha}}\bm{\Phi}_{\bm{\alpha}}(\bm{X})$ & $\bar{J}(\bm{x}) \sim \mathcal{N}(\hat{m}(\bm{x}),\hat{s}^2(\bm{x}))$ \\
+Estim. & Numerical quadrature/Regression & Regression \\
+Quantity & Statistical moments & estimate + CI  \\
+Ref. & \cite{WienerChaos,sudretPCE2015} & \cite{krige1951,matheronUK} \\ \hline
+\end{tabular}
+}
+\subsection{Adaptative sampling}
+\frame{
+\frametitle{Principle of adaptative sampling}
+Based on kriging model $\longrightarrow$ mean and variance \\
+How to choose a new point to evaluate ? 
+Criterion $\kappa(\bm{x}) \longrightarrow$ "potential" of the point
+\begin{equation*}
+\bm{x}_{\mathrm{new}} = \argmax \kappa(\bm{x})
+\end{equation*}
+\includegraphics[width = \textwidth]{example_EGO}
+
+}
+\frame{
+\frametitle{EGO \cite{Jones1998} \\ \emph{Global Optimum}}
+$\mathcal{P}_N$ experimental design on $\mathbb{X} \times \mathcal{K}$, $\mathcal{Y}_N = j(\mathcal{P}_N)$.
+\begin{equation*}
+  \bar{J}_N(\bm{x}_e,K) \sim \mathcal{N}\left(\hat{m}_N(\bm{x}_e,K),\hat{s}_N^2(\bm{x}_e,K)\right)
+\end{equation*}
+%\only<1>{ \begin{figure}[!h]\centering \includegraphics[width = \textwidth , trim = 0 7.5cm 12cm 0, clip]{Krig_EI_example} \end{figure}}
+\onslide<2->{
+$j_{\min}^N = \min \mathcal{Y}_N$ 
+\begin{block}{Expected improvement}
+\begin{align*}
+ \only<4->{ EI(\bm{x}_e,K) = \Ex[}\only<3->{\max\{0, }j_{\min}^N - \bar{J}_N(\bm{x}_e,K) \only<3->{ \} } \only<4->{]} \\
+  \end{align*}
+\end{block}}
+\onslide<5->{
+\begin{block}{EGO iteration}
+\begin{align*}
+  (\tilde{\bm{x}}_e, \tilde{K}) = \argmax EI(\bm{x}_e,K)  \\
+  \mathcal{P}_{N+1} = \mathcal{P}_N \cup (\tilde{\bm{x}}_e, \tilde{K}) \\
+  \bar{J}_{N+1}(\bm{x}_e,K) \sim \mathcal{N}\left(\hat{m}_{N+1}(\bm{x}_e,K),\hat{s}_{N+1}^2(\bm{x}_e,K)\right)
+\end{align*}
+\end{block}}
+}
+\frame{
+\frametitle{Example of an EGO iteration}
+\includegraphics[width = \textwidth]{example_EGO}
+}
+\frame{
+\frametitle{EGO}
+\includegraphics[width=\textwidth]{EGO_response}
+%\begin{tabular}{|c|c|c|c|c|c|}
+%EGO output & mean.h & amplitude & period & phase & $K$ \\ 
+%  \hline
+%$(\bm{x}_e,K)$ & 20.000083 & 5.000129 & 50.000309 & 0.000014 & 0.099971 \\ 
+%\end{tabular}
+}
+\frame{
+\frametitle{Explorative EGO  \cite{DesignCompExp}\\ \emph{Worst-case scenario}}
+$\mathcal{P}_N$ experimental design on $\mathbb{X} \times \mathcal{K}$, $\mathcal{Y}_N = j(\mathcal{P}_N)$.
+\begin{equation*}
+  \bar{J}_N(\bm{x}_e,K) \sim \mathcal{N}\left(\hat{m}_N(\bm{x}_e,K),\hat{s}_N^2(\bm{x}_e,K)\right)
+\end{equation*}
+$j_{\min}^N = \min \mathcal{Y}_N$ 
+\begin{block}{Expected improvement}
+\begin{align*}
+  EI(\bm{x}_e,K) = \Ex[\max\{0, j_{\min}^N - \bar{J}_N(\bm{x}_e,K) \} ]
+\end{align*}
+\end{block}\pause
+
+\begin{block}{Explorative EGO iteration}
+\begin{align*}
+  (\tilde{\bm{x}}_e, \tilde{K}) = \argmax EI(\bm{x}_e,K)  \\
+  \alert<3->{\bm{x}_e^* = \argmax_{\bm{x}_e} d\left((\bm{x}_e,\tilde{K}),\mathcal{P}_N \right)} \\
+  \mathcal{P}_{N+1} = \mathcal{P}_N \cup (\bm{x}^*_e, \tilde{K}) \\
+    \bar{J}_{N+1}(\bm{x}_e,K) \sim \mathcal{N}\left(\hat{m}_{N+1}(\bm{x}_e,K),\hat{s}_{N+1}^2(\bm{x}_e,K)\right)
+\end{align*}
+\end{block}
+}
+\frame{
+\frametitle{Explorative EGO iterations \cite{DesignCompExp}}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{exploEGO}
+\end{figure}
+}
+
+\frame{
+\frametitle{Iterated LHS\\\emph{M-robustness}}
+\begin{center}
+\scalebox{.7}{\input{./Figures/K_LHS.pgf}}
+\end{center} to build $\hat{\mu}(K)$ and $\hat{\sigma}^2(K)$\pause
+\begin{block}{Estimate of the mean}
+\begin{gather*}
+\Ex[J(\bm{X}_e,K) | K] \xrightarrow{\mathrm{estimator}} {\hat{\mu}}(K) = n_e^{-1}\sum_{i=1}^{n_e}J(\bm{X}^{i}_e,K) \text{ (r.v.)} \\
+\Var[J(\bm{X}_e,K) | K] \xrightarrow{\mathrm{estimator}} {\hat{\sigma}}^ 2(K) = (n_e-1)^{-1}\sum_{i=1}^{n_e} (J(\bm{X}^{i}_e,K) - \hat{\mu}(K))^2 \text{ (r.v.)}  \\ 
+\Ex[\hat{\mu}(K)] = \Ex[J(\bm{X}_e,K) | K] \quad\text{ and} \quad \Var[\hat{\mu}(K)] = \frac{\Var[J(\bm{X}_e,K) | K]}{n_e} \approx \frac{\hat{\sigma}^ 2(K)}{n_e}
+\end{gather*}
+\end{block}
+}
+\frame{
+\begin{block}{Estimated mean as a random variable}
+\begin{equation}
+	\hat{\mu}(K) \sim \mathcal{N}\left(\Ex[J(\bm{X}_e,K) | K], \frac{\hat{\sigma}^ 2(K)}{n_e}\right) \tag{CLT approximation}
+\end{equation}
+
+\end{block}
+Idea \cite{rulliere} :
+\begin{itemize}
+\item Add a new point $K_{\mathrm{new}}$ and estimate $\Ex[J(\bm{X}_e,K) | K = K_{\mathrm{new}}]$
+\item OR Reduce the variance by increasing $n_e$
+\end{itemize}
+\pause
+In an adaptative sampling strategy: $K^* = \argmax_{K\in \mathcal{K}} \kappa(K)$
+\begin{itemize}
+\item if $K^*$ "close" to an existing point $\longrightarrow$ increase $n_e$
+\item if not $\longrightarrow$ add $K^*$ to the design
+\end{itemize}
+}
+\frame{
+\frametitle{Knowledge-gradient criterion}
+Metamodel of the \emph{estimated} mean: \\
+Based on $\mathcal{P}_N$, an experimental design of $N$ points on $\mathcal{K}$.
+\begin{equation*}
+	\bar{\mu}_N(K) \sim \mathcal{N}\left(\hat{m}_N(K),\hat{s}_N^2(K)\right)
+\end{equation*}
+\pause
+In the presence of noise in the kriging model:
+\begin{block}{Definition of the KG \cite{frazier2008seq}}
+\begin{equation*}
+  KG(\tilde{K}) = \min_{K'\in\mathcal{K}} \hat{m}_N(K') - \Ex\left[ \min_{K'\in\mathcal{K}} \hat{m}_{N+1}(K') \middle|\, \tilde{K} \right]
+\end{equation*}
+\end{block}
+where $\hat{m}_{N+1}$ is the kriging mean computed based on $\mathcal{P}_N \cup \{\tilde{K} \}$
+\begin{center}
+\scalebox{0.66}{\input{./Figures/iteratedLHS.pgf}}
+\end{center}
+}
+
+
+
+\frame{
+\frametitle{Iterated LHS}
+\includegraphics<1>[width = \textwidth]{Figures/thres005_1}
+\includegraphics<2>[width = \textwidth]{Figures/thres005_2}
+\includegraphics<3>[width = \textwidth]{Figures/thres005_3}
+\includegraphics<4>[width = \textwidth]{Figures/thres005_4}
+\includegraphics<5>[width = \textwidth]{Figures/thres005_5}
+\includegraphics<6>[width = \textwidth]{Figures/thres005_6}
+%\includegraphics<7>[width = \textwidth]{Figures/thres005_7}
+%\includegraphics<8>[width = \textwidth]{Figures/thres005_8}
+%\includegraphics<9>[width = \textwidth]{Figures/thres005_9}
+%\includegraphics<10>[width = \textwidth]{Figures/thres005_10}
+}
+
+\section{Conclusion}
+
+\frame{
+	\frametitle{Wrapping up}
+	\begin{itemize}
+	\item Notion of robustness
+	\item Metamodelling techniques $\rightarrow$ include uncertainties
+	\item Balance between precision and number of runs
+	\end{itemize}
+}
+
+\frame{
+	\frametitle{Perspective and future work}
+	\begin{itemize}
+	\item Better numerical model
+	\begin{itemize}
+		\item 2D
+		\item Better numerical scheme
+	\end{itemize}
+	\item Influence of observation operator $\mathcal{H}$
+	\begin{itemize}
+		\item $Y$ as real measurements
+	\end{itemize}
+	\item Extension to $K$ multidimensional 
+	\item Choice of metamodel:
+		\begin{itemize}
+		\item Kriging
+		\begin{itemize}
+			\item not adapted to high-dimensional input space
+			\item Adaptative sampling in multidimensional case? 
+		\end{itemize}
+		\item PC
+			\begin{itemize}
+			\item adapted to $K$ multidimensional
+			\item "Fixed" grid to evaluate
+			\item May need more evaluation in some cases + adjoint
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+
+}
+
+\frame{
+	\frametitle{Thank you for your attention}
+	\begin{multicols}{2}
+	\tableofcontents
+	\end{multicols}
+}
+
+\begin{frame}[allowframebreaks]
+\bibliographystyle{apalike}
+\bibliography{biblio.bib}
+\end{frame}
+\section*{Appendix}
+\subsection*{The Adjoint Model}
+
+\frame{
+\frametitle{Principle of the adjoint method}
+Let us assume that we have the (formal) model
+\begin{align}
+ & J(W(K),K) \tag{Cost function} \\
+\text{s.t.}&\,R(W(K),K) = 0 \tag{Model equation (SWE)}
+\end{align}
+\begin{overprint}
+\onslide<2->{\begin{equation}
+\frac{\mathrm{d}J}{\mathrm{d}K} = ?
+\end{equation}}
+\onslide<3->{
+\begin{align}
+\frac{\mathrm{d}J}{\mathrm{d}K} &= \frac{\partial J}{\partial W} \textcolor{red}{\frac{\partial W}{\partial K}} +\frac{\partial J}{\partial K} \\
+\frac{\mathrm{d}R}{\mathrm{d}K} &= \frac{\partial R}{\partial W} \textcolor{red}{\frac{\partial W}{\partial K}} +\frac{\partial R}{\partial K} =0
+\end{align}
+}
+\end{overprint}
+\onslide<4->{
+And by introducing a Lagrange multiplier $\lambda$
+}
+}
+\frame{
+\frametitle{Principle of the adjoint method}
+\begin{align}
+\frac{\mathrm{d}J}{\mathrm{d}K} &= \frac{\partial J}{\partial W} \frac{\partial W}{\partial K} +\frac{\partial J}{\partial K} - \lambda^T \left(\frac{\partial R}{\partial W} \frac{\partial W}{\partial K} +\frac{\partial R}{\partial K}\right)\\
+&= \underbrace{\left(\frac{\partial J}{\partial W} - \lambda^T\frac{\partial R}{\partial W} \right)}_{=0 \text{ if } \lambda \text{ is choosen wisely}}\frac{\partial W}{\partial K} + \left(\frac{\partial J}{\partial K} - \lambda^T\frac{\partial R}{\partial K}\right) 
+\end{align}
+\begin{block}{Adjoint model}
+	\begin{equation}
+		\left(\frac{\partial R}{\partial W} \right)^T \lambda = 	\left( \frac{\partial J}{\partial W}\right)^T
+	\end{equation}
+\end{block}
+\pause
+For a value $K$:
+\begin{itemize}
+\item<3-> solve $R(W(K),K) = 0$ for $W$
+\item<4-> solve $ \left(\frac{\partial R}{\partial W} \right)^T \lambda = 	\left( \frac{\partial J}{\partial W}\right)^T$ for $\lambda$
+\item<5-> compute $\frac{\mathrm{d}J}{\mathrm{d}K}$
+\end{itemize}
+}
+
+\subsection*{Polynomial Chaos}
+\frame{
+\frametitle{Orthogonal Polynomials in a Hilbert space}
+$X$, $J(X)$ r.v., such that $\Ex[X^2],\Ex[J(X)^2] < +\infty$\\
+$\rightarrow$ Expand $J$ on a basis of orthogonal polynomials with respect to a specific inner product \cite{WienerChaos,sudretPCE2015}. \pause\\
+Functional inner product:
+
+\begin{align*}
+\langle f, g \rangle = \int_{D_X} f(\xi)g(\xi)p_X(\xi) \, \mathrm{d}\xi
+\end{align*}
+
+\begin{block}{Family of orthogonal polynomials}
+\begin{equation*}
+	\langle \varphi_i , \varphi_j \rangle = \|\varphi_i \|^2 \delta_{ij}
+\end{equation*}
+\end{block}
+
+\begin{table}
+\scalebox{.8}{
+	\begin{tabular}{|c|c|c|c|} \hline
+		Family & $D_X$ & p.d.f. & Distribution \\ \hline
+		Legendre & $[-1;1]$ & $p_X(\xi) = {}^1\!/\!_2$ & $\mathcal{U}([-1;1])$\\ 	\hline 
+		Hermite & $\mathbb{R}$ & $p_X(\xi) = e^{-\xi^2/2}$ & $\mathcal{N}(0,1)$ \\ \hline
+		Laguerre & $[0,+\infty[$ & $p_X(\xi) = e^{-\xi}$ & $\mathrm{Exp}$ \\ \hline
+	\end{tabular} }
+\end{table}
+
+
+}
+\frame{
+\frametitle{The expansion as a surrogate model}
+\begin{block}{Polynomial Chaos Expansion, 1D}
+	\begin{equation*}
+	\mathcal{J} = J(X) = \sum_{i=0}^{+\infty} \hat{J}_i \varphi_i(X) \approx \sum_{i=0}^P \hat{J}_i \varphi_i(X) 
+	\end{equation*}
+\end{block}
+\pause
+	\begin{align*}
+		\bm{\alpha} &= (\alpha_1,\dots \alpha_p),\quad |\bm{\alpha}| = \sum_i \alpha_i \nonumber \\
+	\Phi_{\bm{\alpha}}(\bm{X}) &= \prod_i \varphi_{\alpha_i}(X_i) \nonumber
+	\end{align*}
+\begin{block}{Polynomial Chaos Expansion, multidimensional}
+	\begin{align*}
+	\mathcal{J} = J(\bm{X}) &= \sum_{|\bm{\alpha}|=0}^{+\infty} \hat{J}_{\bm{\alpha}} \Phi_{\bm{\alpha}}(\bm{X}) \approx  \sum_{|\bm{\alpha}| \leq P} \hat{J}_{\bm{\alpha}} \Phi_{\bm{\alpha}}(\bm{X}) \\
+	\end{align*}
+\end{block}
+}
+\frame{
+\frametitle{Statistical moments using PCE}
+PCE allows us to get easily the statistical moments:
+\begin{block}{Mean and variance of $\mathcal{J}$ using the coefficients of the expansion}
+\begin{align*}
+  \Ex[\mathcal{J}] &= \hat{J}_0\|\bm{\Phi}_0\|^2 = \hat{J}_0 \\ 
+\Var[\mathcal{J}] = \Ex[\mathcal{J}^2] - \Ex[\mathcal{J}]^2 &= \sum_{|\bm{\alpha}|\leq P} \hat{J}^2_{\bm{\alpha}} \|\bm{\Phi}_{\bm{\alpha}}\|^2 - \hat{J}^2_0 = \sum_{0<|\bm{\alpha}|\leq P} \hat{J}^2_{\bm{\alpha}} \|\bm{\Phi}_{\bm{\alpha}}\|^2
+\end{align*}
+\end{block}
+}
+\frame{
+\frametitle{PCE on the response}
+\begin{center}
+\includegraphics[width = .8\textwidth]{PCE_tot}
+\end{center}
+}
+
+\subsection*{Kriging}
+\frame{
+	\frametitle{Principle of Kriging}
+	$\mathcal{X} = \{\bm{x}^{(1)},\dots,\bm{x}^{(n_s)}\}$ and $\mathcal{Y} = j(\mathcal{X})$ \\
+	We assume that the deterministic model $j(\bm{x})$ is the realization of a GP  \cite{krige1951, matheronUK}:
+	\begin{block}{Kriging formalism}
+	\begin{gather*}
+	  \underbrace{J(\bm{x})}_{\text{r.v.}} = \underbrace{\bm{f}(\bm{x})^T\bm{\beta}}_{\text{deter}} + \underbrace{\varepsilon(\bm{x})}_{\text{r.v.}} \\
+	  \Ex[\varepsilon(\bm{x})] = 0 \quad \text{ and } \quad\mathrm{Cov}(\varepsilon(\bm{x}),\varepsilon(\bm{x'})) = \sigma^2_J \underbrace{R(\bm{x},\bm{x'})}_{\text{Chosen}}\\
+	  \bar{J}(\bm{x}) \sim J(\bm{x}) | \mathcal{Y}
+	\end{gather*}
+	\end{block}
+}
+\frame{
+\frametitle{Kriging predicator}
+{\small
+\begin{align*}
+  \bm{F} &= \{f_j(\bm{x}^{(i)}) \}_{\substack{1 \leq i \leq n_s \\ 1 \leq j \leq n_\beta}} \\
+  \bm{R} &= \{R(\bm{x}^{(i)},\bm{x}^{(j)}) \}_{1 \leq i,j \leq n_s} \\
+  \bm{r}(\bm{x}) &= \left[R(\bm{x}^{(1)},\bm{x}),\dots,R(\bm{x}^{(n_s)},\bm{x}) \right]^T
+\end{align*}
+\begin{block}{Joint distribution of $\mathcal{Y}$ and $J$}
+\begin{equation*}
+  \begin{bmatrix}
+    \mathcal{Y} \\ J(\bm{x})
+  \end{bmatrix} \sim \mathcal{N}\left(
+    \begin{bmatrix}
+      \bm{F} \hat{\bm{\beta}} \\
+      \bm{f}(\bm{x})^T \hat{\bm{\beta}}
+    \end{bmatrix}, \sigma_J^2
+    \begin{bmatrix}
+      \bm{R} & \bm{r}(\bm{x}) \\
+      \bm{r}(\bm{x})^T & 1
+    \end{bmatrix}
+\right)
+\end{equation*}
+\end{block}
+}
+\begin{block}{Kriging predicator $\bar{J}$}
+\begin{align*}
+\bar{J}(\bm{x}) &\sim  J(\bm{x}) | \mathcal{Y} \\
+			&\sim \alert<2>{\mathcal{N}(\hat{m}_J(\bm{x}) , \hat{s}^2_J(\bm{x}))}
+\end{align*}
+\end{block}
+}
+\frame{
+\frametitle{Example of kriging}
+\begin{figure}[!h]\centering \includegraphics[width = \textwidth , trim = 0 7.5cm 12cm 0, clip]{Krig_EI_example} \end{figure}
+
+}
+\frame{
+\frametitle{Example of kriging}
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width = 0.8\textwidth]{mu_krig_trend} 
+  \caption{Kriging with and without trend of the estimate mean. Variance of observations based on the variance of the estimate}
+  \label{fig:mu_trend}
+\end{figure}
+}
+\subsection*{Exhaustive computation using surrogates}
+\frame{
+	\frametitle{Multi-objective problem: general vocabulary}
+	Vector of objective functions $\bm{f} = (f_1,\dots,f_r)$:
+	\begin{block}{Pareto domination relation}
+	\begin{equation*}
+		\bm{f}(\bm{x}) \prec \bm{f}(\bm{x}') \text{ if } \begin{cases}  f_j(\bm{x}) \leq f_j(\bm{x}') & \forall j \leq r \\
+				f_j(\bm{x}) < f_j(\bm{x}') & \text{ for one } j \leq r
+		\end{cases}
+	\end{equation*}
+	\end{block} \pause
+	\begin{block}{Pareto set, front}
+	Pareto set:
+	\begin{equation*}
+		\mathfrak{P} = \{ \bm{x} \text{ s.t. } \nexists \bm{x}', \bm{f}(\bm{x}') \prec \bm{f}(\bm{x}) \}
+	\end{equation*}
+	Pareto front:
+	\begin{equation*}
+			\{ \bm{z} \text{ s.t. } \exists \bm{x} \in \mathfrak{P}, \bm{z} = \bm{f}(\bm{x})\}
+	\end{equation*}
+	\end{block}
+}
+
+\frame{
+ \frametitle{Kriging to estimate the Pareto front \\\cite{dellino2012robust}}
+ 	Minimization of the vector $(\mu(K),\sigma^2(K))$ \\
+	Idea: Replace expensive computations of $(\mu(K),\sigma^2(K))$ by cheap computations of the metamodel \\
+	
+	\begin{itemize}
+	\item<2->  Initial design on $\mathcal{K}$, compute for each one $\hat{\mu}$ and $\hat{\sigma}^2$, and generate a surrogate
+	\item<3->  Initial design on $\mathbb{X} \times \mathcal{K}$, and use a surrogate to estimate mean and variance
+	\end{itemize}
+}
+\frame{
+	\frametitle{1L-Kriging}
+\begin{center}
+\scalebox{.6}{\input{./Figures/K_LHS.pgf}}
+\end{center}
+\scalebox{0.8}{\input{./Figures/krig1L.pgf}}
+}
+\frame{
+\frametitle{1L-Kriging}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width = .75\textwidth, height = 0.5\textheight]{Figures/pareto_1L} \\
+  \includegraphics[width = .75\textwidth, height = 0.5\textheight]{Figures/mu_sigma_1L}
+\end{figure}
+}
+\frame{
+	\frametitle{2L-Kriging}
+\scalebox{0.8}{\input{./Figures/krig2L.pgf}}
+}
+\frame{
+\frametitle{2L-Kriging}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width = .75\textwidth, height = 0.5\textheight]{Figures/Pareto_2L} \\
+  \includegraphics[width = .75\textwidth, height = 0.5\textheight]{Figures/mu_sigma_2L}
+\end{figure}
+}
+\subsection*{Steepest descent} 
+\frame{
+	\frametitle{Steepest descent using PCE \cite{adjointPCE}}
+	For a given $K$, expansion of $J(\bm{X}_e,K)$ and $\frac{\partial J}{\partial K}(\bm{X}_e,K)$
+	\begin{equation*}
+  J(\bm{X}_e,K) = \sum_{\bm{\alpha} \in \mathcal{A}} \hat{J}_{\bm{\alpha}}(K) \Phi_{\bm{\alpha}}(\bm{X}_e)\quad \text{ and }\quad \frac{\partial J}{\partial K}(\bm{X}_e,K) = \sum_{\bm{\alpha} \in \mathcal{A}} \hat{G}_{\bm{\alpha}}(K) \Phi_{\bm{\alpha}}(\bm{X}_e)
+  \end{equation*}
+  \begin{block}{Relation between $\hat{J}_{\bm{\alpha}}(K)$ and $\hat{G}_{\bm{\alpha}}(K)$}
+  \begin{equation*}
+  \Rightarrow  \frac{\mathrm{d}\hat{J}_{\bm{\alpha}}}{\mathrm{d}K}(K) = \hat{G}_{\bm{\alpha}}(K),\quad \forall \bm{\alpha} \in \mathcal{A}
+\end{equation*}
+\end{block}
+}
+
+\frame{
+\frametitle{Steepest descent using PCE \cite{adjointPCE}}
+Recalling that
+\begin{equation*}
+  \hat{\sigma}^2_J(K) = \sum_{\bm{\alpha} \in \mathcal{A}} \hat{J}_{\bm{\alpha}}(K)^2 \|\Phi_{\bm{\alpha}}\|^2
+\end{equation*}
+By differentiating with respect to $K$:
+\begin{block}{Gradient of the variance}
+\begin{equation*}
+  \frac{\mathrm{d}\hat{\sigma}^2_J}{\mathrm{d}K}(K) = 2\sum_{\bm{\alpha} \in \mathcal{A}} \hat{J}_{\bm{\alpha}}(K)\frac{\mathrm{d}\hat{J}_{\bm{\alpha}}}{\mathrm{d}K}(K) \|\Phi_{\bm{\alpha}}\|^2 =  2\sum_{\bm{\alpha} \in \mathcal{A}} \hat{J}_{\bm{\alpha}}(K)\hat{G}_{\bm{\alpha}}(K) \|\Phi_{\bm{\alpha}}\|^2 
+\end{equation*}
+\end{block}
+We have the gradient of the mean $\hat{G}_0$ and the gradient of the variance \\ $\Rightarrow$ Gradient descent algorithm.
+}
+
+\frame{
+\frametitle{Expansion for different $K$}
+\includegraphics[width = \textwidth]{PCE_CC_43_700x400}
+}
+\frame{
+\frametitle{Gradient descent algorithm on $\rho$}
+$\rho(K,\lambda) = \lambda \mu(K) + (1-\lambda)\sigma(K)$
+\begin{center}\includegraphics[width = .7\textwidth]{PCE_res_lambda} \end{center}
+}
+
+\subsection*{}
+%%================================================
+%===  Define the contact details
+%\newcommand\contactTable{ %
+%  \begin{tabular}{lr}
+%    \multicolumn{2}{l}{Victor Trappler} \\ 
+%    \multicolumn{2}{l}{Inria AIRSEA Intern/future PhD student} \\ \midrule
+%    Bâtiment IMAG, Office 195    & s151431@student.dtu.dk. \\
+%    St-Martin-d'Hères & +33 645751468 \\
+%  \end{tabular}
+%}%
+%
+%\frame[dtuwhitelogo, bgfilename=dtu_bg_fiber]{
+%  \begin{tikzpicture}[remember picture,overlay]
+%    \node[fill=black, fill opacity=0.9, 
+%          text=white, text opacity=1.0,
+%          rounded corners=5pt, 
+%          font=\scriptsize] at (current page.center) {\contactTable};
+%  \end{tikzpicture}
+%}
+%
+%\frame[dtuwhitelogo, bgfilename=dtu_bg_nano]{
+%  \begin{tikzpicture}[remember picture,overlay]
+%    \node[fill=black, fill opacity=0.9, 
+%          text=white, text opacity=1.0,
+%          rounded corners=5pt, 
+%          font=\scriptsize] at (current page.center) {\contactTable};
+%  \end{tikzpicture}
+%}
+%
+%\frame[dtuwhitelogo, bgfilename=dtu_bg_pink]{
+%  \begin{tikzpicture}[remember picture,overlay]
+%    \node[fill=white, fill opacity=0.8, 
+%          text=black, text opacity=1.0,
+%          rounded corners=5pt, 
+%          font=\scriptsize] at (current page.center) {\contactTable};
+%  \end{tikzpicture}
+%}
+%
+\end{document}
