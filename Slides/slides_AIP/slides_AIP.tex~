@@ -234,7 +234,7 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
       \begin{column}{0.6\textwidth}
       The minimizer as a random variable:
       \begin{equation*}
-        \bm{K}_{\argmin}= \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k},\alert<1>{\bm{U}})
+        \bm{K}^* = \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k},\alert<1>{\bm{U}})
       \end{equation*}
       $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
       \begin{align*}
@@ -302,23 +302,23 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \end{center}
 \vfill
 }
-\frame{
-  \frametitle{Application on the calibration of the bottom friction}
-  \frametitle{MPE and relaxation: SWE toy problem, $\dim \mathcal{K}=1$, $\dim \mathcal{U}=2$}
-  \only<1>{Known $\bm{u}_{\mathrm{ref}}=\Ex[\bm{U}]$}
-  \only<2>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.2, -0.1) $}
-  \only<3>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.1, +0.2) $}
-  \only<4>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (+0.2, +0.1) $}
-  \only<5>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (+0.1, -0.2) $}
-  \begin{center}
-    % \includegraphics<1>[height=\textheight]{alpha_check}
-    \includegraphics<1>[height=.8\textheight, width = \textwidth]{alpha_checkref__previous_eval}
-    \includegraphics<2>[height=.8\textheight, width = \textwidth]{alpha_check_AmPm_previous_eval}
-    \includegraphics<3>[height=.8\textheight, width = \textwidth]{alpha_check_AmPp_previous_eval}
-    \includegraphics<4>[height=.8\textheight, width = \textwidth]{alpha_check_ApPp_previous_eval}
-    \includegraphics<5>[height=.8\textheight, width = \textwidth]{alpha_check_ApPm_previous_eval}
-    \end{center}
-  }
+% \frame{
+%   \frametitle{Application on the calibration of the bottom friction}
+%   \frametitle{MPE and relaxation: SWE toy problem, $\dim \mathcal{K}=1$, $\dim \mathcal{U}=2$}
+%   \only<1>{Known $\bm{u}_{\mathrm{ref}}=\Ex[\bm{U}]$}
+%   \only<2>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.2, -0.1) $}
+%   \only<3>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.1, +0.2) $}
+%   \only<4>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (+0.2, +0.1) $}
+%   \only<5>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (+0.1, -0.2) $}
+%   \begin{center}
+%     % \includegraphics<1>[height=\textheight]{alpha_check}
+%     \includegraphics<1>[height=.8\textheight, width = \textwidth]{alpha_checkref__previous_eval}
+%     \includegraphics<2>[height=.8\textheight, width = \textwidth]{alpha_check_AmPm_previous_eval}
+%     \includegraphics<3>[height=.8\textheight, width = \textwidth]{alpha_check_AmPp_previous_eval}
+%     \includegraphics<4>[height=.8\textheight, width = \textwidth]{alpha_check_ApPp_previous_eval}
+%     \includegraphics<5>[height=.8\textheight, width = \textwidth]{alpha_check_ApPm_previous_eval}
+%     \end{center}
+%   }
 \metroset{sectionpage=progressbar, subsectionpage=none}
 
 \section{Conclusion}
@@ -346,3 +346,9 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \bibliography{../../Documents/bibzotero}
 \end{frame}
 \end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

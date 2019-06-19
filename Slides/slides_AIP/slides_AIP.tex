@@ -187,13 +187,13 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
     \end{itemize}
   \item Questions to be answered along the way:
     \begin{itemize}
-    \item Suitable prior distribution on $\bm{K} \sim \pi(\bm{k})$
     \item Good exploration of $\mathcal{U}$, based on the density of $\bm{U}$ (Design of Experiment: LHS, Monte-Carlo, OA,\dots~?)
+    \item Deal with dimension of $\mathcal{K}$?
     \end{itemize}
-
   \end{itemize}
+}
 
- }
+
 
 \metroset{sectionpage=none, subsectionpage=progressbar}
 
@@ -218,18 +218,19 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \end{itemize}
 }
 
-\frame{
-  \frametitle{Toy Problem: Minimization of mean value}
-  \vspace{-5ex}
-   \begin{center}
-    {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
-  \end{center}
-  \vspace{-3ex}
-   $\longrightarrow$ Quite different from the value $\bm{k} \approx 0.1$ obtained by optimization knowing the true value of $\bm{u}_{\mathrm{ref}}$ 
-}
+% \frame{
+%   \frametitle{Toy Problem: Minimization of mean value}
+%   \vspace{-5ex}
+%    \begin{center}
+%     {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
+%   \end{center}
+%   \vspace{-3ex}
+%    $\longrightarrow$ Quite different from the value $\bm{k} \approx 0.1$ obtained by optimization knowing the true value of $\bm{u}_{\mathrm{ref}}$ 
+% }
 
 \frame{
   \frametitle{``Most Probable Estimate'', and relaxation}%
+  Main idea: For each $\bm{u}^i \sim \bm{U}$, compare the value of the cost function to its optimal value $J^*(\bm{u}^i)$
     \begin{columns}
       \begin{column}{0.6\textwidth}
       The minimizer as a random variable:
@@ -238,10 +239,13 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
       \end{equation*}
       $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
       \begin{align*}
-        R(\bm{k}) & = \Prob_U\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
-        \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
-                                                \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
-               \end{align*}%
+        p_{\bm{K}^*}(\bm{k})
+      \end{align*}
+      % \begin{align*}
+      %   R(\bm{k}) & = \Prob_U\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %          \end{align*}%
              % \begin{align*}
              %            R(\bm{k}) &=\Prob_U\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
              %            R_{\alpha}(\bm{k}) & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alpha\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]
@@ -262,13 +266,26 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
                   \end{column}
                 \end{columns}
               }
-\frame{
-\frametitle{Illustration of the relaxation}
-\begin{center}
-\scalebox{0.45}{%
-\input{../Figures/regions_relax_alpha2.pgf}}
+\begin{frame}
+  \frametitle{Tuto}
+  \begin{center}
+  \includegraphics<1>[scale=0.5]{relaxation_tuto_1}
+  \includegraphics<2>[scale=0.5]{relaxation_tuto_2}
+  \includegraphics<3>[scale=0.5]{relaxation_tuto_3}
+  \includegraphics<4>[scale=0.5]{relaxation_tuto_4}
 \end{center}
-}
+\end{frame}
+
+
+% \frame{
+% \frametitle{Illustration of the relaxation}
+% \begin{center}
+% \scalebox{0.45}{%
+% \input{../Figures/regions_relax_alpha2.pgf}}
+% \end{center}
+% }
+
+
               
 
 \begin{frame}
