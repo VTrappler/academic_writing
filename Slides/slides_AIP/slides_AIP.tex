@@ -21,6 +21,8 @@
 \newcommand{\tra}{\mathrm{tr}}
 \newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
 \newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\mathbb{K}}
 \usetikzlibrary{positioning}
 \DeclareMathOperator*{\KL}{\textsf{KL}}
 \graphicspath{{../Figures/}}
@@ -100,7 +102,7 @@
 \frametitle{Data assimilation framework}
 We have $\yobs = \mathcal{M}(\bm{k}_{\mathrm{ref}},\bm{u}_{\mathrm{ref}})$ with $\bm{u}_{\mathrm{ref}} = \bm{u}$
 \begin{equation*}
-\hat{\bm{k}} = \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k}) = \argmin_{\bm{k}\in\mathcal{K}}\frac12 \|\mathcal{M}(\bm{k},\bm{u}) - \bm{y}^{\mathrm{obs}} \|^2
+\hat{\bm{k}} = \argmin_{\bm{k}\in\Kspace} J(\bm{k}) = \argmin_{\bm{k}\in\Kspace}\frac12 \|\mathcal{M}(\bm{k},\bm{u}) - \bm{y}^{\mathrm{obs}} \|^2
 \end{equation*}
 \begin{itemize}
 \item[$\rightarrow$] Deterministic optimization problem
@@ -165,7 +167,7 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \end{itemize}
 
 \begin{equation*}
-  ''\hat{\bm{k}} = \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k},\alert{\bm{u}})'' \text{ but what can we do about } \bm{u} ?
+  ''\hat{\bm{k}} = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\alert{\bm{u}})'' \text{ but what can we do about } \bm{u} ?
 \end{equation*}
 }
 
@@ -187,8 +189,8 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
     \end{itemize}
   \item Questions to be answered along the way:
     \begin{itemize}
-    \item Good exploration of $\mathcal{U}$, based on the density of $\bm{U}$ (Design of Experiment: LHS, Monte-Carlo, OA,\dots~?)
-    \item Deal with dimension of $\mathcal{K}$?
+    \item Good exploration of $\Uspace$, based on the density of $\bm{U}$ (Design of Experiment: LHS, Monte-Carlo, OA,\dots~?)
+    \item Deal with dimension of $\Kspace$?
     \end{itemize}
   \end{itemize}
 }
@@ -205,16 +207,13 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
   \frametitle{Non-exhaustive list of ``Robust'' Objectives }
 \begin{itemize}
 % \item Global Optimum: $ \min_{(\bm{k},\bm{u})} J(\bm{u},\bm{k})$ $ \longrightarrow $ EGO
-\item Worst case: $$ \min_{\bm{k} \in \mathcal{K}} \left\{\max_{\bm{u} \in \mathcal{U}} J(\bm{k},\bm{u})\right\} % \longrightarrow \text{Explorative EGO} 
+\item Worst case: $$ \min_{\bm{k} \in \Kspace} \left\{\max_{\bm{u} \in \Uspace} J(\bm{k},\bm{u})\right\}$$
+\item M-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Ex_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item V-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Var_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item Multiobjective~\cite{baudoui_optimisation_2012}: $$ \text{Pareto frontier}
   $$
-\item M-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\mathcal{K}} \Ex_U\left[J(\bm{k},\bm{U})\right]% \longrightarrow  \text{iterated LHS}
-  $$
-\item V-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\mathcal{K}} \Var_U\left[J(\bm{k},\bm{U})\right] % \longrightarrow  \text{gradient-descent with PCE}
-  $$
-% \item $\rho$-robustness: $\min \rho(J(\bm{U},\bm{k}))$ $\longrightarrow$ gradient-descent with PCE
-\item Multiobjective~\cite{baudoui_optimisation_2012}: $$ \text{Pareto frontier} % \longrightarrow \text{1L/2L kriging}
-  $$
-\item Region of failure given by $J(\bm{k},\bm{u})>T$~\cite{bect_sequential_2012}: $$\max_{\bm{k} \in \mathcal{K}} R(\bm{k}) = \max_{\bm{k}\in \mathcal{K}} \Prob_U\left[J(\bm{k},\bm{U}) \leq T \right]$$
+% \item Region of failure given by $J(\bm{k},\bm{u})>T$~\cite{bect_sequential_2012}: $$\max_{\bm{k} \in \Kspace} R(\bm{k}) = \max_{\bm{k}\in \Kspace} \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq T \right]$$
+\item Best performance attainable for each configuration $\bm{u}^i \sim \bm{U}$
 \end{itemize}
 }
 
@@ -235,20 +234,20 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
       \begin{column}{0.6\textwidth}
       The minimizer as a random variable:
       \begin{equation*}
-        \bm{K}^* = \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k},\alert<1>{\bm{U}})
+        \bm{K}^* = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\alert<1>{\bm{U}})
       \end{equation*}
       $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
       \begin{align*}
         p_{\bm{K}^*}(\bm{k})
       \end{align*}
       % \begin{align*}
-      %   R(\bm{k}) & = \Prob_U\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
-      %   \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
-      %                                           \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %   R(\bm{k}) & = \Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
       %          \end{align*}%
              % \begin{align*}
-             %            R(\bm{k}) &=\Prob_U\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
-             %            R_{\alpha}(\bm{k}) & = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alpha\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]
+             %            R(\bm{k}) &=\Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+             %            R_{\alpha}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alpha\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]
              %          \end{align*}
              %        }
                \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
@@ -309,7 +308,7 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \frametitle{Why surrogates?}
 \begin{itemize}
 \item Computer model: \alert{expensive to run}
-\item $\dim \mathcal{K}$, $\dim \mathcal{U}$ can be very large: \alert{curse of dimensionality}
+\item $\dim \Kspace$, $\dim \Uspace$ can be very large: \alert{curse of dimensionality}
 \item Uncertainties upon $\bm{u}$ maybe incorporated directly in the surrogate (PCE:~\cite{sudret_polynomial_2015})
 \end{itemize}
 \vfill
@@ -321,7 +320,7 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 }
 % \frame{
 %   \frametitle{Application on the calibration of the bottom friction}
-%   \frametitle{MPE and relaxation: SWE toy problem, $\dim \mathcal{K}=1$, $\dim \mathcal{U}=2$}
+%   \frametitle{MPE and relaxation: SWE toy problem, $\dim \Kspace=1$, $\dim \Uspace=2$}
 %   \only<1>{Known $\bm{u}_{\mathrm{ref}}=\Ex[\bm{U}]$}
 %   \only<2>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.2, -0.1) $}
 %   \only<3>{$\bm{u}_{\mathrm{ref}} = \Ex[\bm{U}] + (-0.1, +0.2) $}
