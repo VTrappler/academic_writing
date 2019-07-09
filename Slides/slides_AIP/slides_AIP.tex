@@ -173,7 +173,12 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 
 \frame{
   \frametitle{Toy Problem: Influence of misspecification of $\bm{u}_{\mathrm{ref}}$}
-  Minimization performed on $\bm{k}\mapsto J(\bm{k},\Ex[\bm{U}])$, for different $\bm{u}_{\mathrm{ref}}$: Naïve approach
+  Minimization performed on $\bm{k}\mapsto J\left(\bm{k},
+  \begin{array}{c}
+    \Ex\left[\bm{U}\right] \\
+    \text{arb. value ?}
+  \end{array}
+\right)$, for different $\bm{u}_{\mathrm{ref}}$: Naïve approach
   \begin{center}
     \includegraphics[width=.8\textwidth]{optimization_using_misspecified_uref_4d}
   \end{center}
@@ -184,8 +189,8 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
   \begin{itemize}
     \item Main objectives:
     \begin{itemize}
-    \item[I.] Define criteria of robustness, based on $J(\bm{k},\bm{u})$, that will depend on the final application
-    \item[II.] For each criterion, be able to compute an estimate $\hat{\bm{k}}$ in a reasonable time
+    \item Define criteria of robustness, based on $J(\bm{k},\bm{u})$, that will depend on the final application
+    \item For each criterion, be able to compute an estimate $\hat{\bm{k}}$ in a reasonable time
     \end{itemize}
   \item Questions to be answered along the way:
     \begin{itemize}
@@ -238,7 +243,10 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
       \end{equation*}
       $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
       \begin{align*}
-        p_{\bm{K}^*}(\bm{k})
+        p_{\bm{K}^*}(\bm{k})\,\mathrm{d}\bm{k} & = \Prob\left[\bm{K}^* \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                               & =\Prob\left[\argmin J(\bm{k}, \bm{U}) \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                               &=\Prob\left[J(\bm{k},\bm{U}) \approx J^*(\bm{U}) \right]
+                                              % & \Prob\left[ J(\bm{U}) \leq J(\bm{k}, \bm{U}) \forall \bm{k} \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right]
       \end{align*}
       % \begin{align*}
       %   R(\bm{k}) & = \Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
@@ -267,12 +275,25 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
               }
 \begin{frame}
   \frametitle{Tuto}
-  \begin{center}
-  \includegraphics<1>[scale=0.5]{relaxation_tuto_1}
-  \includegraphics<2>[scale=0.5]{relaxation_tuto_2}
-  \includegraphics<3>[scale=0.5]{relaxation_tuto_3}
-  \includegraphics<4>[scale=0.5]{relaxation_tuto_4}
-\end{center}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+  \includegraphics<1>[scale=0.4]{relaxation_tuto_1}
+  \includegraphics<2>[scale=0.4]{relaxation_tuto_2}
+  \includegraphics<3>[scale=0.4]{relaxation_tuto_3}
+  \includegraphics<4->[scale=0.4]{relaxation_tuto_4}
+\end{column}
+\begin{column}{.5\textwidth}
+  \begin{itemize}
+  \item<1-> Sample $\bm{u}^i\sim\bm{U}$, and solve
+   $\bm{k}^*(\bm{u}^i) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u}^i)$
+ \item<2->The set of conditional minimisers: $\{(\bm{k}^*(\bm{u}), \bm{u}) \mid \bm{u} \in \Uspace\}$
+\item<3-> Set $\alpha$
+ \item<4->Define $R_{\alpha}(\bm{k}) = \{\bm{u} \mid J(\bm{k},\bm{u}) < \alpha J^*(\bm{u}) \}$
+  \item<5-> $\Gamma_{\alpha}(\bm{k}) = \Prob_{\bm{U}}\left[\bm{U}\in R_{\alpha}(\bm{k}) \right]$
+ \end{itemize}
+
+\end{column}
+  \end{columns}
 \end{frame}
 
 
@@ -318,6 +339,12 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \end{center}
 \vfill
 }
+\begin{frame}
+  \frametitle{Surrogates and dimension reduction}
+    \cite{ribaud_robustness_2019}
+\end{frame}
+
+
 % \frame{
 %   \frametitle{Application on the calibration of the bottom friction}
 %   \frametitle{MPE and relaxation: SWE toy problem, $\dim \Kspace=1$, $\dim \Uspace=2$}
@@ -359,10 +386,9 @@ Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random var
 \begin{frame}[allowframebreaks]
   \frametitle{References}
 \bibliographystyle{alpha}
-\bibliography{../../Documents/bibzotero}
+\bibliography{/home/victor/acadwriting/bibzotero.bib}
 \end{frame}
 \end{document}
-
 
 %%% Local Variables:
 %%% mode: latex
