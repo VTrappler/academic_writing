@@ -10,8 +10,8 @@
 
 \begin{tikzpicture}[node distance=3cm]
 
-\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathcal{K}$};
-\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\bm{u} \in \mathcal{U}$ fixed};
+\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathbb{K}$};
+\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\bm{u} \in \mathbb{U}$ fixed};
 
 \node[block] at (4,0)(code){Direct Simulation};
 

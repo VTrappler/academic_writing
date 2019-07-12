@@ -14,11 +14,11 @@
 
 \begin{tikzpicture}
 
-%\node [align = center] at (0,0) (input) {Control variable \\$\mathbf{k} \in \mathcal{K}$};
-\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathcal{K}$};
+%\node [align = center] at (0,0) (input) {Control variable \\$\mathbf{k} \in \mathbb{K}$};
+\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathbb{K}$};
 \node[block] at (4,0) (code){Direct Simulation};
-%\node [align = center, above =of  code ] (envir) {Environmental variables \\$\mathbf{u} \in \mathcal{U}$ fixed};
-\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\bm{u} \in \mathcal{U}$ fixed};
+%\node [align = center, above =of  code ] (envir) {Environmental variables \\$\mathbf{u} \in \mathbb{U}$ fixed};
+\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\bm{u} \in \mathbb{U}$ fixed};
 
 
 
@@ -33,7 +33,7 @@
 \draw[->] (envir) -- (code);
 \draw[->] (code) -- (output);
 
- % \node [align = center] at (0,0) (input) {$Y = \mathcal{H}M(K_{\mathrm{ref}})$};
+ % \node [align = center] at (0,0) (input) {$Y = \mathbb{H}M(K_{\mathrm{ref}})$};
  % \node [align = center] at (4,1.5) (envir) {Environmental variables \\$X_e$ r.v.};
 
  % \node[block] at (4,0)(code){"Inverse Problem"};

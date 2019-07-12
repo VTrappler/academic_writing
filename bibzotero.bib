@@ -2457,7 +2457,7 @@
   title = {Sequential Design of Computer Experiments for the Estimation of a Probability of Failure},
   volume = {22},
   issn = {0960-3174, 1573-1375},
-  abstract = {This paper deals with the problem of estimating the volume of the excursion set of a function f : Rd {$\rightarrow$} R above a given threshold, under a probability measure on Rd that is assumed to be known. In the industrial world, this corresponds to the problem of estimating a probability of failure of a system. When only an expensive-to-simulate model of the system is available, the budget for simulations is usually severely limited and therefore classical Monte Carlo methods ought to be avoided. One of the main contributions of this article is to derive SUR (stepwise uncertainty reduction) strategies from a Bayesian-theoretic formulation of the problem of estimating a probability of failure. These sequential strategies use a Gaussian process model of f and aim at performing evaluations of f as efficiently as possible to infer the value of the probability of failure. We compare these strategies to other strategies also based on a Gaussian process model for estimating a probability of failure.},
+  abstract = {This paper deals with the problem of estimating the volume of the excursion set of a function f : Rd \textrightarrow R above a given threshold, under a probability measure on Rd that is assumed to be known. In the industrial world, this corresponds to the problem of estimating a probability of failure of a system. When only an expensive-to-simulate model of the system is available, the budget for simulations is usually severely limited and therefore classical Monte Carlo methods ought to be avoided. One of the main contributions of this article is to derive SUR (stepwise uncertainty reduction) strategies from a Bayesian-theoretic formulation of the problem of estimating a probability of failure. These sequential strategies use a Gaussian process model of f and aim at performing evaluations of f as efficiently as possible to infer the value of the probability of failure. We compare these strategies to other strategies also based on a Gaussian process model for estimating a probability of failure.},
   language = {en},
   number = {3},
   journal = {Statistics and Computing},
@@ -2645,7 +2645,7 @@
   title = {Bayesian Subset Simulation},
   volume = {5},
   issn = {2166-2525},
-  abstract = {We consider the problem of estimating a probability of failure {$\alpha$}, defined as the volume of the excursion set of a function f : X {$\subseteq$} Rd {$\rightarrow$} R above a given threshold, under a given probability measure on X. In this article, we combine the popular subset simulation algorithm (Au and Beck, Probab. Eng. Mech. 2001) and our sequential Bayesian approach for the estimation of a probability of failure (Bect, Ginsbourger, Li, Picheny and Vazquez, Stat. Comput. 2012). This makes it possible to estimate {$\alpha$} when the number of evaluations of f is very limited and {$\alpha$} is very small. The resulting algorithm is called Bayesian subset simulation (BSS). A key idea, as in the subset simulation algorithm, is to estimate the probabilities of a sequence of excursion sets of f above intermediate thresholds, using a sequential Monte Carlo (SMC) approach. A Gaussian process prior on f is used to define the sequence of densities targeted by the SMC algorithm, and drive the selection of evaluation points of f to estimate the intermediate probabilities. Adaptive procedures are proposed to determine the intermediate thresholds and the number of evaluations to be carried out at each stage of the algorithm. Numerical experiments illustrate that BSS achieves significant savings in the number of function evaluations with respect to other Monte Carlo approaches.},
+  abstract = {We consider the problem of estimating a probability of failure {$\alpha$}, defined as the volume of the excursion set of a function f : X {$\subseteq$} Rd \textrightarrow R above a given threshold, under a given probability measure on X. In this article, we combine the popular subset simulation algorithm (Au and Beck, Probab. Eng. Mech. 2001) and our sequential Bayesian approach for the estimation of a probability of failure (Bect, Ginsbourger, Li, Picheny and Vazquez, Stat. Comput. 2012). This makes it possible to estimate {$\alpha$} when the number of evaluations of f is very limited and {$\alpha$} is very small. The resulting algorithm is called Bayesian subset simulation (BSS). A key idea, as in the subset simulation algorithm, is to estimate the probabilities of a sequence of excursion sets of f above intermediate thresholds, using a sequential Monte Carlo (SMC) approach. A Gaussian process prior on f is used to define the sequence of densities targeted by the SMC algorithm, and drive the selection of evaluation points of f to estimate the intermediate probabilities. Adaptive procedures are proposed to determine the intermediate thresholds and the number of evaluations to be carried out at each stage of the algorithm. Numerical experiments illustrate that BSS achieves significant savings in the number of function evaluations with respect to other Monte Carlo approaches.},
   language = {en},
   number = {1},
   journal = {SIAM/ASA Journal on Uncertainty Quantification},
@@ -4308,6 +4308,81 @@ better QOI than the best value achievable by the moment-based design.},
   year = {2006},
   pages = {514-528},
   file = {/home/victor/Zotero/storage/SAHRJMET/Lempert et al. - 2006 - A General, Analytic Method for Generating Robust S.pdf}
+}
+
+@incollection{le_gratiet_metamodel-based_2016,
+  title = {Metamodel-Based Sensitivity Analysis: Polynomial Chaos Expansions and {{Gaussian}} Processes},
+  shorttitle = {Metamodel-Based Sensitivity Analysis},
+  abstract = {Global sensitivity analysis is now established as a powerful approach for determining the key random input parameters that drive the uncertainty of model output predictions. Yet the classical computation of the so-called Sobol' indices is based on Monte Carlo simulation, which is not af- fordable when computationally expensive models are used, as it is the case in most applications in engineering and applied sciences. In this respect metamodels such as polynomial chaos expansions (PCE) and Gaussian processes (GP) have received tremendous attention in the last few years, as they allow one to replace the original, taxing model by a surrogate which is built from an experimental design of limited size. Then the surrogate can be used to compute the sensitivity indices in negligible time. In this chapter an introduction to each technique is given, with an emphasis on their strengths and limitations in the context of global sensitivity analysis. In particular, Sobol' (resp. total Sobol') indices can be computed analytically from the PCE coefficients. In contrast, confidence intervals on sensitivity indices can be derived straightforwardly from the properties of GPs. The performance of the two techniques is finally compared on three well-known analytical benchmarks (Ishigami, G-Sobol and Morris functions) as well as on a realistic engineering application (deflection of a truss structure).},
+  booktitle = {Handbook of {{Uncertainty Quantification}} - {{Part III}}: {{Sensitivity}} Analysis},
+  author = {Le Gratiet, Loic and Marelli, Stefano and Sudret, Bruno},
+  year = {2016},
+  keywords = {Kriging,Error estimation,Gaussian Processes,Polynomial Chaos Expansions,Sobol' indices},
+  file = {/home/victor/Zotero/storage/BU5KFTVK/Le Gratiet et al. - 2016 - Metamodel-based sensitivity analysis polynomial c.pdf}
+}
+
+@misc{blanchet-scalliet_specific_2017,
+  title = {A Specific Kriging Kernel for Dimensionality Reduction: {{Isotropic}} by Group Kernel},
+  shorttitle = {A Specific Kriging Kernel for Dimensionality Reduction},
+  abstract = {In the context of computer experiments, metamodels are largely used to represent the output of computer codes. Among these models, Gaussian process regression (kriging) is very efficient see e.g Snelson (2008). In high dimension that is with a large number of input variables , but with few observations the classical anisotropic kriging becomes inefficient and sometimes completely wrong. One way to overcome this drawback is to use the isotropic kernel which is more robust because it estimates not as many parameters. However this model is too restrictive. The aim of this paper is to construct a model between these two, that is at the same time a robust and a flexible model. These two skills are necessary for a model in high dimension. We propose a kernel which is an answer to these requests and that we call isotropic by group kernel. This kernel is a tensor product of few isotropic kernels built on well-chosen subgroup of variables. The number and the composition of the groups are found by an algorithm which explores different structures. The choice of the best model is based on the quality of prediction.},
+  language = {en},
+  author = {{Blanchet-Scalliet}, Christophette and Helbert, C{\'e}line and Ribaud, M{\'e}lina and Vial, C{\'e}line},
+  month = mar,
+  year = {2017},
+  file = {/home/victor/Zotero/storage/EVJFQIXZ/Blanchet-Scalliet et al. - 2017 - A specific kriging kernel for dimensionality reduc.pdf;/home/victor/Zotero/storage/GSUA7RYB/hal-01496521v1.html}
+}
+
+@article{xiu_wiener-askey_nodate,
+  title = {{{THE WIENER}}-{{ASKEY POLYNOMIAL CHAOS FOR STOCHASTIC DIFFERENTIAL EQUATIONS}}},
+  abstract = {We present a new method for solving stochastic differential equations based on Galerkin projections and extensions of Wiener's polynomial chaos. Specifically, we represent the stochastic processes with an optimum trial basis from the Askey family of orthogonal polynomials that reduces the dimensionality of the system and leads to exponential convergence of the error. Several continuous and discrete processes are treated, and numerical examples show substantial speed-up compared to Monte-Carlo simulations for low dimensional stochastic inputs.},
+  language = {en},
+  author = {Xiu, Dongbin and Karniadakis, George Em},
+  pages = {26},
+  file = {/home/victor/Zotero/storage/B2ENDBXJ/Xiu et Karniadakis - THE WIENER-ASKEY POLYNOMIAL CHAOS FOR STOCHASTIC D.pdf}
+}
+
+@article{xiu_wiener--askey_2002,
+  title = {The {{Wiener}}--{{Askey Polynomial Chaos}} for {{Stochastic Differential Equations}}},
+  volume = {24},
+  issn = {1064-8275},
+  abstract = {We present a new method for solving stochastic differential equations based on Galerkin projections and extensions of Wiener's polynomial chaos. Specifically, we represent the stochastic processes with an optimum trial basis from the Askey family of orthogonal polynomials that reduces the dimensionality of the system and leads to exponential convergence of the error. Several continuous and discrete processes are treated, and numerical examples show substantial speed-up compared to Monte Carlo simulations for low dimensional stochastic inputs.},
+  number = {2},
+  journal = {SIAM Journal on Scientific Computing},
+  doi = {10.1137/S1064827501387826},
+  author = {Xiu, D. and Karniadakis, G.},
+  month = jan,
+  year = {2002},
+  pages = {619-644},
+  file = {/home/victor/Zotero/storage/HGFIPU5K/S1064827501387826.html}
+}
+
+@article{sudret_global_2008,
+  title = {Global Sensitivity Analysis Using Polynomial Chaos Expansion},
+  volume = {93},
+  abstract = {Global sensitivity analysis (SA) aims at quantifying the respective effects of input random variables (or combinations thereof) onto the variance of the response of a physical or mathematical model. Among the abundant literature on sensitivity measures, the Sobol' indices have received much attention since they provide accurate information for most models. The paper introduces generalized polynomial chaos expansions (PCE) to build surrogate models that allow one to compute the Sobol' indices analytically as a post-processing of the PCE coefficients. Thus the computational cost of the sensitivity indices practically reduces to that of estimating the PCE coefficients. An original non intrusive regression-based approach is proposed, together with an experimental design of minimal size. Various application examples illustrate the approach, both from the field of global SA (i.e. well-known benchmark problems) and from the field of stochastic mechanics. The proposed method gives accurate results for various examples that involve up to eight input random variables, at a computational cost which is 2\textendash{}3 orders of magnitude smaller than the traditional Monte Carlo-based evaluation of the Sobol' indices.},
+  journal = {Reliability Engineering \& System Safety},
+  doi = {10.1016/j.ress.2007.04.002},
+  author = {Sudret, Bruno},
+  month = jul,
+  year = {2008},
+  pages = {964-979},
+  file = {/home/victor/Zotero/storage/YJFEYP88/Sudret - 2008 - Global sensitivity analysis using polynomial chaos.pdf}
+}
+
+@article{beaumont_approximate_2010,
+  title = {Approximate {{Bayesian Computation}} in {{Evolution}} and {{Ecology}}},
+  volume = {41},
+  issn = {1543-592X, 1545-2069},
+  abstract = {In the past 10 years a statistical technique, approximate Bayesian computation (ABC), has been developed that can be used to infer parameters and choose between models in the complicated scenarios that are often considered in the environmental sciences. For example, based on gene sequence and microsatellite data, the method has been used to choose between competing models of human demographic history as well as to infer growth rates, times of divergence, and other parameters. The method fits naturally in the Bayesian inferential framework, and a brief overview is given of the key concepts. Three main approaches to ABC have been developed, and these are described and compared. Although the method arose in population genetics, ABC is increasingly used in other fields, including epidemiology, systems biology, ecology, and agent-based modeling, and many of these applications are briefly described.},
+  language = {en},
+  number = {1},
+  journal = {Annual Review of Ecology, Evolution, and Systematics},
+  doi = {10.1146/annurev-ecolsys-102209-144621},
+  author = {Beaumont, Mark A.},
+  month = dec,
+  year = {2010},
+  pages = {379-406},
+  file = {/home/victor/Zotero/storage/3D67J548/Beaumont - 2010 - Approximate Bayesian Computation in Evolution and .pdf}
 }
 
 
