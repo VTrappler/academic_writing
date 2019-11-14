@@ -1,0 +1,495 @@
+\documentclass[11pt]{beamer}
+\usetheme{focus}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\mathbb{K}}
+\usepackage[duration=25, lastminutes=5]{pdfpcnotes}
+\usetikzlibrary{positioning}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+\graphicspath{{../Figures/}}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+\definecolor{background}{RGB}{255, 255, 255}
+% \definecolor{BlueTOL}{HTML}{222255}
+% \definecolor{BrownTOL}{HTML}{666633}
+% \definecolor{GreenTOL}{HTML}{225522}
+% \setbeamercolor{normal text}{fg=BlueTOL,bg=white}
+% \setbeamercolor{alerted text}{fg=BrownTOL}
+% \setbeamercolor{example text}{fg=GreenTOL}
+
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+\setbeamerfont{author}{size=\footnotesize}
+
+\title{Parameter control in the presence of uncertainties}
+\subtitle{Robust Estimation of Bottom friction}
+\author{{\large \bf Victor Trappler} \hfill \texttt{victor.trappler@univ-grenoble-alpes.fr} \\
+  É. Arnaud, L. Debreu, A. Vidard \\
+  AIRSEA Research team (Inria)\hfill \texttt{team.inria.fr/airsea/en/}\\
+  Laboratoire Jean Kuntzmann}
+
+
+\institute{\begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}}
+
+\date{%\textbf{AIP2019, Grenoble, 2019}}
+  {\bf Applied Inverse Problems}, 12/07/2019}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+\begin{frame}
+   \pnote{Hello everyone, my name is Victor Trappler, I'm a PhD student in the AIRSEA team in Grenoble, under the supervision of Élise Arnaud, Arthur Vidard and Laurent Debreu.
+
+
+I'm here to present some of the work entitled ``Parameter Control in the Presence of uncertainties''
+}
+\maketitle
+
+\end{frame}
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Processus of modelling of physical systems}
+ %  \begin{center}
+%   \scalebox{1}{\input{../Figures/flowchart_modelling_uncertainties_vert}}
+% \end{center}  
+  Uncertainties and errors are introduced at each stage of the modelling, by simplifications, parametrizations\dots
+
+  In the end, we have a set of parameters we want to calibrate, but how can we be sure that this calibration is acting upon the errors of the modelling, and does not compensate the effect of the natural variability of the physical system?
+  \pnote{During the whole process of the modelling of a physical system, that is from the observation of a natural phenomenon, to the simulation using numerical methods, we introduce uncertainties.    
+    Those uncertainties take the form of errors introduced by the simplifications, discretizations and parametrizations needed to represent things numerically.
+
+    In the end, we have a set of parameters, that we need to calibrate, but during this phase of calibration, how can we be sure that we try to correct only the error due to the parametrization, and are not compensating errors coming from others sources.}
+\end{frame}
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\pnote{We are first going to see what problems arise when considering the deterministic case. This will lead us to introduce uncertainties, and then how to define robustness. Finally, we are going to see quickly how surrogate models can help us tackle these issues, especially those linked to the curse of dimensionality}
+\end{frame}
+
+
+\section{Deterministic problem}
+\begin{frame}[t]
+\frametitle{Computer code and inverse problem}
+\begin{itemize}
+	\item[Input] 
+	\begin{itemize}
+		\item $\bm{k}$: Control parameter%Bottom friction (spatially distributed)
+		\item $\bm{u}$: Environmental variables (fixed and known)
+	\end{itemize}
+	\item[Output] \begin{itemize}
+          \item $\mathcal{M}(\bm{k},\bm{u})$: Quantity to be compared to observations%Sea surface height, at predetermined time of the simulation and at certain location
+	\end{itemize}
+      \end{itemize}
+      \vfill
+\only<1>{\input{../Figures/comp_code.pgf}}
+\only<2>{\input{../Figures/inv_prob.pgf}}
+
+\pnote{In quite a classical setting, we assume that we have a model M, that takes two inputs: k the control variable, that we aim at calibrating, and u some environmental variables, that we consider fixed and knowns.
+
+
+Now, to have an inverse problem, we have some observations, that are kinda linked to the model, and from those observations we wish to get back the parameter k from the start.
+}
+\end{frame}
+\begin{frame}
+\frametitle{Data assimilation framework}
+We have $\yobs = \mathcal{M}(\bm{k}_{\mathrm{obs}},\bm{u}_{\mathrm{obs}})$ with $\bm{u}_{\mathrm{obs}} = \bm{u}$
+\begin{equation*}
+\hat{\bm{k}} = \argmin_{\bm{k}\in\Kspace} J(\bm{k}) = \argmin_{\bm{k}\in\Kspace}\frac12 \|\mathcal{M}(\bm{k},\bm{u}) - \bm{y}^{\mathrm{obs}} \|^2
+\end{equation*}
+\begin{itemize}
+\item[$\rightarrow$] Deterministic optimization problem
+\item[$\rightarrow$] Possibly add regularization
+\item[$\rightarrow$] Classical methods: Adjoint gradient and Gradient-descent
+\end{itemize}
+BUT
+\begin{itemize}
+\item What if $\bm{u} \neq \bm{u}_{\mathrm{obs}}$?
+\item Does $\hat{\bm{k}}$ compensate the errors brought by this misspecification?
+% \item How well will $\bm{\hat{k}}$ perform under other conditions?
+\end{itemize}
+\pnote{
+  In practice: we assume that the observations have been generated in a twin experiment framework, using the model and two references values kobs and uobs, uobs that is known. Using the least square approach, we define J, a cost function, as the sum of the squares of the difference.
+
+
+  This is a deterministic optimisation problem, that we can solve using classical methods such as adjoint gradient. Notice that the u used in the optimisation procedure is known.
+
+  But what if it is not, to say that there is a difference between uobs and u. The minimisation procedure is supposed to correct the error of k but how about the error due to uobs and u used in the minimisation ?}
+\end{frame}
+\begin{frame}
+\frametitle{Context}
+\begin{itemize}
+\item The friction $\bm{k}$ of the ocean bed has an influence on the water circulation
+\item Depends on the type and/or characteristic length of the asperities 
+\item Subgrid phenomenon
+\item $\bm{u}$ parametrizes the BC
+\end{itemize}
+\begin{center}
+\scalebox{.9}{\input{../Figures/hauteureau.tikz}}
+\end{center}
+\pnote{
+  The problem here at stakes is the estimation of the bottom friction.
+
+  The bottom friction k has an influence on the oceanic circulation, as it dissipates some energy by turbulences.
+  This friction parameter depends on the type of sediments, and more particularly, on the characteristic length of the asperities. Something that is hard to observe directly.
+  In oceans modelling, this is a subgrid phenomenon.
+
+  The environmental variable u parametrizes the BC, for instance the relative amplitude of tidal components.
+  }
+\end{frame}
+
+
+\section{Dealing with uncertainties}
+\begin{frame}
+  \frametitle{Different types of uncertainties}
+  \begin{block}{Epistemic or aleatoric uncertainties?~\cite{walker_defining_2003}}
+\begin{itemize}
+\item Epistemic uncertainties: From a lack of knowledge, that can be reduced with more research/exploration
+\item Aleatoric uncertainties: From the inherent variability of the system studied, operating conditions
+\end{itemize}
+\end{block}
+$\rightarrow$ But where to draw the line?
+
+Our goal is to take into account the aleatoric uncertainties in the estimation of our parameter.
+\pnote{
+  We said earlier that there are a lot of uncertainties everywhere basically. But we can make a rough distinction between two types:
+
+  - First, the epistemic uncertainties that result from a lack of knowledge, but can be reduce. An example is the uncertainty during the estimation of the mean value. The more samples you take, the less uncertainty there is on your estimation
+
+  - Secondly, there is the aleatoric uncertainty, that comes from the inherent variability of the system studied. Think of the different values that a random variable takes.
+
+  Our goal, is then to be able to reduce the epistemic uncertainty on the value of k to use, while taking into account the aleatoric uncertainty.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Aleatoric uncertainties}
+Instead of considering $\bm{u}$ fixed, we consider that $\bm{U}$ is a random variable (pdf $\pi(\bm{u})$), and the output of the model depends on its realization. \\
+\vfill
+\only<1>{\input{../Figures/inv_prob.pgf}}
+\only<2>{\input{../Figures/comp_code_unc_inv.pgf}}
+\vfill
+
+
+\pnote{
+  As hinted before, we are going to model the aleatoric uncertainty on u by a random variable.
+  The inverse problem considered before becomes now the following, and the output of the model becomes a random variable
+ }
+\end{frame}
+
+\begin{frame}
+\frametitle{The cost function as a random variable}
+\begin{itemize}
+\item Output of the computer code ($\bm{u}$ is an input):
+\begin{equation*}
+    \mathcal{M}(\bm{k},\alert{\bm{u}})
+\end{equation*}
+\item The (deterministic) quadratic error is now
+\begin{equation*}   
+  J(\bm{k},\alert{\bm{u}}) =  \frac12\|\mathcal{M}(\bm{k},\alert{\bm{u}}) - \yobs\|^2
+\end{equation*}
+\end{itemize}
+
+\begin{equation*}
+  ''\hat{\bm{k}} = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\alert{\bm{u}})'' \text{ but what can we do about } \bm{u} ?
+\end{equation*}
+\pnote{
+  In our study, the models are deterministic, so we can control the inputs
+  The cost function, becomes then a function of two inputs. We still wish to minimise with respect to k, but what can we do for u ? A first solution would be to set it to a fixed value, such as the mean of the random variable
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Toy Problem: Influence of misspecification of $\bm{u}_{\mathrm{obs}}$}
+  Minimization performed on $\bm{k}\mapsto J\left(\bm{k},
+    \Ex\left[\bm{U}\right]\right)$, for different $\bm{u}_{\mathrm{obs}}$: Naïve approach
+  \begin{center}
+    \includegraphics[width=.8\textwidth]{optimization_using_misspecified_uref_4d}
+  \end{center}
+  \pnote{
+    To look first into this solution, we applied this to a toy problem based on the SWE.
+    We set different observations using different uobs
+    The real friction is the dashed sine curve at the bottom.
+    When there is no difference, that is uobs equals the mean, the solution seems satisfying. But when there are differences, the estimations are not good at all. We can see that this solution is not really robust. Here finding a value k robust has to be understood as the ability for this k to perform reasonaly well under different operating conditions u. 
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Robust Estimation of parameters}
+  \pnote{So basically, we have two main objectives:
+    - First to find some criteria of robustness to estimate k
+    - Be able to compute those estimates quickly
+    This objectives requires some reflexion on first, being able to explore the U space quite efficiently, using design of experiments. Also, as k may be defined on every points of the mesh, we may want to be able to reduce the dimension of this to keep the computation tractable.
+  }
+  \begin{itemize}
+    \item Main objectives:
+    \begin{itemize}
+    \item Define criteria of robustness, based on $J(\bm{k},\bm{u})$, that will depend on the final application
+    \item For each criterion, be able to compute an estimate $\hat{\bm{k}}$ in a reasonable time
+    \end{itemize}
+  \item Questions to be answered along the way:
+    \begin{itemize}
+    \item Good exploration of $\Uspace$, based on the density of $\bm{U}$ (Design of Experiment: LHS, Monte-Carlo, OA,\dots~?)
+    \item Deal with dimension of $\Kspace$?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+\section{Robust minimization}
+
+\subsection{Criteria of robustness}
+
+\begin{frame}
+  \frametitle{Non-exhaustive list of ``Robust'' Objectives }
+  \pnote{
+    I'm going to present very quickly some estimates that can be considered robust, but will focus mainly on the last one.
+    First we can think about minimising in the worst case sense. This usually leads to overly conservative estimates. We can also think about minimising the moments, such as the mean or the variance, or even combine them in a multiobjective setting by looking for the pareto front.
+
+The main thing we've been working on is to see how can we get the best performance attainable, for each configuration u sampled
+  }
+\begin{itemize}
+% \item Global Optimum: $ \min_{(\bm{k},\bm{u})} J(\bm{u},\bm{k})$ $ \longrightarrow $ EGO
+\item Worst case~\cite{marzat_worst-case_2013}: $$ \min_{\bm{k} \in \Kspace} \left\{\max_{\bm{u} \in \Uspace} J(\bm{k},\bm{u})\right\}$$
+\item M-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Ex_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item V-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Var_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item Multiobjective~\cite{baudoui_optimisation_2012}: $$ \text{Pareto frontier}
+  $$
+% \item Region of failure given by $J(\bm{k},\bm{u})>T$~\cite{bect_sequential_2012}: $$\max_{\bm{k} \in \Kspace} R(\bm{k}) = \max_{\bm{k}\in \Kspace} \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq T \right]$$
+\item Best performance attainable for each configuration $\bm{u} \sim \bm{U}$
+\end{itemize}
+\end{frame}
+
+% \frame{
+%   \frametitle{Toy Problem: Minimization of mean value}
+%   \vspace{-5ex}
+%    \begin{center}
+%     {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
+%   \end{center}
+%   \vspace{-3ex}
+%    $\longrightarrow$ Quite different from the value $\bm{k} \approx 0.1$ obtained by optimization knowing the true value of $\bm{u}_{\mathrm{ref}}$ 
+% }
+
+\begin{frame}
+  \frametitle{``Most Probable Estimate'', and relaxation}%
+
+  \pnote{
+    Basically, once a value u is sampled, the problem is deterministic, so under some assumption, we have a minimiser kstar that is a function of u
+
+
+    Keeping in mind the random nature of U, we can define the random variable Kstar, and its density (if it is defined), can be seen as the frequency of which a value k is optimal.
+
+
+    That is an interesting information, but we can have a little more than that. We may want to include k that yield values of the cost function close to a minimum. To do that, we introduce a relaxation of the equality constraint with alpha, so that for a given u, we consider acceptable the k that give values of the cost function between Jstar, the optimal value and alpha times Jstar
+    So finally, we compute the probability that this given k is acceptable with respect to the level alpha
+    }
+  Main idea: For each $\bm{u} \sim \bm{U}$, compare the value of the cost function to its optimal value $J^*(\bm{u})$ and define
+  $\bm{k}^*(\bm{u}) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u})$
+  \pause
+    % \begin{columns}
+    %   \begin{column}{0.6\textwidth}
+      The minimizer as a random variable:
+      \begin{equation*}
+        \bm{K}^* = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\alert<1>{\bm{U}})
+      \end{equation*}
+      $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
+      \begin{align*}
+        p_{\bm{K}^*}(\bm{k})%\,\mathrm{d} \bm{k} & = \Prob\left[\bm{K}^* \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                        %        & =\Prob\left[\argmin J(\bm{k}, \bm{U}) \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                               &= "\Prob\left[J(\bm{k},\bm{U})= J^*(\bm{U}) \right]"                                               % & \Prob\left[ J(\bm{U}) \leq J(\bm{k}, \bm{U}) \forall \bm{k} \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right]
+      \end{align*}
+      \pause
+      How to take into account values not optimal, but not too far either
+      $\longrightarrow$ relaxation of the equality with $\alpha> 1$:
+      \begin{equation*}
+        \Gamma_{\alpha}(\bm{k}) = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alpha J^*(\bm{U}) \right]
+      \end{equation*}
+      % \begin{align*}
+      %   R(\bm{k}) & = \Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %          \end{align*}%
+             % \begin{align*}
+             %            R(\bm{k}) &=\Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+             %            R_{\alpha}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alpha\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]
+             %          \end{align*}
+             %        }
+               % \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
+                  % \end{column}%
+                  % \begin{column}{0.5\textwidth}
+                  %   \begin{center}
+                  %     \includegraphics[scale=0.3]{summary_criteria}
+                  %   \end{center}
+                  %   % \pause
+                  %   % Idea: Relaxation of the constraint:
+                  %   % \begin{equation*}
+                  %   %   R_{\alpha}(\bm{k}) = \Prob\left[J(\bm{k},\bm{U}) \leq \alpha \min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right],\quad \alpha \geq 1
+                  %   % \end{equation*}
+                  %   % and increase $\alpha$ until $\max_{\bm{k}} R_{\alpha}(\bm{k})$ reaches a level of confidence.
+                  % \end{column}
+                % \end{columns}   %
+   \end{frame}
+\begin{frame}
+  \frametitle{Illustration}
+  \pnote{
+    What does it look like on a concrete example. We have the plot of a cost function, where k is the x axis, and u is on the y axis.
+
+    As said earlier, for each horizontal cross section, so for a u fixed, we compute the minimiser, kstar of u.
+
+    We can then compute the whole set of the conditional minimisers
+
+    Now, we set alpha: inside the yellow lines, we are between the minimum and alpha times the minimum
+
+    Finally, we construct and measure for each k the probability to be within this acceptable region.
+   Great, now we just have to know how to choose alpha. Recalling that Gamma here is a probability, we can set levels of interests, such as 1, 0.9 or 0.95 for instance, and take the smallest alpha such that there is a value k where gamma of alpha and k reaches this level, similarly to a quantile.
+
+  }
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+  \includegraphics<1>[scale=0.35]{relaxation_tuto_1}
+  \includegraphics<2>[scale=0.35]{relaxation_tuto_2}
+  \includegraphics<3>[scale=0.35]{relaxation_tuto_3}
+  \includegraphics<4->[scale=0.35]{relaxation_tuto_4}
+\end{column}
+\begin{column}{.6\textwidth}
+  \begin{itemize}
+  \item<1-> Sample $\bm{u}\sim\bm{U}$, and solve
+   $\bm{k}^*(\bm{u}) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u})$
+ \item<2->Set of conditional minimisers: $\{(\bm{k}^*(\bm{u}), \bm{u}) \mid \bm{u} \in \Uspace\}$
+\item<3-> Set $\alpha \geq 1$
+ \item<4-> $R_{\alpha}(\bm{k}) = \{\bm{u} \mid J(\bm{k},\bm{u}) < \alpha J^*(\bm{u}) \}$
+ \item<4-> $\Gamma_{\alpha}(\bm{k}) = \Prob_{\bm{U}}\left[\bm{U}\in R_{\alpha}(\bm{k}) \right]$
+   \item<5-> How to choose $\alpha$? When $\max_{\bm{k}} \Gamma_\alpha(\bm{k})$ reaches fixed levels
+ \end{itemize}
+\end{column}
+  \end{columns}
+\end{frame}
+
+% \frame{
+% \frametitle{Illustration of the relaxation}
+% \begin{center}
+% \scalebox{0.45}{%
+% \input{../Figures/regions_relax_alpha2.pgf}}
+% \end{center}
+% }
+
+             
+\begin{frame}
+  \frametitle{Choosing a $\alpha$}
+  \pnote{
+    Here we have our problem, and we are increasing alpha. The black curve in the bottom plot is gamma alpha of k. By increasing alpha, we increase the probability of being acceptable, and stop when this probability is 1. This can be seen on the top plot, there is a k, always in the acceptable region.
+    What is interesting is that we have two informations. The value k of the estimation, but also the level alpha, that is controlling in a sense the regret we have relative to the best attainable performance.
+  }
+  \begin{center}
+    \includegraphics<1>[height=.9\textheight, width = \textwidth]{branin0}
+    \includegraphics<2>[height=.9\textheight, width = \textwidth]{branin1}
+    \includegraphics<3>[height=.9\textheight, width = \textwidth]{branin2}
+    \includegraphics<4>[height=.9\textheight, width = \textwidth]{branin3}
+    \end{center}
+\end{frame}
+
+
+\section{Surrogates}
+\subsection{\small{How to compute $\hat{\bm{k}}$ in a reasonable time?}}
+\begin{frame}
+  \frametitle{Why surrogates?}
+  \pnote{We now have defined an estimator, but it is really computationally expensive to run}
+\begin{itemize}
+\item Computer model: \alert{expensive to run}
+\item $\dim \Kspace$, $\dim \Uspace$ can be very large: \alert{curse of dimensionality}
+\item Uncertainties upon $\bm{u}$ may be incorporated directly in the surrogate
+\end{itemize}
+\vfill
+\begin{center}
+	\only<1>{\scalebox{0.9}{\input{../Figures/comp_code_surro.pgf}}}	
+	\only<2>{\scalebox{0.9}{\input{../Figures/surrogate.pgf}}}
+\end{center}
+\vfill
+Two main forms:
+\begin{itemize}
+\item Kriging (Gaussian Process Regression)~\cite{matheron_traite_1962}
+\item Polynomial Chaos Expansion~\cite{xiu_wiener--askey_2002,sudret_polynomial_2015}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimation of $\bm{K}^*$, $J^*(\bm{U})$}
+
+  Iterative procedures to estimate set of conditional minimum/minimisers~\cite{ginsbourger_bayesian_2014}
+  \begin{center}
+  \includegraphics[scale=0.5]{PEI_branin}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Surrogates and dimension reduction}
+  \begin{itemize}
+  \item Sensitivity analysis~\cite{sudret_global_2008,le_gratiet_metamodel-based_2016}:
+    Based on intensive computation of the metamodel, or analytic computation based on coefficients of the expansion computed
+  \item Isotropic by groups kernels~\cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018-1}:
+    Group variables to have a few isotropic kernels
+  \end{itemize}
+
+\end{frame}
+
+% \metroset{sectionpage=progressbar, subsectionpage=none}
+
+\section{Conclusion}
+\begin{frame}
+ \frametitle{Conclusion}
+\begin{block}{Wrapping up}
+\begin{itemize}
+\item Problem of a \emph{good} definition of robustness
+\item Strategies rely heavily on surrogate models, to embed aleatoric uncertainties directly in the modelling
+\end{itemize}
+\end{block}
+
+
+\begin{block}{Perspective and future work}
+\begin{itemize}
+\item Cost of computer evaluations $\rightarrow$ limited number of runs?
+\item Dimensionality of the input space $\rightarrow$ reduction of the input space?
+\item How to deal with uncontrollable errors $\rightarrow$ realism of the model?
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[shrink=1% allowframebreaks
+  ]
+  \frametitle{References}
+\bibliographystyle{alpha}
+\bibliography{/home/victor/acadwriting/bibzotero.bib}
+\end{frame}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

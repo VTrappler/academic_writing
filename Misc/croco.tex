@@ -1,0 +1,154 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath}
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue},
+  otherkeywords={defined,define, \#}
+}
+\author{Victor Trappler}
+\title{CROCO}
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+
+CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under testing), gradually including algorithms from MARS3D (sediments)  and HYCOM (vertical coordinates). An important objective for CROCO is to resolve very fine scales (especially in the coastal area), and their interactions with larger scales. It is the oceanic component of a complex coupled system including various components, e.g., atmosphere, surface waves, marine sediments, biogeochemistry and ecosystems\footnote{taken from \url{http://www.croco-ocean.org/}}.
+
+In this document, I will try to provide a summary of my understanding of this model and its use, especially in the light of my PhD work.
+\section{Numerics}
+\subsection{Parametrization of the bottom friction}
+\paragraph{Linear friction}
+\begin{equation}
+  \label{eq:linear_friction}
+  (\tau_b^x, \tau_b^y) = -r (u_b, v_b)
+\end{equation}
+\paragraph{Quadratic (constant)}
+\begin{equation}
+  \label{eq:quadratic_friction_constant}
+  (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b)
+\end{equation}
+\paragraph{Quadratic with Von Karman log-layer}
+\begin{align}
+  \label{eq:quadratic_friction_vonkarman}
+  (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b) \\  
+  C_d = \left\{\begin{array}{ll}
+                 {\left(\frac{\kappa}{\log({\Delta z_b}/{r_z})}\right)}^2 & \text{for } C_d \in [C_d^{\min}, C_d^{\max}] \\
+                 C_d^{\min} & \\
+                 C_d^{\max}
+       \end{array}
+  \right. \\
+  \kappa=0.41 \\  
+\end{align}
+
+\subsection{Numerical methods used}
+\section{Utilisation}
+CROCO is written mainly in FORTRAN, so it needs to be first compiled, then executed
+\subsection{Compilation}
+\subsubsection{param.h}
+Initialize parameters of the simulation, especially the number of tides to take into account:
+\begin{itemize}
+\item Physical grid
+  \begin{lstlisting}[language=Fortran]
+    #elif defined FRICTION_TIDES
+      parameter (LLm0=139, MMm0=164,    N=1) 
+    \end{lstlisting}
+  \item NTIDES
+    \begin{lstlisting}[language=Fortran]
+!---------------------------------------------------------
+! Tides, Wetting-Drying, Point sources, Floast, Stations
+!---------------------------------------------------------
+
+#if defined SSH_TIDES || defined UV_TIDES
+      integer Ntides             ! Number of tides
+                                 ! ====== == =====
+# if defined IGW || defined S2DV
+      parameter (Ntides=1)
+# elif defined(FRICTION_TIDES)
+      parameter (Ntides=10) ! HERE to change number
+# else
+      parameter (Ntides=8)
+# endif
+\end{lstlisting}
+
+\end{itemize}
+\subsubsection{cppdefs.h}
+\begin{lstlisting}[language=Fortran]
+#define REGIONAL        /* REGIONAL Applications */
+\end{lstlisting}
+
+
+\subsubsection{Compile}
+\begin{lstlisting}[language=bash]
+  #!/bin/sh
+  ../OCEAN/jobcomp
+\end{lstlisting}
+
+\subsection{Execution}
+\subsubsection{The .in file}
+\paragraph{Timestepping}
+\begin{lstlisting}
+  time_stepping: NTIMES   dt[sec]  NDTFAST  NINFO
+               25920      10     1      1
+\end{lstlisting}
+\begin{itemize}
+  \item[\texttt{NTIMES}] is the number of time steps for the simulation
+  \item[\texttt{dt}] is the time-step for the simulation 
+\end{itemize}
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{rl} \hline
+   Time simulated & \texttt{NTIMES} \\ \hline
+    1 hour & 360 \\
+    1 day & 8640 \\
+    3 days & 25920 \\
+    1 week (7 days)& 60480 \\
+    1 month (30 days) & 259200 \\
+    1 year (360 days) & 3110400 \\
+    1 year (365 days) & 3153600 \\ \hline
+  \end{tabular}
+  \caption{Table of some values for NTIMES, with \texttt{dt} of 10s}
+  \label{tab:NTIMESref}
+\end{table}
+\begin{lstlisting}
+restart:          NRST, NRPFRST / filename
+                   720    -1
+                   CROCO_FILES/croco_rst.nc
+history: LDEFHIS, NWRT, NRPFHIS / filename
+            T      180     0
+            CROCO_FILES/croco_rst_obs_1mo.nc
+\end{lstlisting}
+\begin{itemize}
+\item[\texttt{NRST}]: Number of time-steps between saving a rst file
+\item[\texttt{NWRT}]: Number of time-steps between saving to the history file 
+\end{itemize}
+\paragraph{Other input files}
+\begin{lstlisting}
+forcing: filename
+                          CROCO_FILES/croco_frc_M2S2K1.nc
+climatology: filename
+                          CROCO_FILES/croco_clm.nc
+\end{lstlisting}
+Here, the forcing filename is generated using \textsc{MATLAB/OCTAVE} and the \texttt{croco\_tools}, that includes the tide                        
+
+
+\begin{lstlisting}
+  bottom_drag:     RDRG [m/s],  RDRG2,  Zob [m],  Cdb_min, Cdb_max
+                1.00d-04    0.00d+00    5.00d-06    1.00d-04    1.00d-01
+\end{lstlisting}
+
+\subsection{Toward a black-box utilisation using \texttt{crocopy}}
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

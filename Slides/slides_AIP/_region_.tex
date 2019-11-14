@@ -1,0 +1,195 @@
+\message{ !name(slides_AIP.tex)}\documentclass[11pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\mathbb{K}}
+\usepackage{pdfpcnotes}
+\usetikzlibrary{positioning}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+\graphicspath{{../Figures/}}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+% \definecolor{BlueTOL}{HTML}{222255}
+% \definecolor{BrownTOL}{HTML}{666633}
+% \definecolor{GreenTOL}{HTML}{225522}
+% \setbeamercolor{normal text}{fg=BlueTOL,bg=white}
+% \setbeamercolor{alerted text}{fg=BrownTOL}
+% \setbeamercolor{example text}{fg=GreenTOL}
+
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+\setbeamerfont{author}{size=\footnotesize}
+
+\title{Parameter control in the presence of uncertainties}
+\subtitle{Robust Estimation of Bottom friction}
+\author{{\large Victor Trappler} \hfill \texttt{victor.trappler@univ-grenoble-alpes.fr} \\
+  É. Arnaud, L. Debreu, A. Vidard \\
+  AIRSEA Research team (Inria)\hfill \texttt{team.inria.fr/airsea/en/}\\
+  Laboratoire Jean Kuntzmann}
+
+
+\institute{\begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}}
+
+\date{\textbf{AIP2019, Grenoble, 2019}}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+\message{ !name(slides_AIP.tex) !offset(147) }
+\section{Robust minimization}
+
+\subsection{Criteria of robustness}
+
+\frame{
+  \frametitle{Non-exhaustive list of ``Robust'' Objectives }
+\begin{itemize}
+% \item Global Optimum: $ \min_{(\bm{k},\bm{u})} J(\bm{u},\bm{k})$ $ \longrightarrow $ EGO
+\item Worst case~\cite{marzat_worst-case_2013}: $$ \min_{\bm{k} \in \Kspace} \left\{\max_{\bm{u} \in \Uspace} J(\bm{k},\bm{u})\right\}$$
+\item M-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Ex_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item V-robustness~\cite{lehman_designing_2004}: $$\min_{\bm{k}\in\Kspace} \Var_{\bm{U}}\left[J(\bm{k},\bm{U})\right]$$
+\item Multiobjective~\cite{baudoui_optimisation_2012}: $$ \text{Pareto frontier}
+  $$
+% \item Region of failure given by $J(\bm{k},\bm{u})>T$~\cite{bect_sequential_2012}: $$\max_{\bm{k} \in \Kspace} R(\bm{k}) = \max_{\bm{k}\in \Kspace} \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq T \right]$$
+\item Best performance attainable for each configuration $\bm{u}^i \sim \bm{U}$
+\end{itemize}
+}
+
+% \frame{
+%   \frametitle{Toy Problem: Minimization of mean value}
+%   \vspace{-5ex}
+%    \begin{center}
+%     {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
+%   \end{center}
+%   \vspace{-3ex}
+%    $\longrightarrow$ Quite different from the value $\bm{k} \approx 0.1$ obtained by optimization knowing the true value of $\bm{u}_{\mathrm{ref}}$ 
+% }
+
+\frame{
+  \frametitle{``Most Probable Estimate'', and relaxation}%
+  Main idea: For each $\bm{u}^i \sim \bm{U}$, compare the value of the cost function to its optimal value $J^*(\bm{u}^i)$
+
+  
+    % \begin{columns}
+    %   \begin{column}{0.6\textwidth}
+      The minimizer as a random variable:
+      \begin{equation*}
+        \bm{K}^* = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\alert<1>{\bm{U}})
+      \end{equation*}
+      $\longrightarrow$ estimate its density (how often is the value $\bm{k}$ a minimizer)
+      \begin{align*}
+        p_{\bm{K}^*}(\bm{k})\,\mathrm{d}\bm{k} & = \Prob\left[\bm{K}^* \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                               & =\Prob\left[\argmin J(\bm{k}, \bm{U}) \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right] \\
+                                               &=\Prob\left[J(\bm{k},\bm{U}) \approx J^*(\bm{U}) \right] \\
+                                               &= \Prob\left[J(\bm{k},\bm{U}) \right]
+                                              % & \Prob\left[ J(\bm{U}) \leq J(\bm{k}, \bm{U}) \forall \bm{k} \in \left[\bm{k},\bm{k}+\mathrm{d}\bm{k} \right]\right]
+      \end{align*}
+      % \begin{align*}
+      %   R(\bm{k}) & = \Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\bm{k})} & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \phantom{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alert{\alpha}\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]}
+      %          \end{align*}%
+             % \begin{align*}
+             %            R(\bm{k}) &=\Prob_{\bm{U}}\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \\
+             %            R_{\alpha}(\bm{k}) & = \Prob_{\bm{U}}\left[J(\bm{k},\bm{U}) \leq \alpha\min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right]
+             %          \end{align*}
+             %        }
+               % \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
+                  % \end{column}%
+                  % \begin{column}{0.5\textwidth}
+                  %   \begin{center}
+                  %     \includegraphics[scale=0.3]{summary_criteria}
+                  %   \end{center}
+                  %   % \pause
+                  %   % Idea: Relaxation of the constraint:
+                  %   % \begin{equation*}
+                  %   %   R_{\alpha}(\bm{k}) = \Prob\left[J(\bm{k},\bm{U}) \leq \alpha \min_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U})\right],\quad \alpha \geq 1
+                  %   % \end{equation*}
+                  %   % and increase $\alpha$ until $\max_{\bm{k}} R_{\alpha}(\bm{k})$ reaches a level of confidence.
+                  % \end{column}
+                % \end{columns}   %
+              }
+\begin{frame}
+  \frametitle{Illustration}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+  \includegraphics<1>[scale=0.4]{relaxation_tuto_1}
+  \includegraphics<2>[scale=0.4]{relaxation_tuto_2}
+  \includegraphics<3>[scale=0.4]{relaxation_tuto_3}
+  \includegraphics<4->[scale=0.4]{relaxation_tuto_4}
+\end{column}
+\begin{column}{.5\textwidth}
+  \begin{itemize}
+  \item<1-> Sample $\bm{u}^i\sim\bm{U}$, and solve
+   $\bm{k}^*(\bm{u}^i) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u}^i)$
+ \item<2->The set of conditional minimisers: $\{(\bm{k}^*(\bm{u}), \bm{u}) \mid \bm{u} \in \Uspace\}$
+\item<3-> Set $\alpha$
+ \item<4->Define $R_{\alpha}(\bm{k}) = \{\bm{u} \mid J(\bm{k},\bm{u}) < \alpha J^*(\bm{u}) \}$
+  \item<5-> $\Gamma_{\alpha}(\bm{k}) = \Prob_{\bm{U}}\left[\bm{U}\in R_{\alpha}(\bm{k}) \right]$
+ \end{itemize}
+
+\end{column}
+  \end{columns}
+\end{frame}
+
+
+% \frame{
+% \frametitle{Illustration of the relaxation}
+% \begin{center}
+% \scalebox{0.45}{%
+% \input{../Figures/regions_relax_alpha2.pgf}}
+% \end{center}
+% }
+
+
+              
+
+\begin{frame}
+  \frametitle{MPE and relaxation}
+  \begin{center}
+    % \includegraphics<1>[height=\textheight]{alpha_check}
+    \includegraphics<1>[height=.95\textheight, width = \textwidth]{illustration_alpha0}
+    \includegraphics<2>[height=.95\textheight, width = \textwidth]{illustration_alpha1}
+    \includegraphics<3>[height=.95\textheight, width = \textwidth]{illustration_alpha2}
+    \includegraphics<4>[height=.95\textheight, width = \textwidth]{illustration_alpha3}
+    \includegraphics<5>[height=.95\textheight, width = \textwidth]{illustration_alpha4}
+    \includegraphics<6>[height=.95\textheight, width = \textwidth]{illustration_alpha5}
+    \includegraphics<7>[height=.95\textheight, width = \textwidth]{illustration_alpha6}
+    \end{center}
+\end{frame}
+
+
+
+\message{ !name(slides_AIP.tex) !offset(221) }
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
