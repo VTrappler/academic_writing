@@ -1,0 +1,170 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,francais]{babel}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{calc}
+\usepackage{caption}
+\usepackage{easy-todo}
+\usepackage{comment}
+\usepackage{lipsum}
+\usepackage{bbm}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pdfpages}
+\newcommand{\Var}{\mathbb{V}\text{ar}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\ProbGP}{\mathcal{P}}
+\newcommand{\Kspace}{\mathbb{K}}
+\newcommand{\Uspace}{\mathbb{U}}
+
+\DeclareMathOperator*{\argmin}{arg\,min \,}
+\DeclareMathOperator*{\argmax}{arg\,max \,}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\pagestyle{fancy}
+% \rhead{Victor Trappler}
+% \lhead{}
+% \graphicspath{{./Figures/}}
+\begin{document}
+
+
+\title{Bayesian approach of the parameter inverse problem under uncertainties}
+
+\author{Victor Trappler \\[1cm]
+  \begin{tabular}{lr}
+    Directeurs de Thèse: & Arthur VIDARD (Inria) \\
+                        & Élise ARNAUD (UGA)\\
+                        & Laurent DEBREU (Inria)
+  \end{tabular}
+}
+
+\maketitle
+% \vspace{3cm}
+% \includegraphics[scale=0.3]{/home/victor/logo_UGA}
+% \hfill
+% \includegraphics[scale=0.3]{/home/victor/ljk}
+% \hfill
+% \includegraphics[scale=0.3]{/home/victor/inria}
+% \thispagestyle{empty} 
+% \clearpage
+\tableofcontents
+\section{(Joint) Posterior formulation}
+\subsection{Priors}
+\begin{align*}
+  K \sim \mathcal{U}(\mathbb{K}), \quad p(k) \\
+  U \sim \mathcal{U}(\mathbb{U}), \quad p(u)
+\end{align*}
+\subsection{Likelihood model}
+\begin{align*}
+  p(y \mid k, u, \sigma^2) &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2}SS(k,u)\right] \\
+                         &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2} \|\mathcal{M}(k,u) - y \|^2_{\Sigma}\right]
+\end{align*}
+Now to Bayes' theorem
+\begin{align*}
+  p(k,u \mid y,\sigma^2) = \frac{p(y \mid k, u, \sigma^2) p(k,u)}{\iint_{\mathbb{K}\times\mathbb{U}}p(y \mid k, u, \sigma^2) p(k,u) \, \mathrm{d}(k,u)}
+\end{align*}
+Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
+
+
+\section{GP for sequential adaptative design, and Relative-regret based family of estimators}
+\subsection{Random processes}
+Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
+\begin{align}
+  \begin{array}{rrcl}
+    f: & \mathbb{X} \subset \mathbb{R}^p& \longrightarrow & \mathbb{R} \\
+       & x & \longmapsto & f(x)
+  \end{array}
+\end{align}
+This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} \subset \mathbb{X}^n$. 
+We wish to have a probabilistic modelling of this function
+We introduce random processes as way to have a prior distribution on function
+
+\subsection{GP modelling of the penalized cost function}
+\subsubsection{GP processes}
+Let $\Delta_{\alpha}(\mathbf{k},\mathbf{u}) = J(\mathbf{k},\mathbf{u}) - \alpha J^*(\mathbf{u})$. Furthermore, we assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design $\mathcal{X} = \left\{(\mathbf{k}^{(1)},\mathbf{u}^{(1)}),\dots,(\mathbf{k}^{(n)},\mathbf{u}^{(n)}) \right\}$, denoted as $(\mathbf{k},\mathbf{u})\mapsto Y(\mathbf{k},\mathbf{u})$.
+
+As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $\kappa_Y(\cdot, \cdot)$:
+\begin{equation}
+  Y(\mathbf{k},\mathbf{u}) \sim \mathcal{N}\left(m_{Y}(\mathbf{k},\mathbf{u}), \sigma^2_Y(\mathbf{k},\mathbf{u}) \right)
+\end{equation}
+
+Analogous to $J$ and $J^*$, we define $Y^*$ as
+\begin{equation}
+  Y^*(\mathbf{u}) \sim \mathcal{N}\left(m^*_Y(\mathbf{u}), \sigma^{2,*}_Y(\mathbf{u})\right)
+\end{equation}
+Then we have
+\begin{equation}
+  \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \sim \mathcal{N}\left(m_Y(\mathbf{k},\mathbf{u}) - \alpha m^*_Y(\mathbf{u}), \sigma^2_Y(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma^{2,*}_Y(\mathbf{u}) \right)
+\end{equation}
+
+\subsubsection{Definition of $m^*_Y$?}
+\begin{align}
+  J^*(\mathbf{u}) = J(\mathbf{k}^*(\mathbf{u}),\mathbf{u}) = \min_{\mathbf{k}\in\Kspace} J(\mathbf{k},\mathbf{u})
+\end{align}
+As $J^*$ is unknown, we can use first use a plug-in approach, and define
+\begin{align}
+  m^*_Y(\mathbf{u}) = \min_{\mathbf{k}\in\Kspace} m_Y(\mathbf{k},\mathbf{u})
+\end{align}
+The surrogate conditional minimiser is used in Ginsbourger profiles etc.
+\subsubsection{Approximation of the objective probability using GP}
+We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP.
+
+Defined somewhere else, we have
+\begin{align}
+  \Gamma_{\alpha}(\mathbf{k}) &= \Prob_{\mathbf{U}}\left[J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})\right] \\
+                              & =\Ex_{\mathbf{U}}\left[\mathbbm{1}_{J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})}\right]
+\end{align}
+This classification problem can be approached with a plug-in approach, or a probablistic one:
+\begin{align}
+  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \mathbbm{1}_{m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u})} \\
+  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi(\mathbf{k},\mathbf{u})
+\end{align}
+Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our meta model to verify the inequality is given by
+Based on those two approximation, the approximated probability $\Gamma$ is
+\begin{align}
+  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Prob_U\left[m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u}) \right] \tag{plug-in} \\
+  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right] \tag{Probabilistic approx} \\
+\end{align}
+Considering the joint distribution of $Y(\mathbf{k},\mathbf{u})$ and $Y^*(\mathbf{u}) = Y(\mathbf{k}^*(\mathbf{u}), \mathbf{u})$, we have
+\begin{equation}
+  \begin{bmatrix}
+    Y(\mathbf{k},\mathbf{u}) \\
+    Y^*(\mathbf{u})
+  \end{bmatrix}
+  \sim \mathcal{N}\left(
+    \begin{bmatrix}
+      m_Y(\mathbf{k},\mathbf{u}) \\
+      m_Y^*(\mathbf{u})
+    \end{bmatrix}
+    ;\,
+    \begin{bmatrix}
+      C\left((\mathbf{k},\mathbf{u}),(\mathbf{k},\mathbf{u})\right) & C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) \\
+      C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) & C\left((\mathbf{k}^*(\mathbf{u}),\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right)
+    \end{bmatrix}
+\right)
+\end{equation}
+By multiplying by the matrix $\left[1\quad -\alpha\right]$ yields
+\begin{align}
+  \Delta_{\alpha}(\mathbf{k},\mathbf{u}) &\sim \mathcal{N}\left(m_{\Delta}(\mathbf{k},\mathbf{u}); \sigma^2_{\Delta}(\mathbf{k},\mathbf{u})\right) \\
+  m_{\Delta}(\mathbf{k},\mathbf{u}) &= m_Y(\mathbf{k},\mathbf{u}) - \alpha m_Y^*(\mathbf{u}) \\
+  \sigma^2_{\Delta}(\mathbf{k},\mathbf{u}) &= \sigma_Y^2(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma_{Y^*}^2(\mathbf{k},\mathbf{u}) - 2\alpha C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right)
+\end{align}
+The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi$, and can be computed using the CDF of the standard normal distribution $\Phi$:
+\begin{equation}
+  \pi(\mathbf{k},\mathbf{u}) = \Phi\left(-\frac{m_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}{\sigma_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}\right)
+\end{equation}
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

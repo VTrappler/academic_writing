@@ -1,0 +1,19 @@
+#+author: Victor Trappler
+#+title: Outline of PhD manuscript
+
+* Introduction
+** Importance of the numerical model in predictions / L'importance des simulations numériques dans les prédictions
+** Need for good calibrated models / La calibration des modèles numériques
+** Oceanic modelling / La modélisation de l'océan
+** Uncertainties in the modelling and effects / Les Incertitudes dans la modélisation
+*** Classifying the uncertainties / Classer les incertitudes
+*** 
+
+* "Deterministic methods" of calibration / Estimation de paramètres "déterministes"
+** The link between Bayesian and Variational / Fonction objective et approche Bayesienne
+*** The calibration problem as a Bayesian inference problem / Calibration et Inférence Bayesienne
+*** MAP and MLE as point estimates / Le MAP et le MV comme des estimateurs
+** 
+
+
+* Conclusion
