@@ -76,7 +76,7 @@ Now to Bayes' theorem
 Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
 
 
-\section{GP for sequential adaptative design, and Relative-regret based family of estimators}
+\section{GP, RR-based family of estimators}
 \subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
 \begin{align}
@@ -88,53 +88,66 @@ Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}
 This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} \subset \mathbb{X}^n$. 
 We wish to have a probabilistic modelling of this function
 We introduce random processes as way to have a prior distribution on function
+This uncertainty on $f$ is modelled as a random process:
+\begin{equation}
+  \begin{array}{rcl}
+    Z: \mathbb{X} \times \Omega& \longrightarrow & \mathbb{R} \\
+    (x,\omega) & \longmapsto & Z(x,\omega)
+  \end{array}
+\end{equation}
+The $\omega$ variable will be omitted next.
+\subsection{Linear Estimation}
+\label{sec:linear_estimation}
+A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}$ can be written as
+\begin{equation}
+  \label{eq:lin_est}
+  \hat{Z}(x) =
+  \begin{bmatrix}
+    w_1 \dots w_n
+    \end{bmatrix}
+    \begin{bmatrix}
+      f(x_1) \\ \vdots \\ f(x_n)
+    \end{bmatrix} = \mathbf{W}^Tf(\mathcal{X}) = \sum_{i=1}^n w_i(x) f(x_i)
+\end{equation}
+Using those kriging weights $\mathbf{W}$, a few additional conditions must be added:
+\begin{itemize}
+\item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
+\item Minimal variance: $\min \Ex[(\hat{Z}(x) - Z(x))^2]$
+\end{itemize}
+Translating using Eq.\eqref{eq:lin_est}:
+\begin{equation}
+  \Ex[\hat{Z}(x) - Z(x)]=0 \iff m(\sum_{i=1}^n w_i(x)-1) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
+\end{equation}
+For the minimum of variance, we introduce the augmented vector $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$, and
+the variance can be expressed as:
+\begin{align}
+  \Ex[(\hat{Z}(x) - Z(x))^2] = \Var\left[[\mathbf{W}, -1]^T \mathbf{Z}_n(x) \right]
+\end{align}
 
-\subsection{GP modelling of the penalized cost function}
+\subsection{GP of the penalized cost function $\Delta_{\alpha}$}
 \subsubsection{GP processes}
-Let $\Delta_{\alpha}(\mathbf{k},\mathbf{u}) = J(\mathbf{k},\mathbf{u}) - \alpha J^*(\mathbf{u})$. Furthermore, we assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design $\mathcal{X} = \left\{(\mathbf{k}^{(1)},\mathbf{u}^{(1)}),\dots,(\mathbf{k}^{(n)},\mathbf{u}^{(n)}) \right\}$, denoted as $(\mathbf{k},\mathbf{u})\mapsto Y(\mathbf{k},\mathbf{u})$.
+Let $\Delta_{\alpha}(\mathbf{k},\mathbf{u}) = J(\mathbf{k},\mathbf{u}) - \alpha J^*(\mathbf{u})$. Furthermore, we assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\mathbf{k}^{(1)},\mathbf{u}^{(1)}),\dots,(\mathbf{k}^{(n)},\mathbf{u}^{(n)}) \right\}$, denoted as $(\mathbf{k},\mathbf{u})\mapsto Y(\mathbf{k},\mathbf{u})$.
 
-As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $\kappa_Y(\cdot, \cdot)$:
+As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $C(\cdot, \cdot)$, while $\sigma^2_Y(\mathbf{k},\mathbf{u}) = C((\mathbf{k},\mathbf{u}), (\mathbf{k},\mathbf{u}))$
 \begin{equation}
   Y(\mathbf{k},\mathbf{u}) \sim \mathcal{N}\left(m_{Y}(\mathbf{k},\mathbf{u}), \sigma^2_Y(\mathbf{k},\mathbf{u}) \right)
 \end{equation}
+Let us consider now the conditional minimiser:
+\begin{align}
+  J^*(\mathbf{u}) = J(\mathbf{k}^*(\mathbf{u}),\mathbf{u}) = \min_{\mathbf{k}\in\Kspace} J(\mathbf{k},\mathbf{u})
+\end{align}
 
 Analogous to $J$ and $J^*$, we define $Y^*$ as
 \begin{equation}
   Y^*(\mathbf{u}) \sim \mathcal{N}\left(m^*_Y(\mathbf{u}), \sigma^{2,*}_Y(\mathbf{u})\right)
 \end{equation}
-Then we have
-\begin{equation}
-  \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \sim \mathcal{N}\left(m_Y(\mathbf{k},\mathbf{u}) - \alpha m^*_Y(\mathbf{u}), \sigma^2_Y(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma^{2,*}_Y(\mathbf{u}) \right)
-\end{equation}
-
-\subsubsection{Definition of $m^*_Y$?}
-\begin{align}
-  J^*(\mathbf{u}) = J(\mathbf{k}^*(\mathbf{u}),\mathbf{u}) = \min_{\mathbf{k}\in\Kspace} J(\mathbf{k},\mathbf{u})
-\end{align}
-As $J^*$ is unknown, we can use first use a plug-in approach, and define
+where
 \begin{align}
   m^*_Y(\mathbf{u}) = \min_{\mathbf{k}\in\Kspace} m_Y(\mathbf{k},\mathbf{u})
 \end{align}
 The surrogate conditional minimiser is used in Ginsbourger profiles etc.
-\subsubsection{Approximation of the objective probability using GP}
-We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP.
+The $\alpha$-relaxed difference  $\Delta_{\alpha}$ modelled as a GP can then be written as
 
-Defined somewhere else, we have
-\begin{align}
-  \Gamma_{\alpha}(\mathbf{k}) &= \Prob_{\mathbf{U}}\left[J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})\right] \\
-                              & =\Ex_{\mathbf{U}}\left[\mathbbm{1}_{J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})}\right]
-\end{align}
-This classification problem can be approached with a plug-in approach, or a probablistic one:
-\begin{align}
-  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \mathbbm{1}_{m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u})} \\
-  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi(\mathbf{k},\mathbf{u})
-\end{align}
-Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our meta model to verify the inequality is given by
-Based on those two approximation, the approximated probability $\Gamma$ is
-\begin{align}
-  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Prob_U\left[m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u}) \right] \tag{plug-in} \\
-  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right] \tag{Probabilistic approx} \\
-\end{align}
 Considering the joint distribution of $Y(\mathbf{k},\mathbf{u})$ and $Y^*(\mathbf{u}) = Y(\mathbf{k}^*(\mathbf{u}), \mathbf{u})$, we have
 \begin{equation}
   \begin{bmatrix}
@@ -159,10 +172,42 @@ By multiplying by the matrix $\left[1\quad -\alpha\right]$ yields
   m_{\Delta}(\mathbf{k},\mathbf{u}) &= m_Y(\mathbf{k},\mathbf{u}) - \alpha m_Y^*(\mathbf{u}) \\
   \sigma^2_{\Delta}(\mathbf{k},\mathbf{u}) &= \sigma_Y^2(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma_{Y^*}^2(\mathbf{k},\mathbf{u}) - 2\alpha C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right)
 \end{align}
-The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi$, and can be computed using the CDF of the standard normal distribution $\Phi$:
+Assuming that $C((\mathbf{k},\mathbf{u}), (\mathbf{k}',\mathbf{u}')) = s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(u_j - u'_j\|)$
+\begin{align}
+  C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) &= s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)\prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(0) \\
+  &=s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)
+\end{align}
+\subsubsection{Approximation of the objective probability using GP}
+We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP.
+
+Defined somewhere else, we have
+\begin{align}
+  \Gamma_{\alpha}(\mathbf{k}) &= \Prob_{\mathbf{U}}\left[J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})\right] \\
+                              & =\Ex_{\mathbf{U}}\left[\mathbbm{1}_{J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})}\right]
+\end{align}
+This classification problem can be approached with a plug-in approach, or a probablistic one:
+\begin{align}
+  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \mathbbm{1}_{m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u})} \\
+  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi(\mathbf{k},\mathbf{u})
+\end{align}
+Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our meta model to verify the inequality is given by
+Based on those two approximation, the approximated probability $\Gamma$ is
+\begin{align}
+  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Prob_U\left[m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u}) \right] \tag{plug-in} \\
+  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right] \tag{Probabilistic approx} \\
+\end{align}
+
+The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$:
 \begin{equation}
-  \pi(\mathbf{k},\mathbf{u}) = \Phi\left(-\frac{m_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}{\sigma_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}\right)
+  \pi_{\alpha}(\mathbf{k},\mathbf{u}) = \Phi\left(-\frac{m_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}{\sigma_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}\right)
 \end{equation}
+Finally, averaging over $\mathbf{u}$ yields
+\begin{equation}
+  \hat{\Gamma}(\mathbf{k}) = \int_{\Uspace}\pi_{\alpha}(\mathbf{k},\mathbf{u})p(\mathbf{u}) \,\mathrm{d}\mathbf{u}
+\end{equation}
+\subsubsection{Sources, quantification of uncertainties, and SUR strategy ?}
+
+Formally, for a given point $(\mathbf{k},\mathbf{u})$, the event ``the point is $\alpha$-acceptable'' has probability $\pi(\mathbf{k},\mathbf{u})$ and variance $\pi(\mathbf{k},\mathbf{u}) (1-\pi(\mathbf{k},\mathbf{u}))$. Obviously, the points with the highest uncertainty have the highest variance, so have a coverage probability $\pi$ around 0.5.
 \end{document}
 %%% Local Variables:
 %%% mode: latex
