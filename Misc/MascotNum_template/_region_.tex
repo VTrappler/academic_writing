@@ -1,0 +1,82 @@
+\message{ !name(MascotNumTemplate.tex)}\documentclass{MascotNumAbstract}  
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\newcommand{\Var}{\mathbb{V}\text{ar}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min \,}
+\DeclareMathOperator*{\argmax}{arg\,max \,}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % %         Personal information section          % % %
+% % % PLEASE NOTE: All of the fields are mandatory! % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+ 
+% Authors names, in the form 'initials lastname', as in 'J. Smith'
+ \author{V. Trappler}
+% Current affiliation
+ \phduniversity{Université Grenoble-Alpes}
+% Expected phd duration. Format: 'year-year'
+ \phdtime{Oct. 2017 - Sep. 2020}
+% author address
+ \firstauthoraddress{Laboratoire Jean Kuntzmann}
+% Supervisors and affiliations  
+ \supervisors{Prof. Arthur Vidard (UGA), Dr. Élise Arnaud
+   (UGA) and Prof. Laurent Debreu (Inria)}
+% Contact mail
+ \contactmail{victor.trappler@univ-grenoble-alpes.fr} 
+% Title of the abstract
+ \title{Robust Calibration of numerical models based on relative regret}
+% Short biography
+ \biography{I'm a PhD student in the Inria research team called AIRSEA. I graduated from an engineering school in 2017 with a double degree from DTU in applied mathematics. My PhD focuses on the calibration under uncertainties of the bottom friction of a numerical model of the ocean.
+%  Each PhD student is asked to present in
+% max. 5 lines his/her background and the context of the PhD thesis, the
+% sources of funding, links with industry, etc. 
+} 
+
+\begin{document}
+
+\message{ !name(MascotNumTemplate.tex) !offset(-3) }
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % Full abstract here			 	% % %
+
+Numerical models are widely used to study or forecast natural phenomena and improve industrial processes. However, by essence models only partially represent reality and sources of uncertainties are ubiquitous (discretisation errors, missing physical processes, poorly known boundary conditions).  Moreover, such uncertainties may be of different nature. \cite{walker_defining_2003} proposes to consider two categories of uncertainties:
+\begin{itemize}
+\item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
+\item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
+\end{itemize}
+  The latter can be accounted for through the introduction of ad-hoc correcting terms in the numerical model, that need to be properly estimated. Thus, reducing the epistemic uncertainty can be done through parameters estimation approaches. This is usually done using optimal control techniques, leading to an optimisation of a well chosen cost function which is typically built as a comparison with reference observations.
+%
+  An application of such an approach, in the context of ocean circulation modeling, is the estimation of ocean bottom friction parameters in~\cite{das_estimation_1991} and~\cite{boutet_estimation_2015}.
+
+  If parameters to be estimated are not the only source of uncertainties, their optimal control 
+  is doomed to overfit the data, \emph{e.g} to artificially introduce errors in the controlled parameter to compensate for other sources. If such uncertainties are of aleatoric nature, then the parameter estimation is only optimal for the observed situation, and may be very poor in other configurations, phenomenon coined as \textit{localized optimisation} in~\cite{huyse_free-form_2001}.
+  
+  The calibration often takes the form of the minimisation of a function $J$, that describe a distance between the output of the numerical model and some given observed data, plus generally some regularization terms.
+  In our study, this cost function takes two types of arguments: $k\in\mathbb{K}$ that represents the calibration parameters, and $u\in\mathbb{U}$, that represents the environmental conditions.
+The latter represent the aleatoric uncertainties, and thus will be modelled as a random variable $U$.
+
+Some of the optimisation under uncertainties rely on the optimisation of the moments of the random variable indexed by $k$: $k \mapsto J(k,U)$ (in~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}), or multiobjective problems in~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
+
+We propose an approach based on the relative regret, that is the ratio between the objective function and its best value attainable given the enviromnemtal conditions at this point. Working with this quantity allows us to consider points that are ``often close'' to the optimal value attainable.
+This leads to the definion of a new family of robust estimators, upon which we can control either their robustness, \emph{e.g} their ability to perform well under all circumstances, or in contrary, favour near-optimal performances.
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+ 
+
+
+% please comment the following lines if there is no bibliography
+\bibliographystyle{plain}
+\bibliography{/home/victor/acadwriting/bibzotero.bib}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+\message{ !name(MascotNumTemplate.tex) !offset(-82) }

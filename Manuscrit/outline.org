@@ -12,8 +12,13 @@
 * "Deterministic methods" of calibration / Estimation de paramètres "déterministes"
 ** The link between Bayesian and Variational / Fonction objective et approche Bayesienne
 *** The calibration problem as a Bayesian inference problem / Calibration et Inférence Bayesienne
-*** MAP and MLE as point estimates / Le MAP et le MV comme des estimateurs
-** 
+*** MAP and MLE as point estimates / Le MAP et le MV comme des estimateurs ponctuels
 
+
+* Relative Regret family of estimators
+
+* Efficient estimation of members of the RRE family
+
+* Application to the numerical coastal regional model CROCO
 
 * Conclusion

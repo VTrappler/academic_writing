@@ -22,12 +22,15 @@
 \newcommand{\Var}{\mathbb{V}\text{ar}}
 \newcommand{\Ex}{\mathbb{E}}
 \newcommand{\Prob}{\mathbb{P}}
+
 \newcommand{\ProbGP}{\mathcal{P}}
 \newcommand{\Kspace}{\mathbb{K}}
 \newcommand{\Uspace}{\mathbb{U}}
-
+\newcommand{\Xspace}{\mathbb{X}}
+\DeclareMathOperator{\Cov}{\mathrm{Cov}}
 \DeclareMathOperator*{\argmin}{arg\,min \,}
 \DeclareMathOperator*{\argmax}{arg\,max \,}
+\DeclareMathOperator{\IMSE}{IMSE}
 \usepackage{hyperref}
 \usepackage{booktabs}
 
@@ -38,7 +41,7 @@
 \begin{document}
 
 
-\title{Bayesian approach of the parameter inverse problem under uncertainties}
+\title{Notes}
 
 \author{Victor Trappler \\[1cm]
   \begin{tabular}{lr}
@@ -75,7 +78,7 @@ Now to Bayes' theorem
 \end{align*}
 Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
 
-
+\newpage
 \section{GP, RR-based family of estimators}
 \subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
@@ -109,10 +112,10 @@ A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}
       f(x_1) \\ \vdots \\ f(x_n)
     \end{bmatrix} = \mathbf{W}^Tf(\mathcal{X}) = \sum_{i=1}^n w_i(x) f(x_i)
 \end{equation}
-Using those kriging weights $\mathbf{W}$, a few additional conditions must be added:
+Using those kriging weights $\mathbf{W}$, a few additional conditions must be added, in order to obtain the Best Linear Unbiased Estimator:
 \begin{itemize}
 \item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
-\item Minimal variance: $\min \Ex[(\hat{Z}(x) - Z(x))^2]$
+\item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
 \end{itemize}
 Translating using Eq.\eqref{eq:lin_est}:
 \begin{equation}
@@ -121,9 +124,71 @@ Translating using Eq.\eqref{eq:lin_est}:
 For the minimum of variance, we introduce the augmented vector $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$, and
 the variance can be expressed as:
 \begin{align}
-  \Ex[(\hat{Z}(x) - Z(x))^2] = \Var\left[[\mathbf{W}, -1]^T \mathbf{Z}_n(x) \right]
+  \Ex[(\hat{Z}(x) - Z(x))^2] &= \Cov\left[[\mathbf{W}^T, -1] \cdot \mathbf{Z}_n(x) \right] \\
+                             &= [\mathbf{W}^T, -1] \Cov\left[\mathbf{Z}_n(x) \right] [\mathbf{W}^T, -1]^T
 \end{align}
-
+In addition, we have
+\begin{equation}
+  \Cov\left[\mathbf{Z}_n(x) \right] =
+  \begin{bmatrix}
+    \Cov\left[
+      \begin{bmatrix}
+        Z(x_1) \dots Z(x_n)
+      \end{bmatrix}^T\right]
+    & \Cov\left[
+      \begin{bmatrix}
+        Z(x_1) \dots Z(x_n)
+      \end{bmatrix}^T, Z(x) \right]
+  \\
+  \Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T & \Var\left[Z(x)\right]
+  \end{bmatrix}
+\end{equation}
+Once expanded, the kriging weights solve then the following optimisation problem:
+\begin{align}
+  \min_{\mathbf{W}} ~&\mathbf{W}^T \Cov\left[Z(x_1) \dots Z(x_n)\right] \mathbf{W}\\ &-\Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T \mathbf{W}\\ &- \mathbf{W}^T\Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right] \\ &+ \Var\left[Z(x)\right] \\
+  \text{s.t.}& \mathbf{W}^T \mathbf{1} = \mathbf{1}
+\end{align}
+This leads to
+\begin{align}
+  \begin{bmatrix}
+    \mathbf{W} \\ m
+  \end{bmatrix}
+  &=
+  \begin{bmatrix}
+    \Cov\left[Z(x_1) \dots Z(x_n)\right] & \mathbf{1} \\
+  \mathbf{1}^T & 0
+\end{bmatrix}^{-1}
+                 \begin{bmatrix}
+                  \Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T \\ 1 
+\end{bmatrix}
+  \\ &=
+    \begin{bmatrix}
+      C(x_1, x_1) & \cdots & C(x_1, x_n) & 1 \\
+      C(x_2, x_1) & \cdots & C(x_2, x_n) & 1 \\
+      \vdots & \ddots & \vdots & \vdots \\
+      C(x_n, x_1) & \cdots & C(x_n, x_n)& 1 \\
+      1 & \cdots & 1 & 0
+    \end{bmatrix}^{-1}
+                       \begin{bmatrix}
+                         C(x_1, x) \\
+                         C(x_2, x) \\
+                         \vdots \\
+                         C(x_n, x) \\
+                         1
+                       \end{bmatrix}
+\end{align}
 \subsection{GP of the penalized cost function $\Delta_{\alpha}$}
 \subsubsection{GP processes}
 Let $\Delta_{\alpha}(\mathbf{k},\mathbf{u}) = J(\mathbf{k},\mathbf{u}) - \alpha J^*(\mathbf{u})$. Furthermore, we assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\mathbf{k}^{(1)},\mathbf{u}^{(1)}),\dots,(\mathbf{k}^{(n)},\mathbf{u}^{(n)}) \right\}$, denoted as $(\mathbf{k},\mathbf{u})\mapsto Y(\mathbf{k},\mathbf{u})$.
@@ -205,9 +270,127 @@ Finally, averaging over $\mathbf{u}$ yields
 \begin{equation}
   \hat{\Gamma}(\mathbf{k}) = \int_{\Uspace}\pi_{\alpha}(\mathbf{k},\mathbf{u})p(\mathbf{u}) \,\mathrm{d}\mathbf{u}
 \end{equation}
-\subsubsection{Sources, quantification of uncertainties, and SUR strategy ?}
+\subsection{Sources, quantification of uncertainties, and SUR strategy ?}
 
 Formally, for a given point $(\mathbf{k},\mathbf{u})$, the event ``the point is $\alpha$-acceptable'' has probability $\pi(\mathbf{k},\mathbf{u})$ and variance $\pi(\mathbf{k},\mathbf{u}) (1-\pi(\mathbf{k},\mathbf{u}))$. Obviously, the points with the highest uncertainty have the highest variance, so have a coverage probability $\pi$ around 0.5.
+
+\subsubsection{Random sets}
+Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (ref thèse Reda), \cite{heinrich_level_2012}.
+
+
+Let us consider $A$, a random closed set, such that its realizations are subsets of $\Xspace$, and $p$ is its coverage probability, that is
+\begin{equation}
+  p(x) = \Prob\left[x\in A\right], x\in\Xspace
+\end{equation}
+For $\eta \in [0, 1]$, we define the $\eta$-level set of $p$,
+\begin{equation}
+  Q_{\eta} = \{x\in\Xspace \mid p(x) \geq \eta \}
+\end{equation}
+It may seem trivial, but let us still note that those sets are decreasing:
+\begin{equation}
+  0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
+\end{equation}
+
+Using those level sets for the level $\eta=0.05$ for instance:
+\begin{equation}
+  Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}
+\end{equation}
+Recalling the objective, it gives upper bounds and lower bounds of the confidence interval of level $\eta$ on the probability for each $\mathbf{k}$:
+\begin{align}
+  \hat{\Gamma_{\alpha}}^{U}(\mathbf{k}) &= \Prob_\mathbf{U}\left[x=(\mathbf{k},\mathbf{u}) \in Q_{1-\frac{\eta}{2}}\right] \\
+  \hat{\Gamma_{\alpha}}^{L}(\mathbf{k}) &= \Prob_\mathbf{U}\left[x=(\mathbf{k},\mathbf{u}) \in Q_{\frac{\eta}{2}}\right]
+\end{align}
+In \cite{dubourg_reliability-based_2011} is introduced the Margin of uncertainty, defined as the following set difference
+\begin{equation}
+  \mathbb{M}_{\eta} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
+\end{equation}
+Considering the 
+
+Let $\mu$ be a Borel $\sigma$-finite measure on $\Xspace$. We define Vorob'ev expectation, as the $\eta^*$-level set of $A$ verifying
+\begin{equation}
+  \forall \beta < \eta^* \quad \mu(Q_{\beta}) \leq \Ex[\mu(A)] \leq \mu(Q_{\eta^*})
+\end{equation}
+that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
+
+\subsubsection{SUR Strategies}
+The main idea behind Stepwise Uncertainty Reduction is to define a criterion, say $\kappa_n$, that encapsulates the epistemic uncertainty, and to minimize this criterion, in order to select the next point:
+\begin{equation}
+  x^{n+1} = \argmax_{x\in\Xspace} \kappa_n(x)
+\end{equation}
+where $\kappa_n$ depends on $Y\mid \mathcal{X}_n$
+This approach is suitable for step by step evaluations.
+
+\subsubsection{Integrated Mean square criterion}
+\cite{sacks_designs_1989}
+Let us consider that we have a kriging model over $\Xspace$ based on a experimental design $\mathcal{X}$, that is denoted $Y \mid \mathcal{X}$
+
+We define the Integrated Mean Square Error (IMSE) as
+\begin{equation}
+  \IMSE(Y \mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)\,\mathrm{d}x
+\end{equation}
+where
+\begin{equation}
+  Y\mid \mathcal{X} \sim \mathcal{N}(m_{Y\mid\mathcal{X}}(x),\sigma^2_{Y\mid\mathcal{X}}(x))
+\end{equation}
+
+
+\begin{equation}
+  x^{n+1} = \argmin_{x\in \Xspace}\Ex_{y\sim Y(x)}\left[\IMSE\left(Y \mid \mathcal{X}\cup \left\{(x, y)\right\}\right) \right]
+\end{equation}
+So we choose th point minimizing the expected integrated mean square error.
+
+\subsubsection{Weighted IMSE}
+To include a more precise objective than the enrichment of the design, one can add a weight function to the integral, giving the $W-\IMSE$:
+\begin{equation}
+  \label{eq:w-imse}
+  w-\IMSE(Y\mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)w(x)\,\mathrm{d}x
+\end{equation}
+
+In order to increase the accuracy of the surrogate model around some region of interest, the $w-\IMSE$ can be transformed into
+\begin{equation}
+  w-\IMSE(Y\mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)\ProbGP\left[x \in \mathbb{M}_{\eta}\right]\,\mathrm{d}x
+\end{equation}
+where $\mathcal{M}_{\eta}$ is the $\eta$-margin of uncertainty.
+
+\subsubsection{UB-LB for $(p, \alpha_p, \mathbf{k}_p)$}
+Let us assume that we have set a probability $p\in [0,1]$. Let us recall that the triplet $(p, \alpha_p, \mathbf{k}_p)$ verifies
+\begin{align}
+  \max_{\mathbf{k}} \Gamma_{\alpha_p}(\mathbf{k}) = \Gamma_{\alpha_p}(\mathbf{k}_p) = \Prob_{\mathbf{U}}\left[J(\mathbf{k}_p,\mathbf{U}) \leq \alpha_p J^*(\mathbf{U})\mid \mathbf{U} = \mathbf{u}\right] = p
+\end{align}
+Let us say that $\bar{\Gamma}$ is the $\eta$-upper-bound, while $\underline{\Gamma}$ is the $\eta$-lower bounds, so
+\begin{equation}
+  \ProbGP\left[\underline{\Gamma}(\mathbf{k}) \leq \Gamma_n(\mathbf{k}) \leq \bar{\Gamma}(\mathbf{k})\right] = \eta
+\end{equation}
+\begin{itemize}
+\item If $\underline{\Gamma}(\mathbf{k})>p$, we are too permissive, so we should decrease $\alpha$
+  \begin{itemize}
+  \item by how much ?
+  \end{itemize}
+\item If $\bar{\Gamma}(\mathbf{k})<p$, we are too conservative, so we should increase $\alpha$
+  \begin{itemize}
+  \item by how much again ?
+  \end{itemize}
+ \item If $\underline{\Gamma}(\mathbf{k})<p<\bar{\Gamma}(\mathbf{k})$, reduce uncertainty on $\mathbf{k}_p$
+\end{itemize}
+Changing the value of $\alpha$ does not require any further evaluation of the objective function, so can be increased until $\max \hat{\Gamma} = p$ ? by dichotomy for instance. This $\hat{\mathbf{k}}_p$ is then the candidate.
+
+Criterion: stepwise reduction of the variance of the estimation of $\hat{\Gamma}(\hat{\mathbf{k}}_p) = \max_{\mathbf{k}}\hat{\Gamma}(\hat{\mathbf{k}})$
+
+For a fixed $p\in (0, 1]$, and an initial design $\mathcal{X}$. Set an initial value for $\alpha \geq 1$. 
+\begin{itemize}
+\item Define $\Delta_{\alpha}$, using $Y \mid \mathcal{X}$
+\item Update $\alpha$ such that $\max \hat{\Gamma}_{\alpha,n} = p$
+\item Compute measure of uncertainty that we want to reduce:
+  \begin{itemize}
+  \item $\bar{\Gamma}_{\alpha,n}(\mathbf{k}) - \underline{\Gamma}_{\alpha,n}(\mathbf{k})$
+  \item $\pi_{\alpha}(\mathbf{k},\mathbf{u})(1-\pi_{\alpha}(\mathbf{k},\mathbf{u}))$
+  \end{itemize}
+\end{itemize}
+
+
+
+\bibliographystyle{alpha}
+\bibliography{/home/victor/acadwriting/bibzotero}
 \end{document}
 %%% Local Variables:
 %%% mode: latex
