@@ -1,0 +1,48 @@
+#+author: Victor Trappler
+#+title: Plan du manuscrit
+
+* Introduction
+** L'importance des simulations numériques dans les prédictions
+** La calibration des modèles numériques
+** La modélisation de l'océan
+** Les Incertitudes dans la modélisation
+*** Classer les incertitudes
+*** 
+
+* Estimation de paramètres "déterministes"
+** Fonction objective et approche Bayesienne
+*** Calibration et Inférence Bayesienne
+*** Le MAP et le ML comme des estimateurs ponctuels
+
+
+* Robust estimators in the presence of uncertainties
+** Localized optimisation pitfalls
+** Robustness based on the moment of an objective function
+*** Minimizing mean and variance
+*** Multiobjective alternatives and higher moments
+** The relative regret estimators family
+*** Construction of the MPE
+*** Relaxing the optimality constraint
+*** Choosing the relaxation coefficient
+
+* Adaptative design enrichment for calibration using GP
+** Mathematical background on Gaussian Processes
+*** GP as prior on functions
+*** Selecting covariance kernels and hyperparameters
+** One-step lookahead: Stepwise Uncertainties Reduction
+*** Exploration based criteria
+    + Maximum of variance
+    + Reduce one-step IMSE
+*** Goal driven criteria for global optimisation
+    + Probability of Improvement
+    + Expected Improvement
+    + Informational Approach to Global Optimisation
+*** Criteria for Contour Estimation / level sets
+    + Margin definition
+    + Vorob'ev mean and deviation
+*** Criteria to estimate jointly $\alpha_p$ and $k_p$
+
+* Application to the numerical coastal regional model CROCO
+
+* Conclusion
+ 

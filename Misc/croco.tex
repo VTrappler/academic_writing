@@ -48,7 +48,7 @@ In this document, I will try to provide a summary of my understanding of this mo
 \subsection{Numerical methods used}
 \section{Utilisation}
 CROCO is written mainly in FORTRAN, so it needs to be first compiled, then executed
-\subsection{Compilation}
+\subsection{Compilation job}
 \subsubsection{param.h}
 Initialize parameters of the simulation, especially the number of tides to take into account:
 \begin{itemize}
@@ -87,7 +87,62 @@ Initialize parameters of the simulation, especially the number of tides to take 
   #!/bin/sh
   ../OCEAN/jobcomp
 \end{lstlisting}
+The \texttt{jobcomp} executable file in bash prepares and compile CROCO.
+The relevant directory variables are:
+\begin{itemize}
+\item \texttt{RUNDIR}: The current directory, so \texttt{croco/Run/}
+\item \texttt{SOURCE}: The source directory, so \texttt{croco/OCEAN}
+\item \texttt{SCRDIR}: The \emph{scratch} directory, so \texttt{croco/Run/Compile/}
+\item \texttt{ROOT\_DIR}: the root directory, so \texttt{croco/}
+\end{itemize}
+It first set the compiler options according to the OS in place: \texttt{LINUX\_FC=gfortran} with 64bits for instance.
+Afterwards, the source code is copied from \texttt{SOURCE} to \texttt{SCRDIR}.
+The local files (in \texttt{croco/Run/} then) overwrite those in \texttt{SCRDIR}.
+We change directory to \texttt{SCRDIR} (\texttt{Run/Compile}).
 
+The compulation options are set:
+\begin{itemize}
+\item \texttt{CPP1=cpp -traditional -DLinux}: Preprocessing options for C, C++: ``traditional'' for compatibility, ``DLinux'' to predefine macro ``Linux'', with definition 1
+\item \texttt{CFT1 = gfortran}: Fortran compiler, with the flags:
+\item \texttt{FFLAGS1}=
+  \begin{itemize}
+  \item \texttt{-O3}: Optimization of level 3:
+  \item \texttt{-fdefault-real-8}: set defaults real type to 8 bytes wide
+  \item \texttt{-fdefault-double-8}: set defaults double type to 8 bytes wide
+  \item \texttt{-mcmodel=large}: Might require a lot of static memory
+  \item \texttt{-fno-align-commons}: disable automatic alignment of all variables in ``COMMON'' block
+  \item \texttt{-fbacktrace}: Fortran runtime should output backtrace of fatal error
+  \item \texttt{-fbounds-check}: enable generation of runtime checks for array subscripts (deprecated, should be \texttt{fcheck=bounds} according to gfortran manual
+  \item \texttt{-finit-real=nan}: initialize REAL variables to (silent) NaN
+  \item \texttt{-finit-integer=8888}: initialize INTEGER variables to $8888$
+  \end{itemize}
+\end{itemize}
+
+
+\paragraph{TAPENADE}
+Turn on tracing (\texttt{set -x}) and exit on error (\texttt{set -e}).
+Copy all \texttt{.F} \texttt{.c} and \texttt{.h} files from \texttt{ROO\_DIR/AD/} to \texttt{SCRDIR}, and \texttt{Makefile} as well.
+
+It looks for tapenade with ``ifexist'' file:
+\begin{lstlisting}[language=bash]
+  [ -f \${d}/tapenade\_3.14/bin/tapenade ]
+\end{lstlisting}
+
+
+\paragraph{Makefile}
+After the sources are defined, let us take a look at the Makefile, in  \texttt{croco/OCEAN/Compile/}.
+The basic structure of makefiles is the following:
+\begin{lstlisting}[language=make]
+product: source
+    command
+  \end{lstlisting}
+\begin{lstlisting}[language=make]
+$(SBIN):  $(OBJS90) $(OBJS)
+	 $(LDR) $(FFLAGS) $(LDFLAGS) -o a.out $(OBJS90) $(OBJS) $(LCDF) $(LMPI) 
+         mv a.out \$(SBIN)
+\end{lstlisting}
+but with aliase
+\newpage
 \subsection{Execution}
 \subsubsection{The .in file}
 \paragraph{Timestepping}

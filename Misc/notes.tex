@@ -189,6 +189,20 @@ This leads to
                          1
                        \end{bmatrix}
 \end{align}
+
+\subsection{Covariance functions}
+\label{sec:cov_fun}
+
+
+\subsection{General SUR strategies}
+\label{sec:SUR_strat}
+\subsubsection{Generalities on SUR strategies}
+
+\subsubsection{Exploration and Space Filling objectives}
+
+\subsubsection{Contour Estimation}
+Let $\xi$ be a random process over $\Xspace$, and let us follow what has been done in~\cite{bect_sequential_2012}.
+Let $\xi_n$ be the GP constructed using $n$ evaluations of the objective function.
 \subsection{GP of the penalized cost function $\Delta_{\alpha}$}
 \subsubsection{GP processes}
 Let $\Delta_{\alpha}(\mathbf{k},\mathbf{u}) = J(\mathbf{k},\mathbf{u}) - \alpha J^*(\mathbf{u})$. Furthermore, we assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\mathbf{k}^{(1)},\mathbf{u}^{(1)}),\dots,(\mathbf{k}^{(n)},\mathbf{u}^{(n)}) \right\}$, denoted as $(\mathbf{k},\mathbf{u})\mapsto Y(\mathbf{k},\mathbf{u})$.
@@ -231,7 +245,7 @@ Considering the joint distribution of $Y(\mathbf{k},\mathbf{u})$ and $Y^*(\mathb
     \end{bmatrix}
 \right)
 \end{equation}
-By multiplying by the matrix $\left[1\quad -\alpha\right]$ yields
+By multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ yields
 \begin{align}
   \Delta_{\alpha}(\mathbf{k},\mathbf{u}) &\sim \mathcal{N}\left(m_{\Delta}(\mathbf{k},\mathbf{u}); \sigma^2_{\Delta}(\mathbf{k},\mathbf{u})\right) \\
   m_{\Delta}(\mathbf{k},\mathbf{u}) &= m_Y(\mathbf{k},\mathbf{u}) - \alpha m_Y^*(\mathbf{u}) \\
@@ -253,13 +267,13 @@ Defined somewhere else, we have
 This classification problem can be approached with a plug-in approach, or a probablistic one:
 \begin{align}
   \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \mathbbm{1}_{m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u})} \\
-  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi(\mathbf{k},\mathbf{u})
+  \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi_{\alpha}(\mathbf{k},\mathbf{u})
 \end{align}
 Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our meta model to verify the inequality is given by
 Based on those two approximation, the approximated probability $\Gamma$ is
 \begin{align}
   \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Prob_U\left[m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u}) \right] \tag{plug-in} \\
-  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right] \tag{Probabilistic approx} \\
+  \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right]  = \Ex_U\left[\pi_{\alpha}(\mathbf{k},\mathbf{u})\right]\tag{Probabilistic approx} \\
 \end{align}
 
 The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$:

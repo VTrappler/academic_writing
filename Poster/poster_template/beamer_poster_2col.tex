@@ -53,7 +53,7 @@
 \setbeamerfont{itemize/enumerate body}{}
 \setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
 \setbeamerfont{itemize/enumerate subsubbody}{size=\footnotesize}
-\graphicspath{{../Slides/Figures/}}
+\graphicspath{{./Figures/}}
 
 \makeatletter
 \newcommand\HUGE{\@setfontsize\Huge{83}{90}}
@@ -173,7 +173,7 @@
     % \end{itemize}  
     \begin{figure}[!h]
       \centering
-      \resizebox{.7\linewidth}{0.05\textheight}{\input{./hauteureau.tikz}}
+      \resizebox{.7\linewidth}{0.05\textheight}{\input{./Figures/hauteureau.tikz}}
     \end{figure}
     The calibration problem is to be able to find a value of $\bm{k}\in\mathcal{K}$ denoted $\kest$ that matches the best the observations $\yobs$  \nocite{bayarri_framework_2007}
 . We define a loss function, that is the misfit between the observations to the model. 
@@ -201,7 +201,7 @@ and $\yobs = M(\bm{k}_{\mathrm{ref}}, \bm{u}_{\mathrm{ref}})$
 % \framebox{\resizebox{0.5\linewidth}{!}{\input{./inverse_problem_rnd.tikz}}}
     \begin{figure}[!h]
   \centering
-  {\input{./inverse_problem_rnd.tikz}}
+  {\input{./Figures/inverse_problem_rnd.tikz}}
 \end{figure}
 
 The loss function is now
@@ -328,10 +328,10 @@ $\longrightarrow$ Those approaches are not robust: inherent variability of $\bm{
 % ------------------------------------------------------------
 \begin{block}{Numerical Results: toy model of Shallow Waters}
   \begin{center}
-    \includegraphics[width = .97\textwidth]{./estimate_uref_centered.pdf}
+    \includegraphics[width = .97\textwidth]{estimate_uref_centered.pdf}
   \end{center}
   \begin{center}
-    \includegraphics[width = .97\textwidth]{./estimate_uref_AmPm.pdf} 
+    \includegraphics[width = .97\textwidth]{estimate_uref_AmPm.pdf} 
   \end{center}
 \end{block}
 \vfill
@@ -374,7 +374,7 @@ $\longrightarrow$ Those approaches are not robust: inherent variability of $\bm{
      \vspace{-2ex}
       \begin{multicols}{5}
         \bibliographystyle{unsrt} 
-        \bibliography{../Documents/bibzotero}
+        \bibliography{./bibzotero}
       \end{multicols}
      
       

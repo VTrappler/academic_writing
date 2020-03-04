@@ -1,24 +1,74 @@
 #+author: Victor Trappler
 #+title: Outline of PhD manuscript
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
 
 * Introduction
-** Importance of the numerical model in predictions / L'importance des simulations numériques dans les prédictions
-** Need for good calibrated models / La calibration des modèles numériques
-** Oceanic modelling / La modélisation de l'océan
-** Uncertainties in the modelling and effects / Les Incertitudes dans la modélisation
-*** Classifying the uncertainties / Classer les incertitudes
+** Importance of the numerical model in predictions 
+** Need for good calibrated models
+** Oceanic modelling
+** Uncertainties in the modelling and effects
+*** Classifying the uncertainties
 *** 
 
-* "Deterministic methods" of calibration / Estimation de paramètres "déterministes"
-** The link between Bayesian and Variational / Fonction objective et approche Bayesienne
-*** The calibration problem as a Bayesian inference problem / Calibration et Inférence Bayesienne
-*** MAP and MLE as point estimates / Le MAP et le MV comme des estimateurs ponctuels
+
+* Data Assimilation framework
+** The link between Bayesian and Variational
+*** The calibration problem as a Bayesian inference problem
+*** MAP and MLE as point estimates
+** Calibration of numerical models using adjoint method
+*** Using the adjoint to get the gradient of the cost function
+*** Minimization problem in high dimension: BFGS, M1QN3
 
 
-* Relative Regret family of estimators
+* Robust estimators in the presence of uncertainties
+** Localized optimisation pitfalls
 
-* Efficient estimation of members of the RRE family
+** Robustness based on the moment of an objective function
+*** Minimizing mean and variance
+*** Multiobjective alternatives and higher moments
+** Horsetail matching
+*** Metrics on the CDF
+*** Risk-averse or risk-seeking targets
+
+** The relative regret estimators family
+*** Construction of the MPE
+*** Relaxing the optimality constraint
+*** Choosing the relaxation coefficient
+
+
+* Adaptative design enrichment for calibration using GP
+** Mathematical background on Gaussian Processes
+*** GP as prior on functions
+*** Selecting covariance kernels and hyperparameters
+*** Using gradient information
+
+** One-step lookahead: Stepwise Uncertainties Reduction
+*** Exploration based criteria
+    + Maximum of variance
+    + Reduce one-step IMSE
+*** Goal driven criteria for global optimisation
+    + Probability of Improvement
+    + Expected Improvement
+    + Informational Approach to Global Optimisation
+*** Criteria for Contour Estimation / level sets
+    + Margin definition
+    + Vorob'ev mean and deviation
+*** Criterion to estimate jointly $\alpha_p$ and $k_p$
+
+** Taking advantage of parallelism
+*** From one-step to $q$ step lookahead variations of criteria
+*** Sampling-based adaptive designs of experiments
+
 
 * Application to the numerical coastal regional model CROCO
+** Physical parametrization of the bottom friction
+** Modelling of the uncertainties
+** Sensitivity analysis
+** Dimension reduction
+*** Ad-hoc segmentation based on soil type
+*** 
+
+
 
 * Conclusion
