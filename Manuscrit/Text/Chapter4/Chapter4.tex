@@ -1,0 +1,172 @@
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\subfileLocal{\setcounter{chapter}{3}}
+\specialchapter{Adaptative design enrichment for calibration using Gaussian Processes}
+\label{chap:adaptative_design_gp}
+\minitoc
+\newpage
+\subfileLocal{\pagestyle{contentStyle}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 				SECTION 0 : Introduction	   %%%
+
+\section{Gaussian Processes}
+\label{sec:GP}
+
+Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
+\begin{align}
+  \begin{array}{rrcl}
+    f: & \mathbb{X} \subset \mathbb{R}^p& \longrightarrow & \mathbb{R} \\
+       & x & \longmapsto & f(x)
+  \end{array}
+\end{align}
+This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} \subset \mathbb{X}^n$. 
+We wish to have a probabilistic modelling of this function
+We introduce random processes as way to have a prior distribution on function
+This uncertainty on $f$ is modelled as a random process:
+\begin{equation}
+  \begin{array}{rcl}
+    Z: \mathbb{X} \times \Omega& \longrightarrow & \mathbb{R} \\
+    (x,\omega) & \longmapsto & Z(x,\omega)
+  \end{array}
+\end{equation}
+The $\omega$ variable will be omitted next.
+\subsection{Linear Estimation}
+\label{sec:linear_estimation}
+A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}$ can be written as
+\begin{equation}
+  \label{eq:lin_est}
+  \hat{Z}(x) =
+  \begin{bmatrix}
+    w_1 \dots w_n
+    \end{bmatrix}
+    \begin{bmatrix}
+      f(x_1) \\ \vdots \\ f(x_n)
+    \end{bmatrix} = \mathbf{W}^Tf(\mathcal{X}) = \sum_{i=1}^n w_i(x) f(x_i)
+\end{equation}
+Using those kriging weights $\mathbf{W}$, a few additional conditions must be added, in order to obtain the Best Linear Unbiased Estimator:
+\begin{itemize}
+\item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
+\item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
+\end{itemize}
+Translating using Eq.\eqref{eq:lin_est}:
+\begin{equation}
+  \Ex[\hat{Z}(x) - Z(x)]=0 \iff m(\sum_{i=1}^n w_i(x)-1) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
+\end{equation}
+For the minimum of variance, we introduce the augmented vector $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$, and
+the variance can be expressed as:
+\begin{align}
+  \Ex[(\hat{Z}(x) - Z(x))^2] &= \Cov\left[[\mathbf{W}^T, -1] \cdot \mathbf{Z}_n(x) \right] \\
+                             &= [\mathbf{W}^T, -1] \Cov\left[\mathbf{Z}_n(x) \right] [\mathbf{W}^T, -1]^T
+\end{align}
+In addition, we have
+\begin{equation}
+  \Cov\left[\mathbf{Z}_n(x) \right] =
+  \begin{bmatrix}
+    \Cov\left[
+      \begin{bmatrix}
+        Z(x_1) \dots Z(x_n)
+      \end{bmatrix}^T\right]
+    & \Cov\left[
+      \begin{bmatrix}
+        Z(x_1) \dots Z(x_n)
+      \end{bmatrix}^T, Z(x) \right]
+  \\
+  \Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T & \Var\left[Z(x)\right]
+  \end{bmatrix}
+\end{equation}
+Once expanded, the kriging weights solve then the following optimisation problem:
+\begin{align}
+  \min_{\mathbf{W}} ~&\mathbf{W}^T \Cov\left[Z(x_1) \dots Z(x_n)\right] \mathbf{W}\\ &-\Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T \mathbf{W}\\ &- \mathbf{W}^T\Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right] \\ &+ \Var\left[Z(x)\right] \\
+  \text{s.t.}& \mathbf{W}^T \mathbf{1} = \mathbf{1}
+\end{align}
+This leads to
+\begin{align}
+  \begin{bmatrix}
+    \mathbf{W} \\ m
+  \end{bmatrix}
+  &=
+  \begin{bmatrix}
+    \Cov\left[Z(x_1) \dots Z(x_n)\right] & \mathbf{1} \\
+  \mathbf{1}^T & 0
+\end{bmatrix}^{-1}
+                 \begin{bmatrix}
+                  \Cov\left[
+    \begin{bmatrix}
+      Z(x_1) \dots Z(x_n)
+    \end{bmatrix}^T, Z(x) \right]^T \\ 1 
+\end{bmatrix}
+  \\ &=
+    \begin{bmatrix}
+      C(x_1, x_1) & \cdots & C(x_1, x_n) & 1 \\
+      C(x_2, x_1) & \cdots & C(x_2, x_n) & 1 \\
+      \vdots & \ddots & \vdots & \vdots \\
+      C(x_n, x_1) & \cdots & C(x_n, x_n)& 1 \\
+      1 & \cdots & 1 & 0
+    \end{bmatrix}^{-1}
+                       \begin{bmatrix}
+                         C(x_1, x) \\
+                         C(x_2, x) \\
+                         \vdots \\
+                         C(x_n, x) \\
+                         1
+                       \end{bmatrix}
+\end{align}
+
+\subsection{Covariance functions}
+\label{sec:cov_fun}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../bibzotero}
+}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

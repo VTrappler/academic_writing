@@ -187,7 +187,7 @@
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/AMLGSN9K/Azais et Wschebor - 2005 - On the distribution of the maximum of a gaussian f.pdf},
   journal = {The Annals of Applied Probability},
-  keywords = {60G15; 60G70. (Primary),Mathematics - Probability},
+  keywords = {Mathematics - Probability},
   language = {en},
   number = {1A}
 }
@@ -641,7 +641,7 @@
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/MKLWLZCZ/Blömker et Duan - 2006 - Predictability of the Burgers dynamics under model.pdf},
   journal = {arXiv:math/0607357},
-  keywords = {60H10,60H15,Mathematics - Classical Analysis and ODEs,Mathematics - Probability},
+  keywords = {Mathematics - Classical Analysis and ODEs,Mathematics - Probability},
   language = {en}
 }
 
@@ -758,6 +758,40 @@
   primaryClass = {cs, stat}
 }
 
+@article{bouhlel_gradient-enhanced_2019,
+  title = {Gradient-Enhanced Kriging for High-Dimensional Problems},
+  author = {Bouhlel, Mohamed A. and Martins, Joaquim R. R. A.},
+  year = {2019},
+  month = jan,
+  volume = {35},
+  pages = {157--173},
+  issn = {1435-5663},
+  doi = {10.1007/s00366-018-0590-x},
+  abstract = {Surrogate models provide an affordable alternative to the evaluation of expensive deterministic functions. However, the construction of accurate surrogate models with many independent variables is currently prohibitive because they require a large number of function evaluations for the desired accuracy. Gradient-enhanced kriging has the potential to reduce the number of evaluations when efficient gradient computation, such as an adjoint method, is available. However, current gradient-enhanced kriging methods do not scale well with the number of sampling points because of the rapid growth in the size of the correlation matrix, where new information is added for each sampling point in each direction of the design space. Furthermore, they do not scale well with the number of independent variables because of the increase in the number of hyperparameters that must be estimated. To address this issue, we develop a new gradient-enhanced surrogate model approach that drastically reduces the number of hyperparameters through the use of the partial least squares method to maintain accuracy. In addition, this method is able to control the size of the correlation matrix by adding only relevant points defined by the information provided by the partial least squares method. To validate our method, we compare the global accuracy of the proposed method with conventional kriging surrogate models on two analytic functions with up to 100 dimensions, as well as engineering problems of varied complexity with up to 15 dimensions. We show that the proposed method requires fewer sampling points than conventional methods to obtain the desired accuracy, or it provides more accuracy for a fixed budget of sampling points. In some cases, we get models that are over three times more accurate than previously developed surrogate models for the same computational time, and over 3200 times faster than standard gradient-enhanced kriging models for the same accuracy.},
+  file = {/home/victor/Zotero/storage/CEZELLGQ/Bouhlel et Martins - 2019 - Gradient-enhanced kriging for high-dimensional pro.pdf},
+  journal = {Engineering with Computers},
+  keywords = {GP,High dimension},
+  language = {en},
+  number = {1}
+}
+
+@article{bouhlel_improving_2016,
+  title = {Improving Kriging Surrogates of High-Dimensional Design Models by {{Partial Least Squares}} Dimension Reduction},
+  author = {Bouhlel, Mohamed Amine and Bartoli, Nathalie and Otsmane, Abdelkader and Morlier, Joseph},
+  year = {2016},
+  month = may,
+  volume = {53},
+  pages = {935--952},
+  issn = {1615-147X, 1615-1488},
+  doi = {10.1007/s00158-015-1395-9},
+  abstract = {Engineering computer codes are often computationally expensive. To lighten this load, we exploit new covariance kernels to replace computationally expensive codes with surrogate models. For input spaces with large dimensions, using the kriging model in the standard way is computationally expensive because a large covariance matrix must be inverted several times to estimate the parameters of the model. We address this issue herein by constructing a covariance kernel that depends on only a few parameters. The new kernel is constructed based on information obtained from the Partial Least Squares method. Promising results are obtained for numerical examples with up to 100 dimensions, and significant computational gain is obtained while maintaining sufficient accuracy.},
+  file = {/home/victor/Zotero/storage/94JUCVF2/Bouhlel et al. - 2016 - Improving kriging surrogates of high-dimensional d.pdf},
+  journal = {Structural and Multidisciplinary Optimization},
+  keywords = {GP,High dimension},
+  language = {en},
+  number = {5}
+}
+
 @phdthesis{boutet_estimation_2015,
   title = {Estimation Du Frottement Sur Le Fond Pour La Mod{\'e}lisation de La Mar{\'e}e Barotrope},
   author = {Boutet, Martial},
@@ -803,6 +837,14 @@
   journal = {Inverse Problems},
   keywords = {Discrepancy,Model inadequacy},
   number = {11}
+}
+
+@article{buchholz_high_nodate,
+  title = {High Dimensional {{Bayesian}} Computation},
+  author = {Buchholz, Alexander},
+  pages = {168},
+  file = {/home/victor/Zotero/storage/9IIL2VQM/Buchholz - High dimensional Bayesian computation.pdf},
+  language = {en}
 }
 
 @book{bucholtz_handbook_2013,
@@ -1398,6 +1440,17 @@ better QOI than the best value achievable by the moment-based design.},
   year = {1988},
   abstract = {Recent advances in variational and optimization methods applied to increasingly complex numerical weather prediction models with larger numbers of degrees of freedom mandate to take a perspective view of past and recent developments in this field, and present a view of the state of art in the field. Variational methods attempt to achieve a best fit between data and model subject to some `a priori' criteria \textendash{} in view of resolving the undeterminancy problem between the size of the model and the respective number of data required for its satisfactory solution. This review paper presents in a synthesized way the combined views of the authors as to the state of the art of variational and optimization methods in meteorology. Issues discussed include topics of variational analysis, variational initialization, optimal control techniques, variational methods applied for numerical purposes and constrained adjustment, and finally how some of the variational and optimization methods discussed in the review relate to each other.},
   file = {/home/victor/Zotero/storage/W6FNUMJV/Dimet et Navon - 1988 - Variational and Optimization Methods in Meteorolog.pdf;/home/victor/Zotero/storage/TW3ZC5FN/summary.html}
+}
+
+@phdthesis{dobre_analyses_2010,
+  title = {{Analyses de sensibilit{\'e} et d'identifiabilit{\'e} globales. Application {\`a} l'estimation de param{\`e}tres photophysiques en th{\'e}rapie photodynamique}},
+  author = {Dobre, Simona},
+  year = {2010},
+  month = jun,
+  abstract = {La th{\'e}rapie photodynamique (PDT) est un traitement m{\'e}dical destin{\'e} {\`a} certains types de cancer. Elle utilise un agent photosensibilisant qui se concentre dans les tissus pathologiques est qui sera. Cet agent est ensuite activ{\'e} par une lumi{\`e}re d'une longueur d'onde pr{\'e}cise produisant, apr{\`e}s une cascade de r{\'e}actions, des esp{\`e}ces r{\'e}actives de l'oxyg{\`e}ne qui endommagent les cellules canc{\'e}reuses. Cette th{\`e}se aborde les analyses d'identifiabilit{\'e} et de sensibilit{\'e} des param{\`e}tres du mod{\`e}le dynamique non lin{\'e}aire retenu. Apr{\`e}s avoir pr{\'e}cis{\'e} diff{\'e}rents cadres d'analyse d'identifiabilit{\'e}, nous nous int{\'e}ressons plus particuli{\`e}rement {\`a} l'identifiabilit{\'e} a posteriori, pour des conditions exp{\'e}rimentales fix{\'e}es, puis {\`a} l'identifiabilit{\'e} pratique, prenant en plus en compte les bruits de mesure. Pour ce dernier cadre, nous proposons une m{\'e}thodologie d'analyse locale autour de valeurs particuli{\`e}res des param{\`e}tres. En ce qui concerne l'identifiabilit{\'e} des param{\`e}tres du mod{\`e}le dynamique de la phase photocytotoxique de la PDT, nous montrons que parmi les dix param{\`e}tres localement identifiables a posteriori, seulement l'un d'entre eux l'est en pratique. N{\'e}anmoins, ces r{\'e}sultats locaux demeurent insuffisants en raison des larges plages de variation possibles des param{\`e}tres du mod{\`e}le et n{\'e}cessitent d'{\^e}tre compl{\'e}t{\'e}s par une analyse globale. Le manque de m{\'e}thode visant {\`a} tester l'identifiabilit{\'e} globale a posteriori ou pratique, nous a orient{\'e}s vers l'analyse de sensibilit{\'e} globale de la sortie du mod{\`e}le par rapport {\`a} ses param{\`e}tres. Une m{\'e}thode d'analyse de sensibilit{\'e} globale fond{\'e}e sur l'{\'e}tude de la variance a permis de mettre en {\'e}vidence trois param{\`e}tres sensibilisants. Nous abordons ensuite les liens entre les analyses globales d'identifiabilit{\'e} et de sensibilit{\'e} des param{\`e}tres, en employant une d{\'e}composition de Sobol'. Nous montrons alors que les liens suivants existent : une fonction de sensibilit{\'e} totale nulle implique un param{\`e}tre non-identifiable; deux fonctions de sensibilit{\'e} colin{\'e}aires impliquent la non-identifiabilit{\'e} mutuelle des param{\`e}tres en question ; la non-injectivit{\'e} de la sortie par rapport {\`a} un de ses param{\`e}tres peut aussi entrainer la non-identifiabilit{\'e} du param{\`e}tre en question mais ce dernier point ne peut {\^e}tre d{\'e}tect{\'e} en analysant les fonctions de sensibilit{\'e} uniquement. En somme, la d{\'e}tection des param{\`e}tres non globalement identifiables dans un cadre exp{\'e}rimental donn{\'e} {\`a} partir de r{\'e}sultats d'analyse de sensibilit{\'e} globale ne peut {\^e}tre que partielle. Elle permet d'observer deux (sensibilit{\'e} nulle ou n{\'e}gligeable et sensibilit{\'e}s corr{\'e}l{\'e}es) des trois causes de la non-identifiabilit{\'e}.},
+  file = {/home/victor/Zotero/storage/3ZJS3E9C/Dobre - 2010 - Analyses de sensibilité et d'identifiabilité globa.pdf;/home/victor/Zotero/storage/MXQQJMVI/tel-00550527.html},
+  language = {fr},
+  school = {Universit{\'e} Henri Poincar{\'e} - Nancy I}
 }
 
 @article{dobrovidov_data-driven_2014,
@@ -2237,9 +2290,19 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/FF7YVTEY/Hernández-Lobato et al. - 2014 - Predictive Entropy Search for Efficient Global Opt.pdf},
   journal = {arXiv:1406.2541 [cs, stat]},
-  keywords = {Computer Science - Learning,Statistics - Machine Learning},
+  keywords = {Statistics - Machine Learning},
   language = {en},
   primaryClass = {cs, stat}
+}
+
+@article{hewston_quantifying_2010,
+  title = {Quantifying Uncertainty in Tide, Surge and Wave Modelling during Extreme Storms},
+  author = {Hewston, R and Chen, Yanxian and Pan, Shunqi and Zou, Qingping and Reeve, Dominic and Cluckie, Ian},
+  year = {2010},
+  month = sep,
+  doi = {10.7558/bhs.2010.ic74},
+  abstract = {Interactions between meteorological and hydrodynamic processes are poorly understood, and may result in large uncertainties when assessing the performance of sea defences in extreme conditions. This study integrates numerical weather prediction models with models of wave generation and propagation, and surge and tide propagation. By using an ensemble methodology, the uncertainty at each stage of the model cascade may be quantified. Subsequently, this information, either as a proxy or appropriately transformed into predictive uncertainty, will be valuable in calculating the likelihood of hydraulic and structural failure in extreme storms. This paper describes results for a domain centred on one of the locations for the proposed Severn Barrage. This barrage will be the focus for the world's largest marine renewable energy scheme and will potentially have a significant impact on the coastal flooding response of this part of the Severn Estuary. Dynamically downscaled, high resolution wind and pressure fields of historic extreme storms are generated using the Weather Research and Forecasting (WRF) modelling system. The state of the art tide and surge model, POLCOMS, in conjunction with a third generation wave model (ProWAM), utilises the meteorological data, producing hydrodynamic parameters such as surge and wave heights at a proposed location for the Severn Barrage. European Centre for Medium range Forecasting (ECMWF) Ensemble Prediction System data are used for boundary conditions in WRF, producing a 50-member ensemble. The variation in storm track and intensity between members allows the uncertainty in the model system to be quantified in terms of wave and surge heights. This work is part of the NERC funded EPIRUS consortium research but is closely allied to the interests of the EPSRC FRMRC project and the HEPEX international network focused on ensemble prediction in the context of hydrological prediction systems.},
+  file = {/home/victor/Zotero/storage/TCS9SVPG/Hewston et al. - 2010 - Quantifying uncertainty in tide, surge and wave mo.pdf}
 }
 
 @article{higdon_combining_2004,
@@ -2395,6 +2458,23 @@ better QOI than the best value achievable by the moment-based design.},
   file = {/home/victor/Zotero/storage/48JTUEST/Huber - 2011 - Robust statistics.pdf;/home/victor/Zotero/storage/SA65GIYR/10.html}
 }
 
+@article{hug_high-dimensional_2013,
+  title = {High-Dimensional {{Bayesian}} Parameter Estimation: {{Case}} Study for a Model of {{JAK2}}/{{STAT5}} Signaling},
+  shorttitle = {High-Dimensional {{Bayesian}} Parameter Estimation},
+  author = {Hug, S. and Raue, A. and Hasenauer, J. and Bachmann, J. and Klingm{\"u}ller, U. and Timmer, J. and Theis, F.J.},
+  year = {2013},
+  month = dec,
+  volume = {246},
+  pages = {293--304},
+  issn = {00255564},
+  doi = {10.1016/j.mbs.2013.04.002},
+  abstract = {In this work we present results of a detailed Bayesian parameter estimation for an analysis of ordinary differential equation models. These depend on many unknown parameters that have to be inferred from experimental data. The statistical inference in a high-dimensional parameter space is however conceptually and computationally challenging. To ensure rigorous assessment of model and prediction uncertainties we take advantage of both a profile posterior approach and Markov chain Monte Carlo sampling.},
+  file = {/home/victor/Zotero/storage/IKC38469/Hug et al. - 2013 - High-dimensional Bayesian parameter estimation Ca.pdf},
+  journal = {Mathematical Biosciences},
+  language = {en},
+  number = {2}
+}
+
 @article{hutter_bayesian_2006,
   title = {Bayesian {{Regression}} of {{Piecewise Constant Functions}}},
   author = {Hutter, Marcus},
@@ -2406,7 +2486,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/E9LCVMVB/Hutter - 2006 - Bayesian Regression of Piecewise Constant Function.pdf;/home/victor/Zotero/storage/G94863ZU/0606315.html},
   journal = {arXiv:math/0606315},
-  keywords = {Computer Science - Learning,Mathematics - Probability,Mathematics - Statistics Theory}
+  keywords = {Mathematics - Probability,Mathematics - Statistics Theory}
 }
 
 @article{huyse_free-form_2001,
@@ -2458,7 +2538,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/JXFMY8DC/Ibrahimi et al. - 2011 - Robust Max-Product Belief Propagation.pdf;/home/victor/Zotero/storage/E6QC2FXD/1111.html},
   journal = {arXiv:1111.6214 [cs, math]},
-  keywords = {Computer Science - Computational Engineering; Finance; and Science,Computer Science - Learning,Mathematics - Optimization and Control},
+  keywords = {Computer Science - Computational Engineering; Finance; and Science,Mathematics - Optimization and Control},
   primaryClass = {cs, math}
 }
 
@@ -2628,7 +2708,6 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/3CTW2N4D/Kingma et Ba - 2014 - Adam A Method for Stochastic Optimization.pdf;/home/victor/Zotero/storage/LBC2YKV7/1412.html},
   journal = {arXiv:1412.6980 [cs]},
-  keywords = {Computer Science - Learning},
   primaryClass = {cs}
 }
 
@@ -2709,6 +2788,21 @@ better QOI than the best value achievable by the moment-based design.},
   year = {2016},
   file = {C\:\\Users\\Victor\\Downloads\\adaptive-model-reduction-control-kramer-peherstorfer-willcox.pdf},
   keywords = {Optim Robuste}
+}
+
+@article{kreutz_likelihood_2012,
+  title = {Likelihood Based Observability Analysis and Confidence Intervals for Predictions of Dynamic Models},
+  author = {Kreutz, Clemens and Raue, Andreas and Timmer, Jens},
+  year = {2012},
+  month = sep,
+  volume = {6},
+  pages = {120},
+  issn = {1752-0509},
+  doi = {10.1186/1752-0509-6-120},
+  abstract = {Predicting a system's behavior based on a mathematical model is a primary task in Systems Biology. If the model parameters are estimated from experimental data, the parameter uncertainty has to be translated into confidence intervals for model predictions. For dynamic models of biochemical networks, the nonlinearity in combination with the large number of parameters hampers the calculation of prediction confidence intervals and renders classical approaches as hardly feasible.},
+  file = {/home/victor/Zotero/storage/Q23QL5VX/Kreutz et al. - 2012 - Likelihood based observability analysis and confid.pdf;/home/victor/Zotero/storage/EWX9XXT3/1752-0509-6-120.html},
+  journal = {BMC Systems Biology},
+  number = {1}
 }
 
 @article{krige_statistical_1951,
@@ -3576,6 +3670,18 @@ better QOI than the best value achievable by the moment-based design.},
   language = {fr}
 }
 
+@article{noauthor_loi_2018,
+  title = {{Loi normale g{\'e}n{\'e}ralis{\'e}e}},
+  year = {2018},
+  month = jul,
+  abstract = {En th{\'e}orie des probabilit{\'e}s et en statistique, la loi normale g{\'e}n{\'e}ralis{\'e}e ou loi gaussienne g{\'e}n{\'e}ralis{\'e}e d{\'e}signe deux familles de lois de probabilit{\'e} {\`a} densit{\'e} dont les supports sont l'ensemble des r{\'e}els. Cette loi rajoute un param{\`e}tre de forme {\`a} la loi normale. Pour les diff{\'e}rencier, les deux familles seront appel{\'e}es \guillemotleft{} version 1 \guillemotright{} et \guillemotleft{} version 2 \guillemotright, ce ne sont cependant pas des appellations standards.},
+  copyright = {Creative Commons Attribution-ShareAlike License},
+  file = {/home/victor/Zotero/storage/Q44Z4MY6/index.html},
+  journal = {Wikip{\'e}dia},
+  language = {fr},
+  note = {Page Version ID: 150178985}
+}
+
 @misc{noauthor_modeling_nodate,
   title = {Modeling - {{Why}} Should {{I}} Be {{Bayesian}} When My Model Is Wrong?},
   file = {/home/victor/Zotero/storage/ZCPTGJZK/why-should-i-be-bayesian-when-my-model-is-wrong.html},
@@ -3616,6 +3722,14 @@ better QOI than the best value achievable by the moment-based design.},
   file = {/home/victor/Zotero/storage/LG4XNV2F/sum-of-bernoulli-random-variables-with-different-success-probabilities.html},
   howpublished = {https://math.stackexchange.com/questions/392860/sum-of-bernoulli-random-variables-with-different-success-probabilities},
   journal = {Mathematics Stack Exchange}
+}
+
+@article{noauthor_profile_nodate,
+  title = {On {{Profile Likelihood}}},
+  pages = {18},
+  file = {/home/victor/Zotero/storage/LYQFCP87/On Profile Likelihood.pdf},
+  keywords = {Profile lik},
+  language = {en}
 }
 
 @misc{noauthor_savage_nodate,
@@ -3865,6 +3979,22 @@ better QOI than the best value achievable by the moment-based design.},
   file = {/home/victor/Zotero/storage/7K85S8BF/Pflug - 2000 - Some remarks on the value-at-risk and the conditio.pdf;/home/victor/Zotero/storage/PWB3L5GT/978-1-4757-3150-7_15.html}
 }
 
+@article{piano_tidal_2017,
+  title = {Tidal Stream Resource Assessment Uncertainty Due to Flow Asymmetry and Turbine Yaw Misalignment},
+  author = {Piano, M. and Neill, S. P. and Lewis, M. J. and Robins, P. E. and Hashemi, M. R. and Davies, A. G. and Ward, S. L. and Roberts, M. J.},
+  year = {2017},
+  month = dec,
+  volume = {114},
+  pages = {1363--1375},
+  issn = {0960-1481},
+  doi = {10.1016/j.renene.2017.05.023},
+  abstract = {The majority of tidal energy convertors (TECs) currently under development are of a non-yawing horizontal axis design. However, most energetic regions that have been identified as candidate sites for installation of TEC arrays exhibit some degree of directional and magnitude asymmetry between incident flood and ebb flow angles and velocities, particularly in nearshore environments where topographic, bathymetric and seabed frictional effects and interactions are significant. Understanding the contribution of directional and magnitude asymmetry to resource power density along with off axis rotor alignment to flow could influence site selection and help elucidate optimal turbine orientation. Here, 2D oceanographic model simulations and field data were analysed to investigate these effects at potential deployment locations in the Irish Sea; an energetic semi-enclosed shelf sea region. We find that observed sites exhibiting a high degree of asymmetry may be associated with a reduction of over 2\% in annual energy yield when deployment design optimisation is ignored. However, at the majority of sites, even in the presence of significant asymmetry, the difference is {$<$}0.3\%. Although the effects are shown to have less significance than other uncertainties in resource assessment, these impacts could be further investigated and quantified using CFD and 3D modelling.},
+  file = {/home/victor/Zotero/storage/B5I6CFNP/Piano et al. - 2017 - Tidal stream resource assessment uncertainty due t.pdf;/home/victor/Zotero/storage/KJQD76MP/S0960148117304081.html},
+  journal = {Renewable Energy},
+  keywords = {Marine renewable energy,Telemac 2D Irish Sea hydrodynamic modelling and ADCP observations,Tidal flow asymmetry,Tidal resource assessment and optimisation,Tidal stream characterisation,Turbine yaw misalignment},
+  language = {en}
+}
+
 @article{picheny_adaptive_2010,
   title = {Adaptive {{Designs}} of {{Experiments}} for {{Accurate Approximation}} of a {{Target Region}}},
   author = {Picheny, Victor and Ginsbourger, David and Roustant, Olivier and Haftka, Raphael T. and Kim, Nam-Ho},
@@ -3911,6 +4041,22 @@ better QOI than the best value achievable by the moment-based design.},
   series = {Recent {{Advances}} in {{Applied}} and {{Computational Mathematics}}: {{ICACM}}-{{IAM}}-{{METU}}}
 }
 
+@article{pogany_characteristic_2010,
+  title = {On the Characteristic Function of the Generalized Normal Distribution},
+  author = {Pog{\'a}ny, Tibor K. and Nadarajah, Saralees},
+  year = {2010},
+  month = feb,
+  volume = {348},
+  pages = {203--206},
+  issn = {1631073X},
+  doi = {10.1016/j.crma.2009.12.010},
+  abstract = {For the first time, an explicit closed form expression is derived for the characteristic function of the generalized normal distribution (GND). Also derived is an expression for the correlation coefficient between variate-values and their ranks in samples from the GND. The expression for the former involves the Fox-Wright generalized confluent hypergeometric 1{$\Psi$}0-function, while the latter is expressed via the Gaussian hypergeometric 2F1.},
+  file = {/home/victor/Zotero/storage/D93CMEFF/Pogány et Nadarajah - 2010 - On the characteristic function of the generalized .pdf},
+  journal = {Comptes Rendus Mathematique},
+  language = {en},
+  number = {3-4}
+}
+
 @article{polavarapu_data_2005,
   title = {Data Assimilation with the {{Canadian Middle Atmosphere Model}}},
   author = {Polavarapu, Saroja and Ren, Shuzhan and Rochon, Y and Sankey, David and Ek, Nils and Koshyk, John and Tarasick, David},
@@ -3953,7 +4099,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/V2QHCQYZ/Qin et al. - 2017 - Improving the Expected Improvement Algorithm.pdf;/home/victor/Zotero/storage/NBKTIDCQ/1705.html},
   journal = {arXiv:1705.10033 [cs, stat]},
-  keywords = {Computer Science - Learning,Statistics - Machine Learning},
+  keywords = {Statistics - Machine Learning},
   primaryClass = {cs, stat}
 }
 
@@ -4024,6 +4170,23 @@ better QOI than the best value achievable by the moment-based design.},
   lccn = {QA274.4 .R37 2006},
   note = {OCLC: ocm61285753},
   series = {Adaptive Computation and Machine Learning}
+}
+
+@article{raue_joining_2013,
+  title = {Joining Forces of {{Bayesian}} and Frequentist Methodology: A Study for Inference in the Presence of Non-Identifiability},
+  shorttitle = {Joining Forces of {{Bayesian}} and Frequentist Methodology},
+  author = {Raue, Andreas and Kreutz, Clemens and Theis, Fabian Joachim and Timmer, Jens},
+  year = {2013},
+  month = feb,
+  volume = {371},
+  pages = {20110544},
+  issn = {1364-503X, 1471-2962},
+  doi = {10.1098/rsta.2011.0544},
+  file = {/home/victor/Zotero/storage/YNPGQZKX/Raue et al. - 2013 - Joining forces of Bayesian and frequentist methodo.pdf},
+  journal = {Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences},
+  keywords = {profile lik},
+  language = {en},
+  number = {1984}
 }
 
 @article{raynaud_vacumm_2014,
@@ -4167,6 +4330,15 @@ better QOI than the best value achievable by the moment-based design.},
   publisher = {{Cambridge University Press}},
   file = {C\:\\Users\\Victor\\Documents\\Randall_J._LeVeque_Finite_Volume_Methods_for_Hyperbolic_Problems.pdf},
   keywords = {Finite Volume}
+}
+
+@article{rolland_characterization_nodate,
+  title = {Characterization of {{Space}} and {{Time}}-{{Dependence}} of 3-{{Point Shots}} in {{Basketball}}},
+  author = {Rolland, Gabin and Vuillemot, Romain and Bos, Wouter and Rivi{\`e}re, Nathan},
+  pages = {16},
+  abstract = {Understanding characteristics of 3-point shots is paramount for modern basketball success, as in recent decades, 3-point shots have become more prevalent in the NBA. They accounted for 33,6\% of the number of total shots in 2017-2018, compared to only 3\% in 1979-1980 [1]. In this paper, we aim at better understanding the connections between the type of 3-point shooting (catch-and-shoots and pull-ups) and the timing for shooting, using two distinct space-time models of player motion. Those models allow us to identify individual behavior as a function of specific defensive settings, e.g. shot-behavior when a player is guarded closely. We assess our models using SportVU data for specific NBA players and our code is open-source to enable more players and teams explorations, as well as to support further research and application of those models, beyond basketball and sport.},
+  file = {/home/victor/Zotero/storage/U6RWYATJ/Rolland et al. - Characterization of Space and Time-Dependence of 3.pdf},
+  language = {en}
 }
 
 @article{rontsis_distributionally_2017,
@@ -4400,7 +4572,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/VPPMUUCH/Shah et al. - 2014 - Student-t Processes as Alternatives to Gaussian Pr.pdf;/home/victor/Zotero/storage/ZIFUTJNY/1402.html},
   journal = {arXiv:1402.4306 [cs, stat]},
-  keywords = {Computer Science - Artificial Intelligence,Computer Science - Learning,Statistics - Machine Learning,Statistics - Methodology},
+  keywords = {Statistics - Machine Learning,Statistics - Methodology},
   primaryClass = {cs, stat}
 }
 
@@ -4720,7 +4892,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/NJYEM92J/Tran et al. - 2016 - Spectral M-estimation with Applications to Hidden .pdf;/home/victor/Zotero/storage/6MMGQQSJ/1603.html},
   journal = {arXiv:1603.08815 [cs, stat]},
-  keywords = {Computer Science - Learning,Statistics - Computation,Statistics - Methodology},
+  keywords = {Statistics - Computation,Statistics - Methodology},
   primaryClass = {cs, stat}
 }
 
@@ -5036,7 +5208,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/EBLYPEB9/Wang et al. - 2018 - Optimization of Smooth Functions with Noisy Observ.pdf},
   journal = {arXiv:1803.08586 [cs, math, stat]},
-  keywords = {Computer Science - Learning,Mathematics - Statistics Theory,Statistics - Machine Learning},
+  keywords = {Mathematics - Statistics Theory,Statistics - Machine Learning},
   language = {en},
   primaryClass = {cs, math, stat}
 }
@@ -5178,7 +5350,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/7MDQJAV2/Wu et Frazier - 2016 - The Parallel Knowledge Gradient Method for Batch B.pdf;/home/victor/Zotero/storage/4C3GXJWK/1606.html},
   journal = {arXiv:1606.04414 [cs, stat]},
-  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Statistics - Machine Learning},
+  keywords = {Computer Science - Machine Learning,Statistics - Machine Learning},
   primaryClass = {cs, stat}
 }
 
@@ -5283,7 +5455,7 @@ better QOI than the best value achievable by the moment-based design.},
   eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/3FZ6AFKT/Zhao et al. - 2014 - SAME but Different Fast and High-Quality Gibbs Pa.pdf;/home/victor/Zotero/storage/7W43GP2H/Zhao et al. - 2014 - SAME but Different Fast and High-Quality Gibbs Pa.pdf;/home/victor/Zotero/storage/ZPDSAHMX/1409.html},
   journal = {arXiv:1409.5402 [cs, stat]},
-  keywords = {Computer Science - Learning,D.1.3,K.3.2,Statistics - Machine Learning},
+  keywords = {D.1.3,K.3.2,Statistics - Machine Learning},
   primaryClass = {cs, stat}
 }
 

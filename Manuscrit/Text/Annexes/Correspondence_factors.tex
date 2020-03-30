@@ -1,0 +1,48 @@
+
+
+\section{Correspondence quality factors}
+\label{appendix:Correspondence_quality_factors}
+
+Correspondence quality is complex to measure, no ideal evaluation exist at the moment (\secref{ssec:2_StateArt_Corr}). Davies et al \cite{davies_2001_minimum} proposed three correspondence quality factors, based on the observation that the better the correspondence between shapes, the better the statistical model computed with these shapes. The three factors characterize the model based on its capacity of \textit{generalization}, \textit{specificity} and \textit{compactness}. 
+
+These factors cannot be interpreted on their own, they can only be used to compare various correspondence methods used on a same database. We have measured the factors values for our database described with corresponding meshes $M_{W,\{b,i\}}$. Correspondence was computed with the algorithm presented in \secref{sec:3_Method}. The factors have been calculated with the SSMs modeling one bone each, based on a PCA, presented in \secref{subsec:4_PCA}.
+
+We cannot directly use them to evaluate our results, however we have computed them as reference should anyone compute correspondence on the same database. They are presented in \tabref{tab:specificity_generalization}. The mean distance between a vertex and its closest neighbor and the Hausdorff distance were both calculated to quantify shape similarity. 
+
+%%%%%%         TABLEAU DISTANCE MESHES SPECIFICITY
+% Généré à partir du script : D:/users/emilie/chirocap/prog/cmc_database/measure_res_cmc/pca/specificity_pca.py
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{>{\RaggedRight}p{2.2cm} %centré gauche
+			>{\centering\arraybackslash}p{1.6cm}
+			>{\centering\arraybackslash}p{1.6cm}
+			p{0.3cm}
+			>{\centering\arraybackslash}p{1.6cm}
+			>{\centering\arraybackslash}p{1.6cm}
+%			p{0.7cm}
+			>{\centering\arraybackslash}p{2.3cm}}
+		\toprule
+		& \multicolumn{2}{c}{\textbf{Specificity} (mm)} &&  \multicolumn{2}{c}{\textbf{Generalization} (mm)} & \textbf{Compactness}	\\
+		& Dist \eqref{eq:mesh_dist} & Dist \eqref{eq:mesh_hausdorff} && Dist \eqref{eq:mesh_dist} &  Dist \eqref{eq:mesh_hausdorff} & \\
+		\midrule \ \vspace{-2.5mm} & & & & &  \\
+		Radius		 	& 0.202 	& \textit{1.645} && 1.052	& \textit{4.064} & 7126 \\
+		Scaphoid		& 0.176 	& \textit{1.024} && 0.720 	& \textit{3.453} & 893 \\
+		Lunate		 	&  0.145 	& \textit{1.117} && 0.701 	& \textit{2.873} & 579 \\
+		Triquetrum		& 0.172 	& \textit{1.022} && 0.709 	& \textit{3.114} & 482 \\
+		Pisiform		& 0.108 	& \textit{0.490} && 0.565 	& \textit{2.455} & 296 \\
+		Trapezoid		& 0.140 	& \textit{0.857} && 0.612 	& \textit{2.574} & 648 \\
+		Trapezium		& 0.213 	& \textit{0.952} && 0.639 	& \textit{3.329} & 542 \\
+		Capitate		& 0.235 	& \textit{1.371} && 0.711 	& \textit{4.274} & 1261 \\
+		Hamate		 	& 0.168 	& \textit{0.901} && 0.701 	& \textit{3.647} & 967 \\
+		Metac. 1		& 0.182 	& \textit{1.079} && 1.033 	& \textit{3.917} & 2529 \\
+		Metac. 2		& 0.228 	& \textit{1.337} && 1.023 	& \textit{3.814} & 4674 \\
+		Metac. 3		& 0.225 	& \textit{1.525} && 0.985 	& \textit{5.406} & 4827 \\
+		Metac. 4		& 0.175 	& \textit{1.113} && 0.889 	& \textit{3.367} & 2258 \\
+		Metac. 5		& 0.077 	& \textit{0.745} && 0.861 	& \textit{3.143} & 2156 \\
+		\bottomrule
+	\end{tabular}
+	\caption[Generalization, Specificity and Compactness of the SSMs]{Evaluation of correspondence quality based on the SSMs modeling one bone each and 39 principal modes with the three standard criteria: Generalization, Specificity and Compactness. }
+	\label{tab:specificity_generalization}
+\end{table}
+

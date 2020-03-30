@@ -1,0 +1,100 @@
+\makeatletter 
+\def\input@path{{../../}} 
+\makeatother
+
+%% Preamble
+\input{Preamble/Preamble.tex}
+
+\begin{document}
+	
+	
+	
+	\renewcommand{\subfileLocal}[1]{}
+	\renewcommand{\subfileGlobal}[1]{#1}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Page de couverture
+	\includepdf{couverture_these.pdf}
+	\newpage
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Numérotation des pages en chiffres romains
+	\pagenumbering{roman}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Sommaire
+	\cleartoleftpage %% On veut que les pages du sommaires de fassent face
+	\pagestyle{empty} % Disable any style
+	\dominitoc
+	\ForceEmptyStyle{\tableofcontents}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Liste des figures	
+	\phantomsection % Pour que hyperref pointe sur la page
+	\addstarredchapter{\listfigurename}
+	\ForceEmptyStyle{\listoffigures}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Liste des tables	
+	\phantomsection % Pour que hyperref pointe sur la page
+	\addstarredchapter{\listtablename}
+	\ForceEmptyStyle{\listoftables} 
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Liste des abréviations
+	\input{Abbreviations}
+	\renewcommand{\nomname}{List of Abbreviations}
+	\phantomsection
+	\printnomenclature
+
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	%% Liste des todos
+%	\phantomsection % Pour que hyperref pointe sur la page
+%	\addstarredchapter{List of Todos}
+%	\ForceEmptyStyle{\listoftodos} 
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Changement de style
+	\pagestyle{contentStyle} % Enable content style
+	\clearpage
+	\pagenumbering{arabic}	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%% Content
+	
+	\subfile{Text/Introduction/Introduction.tex}
+	
+	%%% Le contenu de la thèse à proprement parler
+	\adjustmtc % Recaler les minis sommaires
+	\subfile{Text/Chapter2/Chapter2.tex}
+	\subfile{Text/Chapter3/Chapter3.tex}
+	\subfile{Text/Chapter4/Chapter4.tex}
+	\subfile{Text/Chapter5/Chapter5.tex}
+	
+	% \subfile{Text/Conclusion/Conclusion.tex}
+	
+	% \subfile{Text/Annexes/Annexes.tex}
+	\pagestyle{appendixStyle}
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\fullclear
+	\pagestyle{empty} % Disable any style
+	\bibliographystyle{alpha}
+	\bibliography{../bibzotero}
+	
+	\fullclear
+	\pagestyle{empty} % Disable any style
+	\subfile{Text/Resumes.tex}
+	
+\end{document}
+
+
+%%%% TODO
+% Main page
+% Index - NON
+% Couleurs?
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

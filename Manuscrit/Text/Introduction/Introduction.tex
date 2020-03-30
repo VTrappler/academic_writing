@@ -1,0 +1,77 @@
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Introduction/#1}
+}
+
+\subfileLocal{
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\TitleBtwLines
+
+%% ---- On veut que ce soit le chapitre numéro 1 en notation romaine pour avoir un I
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\Roman{chapter}}%
+
+\specialchapter{Introduction}
+\label{chap:Introduction}
+%\newpage
+\pagestyle{introStyle}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The human hand plays an important role in a person's everyday life for it is required for many varied tasks. The incredible variety of functions of the hand is due to its combination of strength, precision and mobility. The reduction of any of these features can prove to be incapacitating. The wrist is the source of the large range of motion of the hand. Fully apprehend this articulation is essential to be able to make diagnosis, prevent and treat any injury. The wrist is a very complex joint, composed of eight small bones, connected to five metacarpal bones on the hand side and to the two forearm bones. The complexity of the joint is not only due to the  high number of interconnected bones (15 in total), but also to the small size of the carpal bones and their elaborate shapes interlocked with each other, that move in an intricate way around each other.
+
+In this thesis we are interested in modeling the 3D wrist bone shapes. Computer models can be used to take measurements, serve as basis for the creation of automated IT tools, or else be integrated into software for diagnosis support for example. They can provide the required prior information to automate some tasks, such as segmentation of images or inferring 3D volumes from 2D images. The quality of the results of such applications depends on the quality of the model. We therefore attach a special importance to the validation of our work, while such assessment cannot directly be measured and must be proven by indirect metrics. Not many works on wrist bones modeling have been conducted yet, which is mostly due to the little data that have been collected into databases exploitable for computer models. 
+
+We have taken interest in tools for the modeling of 3D shapes, especially in techniques of correspondence between 3D meshes, and propose a method to transform raw data extracted from Computed Tomography (CT) scans into corresponding bone representations. As discussed in the literature, it is not trivial to define the resampling procedure, and neither is its quality assessment. The dense correspondence relations that we compute make possible many applications. We propose several utilizations. Variability among bones is analyzed with statistical procedures such as the Principal Component Analysis (PCA) and another one based on Gaussian Processes. While the PCA-based model has already been introduced for wrist bones, the second has never been used before for carp modeling. The registration capacities of the first model are employed for defining correspondence with a second database. We propose a method to easily transfer systems of coordinates or other landmarks from a few example towards the rest of the database, a convenient function for biomechanical wrist motion study. In a last phase, we are concerned with modeling wrist bones motions with a parametric model based on meaningful and easily measurable predictors. \\ \\
+The work realized is presented in this document and structured as follow: 
+
+The first chapter introduces the context of the work. It is composed of three main themes: the wrist anatomy and biomechanics, image databases from CT scans and tools for 3D modeling. Our work focuses both on carpal bones shapes and wrist motion, a rough overview of the wrist functioning is essential for a better comprehension of the issue. The presentation of the database we are using is similarly important, a statistical model can only be as good as the data it is based on. In a large part of the chapter are detailed a type of data representation, 3D meshes, and related properties that are of interest for our work such as shape similarity evaluation and correspondence between shapes characteristics. We explore the literature about similar issues, and particularly detail works focusing on wrist shape modeling. 
+
+In a second chapter, we present our work to define correspondence relations between bones of a database. A first step creates common reference templates of the wrist bones from the set of data. These templates represent the mean bone shapes. In a second step, the common templates are deformed to match accurately the individual data extracted from CT scans. This method preserves corresponding relations between the vertices. We attach importance to the reproducibility of the method. We prove that the new mesh parameterization causes limited loss of information compared to the initial shapes extracted from the scans. The generated meshes can therefore be used for shape analysis, without biasing the results with bad shape encoding. 
+
+In a third chapter, we introduce applications of the data previously generated. All these operations depend on correspondence between meshes previously calculated. Two statistical models are computed, one based on a Principal Component Analysis and one on Gaussian Processes. The capacities of registration of these models to new shapes are evaluated. Correspondence is defined with the wrists of another database using the first statistical model, and we prove again that the similarity between the raw shapes and the reparameterized achieves results with a high accuracy, enabling the use of the second ones without introducing bias. Finally we propose to use correspondence relations to transfer point locations across bones. This can be used to define any systems of coordinates without having to rely on any anatomical or mathematical landmarks while being sure to reproduce them, important condition for definition of joint systems of coordinates. 
+
+In the fourth and last chapter, we introduce a preliminary work about wrist motion modeling. In the literature very few parametric models of wrist motion exist, and they are only based on a principal component analysis. We propose a parametric model resting on meaningful predictors: the degrees of freedom of the articulations. Correlation between pose characteristics and meshes locations and orientations are identified with a linear regression. We test these parameters and show that they are indeed correct predictors for a model, which reacts as expected. We test the accuracy of new poses generated from predictors values. %However, we lack more poses of the wrist for actually testing the full registration capacities of the method, and 
+We explain why more appropriate data are required for further investigation and validation. 
+
+
+
+%
+%In the first chapter 
+%
+%In the second chapter
+%
+%In the third chapter
+%
+%In the last chapter
+
+% Rappeler que c'est un domaine où il n'y a pas encore trop de travaux et que mon travail aide à enrichir ce qui existe
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../bibzotero}
+}
+\end{document}
+
+

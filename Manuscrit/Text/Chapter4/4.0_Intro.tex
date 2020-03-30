@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:4_Intro}
+
+
+
+In the previous chapter, a method to reparameterize shapes into meshes in correspondence was presented. The output meshes of a class of shapes are such that they are all described by the same number of vertices, and each vertex is on the same anatomical location for all instances of the class. The method was applied on a database of wrist bones, the output meshes are noted \mw*, with $b$ characterizing the class of bone the shape belongs to, $i$ is the index of the person in the database. 
+
+In this chapter, we propose various applications of such a database, composed of bones in correspondence. The first application is the computation of statistical shape models. They consist in a  statistical analysis of the location or deformation of the mesh vertices over the instances, and can only be computed when the shapes are in correspondence. Most of the time, the modeling is based on a Principal Component Analysis of the forms, or derivative methods. We compute such a model, both as a reference and because the correspondence quality factors proposed in \cite{davies_2001_minimum} rest on a Statistical Shape Model (SSM) computation. In a second time we compute a Gaussian Process based model. The latter is less common and has never been used on wrist bones, but offers advantages over SSMs, such as non-linearity and adaptation to posterior information. We carefully test the models in order to verify their reliability. 
+
+In a second phase, we use the SSMs to register a second wrist database. It offers two advantages: the model can be further tested on new data and the modeling of this other database with the SSMs is naturally in correspondence with the bones of the training database. We prove that the resulting shapes are close to the original ones: the average Hausdorff distance is below $0.3$ mm. The method presented in Chap \ref{chap:Method} is not used on this database because the final purpose of the work is to create tools for registration applications, and evaluation of the model on unknown data is more interesting. Furthermore the data of this second database are less complete than the one used in the previous chapter, the metacarpals are only partially visible, the radii distal end are shorter. Using complete models on these data bring information about the unavailable parts of the bones. 
+
+Finally, we propose a third application for the meshes in correspondence. We prove that the properties of these meshes allow the definition of consistent system of coordinates on example instances. The latter can be reproduced on all other occurrences of the database. Such systems are employed in biomechanics, the study of a joint movement is based on the rigid transformations of one system relatively to the other. We prove that the method is as reliable as another specific one proposed in the literature while being more global. The results additionally strengthen the confidence in the correspondence relations quality between the meshes, as the method is entirely based on the correspondence features. 
+
+%En fait on n'utilise pas notre méthode pour transformer la nouvelle base de données, parce que ça n'a que peu d'intérê
+%
+%L'idée d'avoir des meshes en correspondence n'est que de les utiliser pour créer des modèles statistiques qui seront ensuite utiliser pour obtenir desmodèles 3D des os d'une nouvelle patient en regardant directement son scan voir un truc 2D
+%
+%En fait pour l'instant on les register à des os en 3D du coup on peut ne pas en voir l'intéret, mais ce n'est que pour esurer la précision des modèles pour ensuite les utiliser sur des données qui seront beaucoup plus brutes. 

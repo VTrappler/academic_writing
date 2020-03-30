@@ -7,42 +7,36 @@
 ** Importance of the numerical model in predictions 
 ** Need for good calibrated models
 ** Oceanic modelling
-** Uncertainties in the modelling and effects
-*** Classifying the uncertainties
-*** 
+** Uncertainties in the modelling and classification
+** Defining robustness
 
-
-* Data Assimilation framework
+* Inverse Problem Formulation
+** Bayesian Formulation
 ** The link between Bayesian and Variational
 *** The calibration problem as a Bayesian inference problem
-*** MAP and MLE as point estimates
+*** MAP and MLE properties as point estimates
 ** Calibration of numerical models using adjoint method
 *** Using the adjoint to get the gradient of the cost function
-*** Minimization problem in high dimension: BFGS, M1QN3
-
-
-* Robust estimators in the presence of uncertainties
+*** Minimization problem in high dimension: BFGS, M1  
 ** Localized optimisation pitfalls
-
+* Robust estimators in the presence of uncertainties
+** (Re)defining robustness
 ** Robustness based on the moment of an objective function
 *** Minimizing mean and variance
 *** Multiobjective alternatives and higher moments
-** Horsetail matching
-*** Metrics on the CDF
-*** Risk-averse or risk-seeking targets
-
 ** The relative regret estimators family
 *** Construction of the MPE
 *** Relaxing the optimality constraint
 *** Choosing the relaxation coefficient
 
-
+** Profile posterior formulation
+*** Exponentiation of the profile posterior
+*** Ratio of profiles
 * Adaptative design enrichment for calibration using GP
 ** Mathematical background on Gaussian Processes
 *** GP as prior on functions
 *** Selecting covariance kernels and hyperparameters
 *** Using gradient information
-
 ** One-step lookahead: Stepwise Uncertainties Reduction
 *** Exploration based criteria
     + Maximum of variance
@@ -55,20 +49,20 @@
     + Margin definition
     + Vorob'ev mean and deviation
 *** Criterion to estimate jointly $\alpha_p$ and $k_p$
-
+    + Reduce modified IMSE
 ** Taking advantage of parallelism
 *** From one-step to $q$ step lookahead variations of criteria
 *** Sampling-based adaptive designs of experiments
-
-
+    
 * Application to the numerical coastal regional model CROCO
 ** Physical parametrization of the bottom friction
-** Modelling of the uncertainties
-** Sensitivity analysis
+** Modelling the uncertainties
+** Sensitivity on the uncertainties
 ** Dimension reduction
-*** Ad-hoc segmentation based on soil type
-*** 
-
-
+*** Ad-hoc segmentation based on soil 
+*** GP based method of dimension reduction
 
 * Conclusion
+** Recap
+** Perspectives
+

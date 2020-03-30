@@ -1,0 +1,520 @@
+\documentclass[11pt, oneside, a4paper]{book} % one-sided par défaut. Si on veut du twosided (pour la jolie version fnale) aller dans Config.txt et changer CfgPrintedVersion en true
+
+\usepackage{etoolbox}
+\newbool{CfgPrintedVersion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGE SUBFILE				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% => Permettre de compiler un chapitre seulement à la fois
+\usepackage{subfiles}
+\newcommand{\subfileLocal}[1]{#1}
+\newcommand{\subfileGlobal}[1]{}
+\newcommand{\RootDir}[1]{#1}
+\usepackage{xr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Config keys
+\input{Preamble/Config.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 		PACKAGE FONT LANGUAGE & ENCODING		%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[LGR]{fontenc}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{cmap}
+%\usepackage{ucs}
+\usepackage[english]{babel} % if babel greek : probleme avec la liste de nomenclature
+\usepackage{alphabeta}
+%\frenchbsetup{AutoSpacePunctuation=false}
+\usepackage[babel=true]{microtype}
+\microtypecontext{kerning=english} 	% Set microtype to french
+\usepackage{natbib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGE GEOMETRY			%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ifbool{CfgPrintedVersion}{
+%	\newcommand{\CfgBookLayout}{true}
+%}{
+%	\newcommand{\CfgBookLayout}{false}
+%}
+\usepackage[
+	twoside=true, % always true for page numbering consistency
+	left=32mm,
+	right=32mm,
+	top=40mm,
+	bottom=35mm,
+	headheight=18.1pt
+]{geometry}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGES MATHS				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 				PACKAGES GRAPHIQUES				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{array}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx} % Graphics
+\usepackage{rotating}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 				PACKAGES POLICES				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Examples:
+%% Font 1
+%\usepackage{fouriernc}
+\usepackage[scaled=0.875]{helvet}
+%\usepackage{courier}
+%
+%% Font 2
+% \usepackage{palatino} % Text font
+%\usepackage{xcharter}
+%
+%% Font 3
+%\usepackage{newpxtext,newpxmath}
+%
+%% Font 4
+%\usepackage[osf,sc]{mathpazo}
+%
+%%
+% \usepackage{lmodern}
+%\usepackage{palatino}
+%\usepackage{newpxmath}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 				PACKAGE LIENS REFERENCES		%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hyperref}
+\hypersetup{colorlinks, breaklinks,
+	urlcolor  = cfgUrlColor,
+	linkcolor = cfgLinkColor,
+	citecolor = cfgCiteColor,
+	pdftitle    = {\ThesisTitle},
+	pdfauthor   = {\ThesisAuthor},
+	pdfsubject  = {\ThesisSubject},
+	%pdfkeywords = {keyword1, key2, key3},
+}
+\urlstyle{same}
+
+
+
+\usepackage{setspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGE TABLEAUX			%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{makecell} 		% Pour les tableaux, diviser du texte dans une cellule, 
+							% pour qu'il passe à la ligne suivante (\thead)
+\usepackage{ragged2e}						
+\usepackage{booktabs}
+\usepackage[export]{adjustbox}	% Les images dans les tableaux sont automatiquement en bas; 
+   
+\usepackage{changepage}	% Quand les figures/tableaux dépassent des marges, 
+						% Qu'ils dépassent également des deux cotés et pas que à droite
+\usepackage{multirow}	% Pour les tableaux, une case composée de plusieurs lignes
+\usepackage{hhline}		% Les lignes de tableaux plus évoluées
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGE TODO				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\marginparwidth }{2cm} % A enlever pour l'impression finale? C'est pour que les todo dans les marges ne posent pas de problèmes
+\usepackage[colorinlistoftodos,prependcaption,textsize=small, textwidth=2.7cm]{todonotes}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGES DESSIN				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{calc, fit, matrix, arrows, automata, positioning, shapes.arrows, fadings, patterns}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					PACKAGES DIVERS				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[shortlabels]{enumitem}
+\usepackage{xargs} % Utilisation de + de 1 paramètre optionnel dans les nouvelles commandes
+\usepackage{lipsum} % générer du texte 
+\usepackage[final]{pdfpages} % inclure une page pdf
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					MISE EN FORME				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Saute une ligne avant chaque nouveau paragraphe et garde l'alinea
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{parskip}
+\restoreparindent
+\usepackage{indentfirst}
+
+% Pas de ligne seule en début ou fin de page
+\usepackage[all]{nowidow}
+
+%% Saute une ligne après le titre d'un paragraphe
+\makeatletter
+\renewcommand\paragraph{%
+	\@startsection{paragraph}{4}{0mm}%
+	{-\baselineskip}%
+	{.5\baselineskip}%
+	{\normalfont\normalsize\bfseries}}
+\makeatother
+
+%\setlength{\parindent}{3pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 					COULEURS					%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{darkcyan}{rgb}{0.0, 0.55, 0.55}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{Maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{Black}{cmyk}{0, 0, 0, 0}
+\definecolor{blueGreen}{HTML}{4CA6A7}
+\definecolor{blueGreenN2}{HTML}{3964B4}
+
+
+\colorlet{cfgHeaderBoxColor}{blueGreen} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{blueGreen} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{blueGreen}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{blueGreen} % vLionel : blueGreenN2
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Chapter pages
+\usepackage[Conny]{fncychap}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 				HEADERS et FOOTERS				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% Header horizontal line
+\def\headrulefill{  \leaders \hrule width 0pt height 3pt depth -2.8pt \hfill}
+% Header title
+\renewcommand\chaptermark[1]{\markboth{\enskip#1}{}}
+
+% Create style for content
+\fancypagestyle{contentStyle}{%
+	% clear header and footer
+	\fancyhf{} 
+	\renewcommand*{\headrulewidth}{0pt}
+	%\renewcommand*{\footrulewidth}{0.2pt}
+	\renewcommand{\chaptername}{Chapter \ }
+	
+	% Numéro de page en bas
+	\cfoot{\thepage}
+	
+	% Configure header
+\ifbool{CfgPrintedVersion}{
+	%% Header for twosided document
+	\fancyhead[LE]{% LE : Left side of Even pages
+  		\makebox[0pt][r]{
+    	\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{\chaptername\ \thechapter}\enskip}}\hspace*{1em}}%
+		{\itshape\leftmark}\hspace*{1em}\headrulefill%\hspace*{1.4em} si numéro de page en haut
+	}
+	\fancyhead[RO]{% RO: Right side of Odd pages
+  		%\hspace*{1.4em} si numéro de page en haut
+  		\mbox{}\headrulefill \hspace*{1em}{\itshape\leftmark}%
+  		\makebox[0pt][l]{%
+    		\hspace*{1em}\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][l]{\enskip\textcolor{white}{\chaptername\ \thechapter}}}}
+	}
+	%% Numéro de page en haut
+%	\fancyhead[LO]{
+%		 \thepage 
+%	}
+%	\fancyhead[RE]{
+%		 \thepage 
+%	}
+}{
+	%% Header of onesided document
+	\fancyhead[L]{%
+  		\makebox[0pt][r]{
+    	\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{\chaptername\ \thechapter}\enskip}}\hspace*{1em}}%
+		{\itshape\leftmark}\hspace*{1em}\headrulefill%
+	}
+%	\fancyhead[R]{
+%		 \thepage 
+%	}
+}
+}
+
+
+% Create style for content
+\fancypagestyle{introStyle}{%
+	% clear header and footer
+	\fancyhf{} 
+	\renewcommand*{\headrulewidth}{0pt}
+	% Numéro de page en bas
+	\cfoot{\thepage}
+	% Configure header
+	\ifbool{CfgPrintedVersion}{
+		%% Header for twosided document
+		\fancyhead[LE]{% LE : Left side of Even pages
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Introduction}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+		\fancyhead[RO]{% RO: Right side of Odd pages
+			\mbox{}\headrulefill \hspace*{1em}{\itshape}%
+			\makebox[0pt][l]{%
+				\hspace*{1em}\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][l]{\enskip\textcolor{white}{Introduction}}}}
+		}
+	
+	}{
+		%% Header of onesided document
+		\fancyhead[L]{%
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Introduction}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+	}
+}
+
+
+
+% Create style for content
+\fancypagestyle{conclusionStyle}{%
+	%% Configuration du header
+	% clear header and footer
+	\fancyhf{} 
+	
+	% NUméro de page en bas
+	\cfoot{\thepage}
+	
+	\renewcommand*{\headrulewidth}{0pt}
+	% Configure header
+	\ifbool{CfgPrintedVersion}{
+		%% Header for twosided document
+		\fancyhead[LE]{% LE : Left side of Even pages
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Conclusion}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+		\fancyhead[RO]{% RO: Right side of Odd pages
+			\mbox{}\headrulefill \hspace*{1em}{\itshape}%
+			\makebox[0pt][l]{%
+				\hspace*{1em}\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][l]{\enskip\textcolor{white}{Conclusion}}}}
+		}
+
+	}{
+		%% Header of onesided document
+		\fancyhead[L]{%
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Conclusion}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+
+	}
+}
+	
+
+
+
+% Create style for content
+\fancypagestyle{appendixStyle}{%
+	% clear header and footer
+	\fancyhf{} 
+	\renewcommand*{\headrulewidth}{0pt}
+	% NUméro de page en bas
+	\cfoot{\thepage}
+	% Configure header
+	\ifbool{CfgPrintedVersion}{
+		%% Header for twosided document
+		\fancyhead[LE]{% LE : Left side of Even pages
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Appendix}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+		\fancyhead[RO]{% RO: Right side of Odd pages
+			\mbox{}\headrulefill \hspace*{1em}{\itshape}%
+			\makebox[0pt][l]{%
+				\hspace*{1em}\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][l]{\enskip\textcolor{white}{Appendix}}}}
+		}
+
+	}{
+		%% Header of onesided document
+		\fancyhead[L]{%
+			\makebox[0pt][r]{
+				\colorbox{cfgHeaderBoxColor}{\makebox[\textwidth][r]{\textcolor{white}{Appendix}\enskip}}\hspace*{1em}}%
+			{\itshape}\hspace*{1em}\headrulefill%
+		}
+	}
+}
+
+
+
+
+%% Macro that forces a command to be excuted with plain style set to empty style. This is useful for \tableofcontents and \listoffigures command which issue a \thispagestyle{plain} command.
+\makeatletter
+\newcommand{\ForceEmptyStyle}[1]{%
+  \cleardoublepage
+  \begingroup
+  \let\ps@plain\ps@empty
+  \pagestyle{empty}
+  #1
+  \cleardoublepage
+  }
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 			ENVIRONNEMENTS DES THEOREMES		%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[framemethod=tikz]{mdframed}
+\newtheoremstyle{defi}
+  {\topsep}%
+  {\topsep}%
+  {\normalfont}%
+  {}%
+  {\bfseries}% 
+  {:}%
+  {.5em}%
+  {\thmname{#1}\thmnote{~(#3)}}
+  %
+\mdfdefinestyle{theoremStyle}{
+	hidealllines=true,
+	leftline=true,
+	bottomline=true,
+	innertopmargin=2pt,
+	innerbottommargin=6pt,
+	linewidth=2.5pt,
+	linecolor=gray!40,
+	innerrightmargin=0pt,
+}
+\newcounter{thmCounter}[section]
+\numberwithin{thmCounter}{section}
+\newmdtheoremenv[style=theoremStyle]{envThm}[thmCounter]{Théorème}
+\newmdtheoremenv[style=theoremStyle]{envDef}[thmCounter]{Définition}
+\newmdtheoremenv[style=theoremStyle]{envConj}[thmCounter]{Conjecture}
+\newmdtheoremenv[style=theoremStyle]{envLem}[thmCounter]{Lemme}
+\newmdtheoremenv[style=theoremStyle]{envRem}[thmCounter]{Remarque}
+\newmdtheoremenv[style=theoremStyle]{envEx}[thmCounter]{Example}
+\newmdtheoremenv[style=theoremStyle]{envProp}[thmCounter]{Proposition}
+\newmdtheoremenv[style=theoremStyle]{envCor}[thmCounter]{Corollaire}
+
+\mdfdefinestyle{alertStyle}{
+backgroundcolor=red!27,
+linecolor=gray,
+roundcorner=6pt,
+middlelinewidth=0pt
+}
+
+% Repetable theorem env
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\declaretheoremstyle
+[
+    preheadhook={\begin{mdframed}[style=theoremStyle]},
+    postfoothook=\end{mdframed},
+]{framedThmStyle}
+\declaretheorem[style=framedThmStyle, title=Théorème, numberlike=thmCounter]{repenvThm}
+\declaretheorem[style=framedThmStyle, title=Conjecture, numberlike=thmCounter]{repenvConj}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 			SOMMAIRES et NUMEROTATION			%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Profondeur du sommaire principal
+\setcounter{tocdepth}{2} % Va jusqu'à 1.1.1 si depth=2 (subsection)
+
+%% Sommaires intermédiaires
+\usepackage{minitoc}
+% Profondeur des sommaires des chapitres
+\setcounter{minitocdepth}{3} % Si depth = 4 : paragraphes inclus; depth=3 : subsubsections incluses
+
+% Numérotation des subsubsections 
+\setcounter{secnumdepth}{3}
+
+\renewcommand{\thesubsubsection}{\thesubsection.\alph{subsubsection}}
+
+%\dominitoc
+%\renewcommand{\mtctitle}{Sommaire}
+%\usepackage[explicit]{titlesec} % Non compatible avec minitoc
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 			LISTES DES ABBREVIATIONS			%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[intoc, english]{nomencl}
+\makenomenclature
+\makeindex
+\usepackage{ifthen}
+\renewcommand{\nomgroup}[1]{
+	\ifthenelse{\equal{#1}{B}}{\item[\textbf{Bone name}]}{
+	{}}
+	\ifthenelse{\equal{#1}{C}}{\item[\textbf{Joint name}]}{
+	{}}
+	\ifthenelse{\equal{#1}{I}}{\item[\textbf{Image Acquisition Technique}]}{
+	{}}
+	\ifthenelse{\equal{#1}{M}}{\item[\textbf{Method name}]}{
+	{}}
+}
+%% Abbréviations en 2 colonnes
+\usepackage{multicol}
+\renewcommand{\nompreamble}{\begin{multicols}{2}}
+\renewcommand{\nompostamble}{\end{multicols}}
+
+
+\setlength{\nomlabelwidth}{1.5cm}
+
+%
+%\usepackage{xpatch}
+%% initial definitions for storing the section info (name and number)
+%\def\thissectiontitle{}
+%\def\thissectionnumber{}
+%
+%\newtoggle{noTodos}
+%
+%\titleformat{\section}
+%{\normalfont\Large\bfseries\sffamily}
+%{\thesection}
+%{0.5em}
+%{\gdef\thissectiontitle{#1}\gdef\thissectionnumber{\thesection}#1}
+%
+%\pretocmd{\section}{\global\toggletrue{noTodos}}{}{}
+%
+%% the \todo command does the job: the first time it is used after a \section command, 
+%% it writes the information of the section to the list of todos
+%\AtBeginDocument{%
+%	\xpretocmd{\todo}{%
+%		\iftoggle{noTodos}{
+%			\addtocontents{tdo}{\protect\contentsline{section}%
+%				{\protect\numberline{\thissectionnumber}{\thissectiontitle}}{}{} }
+%			\global\togglefalse{noTodos}
+%		}{}
+%	}{}{}%
+%}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Custom commands definitions
+\input{Preamble/Commands.tex}

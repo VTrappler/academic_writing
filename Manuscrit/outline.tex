@@ -1,4 +1,4 @@
-% Created 2020-02-05 mer. 14:43
+% Created 2020-03-19 jeu. 14:44
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,6 +14,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage[margin=0.5in]{geometry}
 \author{Victor Trappler}
 \date{\today}
 \title{Outline of PhD manuscript}
@@ -30,42 +31,125 @@
 \tableofcontents
 
 
+
 \section{Introduction}
-\label{sec:org2bc2050}
-\subsection{Importance of the numerical model in predictions / L'importance des simulations numériques dans les prédictions}
-\label{sec:org8a4816c}
-\subsection{Need for good calibrated models / La calibration des modèles numériques}
-\label{sec:org3b26b66}
-\subsection{Oceanic modelling / La modélisation de l'océan}
-\label{sec:org6bc7272}
-\subsection{Uncertainties in the modelling and effects / Les Incertitudes dans la modélisation}
-\label{sec:org4731a58}
-\subsubsection{Classifying the uncertainties / Classer les incertitudes}
-\label{sec:orge738d0d}
-\subsubsection{}
-\label{sec:org003587a}
+\label{sec:orge18212c}
+\subsection{Importance of the numerical model in predictions}
+\label{sec:org4d2a4b2}
+\subsection{Need for good calibrated models}
+\label{sec:orga07d2b1}
+\subsection{Oceanic modelling}
+\label{sec:org10b3a75}
+\subsection{Uncertainties in the modelling and classification}
+\label{sec:org7b5a89b}
+\subsection{Defining robustness}
+\label{sec:org17b820d}
 
-\section{"Deterministic methods" of calibration / Estimation de paramètres "déterministes"}
-\label{sec:org7dfc209}
-\subsection{The link between Bayesian and Variational / Fonction objective et approche Bayesienne}
-\label{sec:org2bf321b}
-\subsubsection{The calibration problem as a Bayesian inference problem / Calibration et Inférence Bayesienne}
-\label{sec:org9e8c4eb}
-\subsubsection{MAP and MLE as point estimates / Le MAP et le MV comme des estimateurs}
-\label{sec:org462f103}
-\subsection{}
-\label{sec:orgdb4be53}
+\section{Inverse Problem Formulation}
+\label{sec:orgfbfa119}
+\subsection{Bayesian Formulation}
+\label{sec:orgb2da19a}
+\subsection{The link between Bayesian and Variational}
+\label{sec:orgc668001}
+\subsubsection{The calibration problem as a Bayesian inference problem}
+\label{sec:orgf26cfe5}
+\subsubsection{MAP and MLE properties as point estimates}
+\label{sec:org3de970f}
+\subsection{Calibration of numerical models using adjoint method}
+\label{sec:orgbc53a8d}
+\subsubsection{Using the adjoint to get the gradient of the cost function}
+\label{sec:org0a9c33c}
+\subsubsection{Minimization problem in high dimension: BFGS, M1}
+\label{sec:orgc1889fb}
+\subsection{Localized optimisation pitfalls}
+\label{sec:org0ce1036}
+\section{Robust estimators in the presence of uncertainties}
+\label{sec:orge2c326e}
+\subsection{(Re)defining robustness}
+\label{sec:orge7830a6}
+\subsection{Robustness based on the moment of an objective function}
+\label{sec:org84fb772}
+\subsubsection{Minimizing mean and variance}
+\label{sec:orga915ddb}
+\subsubsection{Multiobjective alternatives and higher moments}
+\label{sec:orgf7aaf9b}
+\subsection{The relative regret estimators family}
+\label{sec:org700ffe9}
+\subsubsection{Construction of the MPE}
+\label{sec:org0fca75d}
+\subsubsection{Relaxing the optimality constraint}
+\label{sec:orge09cf05}
+\subsubsection{Choosing the relaxation coefficient}
+\label{sec:orgfc77c5f}
 
-
-\section{Relative Regret family of estimators}
-\label{sec:orgbabf816}
-
-\section{Efficient estimation of members of the RRE family}
-\label{sec:org0aa4989}
+\subsection{Profile posterior formulation}
+\label{sec:org9fccbb2}
+\subsubsection{Exponentiation of the profile posterior}
+\label{sec:orgdcc5113}
+\subsubsection{Ratio of profiles}
+\label{sec:org2e4a526}
+\section{Adaptative design enrichment for calibration using GP}
+\label{sec:org09af0c3}
+\subsection{Mathematical background on Gaussian Processes}
+\label{sec:org7fa1013}
+\subsubsection{GP as prior on functions}
+\label{sec:org5c6ac6a}
+\subsubsection{Selecting covariance kernels and hyperparameters}
+\label{sec:org87388f5}
+\subsubsection{Using gradient information}
+\label{sec:orgef0a7bd}
+\subsection{One-step lookahead: Stepwise Uncertainties Reduction}
+\label{sec:orgaf38846}
+\subsubsection{Exploration based criteria}
+\label{sec:orged7eafd}
+\begin{itemize}
+\item Maximum of variance
+\item Reduce one-step IMSE
+\end{itemize}
+\subsubsection{Goal driven criteria for global optimisation}
+\label{sec:org807d423}
+\begin{itemize}
+\item Probability of Improvement
+\item Expected Improvement
+\item Informational Approach to Global Optimisation
+\end{itemize}
+\subsubsection{Criteria for Contour Estimation / level sets}
+\label{sec:orge939159}
+\begin{itemize}
+\item Margin definition
+\item Vorob'ev mean and deviation
+\end{itemize}
+\subsubsection{Criterion to estimate jointly \(\alpha_p\) and \(k_p\)}
+\label{sec:orga17b85a}
+\begin{itemize}
+\item Reduce modified IMSE
+\end{itemize}
+\subsection{Taking advantage of parallelism}
+\label{sec:org9fe350a}
+\subsubsection{From one-step to \(q\) step lookahead variations of criteria}
+\label{sec:org125138f}
+\subsubsection{Sampling-based adaptive designs of experiments}
+\label{sec:orgb1deed5}
 
 \section{Application to the numerical coastal regional model CROCO}
-\label{sec:orgd70bb13}
+\label{sec:org813659a}
+\subsection{Physical parametrization of the bottom friction}
+\label{sec:org9b187aa}
+\subsection{Modelling the uncertainties}
+\label{sec:orge22b8e5}
+\subsection{Sensitivity on the uncertainties}
+\label{sec:orgdf82b55}
+\subsection{Dimension reduction}
+\label{sec:org2b3d8f6}
+\subsubsection{Ad-hoc segmentation based on soil}
+\label{sec:orgb2a1a3f}
+\subsubsection{GP based method of dimension reduction}
+\label{sec:org6536119}
 
 \section{Conclusion}
-\label{sec:orgb7012d9}
+\label{sec:org0d37aca}
+\subsection{Recap}
+\label{sec:orgdb61c4b}
+\subsection{Perspectives}
+\label{sec:org500c0a8}
 \end{document}

@@ -1,0 +1,18 @@
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:3_Conclusion}
+
+In this chapter, we have introduced a method to define correspondence between the small complex shapes that are the carpal bones. We payed particular attention to propose an algorithm that can be easily implemented, that is reproducible and we provide upper bounds of errors with different metrics. We endeavor to prove that our resulting meshes are reliable, they encode the exact same shapes as the original meshes. 
+
+Compared to the previous approach \cite{joshi_2016_registration-based}, we favor a method that give more freedom.% for the sake of reproducibility. 
+% We have chosen to base our correspondence mapping algorithm on a graphics method, which gives more freedom than an analytic optimization one. 
+It enables manual intervention should the need arise, as we have experienced with our dataset. We chose to work with templates non-rigidly registered to the database bones. These templates are iteratively updated, becoming the geometrical mean of all their deformed instances, before being registered again. These updates avoid too much dependence of the results on the original chosen templates. Finally, we have added a projection along the normals of the vertices to the target surface to refine the results. 
+
+Considering the quality measures of the meshes, we prove that both Laplacian deformation step and projection along the normals step are necessary and useful. The distances strictly improve after both processes, while the initial templates and the database bones are too different for a direct projection along the normals, vertices would be badly distributed along the target surface.
+
+The final results prove that the difference between the initial shapes and the ones in correspondences are small. They are however existent. This is normal, since the templates have from 6 to 8 times less vertices than the original shapes. Nonetheless we obtained surfaces that provide an accurate representation of the bones, with mean errors largely below the accuracy of the CT images (\precision* mm). In addition, if really obvious coarse errors have been manually deleted during the preprocessing of the data, some defects remain present in the database bones, such as step-like appearance of the surfaces. We can therefore argue that on the opposite of being a negative point, the small remaining distance between the meshes smooths out such artifacts. 
+
+We have proven so far that the shapes encoded in both database and registered templates are similar. However, we argue that in addition to simplifying the meshes by describing them with fewer points, we also obtain meshes that are in dense correspondence. This has not been studied yet, and will be considered in the next chapter. 
+
+ % Ils sont bons, il y a un peu de différence, mais il y a beaucoup moins de points et qu'un poil de lissage ça fait de toute façon pas de mal

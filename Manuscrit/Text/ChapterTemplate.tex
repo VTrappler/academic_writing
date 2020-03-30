@@ -1,0 +1,63 @@
+\documentclass[../../Main.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/ChapterName/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter1/build/Chapter1}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+% Set counter = number of chapter-1
+\subfileLocal{\setcounter{chapter}{3}}
+\chapter{Chapter Name}
+\label{chap:Name}
+\minitoc
+\newpage
+\subfileLocal{\pagestyle{contentStyle}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% CONTENT GOES HERE
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 				SECTION 1 : INTRO			   %%%
+%\include{\RootDir{3.1_Introduction}}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../Bibliography}
+}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../Main_ManuscritThese"
+%%% End:

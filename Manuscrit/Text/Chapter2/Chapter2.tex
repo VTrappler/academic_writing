@@ -1,0 +1,129 @@
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter2/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+% Rappel du précédent style, pour qu'il aille jusqu'à la dernière page (?? latex...)
+\pagestyle{introStyle}
+
+
+%% ---- C'est le vrai ch 1 en numérotation arabe
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\arabic{chapter}}%
+\specialchapter{Inverse Problem Framework}
+\label{chap:inverse_problem}
+\pagestyle{contentStyle}
+\minitoc
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 			SECTION 0 : INTRO DU CHAP 		   %%%
+\section{Forward and Inverse Problems and Parameter inference}
+The physical system (the reality) can formally be represented by an operator $\mathscr{M}$, applied to a set of parameters $\vartheta \in \Theta_0$:
+\begin{equation*}
+  \begin{array}{llll}
+    \mathscr{M} :& \Theta_0 &\longrightarrow& \Yspace \\
+                 & \vartheta & \longmapsto& \mathscr{M}(\vartheta)
+    \end{array}
+\end{equation*}
+
+\subsection{Model space and data space}
+\label{sec:model_space_data_space}
+We are going to follow~\citeauthor{tarantola_inverse_2005}'s description of model and data space in~\cite{tarantola_inverse_2005}.
+
+In order to describe accurately a physical system, we have a set of possible models, $\mathfrak{M}$. Each element $\mathfrak{M}_i$ of $\mathfrak{M}$ is comprised of an operator $\mathcal{M}_i$, called the forward operator, and a set of parameters $\theta_i \in \mathbb{R}^{d_i}$:
+\\
+\begin{envDef}[Model]
+  A model is comprised of a forward operator $\mathcal{M}$, and a parameter space $\Theta$
+  \begin{equation}
+  (\mathcal{M}, \Theta \subset \mathbb{R}^{d})
+\end{equation}
+The forward operator is the mathematical representation of the physical system, 
+\end{envDef}
+
+The data space is formally introduced as the set of all possible observations that one can make during the physical experiment, so consists in all the physically acceptable results of the physical experiment. This set is noted $\Yspace$.
+Then, the model function $\mathcal{M}_i$ maps the parameter space $\Theta_i \subset \mathbb{R}^{d_i}$ to the data space $\Yspace$, as one can expect that all models provide physically acceptable outputs.
+\\
+\begin{envDef}
+We say that $\mathfrak{M}_i \in \mathfrak{M}$ is nested within $\mathfrak{M}_j\in\mathfrak{M}$ iff
+\begin{equation}
+  \mathcal{M}_i = \mathcal{M}_j \text{ and } \Theta_i \subset \Theta_j
+\end{equation}
+\end{envDef}
+\begin{envEx}
+  Let us consider two models, where $\Yspace = \mathbb{R}$
+  \begin{align*}
+    \mathfrak{M}_1 &= \left((a,b) \mapsto ab;\quad (a,b) \in \mathbb{R} \times [0;2]\right) \\
+   \mathfrak{M}_2 &= \left((a,b) \mapsto ab;\quad (a,b) \in \mathbb{R}^+ \times \{1/\pi\}\right)
+  \end{align*}
+$\mathfrak{M}_2$ is nested within $\mathfrak{M}_1$
+\end{envEx}
+\begin{envEx}
+  Now let us consider $\Yspace$ as the space of random vector of dimension $n$:
+  \begin{align*}
+    \mathfrak{M}_1 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \mathbb{R}^+ \text{ and } \epsilon \sim \mathcal{N}(0, I) \\
+    \mathfrak{M}_2 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \{1\} \text{ and } \epsilon \sim \mathcal{N}(0, I)
+  \end{align*}
+\end{envEx}
+$\mathfrak{M}_2$ is nested within $\mathfrak{M}_2$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 			SECTION 1 : ANATOMY	and BIOMECA	   %%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 			SECTION 2 : DATABASES CREATION 	   %%%
+\newpage
+\section{The IP as an inference problem}x
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 			SECTION 3 : 3D MESHES		   	   %%%
+% \newpage
+% \input{\RootDir{2.3_Meshes}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%% 			SECTION 4 : State of the art	   %%%
+% \newpage
+% \input{\RootDir{2.4_Wrist_SoA}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%% 			SECTION 5 : CONCLUSION			   %%%
+% \newpage
+% \input{\RootDir{2.5_Conclusion}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{/home/victor/acadwriting/bibzotero}
+}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

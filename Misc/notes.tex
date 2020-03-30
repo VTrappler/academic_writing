@@ -1,11 +1,13 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[english,francais]{babel}
+\usepackage[francais, english]{babel}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{bm}
 \usepackage{amsfonts}
 \usepackage{graphicx}
 \usepackage{geometry}
+\usepackage{mathtools}
 \usepackage[utf8]{inputenc}
 \usepackage{titlesec}
 \usepackage{enumitem}
@@ -19,25 +21,103 @@
 \usepackage{fancyhdr}
 \usepackage{tikz}
 \usepackage{pdfpages}
+\usepackage{titlesec}
 \newcommand{\Var}{\mathbb{V}\text{ar}}
 \newcommand{\Ex}{\mathbb{E}}
 \newcommand{\Prob}{\mathbb{P}}
-
+\usepackage{natbib}
+\usepackage{mathrsfs}
 \newcommand{\ProbGP}{\mathcal{P}}
 \newcommand{\Kspace}{\mathbb{K}}
 \newcommand{\Uspace}{\mathbb{U}}
 \newcommand{\Xspace}{\mathbb{X}}
+\newcommand{\Yspace}{\mathbb{Y}}
 \DeclareMathOperator{\Cov}{\mathrm{Cov}}
 \DeclareMathOperator*{\argmin}{arg\,min \,}
 \DeclareMathOperator*{\argmax}{arg\,max \,}
 \DeclareMathOperator{\IMSE}{IMSE}
+\newcommand{\given}{\middle|}
+% \theoremstyle{definition}
+% \newtheorem{example}{Example}[section]
+% \newtheorem{definition}{Definition}[section]
+% \newtheorem{thm}{Theorem}[section]
+
 \usepackage{hyperref}
 \usepackage{booktabs}
 
 \pagestyle{fancy}
-% \rhead{Victor Trappler}
-% \lhead{}
+\rhead{\rightmark}
+\lhead{}
 % \graphicspath{{./Figures/}}
+% \newcommand{\Ex}{\operatorname{E}\expectarg}
+% \DeclarePairedDelimiterX{\expectarg}[1]{[}{]}{%
+%   \ifnum\currentgrouptype=16 \else\begingroup\fi
+%   \activatebar#1
+%   \ifnum\currentgrouptype=16 \else\endgroup\fi
+% }
+
+\newcommand{\innermid}{\nonscript\;\delimsize\vert\nonscript\;}
+\newcommand{\activatebar}{%
+  \begingroup\lccode`\~=`\|
+  \lowercase{\endgroup\let~}\innermid 
+  \mathcode`|=\string"8000
+}
+
+\usepackage[framemethod=tikz]{mdframed}
+\newtheoremstyle{defi}
+  {\topsep}%
+  {\topsep}%
+  {\normalfont}%
+  {}%
+  {\bfseries}% 
+  {:}%
+  {.5em}%
+  {\thmname{#1~}\thmnumber{#2}\thmnote{ -- #3}}
+  %
+  \theoremstyle{defi}
+\mdfdefinestyle{theoremStyle}{
+	hidealllines=true,
+	leftline=true,
+	bottomline=true,
+	innertopmargin=2pt,
+	innerbottommargin=6pt,
+	linewidth=2.5pt,
+	linecolor=gray!40,
+	innerrightmargin=0pt,
+}
+\newcounter{thmCounter}[section]
+\numberwithin{thmCounter}{section}
+\newmdtheoremenv[style=theoremStyle]{theorem}[thmCounter]{Theorem}
+\newmdtheoremenv[style=theoremStyle]{definition}[thmCounter]{Definition}
+\newmdtheoremenv[style=theoremStyle]{conjecture}[thmCounter]{Conjecture}
+\newmdtheoremenv[style=theoremStyle]{lemma}[thmCounter]{Lemma}
+\newmdtheoremenv[style=theoremStyle]{remark}[thmCounter]{Remark}
+\newmdtheoremenv[style=theoremStyle]{example}[thmCounter]{Example}
+\newmdtheoremenv[style=theoremStyle]{proposition}[thmCounter]{Proposition}
+\newmdtheoremenv[style=theoremStyle]{corollary}[thmCounter]{Corollary}
+
+\mdfdefinestyle{alertStyle}{
+backgroundcolor=red!27,
+linecolor=gray,
+roundcorner=6pt,
+middlelinewidth=0pt
+}
+
+% Repetable theorem env
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\declaretheoremstyle
+[
+    preheadhook={\begin{mdframed}[style=theoremStyle]},
+    postfoothook=\end{mdframed},
+]{framedThmStyle}
+\declaretheorem[style=framedThmStyle, title=Théorème, numberlike=thmCounter]{repenvThm}
+\declaretheorem[style=framedThmStyle, title=Conjecture, numberlike=thmCounter]{repenvConj}
+
+
+
+
+
 \begin{document}
 
 
@@ -60,24 +140,406 @@
 % \includegraphics[scale=0.3]{/home/victor/inria}
 % \thispagestyle{empty} 
 % \clearpage
-\tableofcontents
-\section{(Joint) Posterior formulation}
+% \tableofcontents
+\section{Forward, inverse problems and probability theory}
+
+
+\subsection{Model space data space and forward problem}
+\label{sec:model_space_data_space}
+We are going to follow~\citeauthor{tarantola_inverse_2005}'s description of model and data space in~\cite{tarantola_inverse_2005}.
+
+In order to describe accurately a physical system, we have to define the notion of model:
+\begin{definition}[Model]
+  A model $\mathfrak{M}$ is defined as a pair composed of a forward operator $\mathcal{M}$, and a parameter space $\Theta$
+  \begin{equation*}
+    \mathfrak{M} = (\mathcal{M}, \Theta)
+  \end{equation*}
+The forward operator is the mathematical representation of the physical system, while the parameter space is chosen here to be a subset of a finite dimensional space, so usually $\Theta$ will be a subset of $\mathbb{R}^n$. 
+\end{definition}
+\begin{remark}
+  The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$
+\end{remark}
+\begin{example}
+  A model with parameter space $\Theta = \mathbb{R}^2\times [0, 1]$ has dimension $3$, while $\Theta = \mathbb{R}^2 \times \{1\}$ has dimension $2$.
+\end{example}
+The data space is formally introduced as the set of all possible observations that one can make during the physical experiment, so consists in all the physically acceptable results of the physical experiment. This set is noted $\Yspace$.
+Then, the forward operator $\mathcal{M}$ maps the parameter space $\Theta \subset \mathbb{R}^{d}$ to the data space $\Yspace$, as one can expect that all models provide physically acceptable outputs.
+\subsection{Forward problem}
+Given a model $(\mathcal{M}, \Theta)$, the forward problem consists in applying the forward operator to a given $\theta \in \Theta$, in order to get the model prediction. The forward problem is then to obtain information on the result of the experiment, based on the parameters:
+\begin{equation*}
+  \begin{array}{cccc}
+    \mathcal{M}:&\Theta&\longrightarrow & \Yspace \\
+                & \theta & \longmapsto & \mathcal{M}(\theta)
+  \end{array}
+\end{equation*}
+
+\subsection{Inverse Problem}
+The inverse problem, as its name suggests, consists in trying to gather more information on the parameters, based on the result of the experiment, or the physical process.
+
+In that perspective we are going to introduce briefly the usual probabilistic framework.
+\subsubsection{Probabilistic formulation}
+
+\paragraph{Notions of probabilities theory}
+\label{sec:notion_prob_theory}
+
+
+We are first going to define the usual notions of probability theory, such as events, random variables and density functions.
+Let us consider a probabilistic space $(\Omega, \mathcal{F}, \Prob)$, and a measurable state (or sample) space $(S, \mathcal{B}(S))$.
+\begin{definition}[Event, and probability of an event]
+   We call an event an element of the $\sigma$-algebra $\mathcal{F}$, and the probability of an event $A\in \mathcal{F}$ is defined as the integral
+  \begin{equation}
+    \Prob[A] = \int_{A} \,\mathrm{d}\Prob(\omega)
+  \end{equation}
+\end{definition}
+Observing an event $B \in \mathcal{F}$ can bring information upon another event $A\in \mathcal{F}$. In that sense, we introduce the conditional probability of $A$ given $B$:
+\begin{definition}[Conditional Probability]
+  Let $A$, $B \in \mathcal{F}$
+  The event $A$ given $B$ is written $A | B$ and its probability is
+  \begin{equation}
+    \Prob[A | B] = \frac{\Prob[A \cap B]}{\Prob[B]}
+  \end{equation}
+\end{definition}
+Formally, an event can be seen as an outcome of some uncertain experiment
+\begin{definition}[Random Variable]
+  A random variable (abbreviated as r.v.) $Y$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an uppercase letter
+\end{definition}
+\begin{remark}
+  When $S = \mathbb{R}^p$ with $p > 1$, and $\mathcal{B}(\mathbb{R}^p)$ the usual borelian $\sigma$-algebra on $\mathbb{R}^p$, a random variable is called a random vector.
+\end{remark}
+
+\begin{definition}[Expectation of a r.v.]
+  \label{def:expectation}
+  The expectation of a r.v. $Y:\Omega \rightarrow S$ is defined as
+  \begin{equation*}
+    \Ex[Y] = \int_{\Omega} Y(\omega) \,\mathrm{d}\Prob(\omega)
+  \end{equation*}
+\end{definition}
+\begin{remark}
+  Using the definition~\ref{def:expectation}, the probability of an event $A$ can be seen as the expectation of a well chosen random variable:
+  \begin{equation*}
+    \begin{array}{cccc}
+      \mathbbm{1}_{A}:& \Omega& \longrightarrow& \{0,1\} \\
+                      & \omega& \longmapsto & \begin{cases}
+                        1\text{ if } \omega \in A \\
+                        0 \text{ if } \omega \notin A
+                                              \end{cases}
+    \end{array}
+  \end{equation*}
+  and
+  \begin{align*}
+    \Ex[\mathbbm{1}_A] &= \int_{\Omega} \mathbbm{1}_A \, \mathrm{d}\Prob(\omega) \\
+                       &= \int_{A} \, \mathrm{d}\Prob(\omega) = \Prob[A]
+  \end{align*}
+  $\mathbbm{1}_A$ is called the indicator function of the event $A$.
+\end{remark}
+\begin{definition}[Image (Pushforward) measure]
+  \label{def:image_measure}
+  Let $Y:\Omega \rightarrow S$ be a random variable, and $A \subseteq S$. The image measure (also called pushforward measure) of $\Prob$ through $Y$ is denoted by $\Prob_Y = \Prob \circ Y^{-1}$. This notation can differ slightly depending on the community in which it is applied, so one can find $ \Prob_Y = \Prob \circ Y^{-1} = Y_{\sharp}\Prob$, the latter notation especially used in transport theory. The probability, for the r.v. $Y$ to be in $A$ is equal to
+  \begin{equation}
+    \Prob[Y \in A] = \Prob_Y[A] = \int_{A}\,\mathrm{d}\Prob_Y(\omega) =  \int_{Y^{-1}(A)}\,\mathrm{d}\Prob(\omega) = \Prob[Y^{-1}(A)] = \Prob[\{\omega\,;\,Y(\omega) \in A\}]
+  \end{equation}
+\end{definition}
+We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to the sample space $(S,\mathcal{B}(S)) = (\mathbb{R},\mathcal{B}(\mathbb{R}))$.
+\begin{definition}[Cumulative distribution function (c.d.f.) and Probability density function (p.d.f.)]
+  \label{def:pdf}
+  The Cumulative distribution function (further abbreviated as cdf) of a real-valued r.v. $Y$ is defined as the probability of the right closed intervals that generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R})$ of the real line.
+  \begin{equation}
+    F_{Y}(y) = \Prob\left[Y \leq y\right] = \Prob_Y\big[\,]-\infty; y]\, \big]
+  \end{equation}
+\end{definition}
+
+\paragraph{Bayes' Theorem}
+\label{ssec:bayes_theorem}
+\begin{theorem}[Bayes' theorem]
+  \begin{equation}
+  p(\theta \mid y) = \frac{\mathcal{L}(\theta;y)p(\theta)}{p(y)} \propto \mathcal{L}(\theta;y)p(\theta)
+  \end{equation}
+  where
+  \begin{equation}
+    p(y) = \int_{\theta \in \Theta} \mathcal{L}(\theta;y)p(\theta)\, \mathrm{d}\theta
+  \end{equation}
+\end{theorem}
+
+\paragraph{Measure of the discrepancy}
+
+ It involves then to compare the output of the mathematical model, with the output of the physical process $y$, usually by defining a kind of discrepancy $D$ between two elements of $\Yspace$ verifying:
+\begin{itemize}
+\item 
+\begin{equation*}
+  \begin{array}{cccc}
+    D:& \Yspace \times \Yspace& \longrightarrow&\mathbb{R}^+ \\
+     & (y,y^{\prime}) & \longmapsto & D(y, y^{\prime})
+  \end{array}
+\end{equation*}
+\item for all $y$ and all $y^{\prime}$, $D(y, y^{\prime})\geq 0$
+\item $D(y, y^{\prime}) = 0 \Rightarrow y = y^{\prime}$
+\end{itemize}
+If $\Yspace$ is a metric space, one obvious choice for $D$ is to take the associated metric. In the following, unless stated otherwise, $\Yspace$ will have a finite dimension, and $D$ will be defined as
+\begin{equation}
+  D(y, y^{\prime}) = \|y - y^{\prime}\|_{\Sigma} = \sqrt{(y - y^{\prime})^T\Sigma^{-1}(y - y^{\prime})}
+\end{equation}
+\paragraph{From the physical experiment to the model}
+\label{ssec:inv_problem}
+The physical system (the reality) that is observed can formally be represented by a model, so by an operator $\mathscr{M}$, applied to a set of parameters $\vartheta \in \Theta_0$:
+\begin{equation*}
+  \begin{array}{llll}
+    \mathscr{M} :& \Theta_0 &\longrightarrow& \Yspace \\
+                 & \vartheta & \longmapsto& \mathscr{M}(\vartheta)
+  \end{array}
+\end{equation*}
+Let us assume that we dispose of a model $(\mathcal{M}, \Theta)$, at the input $x$, 
+\begin{equation*}
+    \mathscr{M}(x, \vartheta) = \mathcal{M}(x, \theta) + \delta(x,\theta)
+\end{equation*}
+
+The difference $\delta$ is the error between the physical model and the model.
+One current assumption, is that $\delta(x, \theta)$ is normally distributed $\delta(\theta) \sim \mathcal{N}(0, \Sigma)$ 
+\begin{equation}
+  y\mid \theta \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
+\end{equation}
+Its probability density function can be written as
+\begin{equation}
+  p(y\mid \theta) = (2\pi)^{-n/2}(\mathrm{det} \Sigma)^{-1/2}\exp\left(-\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)\right)
+\end{equation}
+\begin{remark}
+  If $\Sigma = \sigma^2 I$, the pdf can be rewritten as
+  \begin{equation*}
+    p(y \mid \theta) = (2\pi)^{-n/2} \sigma^{-n} \exp\left(-\frac{1}{2\sigma^2}(\mathcal{M}(\theta) - y)^T(\mathcal{M}(\theta) - y)\right)
+  \end{equation*}
+\end{remark}
+
+\begin{definition}
+  The probability density function of the observation given the parameters is also called the likelihood, $\mathcal{L}$
+  \begin{equation}
+    \label{eq:likelihood_definition}
+    \mathcal{L}(\theta;y) = p(y \mid \theta)
+  \end{equation}
+\end{definition}
+\section{Parameter inference}
+\subsection{Choosing a likelihood model}
+\begin{align*}
+  p(y | k, u, \sigma^2) &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2}SS(k,u)\right] \\
+                         &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2} \|\mathcal{M}(k,u) - y \|^2_{\Sigma}\right]
+\end{align*}
+\subsection{Quantities derived from the likelihood}
+\subsubsection{The score function}
+\label{sec:score_function}
+Given the data $y$, the likelihood function is $\mathcal{L}(\theta ; y)$, and the log likelihood is $l(\theta;y) = \log \mathcal{L}(\theta;y)$
+The score function is defined as
+\begin{equation}
+  \label{eq:def_score_function}
+  s(\theta) = \frac{\partial \log \mathcal{L}}{\partial \theta}(\theta; y)
+\end{equation}
+and the MLE $\hat{\theta}$ verifies
+\begin{equation}
+  \label{eq:MLE}
+  s(\hat{\theta}) = 0
+\end{equation}
+For the true parameter $\bar{\theta}$, averaging over all possible information yields $0$:
+\begin{align}
+  \Ex\left[s(\bar{\theta}) \mid \bar{\theta}\right] = \Ex\left[\frac{\frac{\partial p(y|\theta)}{\partial \theta}}{p(y|\theta)} \mid \bar{\theta}\right] = \int \frac{\frac{\partial p(y|\bar\theta)}{\partial \theta}}{p(y\mid\bar\theta)} p (y \mid \bar\theta) \,\mathrm{d}y = \frac{\partial}{\partial \theta} \int p(y|\bar\theta) \,\mathrm{d}y = 0
+\end{align}
+The variance of the score is the Fisher Information matrix
+
+\subsubsection{Fisher Information Matrix}
+\label{sec:fisher_information_matrix}
+\begin{align}
+  \label{eq:def_fisher_information_matrix}
+  \mathcal{I}(\theta) &= \Ex\left[\left(\frac{\partial \log \mathcal{L}}{\partial \theta}\right)^2 \mid \theta\right] \\
+                        &=\Ex\left[-\frac{\partial^2 \log \mathcal{L}}{\partial \theta^2} \mid \theta\right]
+\end{align}
+
 \subsection{Priors}
+\subsubsection{Informative priors}
+\label{sec:informative_priors}
+
 \begin{align*}
   K \sim \mathcal{U}(\mathbb{K}), \quad p(k) \\
   U \sim \mathcal{U}(\mathbb{U}), \quad p(u)
 \end{align*}
-\subsection{Likelihood model}
-\begin{align*}
-  p(y \mid k, u, \sigma^2) &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2}SS(k,u)\right] \\
-                         &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2} \|\mathcal{M}(k,u) - y \|^2_{\Sigma}\right]
-\end{align*}
+
+\subsubsection{Non-informative priors}
+\label{sec:non-info_priors}
+Non-informative priors 
 Now to Bayes' theorem
 \begin{align*}
-  p(k,u \mid y,\sigma^2) = \frac{p(y \mid k, u, \sigma^2) p(k,u)}{\iint_{\mathbb{K}\times\mathbb{U}}p(y \mid k, u, \sigma^2) p(k,u) \, \mathrm{d}(k,u)}
+  p(k,u | y,\sigma^2) = \frac{p(y | k, u, \sigma^2) p(k,u)}{\iint_{\mathbb{K}\times\mathbb{U}} p(y | k, u, \sigma^2) p(k,u) \, \mathrm{d}(k,u)}
 \end{align*}
-Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
+  Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
 
+In the following, we write $\theta = (k, u)\in \Theta$ when no distinction is needed, or a general notation is needed.
+
+\section{Model selection}
+\label{sec:model_selection}
+
+\subsection{Likelihood ratio test}
+The likelihood ratio test is a useful test in the case of nested models, as described in waht follows:
+
+\subsubsection{Nested models}
+\begin{definition}[Nested models]
+  Let $\mathfrak{M}_1=(\mathcal{M}_1, \Theta_1)$ and $\mathfrak{M}_2=(\mathcal{M}_2, \Theta_2)$ be two models.
+$\mathfrak{M}_1$ is said to be nested within $\mathfrak{M}_2$ if
+\begin{equation*}
+  \mathcal{M}_1 = \mathcal{M}_1 \text{ and } \Theta_1 \subset \Theta_2
+\end{equation*}
+\end{definition}
+\begin{example}
+  Let us consider two models, where $\Yspace = \mathbb{R}$
+  \begin{align*}
+    \mathfrak{M}_1 &= \left((a,b) \mapsto ab;\quad (a,b) \in \mathbb{R} \times [0;2]\right) \\
+   \mathfrak{M}_2 &= \left((a,b) \mapsto ab;\quad (a,b) \in \mathbb{R}^+ \times \{1/\pi\}\right)
+  \end{align*}
+$\mathfrak{M}_2$ is nested within $\mathfrak{M}_1$
+\end{example}
+\begin{example}
+  Now let us consider $\Yspace$ as the space of random vector of dimension $n$:
+  \begin{align*}
+    \mathfrak{M}_1 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \mathbb{R}^+ \text{ and } \epsilon \sim \mathcal{N}(0, I) \\
+    \mathfrak{M}_2 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \{1\} \text{ and } \epsilon \sim \mathcal{N}(0, I)
+  \end{align*}
+\end{example}
+$\mathfrak{M}_2$ is nested within $\mathfrak{M}_2$
+
+\label{sec:lik_test}
+Using the likelihood defined above, we can test for the following hypotheses:
+\begin{itemize}
+\item $\mathcal{H}_0$: $\theta \in \Theta_0\subset \mathbb{R}^d$
+\item $\mathcal{H}_1$: $\theta \in \Theta_1 \subset \mathbb{R}^r$, and $\Theta_0 \subset \Theta_1$
+\end{itemize}
+Intuitively, we can see $\Theta_1$ as the more general model.
+The test statistic is
+\begin{equation}
+  \label{eq:def_lik_ratio}
+  \Lambda(y) = \frac{\sup_{\theta \in \Theta_0} \mathcal{L}(\theta ; y)}{\sup_{\theta \in \Theta_1} \mathcal{L}(\theta ; y)}
+\end{equation}
+and under $\mathcal{H}_0$, the quantity 
+\begin{equation}
+  - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
+\end{equation}
+is asymptotically distributed as a $\chi^2_{r-d}$.
+Using the log-likelihood, $-2(l(\theta_0;y) - l(\theta_1;y)) \xrightarrow{\mathrm{d}} \chi^2_{r-d}$
+The asymptotic rejection region of level $\alpha$ is then
+\begin{align}
+  \mathrm{RejReg}_{\alpha} &= \{y \mid -2 \log \Lambda(y) > \chi^2_{1-\alpha, r-d} \} \\
+                           &= \{y \mid \log \Lambda(y) < -\frac12 \chi^2_{1-\alpha, r-d} \} \\
+                           &= \{ y \mid (\sup_{\theta\in\Theta_0} l(\theta;y) - \sup_{\theta\in\Theta_1} l(\theta;y)) < -\frac12 \chi^2_{1-\alpha, r-d} \} \\
+                           &= \{ y \mid (\sup_{\theta\in\Theta_1} l(\theta;y) - \sup_{\theta\in\Theta_0} l(\theta;y)) > \frac12 \chi^2_{1-\alpha, r-d} \} \\
+\end{align}
+
+
+
+
+Let us set $\theta = (k,u,\phi)$ where $\phi$ represents additional parameters in the likelihood
+\begin{equation}
+  \mathcal{L}(\theta; y) = \mathcal{L}(k, u, \phi ; y)
+\end{equation}
+Let us assume furthermore that the maximizer of the likelihood depends only on $u$ (and implicitly on the data).
+\begin{equation}
+  \argmax_{k \in \Kspace} \mathcal{L}(k,u, \phi) = k^*(u) = \argmax_{k \in \Kspace} \ell(k,u, \phi)
+\end{equation}
+
+Now let us consider the ratio depending on the uncertain variable $u$ (the $y$ is ignored for notational reasons):
+\begin{equation}
+  -2\log\Lambda(u, \phi^\prime) = -2\left(\ell(k, u, \phi) - \ell(k^*(u), u, \phi^\prime) \right)
+\end{equation}
+
+Given $u$, let us define the following likelihoods
+\begin{align}
+  \mathcal{L}(k ; u, \sigma^2) &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{J(k,u)}{2\sigma^2}\right] \\
+  \mathcal{L}(k=k^*(u) ; u, \varsigma^2) &= \frac{1}{\sqrt{2\pi}\varsigma}\exp\left[-\frac{J^*(u)}{2\varsigma^2}\right] \\
+\end{align}
+Taking the ratio yields
+\begin{align}
+  \frac{\mathcal{L}(k;u,\sigma^2)}{\mathcal{L}(k^*;u,\varsigma^2)} &= \frac{\varsigma}{\sigma}\exp\left[-\frac{1}{2}\left(\frac{J(k,u)}{\sigma^2} - \frac{J^*(u)}{\varsigma^2})\right)\right] \\
+                                                                   &= \frac{\varsigma}{\sigma}\exp\left[-\frac{1}{2\sigma^2}\left(J(k,u)- \frac{\sigma^2}{\varsigma^2}J^*(u))\right)\right]
+\end{align}
+taking twice the negative log likelihood,
+\begin{equation}
+  -2\log \frac{\mathcal{L}(k;u,\sigma^2)}{\mathcal{L}(k^*;u,\varsigma^2)} = \frac{1}{\sigma^2}\left(J(k,u) - \frac{\sigma^2}{\varsigma^2}J^*(u)\right) +2\log\frac{\sigma}{\varsigma}
+\end{equation}
+The log ratio $\varrho$ is
+\begin{align}
+  \varrho(k, u, \sigma, \varsigma) &= \frac{1}{\sigma^2}\left(J(k,u) - \frac{\sigma^2}{\varsigma^2}J^*(u)\right) +2\log\frac{\sigma}{\varsigma} \\
+  (\text{When } \sigma=1)                  &  = \left(J(k,u) - \frac{1}{\varsigma^2}J^*(u)\right) - 2\log\varsigma
+\end{align}
+
+
+\subsubsection{Relative Likelihood}
+\label{sec:relative_likelihood}
+\subsection{Bayesian Model Selection}
+\label{sec:bayesian_model_selection}
+Let us assume that for $\mathcal{M}$ is chosen to represent the problem at stake. In this case, $\theta$ represent implicitly parameters of this model $\mathcal{M}$. Bayes' theorem gives
+\begin{equation}
+  \label{eq:bayes_th_BMS}
+  p(\theta | \mathcal{M}, y) = \frac{p(y | \mathcal{M}, \theta)p(\theta)}{p(y | \mathcal{M})}
+\end{equation}
+In Eq.\eqref{eq:bayes_th_BMS}, $p(y | \mathcal{M}) = \int_{\Theta}p(y | \mathcal{M}, \theta)p(\theta) \,\mathrm{d}\theta$ is called the evidence of the model $\mathcal{M}$ given the data $y$.
+
+\subsubsection{Bayes factor}
+When comparing two models $\mathcal{M}_1$ and $\mathcal{M}_2$, one can compute the Bayes factor, that is the ratio of the evidence of the two models:
+\begin{equation}
+  \label{eq:bayes_factor}
+  \mathrm{BF}(\mathcal{M}_1, \mathcal{M}_2) = \frac{p(y | \mathcal{M}_1)}{p(y | \mathcal{M}_1)}
+\end{equation}
+\subsection{The generalized normal distribution}
+\label{sec:generalized_normal_distribution}
+\subsubsection{Probability density function}
+\label{sec:generalized_normal_distribution_pdf}
+We consider a random variable $\xi(\kappa)$ with the following pdf
+\begin{equation}
+  \label{eq:pdf_GND}
+  f_{\kappa}(x, \mu, s) = \frac{\kappa}{2 s \Gamma(1/\kappa)} \exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right]
+\end{equation}
+that depends on the parameters $\mu$ $s>0$ and $\kappa>0$ representing respectively the location, scale and the shape parameter.
+One can notice that in the particular case where $\kappa=2$, $\xi(\kappa=2)\sim \mathcal{N}(\mu, \frac{s^2}{2})$. Similarly, when $\kappa=1$, $\xi(\kappa=1)$ is distributed according to Laplace distribution.
+One important fact is that for $x \in ]\mu - s,\mu +s[$, $\frac{\lvert x-\mu \rvert}{s} < 1$ so when $\kappa \rightarrow +\infty$, $\exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right] \rightarrow 1$ if $x \in ]\mu - s,\mu +s[$, $0$ elsewhere. This distribution converges pointwise to a uniform distribution on $]\mu - s,\mu +s[$.
+
+\subsubsection{Moments of the generalized normal distribution}
+\label{sec:generalized_normal_distribution_moments}
+Due to the symmetry of the pdf, one can directly conclude that the mode, median and mean are $\mu$:
+\begin{equation}
+  \Ex[\xi(\kappa)] = \mathrm{Mode}[\xi(\kappa)] = \mathrm{Median}[\xi(\kappa)] = \mu 
+\end{equation}
+In~\cite{pogany_characteristic_2010}, is also proven the following expression for the variance of $\xi(\kappa)$:
+\begin{align}
+  \Var\left[\xi(\kappa)\right] &= s^2 \frac{\Gamma(3 / \kappa)}{\Gamma(1/ \kappa)} = \frac{s^2}{3} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right) \\
+                               &= \frac{(2s)^2}{12} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right)
+\end{align}
+At the first order, when $\kappa\rightarrow +\infty$, the variance is the variance of a random variable on an interval of length $2s$ as expected
+
+\subsubsection{Loglikelihood for GND}
+\label{sec:loglik_GND}
+
+\begin{align}
+  \ell_{\kappa}(x, \mu, s) &= -\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2 \\
+  &= -\left(\left(\frac{x-\mu}{s}\right)^2\right)^{\frac{\kappa}{2}} + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2
+  \end{align}
+\subsubsection{Ratio between two GND}
+\label{sec:ratio_GND}
+Let us consider two GND distribution: the ratio between the two can be written as
+\begin{align}
+  \frac{f_{\kappa_1}(x_1, \mu_1, s_1)}{f_{\kappa_2}(x_2, \mu_2, s_2)} = \frac{\kappa_1}{\kappa_2} \frac{s_2 \Gamma(1/ \kappa_2)}{s_1 \Gamma(1/ \kappa_1)} \exp \left[\left(\frac{\lvert x_2 - \mu_2 \rvert}{s_2}\right)^{\kappa_2}-\left(\frac{\lvert x_1 - \mu_1 \rvert}{s_1}\right)^{\kappa_1} \right]
+\end{align}
+
+\subsection{The Profile Likelihood}
+\label{sec:prof_lik}
+The likelihood is defined as
+\begin{equation}
+  \label{eq:lik_def}
+  \mathcal{L}(k, u ; y) = p( y \mid k, u)
+\end{equation}
+Maximizing the likelihood yields the Maximum Likelihood Estimator:
+Given the observation $y$,
+\begin{equation}
+  \label{eq:MLE}
+  (k_{\mathrm{MLE}}, u_{\mathrm{MLE}}) = \max_{k,u} \mathcal{L}(k, u; y)
+\end{equation}
+The traditional profile likelihood is obtained by profiling the nuisance parameters:
+\begin{equation}
+  \label{eq:plik_def}
+  \mathcal{L}_p(k) = \sup_{u\in\Uspace}\mathcal{L}(k, u; y)
+\end{equation}
+Immediately, one can see that maximizing the profile likelihood leads to the MLE.
 \newpage
 \section{GP, RR-based family of estimators}
 \subsection{Random processes}
@@ -192,7 +654,17 @@ This leads to
 
 \subsection{Covariance functions}
 \label{sec:cov_fun}
-
+\begin{itemize}
+\item Desired properties
+  \begin{itemize}
+  \item isotropy (?)
+  \item stationarity
+  \item semi-definite positiveness
+  \end{itemize}
+\item parametric models of covariance
+\item examples
+\item usual hyperparameters estimation
+\end{itemize}
 
 \subsection{General SUR strategies}
 \label{sec:SUR_strat}
@@ -251,7 +723,7 @@ By multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ yields
   m_{\Delta}(\mathbf{k},\mathbf{u}) &= m_Y(\mathbf{k},\mathbf{u}) - \alpha m_Y^*(\mathbf{u}) \\
   \sigma^2_{\Delta}(\mathbf{k},\mathbf{u}) &= \sigma_Y^2(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma_{Y^*}^2(\mathbf{k},\mathbf{u}) - 2\alpha C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right)
 \end{align}
-Assuming that $C((\mathbf{k},\mathbf{u}), (\mathbf{k}',\mathbf{u}')) = s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(u_j - u'_j\|)$
+Assuming that $C((\mathbf{k},\mathbf{u}), (\mathbf{k}',\mathbf{u}')) = s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(\|u_j - u'_j\|)$
 \begin{align}
   C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) &= s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)\prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(0) \\
   &=s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)
@@ -403,7 +875,9 @@ For a fixed $p\in (0, 1]$, and an initial design $\mathcal{X}$. Set an initial v
 
 
 
-\bibliographystyle{alpha}
+
+
+\bibliographystyle{abbrvnat}
 \bibliography{/home/victor/acadwriting/bibzotero}
 \end{document}
 %%% Local Variables:

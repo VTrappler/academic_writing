@@ -1,0 +1,64 @@
+\documentclass[../../Main.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Annexes/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%	
+%\appendix
+\pagestyle{conclusionStyle}
+
+
+\begingroup
+
+%% Le chapitre est numéroté A
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\Alph{chapter}}%
+
+%% Le titre doit être entre les traits de la 1ere page du chapitre
+\TitleBtwLines
+
+\specialchapter{Appendix}
+\pagestyle{appendixStyle}
+
+
+
+\minitoc
+\pagestyle{appendixStyle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+\input{\RootDir{Volume_indexes.tex}}
+
+\newpage
+\input{\RootDir{Linreg_generalization.tex}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../Bibliography}
+}
+
+\endgroup
+
+\end{document}

@@ -1,0 +1,58 @@
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter3/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\subfileLocal{\setcounter{chapter}{2}}
+\specialchapter{Robust estimators in the presence of uncertainties} 
+\label{chap:robust_estimators}
+\minitoc
+\newpage
+\subfileLocal{\pagestyle{contentStyle}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 				SECTION 1 : INTRO			   %%%
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../bibzotero}
+      }
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

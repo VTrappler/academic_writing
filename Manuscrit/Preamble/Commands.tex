@@ -1,0 +1,177 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Miscs Cmds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\quadn}{\!\!\!\!}
+\newcommand{\todoinl}{\todo[inline]{}}
+\newcommand{\paragraphTitle}[1]{
+%\begin{center}
+%\vspace{-5mm}
+%\item \paragraph{#1}~\\
+%\end{center}
+\subsubsection*{\centering{#1}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Référencer des tables, figures
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\figref{Fig.~\ref}
+\newcommand\tabref{Table~\ref}
+\newcommand\secref{Sec.~\ref}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Norme
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tableaux
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Laisser de l'espace avant ou après une ligne horizontale 
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+% Utilisation : 
+%	\begin{tabular}{|l|}
+%		\hline
+%		TEXT\Tstrut\Bstrut\\ % top *and* bottom struts
+%		\hline
+%		TEXT \Tstrut\\       % top strut only
+%		TEXT \Bstrut\\       % bottom strut only
+%		\hline
+%	\end{tabular}
+
+% Epaisseur des traits de toprule et bottomrule
+\setlength\heavyrulewidth{0.25ex}
+
+% Différents types de colonnes à mettre dans tabular
+\newcolumntype{C}{>{\centering\arraybackslash}X} % Centered
+\newcolumntype{D}{>{\RaggedLeft}X} % Aligné à droite
+
+% Ecrire plusieurs ligne dans une cell de tableau, en précisant où on veut les mettre
+\newcommand{\specialcell}[2][c]{ \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 				 SAUTER DES PAGES				%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Force que la suite de cette commande soit écrite sur une page impaire (à droite), et qu'au moins une page complètement blanche la précède (donc 2 si nécessaire pour être à droite)
+% A utiliser avant un nouveau chapitre par exemple
+\newcommand{\fullclear}{\clearpage\phantom{h}\pagestyle{empty}\newpage\cleardoublepage\pagestyle{fancy}}
+% La page sera écrite à gauche
+\newcommand*\cleartoleftpage{%
+	\clearpage
+	\ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
+}
+\newcommand{\specialchapter}[1]{\fullclear\chapter{#1}}
+\newcommand{\specialchapterstar}[1]{\fullclear\chapter*{#1}}
+
+
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Mise en page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dans le cas où on utilise la mise en page Conny de fncychap
+% Plutôt que d'avoir "chapitre 1 -- Intro", on veut que Intro soit directement écrit entre les lignes
+% Pour la page de garde du chapitre, 
+% On utilise cette commande (peut aussi être utile pour conclusion, annexes)
+\makeatletter
+	\newcommand\TitleBtwLines{%% 
+		
+		\ChTitleVar{\centering\Huge\rm\bfseries}
+		\renewcommand{\DOCH}{%
+			\mghrulefill{3\RW}\par\nobreak
+			\vskip -0.5\baselineskip
+			\mghrulefill{\RW}\par\nobreak
+			
+		}
+		\renewcommand{\DOTI}[1]{%
+			\CTV\FmTi{##1}\par\nobreak
+			\vskip -0.5\baselineskip
+			\mghrulefill{\RW}\par\nobreak
+			\vskip 60\p@
+		}
+		\renewcommand{\DOTIS}[1]{%
+			\mghrulefill{\RW}\par\nobreak
+			\CTV\FmTi{##1}\par\nobreak
+			\vskip 60\p@
+		}
+	
+	} 
+\makeatother
+	
+% Ligne avec 3 étoiles au milieu -> Très bien pour séparer des paragraphes
+\newcommand*{\etoile}{
+	\begin{center}
+		* \hspace{2ex}* \hspace{2ex}*
+	\end{center}
+}
+
+
+%================================================
+%% Faciliter l'écriture
+%================================================
+\def \first*{$1^{st}$}
+\def \second*{$2^{nd}$}
+\def \third*{$3^{rd}$}
+
+\def \r3*{$\mathbb{R}^3$}
+
+\def \kl*{Karhunen-Loève}
+
+\def \degre{$^{\circ}$}
+
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\Ex}{\mathbb{E}}
+\DeclareMathOperator*{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\ProbGP}{\mathcal{P}}
+\DeclareMathOperator*{\Var}{\mathbb{V}\mathrm{ar}}
+\DeclareMathOperator*{\Cov}{\mathbb{C}\mathrm{ov}}
+\newcommand{\Kspace}{\mathbb{K}}
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Xspace}{\mathbb{X}}
+\newcommand{\Yspace}{\mathbb{Y}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% TikZ Cmds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+\newcommand{\tikzdrawbox}[3][(0pt,0pt)]{%
+    \tikz[overlay,remember picture]{
+    \draw[#3]
+      ($(left#2)+(-0.3em,0.9em) + #1$) rectangle
+      ($(right#2)+(0.2em,-0.4em) - #1$);}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% -- Package TODO enrichi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pavé coloré sur toute la ligne pour signaler ce qu'on doit faire
+\newcommand{\todol}[1]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,inline]{!! #1 !!}}
+\newcommand{\unsure}[1]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,inline]{?? #1 ??}}
+\newcommand{\change}[1]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,inline]{#1}}
+\newcommand{\info}[1]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,inline]{#1}}
+\newcommand{\improvement}[1]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,inline]{#1}}
+\newcommand{\thiswillnotshow}[1]{\todo[disable,inline]{#1}}
+\newcommand{\reformuler}{\change{Reformuler}}
+
+% Pavé coloré petit dans le texte pour les citations à ajouter
+\newcommand{\aciter}[1]{\todo[linecolor=violet,backgroundcolor=violet!25,bordercolor=violet, inline, inlinewidth=5cm, noinlinepar]{~ #1 ~}}
+
+% Texte coloré dans les paragraphes, pour signaler que c'est des infos/des formulations à vérifier
+\newcommand{\tocheck}[1]{{\color{red}{#1}} \addcontentsline{tdo}{todo}{#1}}
+
+% Note to self : n'apparaît pas dans la liste des todos à faire, c'est pour avoir des infos complémentaires pour soi qui apparaissent dans le pdf
+\newcommand{\notetoself}[1]{\todo[linecolor=orange,backgroundcolor=orange!25,bordercolor=orange,nolist,inline]{Note to self: #1}}
+
+%% Liste de todos à cocher
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+	\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
