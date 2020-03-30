@@ -177,22 +177,24 @@ Given a model $(\mathcal{M}, \Theta)$, the forward problem consists in applying 
 The inverse problem, as its name suggests, consists in trying to gather more information on the parameters, based on the result of the experiment, or the physical process.
 
 In that perspective we are going to introduce briefly the usual probabilistic framework.
-\subsubsection{Probabilistic formulation}
+\subsection{Probabilistic formulation}
 
-\paragraph{Notions of probabilities theory}
+\subsubsection{Notions of probabilities theory}
 \label{sec:notion_prob_theory}
 
 
 We are first going to define the usual notions of probability theory, such as events, random variables and density functions.
 Let us consider a probabilistic space $(\Omega, \mathcal{F}, \Prob)$, and a measurable state (or sample) space $(S, \mathcal{B}(S))$.
 \begin{definition}[Event, and probability of an event]
-   We call an event an element of the $\sigma$-algebra $\mathcal{F}$, and the probability of an event $A\in \mathcal{F}$ is defined as the integral
+  \label{def:prob_event}
+   We call an event an element of the $\sigma$-algebra $\mathcal{F}$, and the probability of an event $A\in \mathcal{F}$ is defined as the Lebesgue integral
   \begin{equation}
     \Prob[A] = \int_{A} \,\mathrm{d}\Prob(\omega)
   \end{equation}
 \end{definition}
 Observing an event $B \in \mathcal{F}$ can bring information upon another event $A\in \mathcal{F}$. In that sense, we introduce the conditional probability of $A$ given $B$:
 \begin{definition}[Conditional Probability]
+  \label{def:cond_proba}
   Let $A$, $B \in \mathcal{F}$
   The event $A$ given $B$ is written $A | B$ and its probability is
   \begin{equation}
@@ -201,6 +203,7 @@ Observing an event $B \in \mathcal{F}$ can bring information upon another event 
 \end{definition}
 Formally, an event can be seen as an outcome of some uncertain experiment
 \begin{definition}[Random Variable]
+  \label{def:random_variable}
   A random variable (abbreviated as r.v.) $Y$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an uppercase letter
 \end{definition}
 \begin{remark}
@@ -235,20 +238,79 @@ Formally, an event can be seen as an outcome of some uncertain experiment
 \begin{definition}[Image (Pushforward) measure]
   \label{def:image_measure}
   Let $Y:\Omega \rightarrow S$ be a random variable, and $A \subseteq S$. The image measure (also called pushforward measure) of $\Prob$ through $Y$ is denoted by $\Prob_Y = \Prob \circ Y^{-1}$. This notation can differ slightly depending on the community in which it is applied, so one can find $ \Prob_Y = \Prob \circ Y^{-1} = Y_{\sharp}\Prob$, the latter notation especially used in transport theory. The probability, for the r.v. $Y$ to be in $A$ is equal to
-  \begin{equation}
+  \begin{equation*}
     \Prob[Y \in A] = \Prob_Y[A] = \int_{A}\,\mathrm{d}\Prob_Y(\omega) =  \int_{Y^{-1}(A)}\,\mathrm{d}\Prob(\omega) = \Prob[Y^{-1}(A)] = \Prob[\{\omega\,;\,Y(\omega) \in A\}]
-  \end{equation}
-\end{definition}
-We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to the sample space $(S,\mathcal{B}(S)) = (\mathbb{R},\mathcal{B}(\mathbb{R}))$.
-\begin{definition}[Cumulative distribution function (c.d.f.) and Probability density function (p.d.f.)]
-  \label{def:pdf}
-  The Cumulative distribution function (further abbreviated as cdf) of a real-valued r.v. $Y$ is defined as the probability of the right closed intervals that generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R})$ of the real line.
-  \begin{equation}
-    F_{Y}(y) = \Prob\left[Y \leq y\right] = \Prob_Y\big[\,]-\infty; y]\, \big]
-  \end{equation}
+  \end{equation*}
 \end{definition}
 
-\paragraph{Bayes' Theorem}
+\paragraph{Real-valued random variables}
+We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to the sample space $(S,\mathcal{B}(S)) = (\mathbb{R},\mathcal{B}(\mathbb{R}))$.
+\begin{definition}[Cumulative distribution function (c.d.f.) and Probability density function (p.d.f.)]
+  \label{def:distribution}
+  The \emph{cumulative distribution function} (further abbreviated as cdf) of a real-valued r.v. $Y$ is defined as the probability of the right closed intervals that generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R})$ of the real line.
+  \begin{equation*}
+    F_{Y}(y) = \Prob\left[Y \leq y\right] = \Prob_Y\big[\,]-\infty; y]\, \big]
+  \end{equation*}
+and $\lim_{-\infty}F_Y = 0$ and $\lim_{+\infty} F_Y = 1$
+  
+  If the pushforward measure $\Prob_Y$ is absolutely continuous with respect to the Lebesgue measure $\lambda$ defined as $\lambda\left(]a, b]\right) = b-a$, then according to Radon-Nikodym theorem, there exists a function $p_Y$, such that for all measurable set $A$,
+  \begin{equation*}
+    \Prob_Y[A] = \Prob[Y \in A] = \int_A \,\mathrm{d}\Prob_Y(\omega) = \int_A p_Y(y)\,\mathrm{d}y
+  \end{equation*}
+  This function $p_Y: S\subseteq\mathbb{R} \rightarrow \mathbb{R}$, is called the \emph{probability density function} (abbreviated pdf) of $Y$,  called the Radon-Nikodym derivative of $\Prob_Y$ wrt $\lambda$: $p_Y=\frac{\mathrm{d}\Prob_Y}{\mathrm{d} \lambda} = \frac{\mathrm{d} F_Y}{\mathrm{d} y}$.
+  As $Y$ is real-valued, the probability for $Y$ to be in an interval is
+  \begin{equation*}
+    \Prob_Y\big[]a;\,b]\big]=\Prob[a \leq Y < b] = \int_{a}^b p_Y(y)\,\mathrm{d}y = F_Y(b) - F_Y(a)
+  \end{equation*}
+  and $\Prob_Y[\mathbb{R}] = \int_{\mathbb{R}}p_Y(y)\,\mathrm{d}y=1$. By slight abuse of notation, the notation $\Prob_Y\left[\right]$ will be used to indicate that the probability is to be taken wrt $Y$
+\end{definition}
+\begin{remark}
+  If the random variable $Y$ admits a density $p_Y$, its expectation can be rewritten as
+  \begin{equation*}
+    \Ex\left[Y\right] = \int_{\Omega} Y(\omega) \,\mathrm{d}\Prob(\omega) = \int_{\mathbb{R}} y \,\mathrm{d}\Prob_{Y}(y) = \int_{\mathbb{R}} y\,p_Y(y)\,\mathrm{d}y
+  \end{equation*}
+  using the change of variable $Y(\omega) = y$
+\end{remark}
+\begin{definition}[Quantile function]
+  For a r.v. $Y$, the quantile function $Q_Y$ is the generalized inverse function of the cdf:
+  \begin{equation*}
+    Q_y(p) = \inf\{q:\, F_Y(q)\geq p\}
+  \end{equation*}
+\end{definition}
+
+\paragraph{Real-valued random vectors}
+
+
+\begin{definition}[Joint, marginal and conditional densities]
+  \label{def:joint_marginal_cond_densities}
+  Let $X=[X_1,\cdots,X_p]$ be a random vector from $\Omega \rightarrow S\subseteq\mathbb{R}^p$
+  The cdf of $X$ at the point $x=[x_1,\dots x_p]$ is
+  \begin{equation*}
+    F_{X}(x) = F_{X_1,\dots, X_p}(x_1,\dots, x_p) = \Prob\left[X_1 \leq x_1, \cdots, X_p\leq x_p\right] = \Prob\left[\bigcap_{i=1}^p \{\omega;\,X_i(\omega) \leq x_i\}\right]
+  \end{equation*}
+  Similarly as in the real-valued case, we can define the pdf of the random vector, by derivating with respect to the variables:
+  \begin{equation*}
+    p_{X}(x)= p_{X_1,\dots, X_p}(x_1,\dots, x_p) =\frac{\partial^p F_X}{\partial x_1 \cdots \partial x_p}(x)
+  \end{equation*}
+  and $\int_{\mathbb{R}^p}p_{X_1,\dots, X_p}(x_1,\dots, x_p)\,\mathrm{d}(x_1,\dots, x_p)=1$
+
+  For notation clarity, we are going to set $X = [Y,Z]$
+  We can now define the marginals
+  \begin{equation*}
+    p_{Y}(y) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}z \quad \text{ and } \quad p_{Z}(z) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}y
+  \end{equation*}
+  The random variable $Y$ given $Z$, denoted by $Y \mid Z$ has the conditional density
+  \begin{equation*}
+    p_{Y \mid Z}(y \mid z) = \frac{p_{Y,Z}(y,z)}{p_Z(z)}
+  \end{equation*}
+\end{definition}
+\begin{definition}[Independence]
+  Let $A,B\in \mathcal{F}$. Those two events are deemed independent if $\Prob[A \cap B] = \Prob[A]\Prob[B]$.
+  Quite similarly, two real-valued random variables $Y$ and $Z$ are said to be independent if $F_{Y,Z}(y,z) = F_Y(y) F_Z(z)$ or equivalently, $p_{Y,Z}(y,z) = p_Y(y) p_Z(z)$
+\end{definition}
+
+
+\subsubsection{Bayes' Theorem}
 \label{ssec:bayes_theorem}
 \begin{theorem}[Bayes' theorem]
   \begin{equation}
@@ -260,7 +322,7 @@ We are now going to focus on real-valued random variables, so measurable functio
   \end{equation}
 \end{theorem}
 
-\paragraph{Measure of the discrepancy}
+\subsubsection{Measure of the discrepancy}
 
  It involves then to compare the output of the mathematical model, with the output of the physical process $y$, usually by defining a kind of discrepancy $D$ between two elements of $\Yspace$ verifying:
 \begin{itemize}
@@ -278,7 +340,7 @@ If $\Yspace$ is a metric space, one obvious choice for $D$ is to take the associ
 \begin{equation}
   D(y, y^{\prime}) = \|y - y^{\prime}\|_{\Sigma} = \sqrt{(y - y^{\prime})^T\Sigma^{-1}(y - y^{\prime})}
 \end{equation}
-\paragraph{From the physical experiment to the model}
+\subsubsection{From the physical experiment to the model}
 \label{ssec:inv_problem}
 The physical system (the reality) that is observed can formally be represented by a model, so by an operator $\mathscr{M}$, applied to a set of parameters $\vartheta \in \Theta_0$:
 \begin{equation*}
