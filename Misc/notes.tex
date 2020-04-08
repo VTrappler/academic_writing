@@ -1,5 +1,7 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{natbib}
 \usepackage[francais, english]{babel}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -25,13 +27,13 @@
 \newcommand{\Var}{\mathbb{V}\text{ar}}
 \newcommand{\Ex}{\mathbb{E}}
 \newcommand{\Prob}{\mathbb{P}}
-\usepackage{natbib}
 \usepackage{mathrsfs}
 \newcommand{\ProbGP}{\mathcal{P}}
 \newcommand{\Kspace}{\mathbb{K}}
 \newcommand{\Uspace}{\mathbb{U}}
 \newcommand{\Xspace}{\mathbb{X}}
 \newcommand{\Yspace}{\mathbb{Y}}
+\newcommand{\estimtxt}[2]{\hat{#1}_{\mathrm{#2}}}
 \DeclareMathOperator{\Cov}{\mathrm{Cov}}
 \DeclareMathOperator*{\argmin}{arg\,min \,}
 \DeclareMathOperator*{\argmax}{arg\,max \,}
@@ -43,8 +45,9 @@
 % \newtheorem{thm}{Theorem}[section]
 
 \usepackage{hyperref}
+\usepackage[capitalize, nameinlink]{cleveref}
 \usepackage{booktabs}
-
+% \creflabelformat{equation}{Eq.(#1)}
 \pagestyle{fancy}
 \rhead{\rightmark}
 \lhead{}
@@ -59,7 +62,7 @@
 \newcommand{\innermid}{\nonscript\;\delimsize\vert\nonscript\;}
 \newcommand{\activatebar}{%
   \begingroup\lccode`\~=`\|
-  \lowercase{\endgroup\let~}\innermid 
+  \lowercase{\endgroup\let~}\innermid
   \mathcode`|=\string"8000
 }
 
@@ -141,84 +144,91 @@ middlelinewidth=0pt
 % \thispagestyle{empty} 
 % \clearpage
 % \tableofcontents
+
+\showthe\columnwidth
+% Columnwidth = 418.25368pt
 \section{Forward, inverse problems and probability theory}
-
-
 \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
 We are going to follow~\citeauthor{tarantola_inverse_2005}'s description of model and data space in~\cite{tarantola_inverse_2005}.
+In order to describe accurately a physical system, we have to define the notion of models. A model represents the link between some parameters and some observable quantities. A simple example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point to make is that a model is not only the \emph{forward operator}, but must also include the parameter space
 
-In order to describe accurately a physical system, we have to define the notion of model:
 \begin{definition}[Model]
-  A model $\mathfrak{M}$ is defined as a pair composed of a forward operator $\mathcal{M}$, and a parameter space $\Theta$
+  A model $\mathfrak{M}$ is defined as a pair composed of a \emph{forward operator} $\mathcal{M}$, and a \emph{parameter space} $\Theta$
   \begin{equation*}
     \mathfrak{M} = (\mathcal{M}, \Theta)
   \end{equation*}
-The forward operator is the mathematical representation of the physical system, while the parameter space is chosen here to be a subset of a finite dimensional space, so usually $\Theta$ will be a subset of $\mathbb{R}^n$. 
+The forward operator is the mathematical representation of the physical system, while the parameter space is chosen here to be a subset of a finite dimensional space, so usually $\Theta$ will be a subset of $\mathbb{R}^n$.
 \end{definition}
+As we will usually consider $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$, we can define a kind of dimensionality of the model, based on the number of \emph{degrees of freedom} available for the parameters to vary freely.
 \begin{remark}
-  The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$
-\end{remark}
+  The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$. The dimension of a model $\mathfrak{M}$ is sometimes called the degrees of freedom of $\mathfrak{M}$.
+  \end{remark}
+  
 \begin{example}
   A model with parameter space $\Theta = \mathbb{R}^2\times [0, 1]$ has dimension $3$, while $\Theta = \mathbb{R}^2 \times \{1\}$ has dimension $2$.
 \end{example}
-The data space is formally introduced as the set of all possible observations that one can make during the physical experiment, so consists in all the physically acceptable results of the physical experiment. This set is noted $\Yspace$.
+ Now that we have introduced the forward operator and the parameter space, we will focus on the output of the model.
+The data space consists in all the physically acceptable results of the physical experiment. This set is noted $\Yspace$.
 Then, the forward operator $\mathcal{M}$ maps the parameter space $\Theta \subset \mathbb{R}^{d}$ to the data space $\Yspace$, as one can expect that all models provide physically acceptable outputs.
+
 \subsection{Forward problem}
-Given a model $(\mathcal{M}, \Theta)$, the forward problem consists in applying the forward operator to a given $\theta \in \Theta$, in order to get the model prediction. The forward problem is then to obtain information on the result of the experiment, based on the parameters:
+Given a model $(\mathcal{M}, \Theta)$, the \emph{forward problem} consists in applying the forward operator to a given $\theta \in \Theta$, in order to get the \emph{model prediction}. The forward problem is then to obtain information on the result of the experiment based on the parameters we chose as input, so deriving a satisfying forward operator $\mathcal{M}$.
 \begin{equation*}
   \begin{array}{cccc}
-    \mathcal{M}:&\Theta&\longrightarrow & \Yspace \\
-                & \theta & \longmapsto & \mathcal{M}(\theta)
+    \mathcal{M}:& \Theta &\longrightarrow & \Yspace \\
+                & \theta &\longmapsto     & \mathcal{M}(\theta)
   \end{array}
 \end{equation*}
+As said earlier, the forward operator can be a set of ODEs or PDEs, discretized or not. The forward problem is then the attempt to link the causes (i.e.\ the parameters) to the consequence, i.e.\ the output in the data space.
 
 \subsection{Inverse Problem}
-The inverse problem, as its name suggests, consists in trying to gather more information on the parameters, based on the result of the experiment, or the physical process.
+The inverse problem is the natural counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on the result of the experiment or the physical process, and the knowledge of the forward operator. This kind of circular procedure: adding complexity by updating the forward operator and the parameter space by choosing a model with higher complexity for the forward problem, and reducing this complexity by comparing some observations with the output of the model, and reducing the parameter space.
 
-In that perspective we are going to introduce briefly the usual probabilistic framework.
-\subsection{Probabilistic formulation}
 
-\subsubsection{Notions of probabilities theory}
+However, a purely deterministic approach for the inverse problem is doomed to fail: as most physical processes are not perfectly known, some uncertainties remain in the whole modelling process. Those uncertainties are ubiquitous: the observations available may be corrupted by a random noise coming from the measurement devices and the model may not represent perfectly the reality, thus introducing a systematic bias for instance. Taking into account those uncertainties is crucial to solve the inverse problem.
+
+
+In that perspective we are going to introduce briefly the usual probabilistic framework, along with common notations that we will use throughout this manuscript. Those notions are well established in the scientific literature, and one can read~\cite{billingsley_probability_2008} for a more thorough description.
+\subsection{Notions of probability theory}
+\subsubsection{Probability measure, and random variables}
 \label{sec:notion_prob_theory}
 
-
-We are first going to define the usual notions of probability theory, such as events, random variables and density functions.
-Let us consider a probabilistic space $(\Omega, \mathcal{F}, \Prob)$, and a measurable state (or sample) space $(S, \mathcal{B}(S))$.
-\begin{definition}[Event, and probability of an event]
+We are first going through some usual notions of probability theory. 
+Let us consider the usual probabilistic space $(\Omega, \mathcal{F}, \Prob)$.
+\begin{definition}[Event probability and conditioning]
   \label{def:prob_event}
    We call an event an element of the $\sigma$-algebra $\mathcal{F}$, and the probability of an event $A\in \mathcal{F}$ is defined as the Lebesgue integral
   \begin{equation}
     \Prob[A] = \int_{A} \,\mathrm{d}\Prob(\omega)
   \end{equation}
-\end{definition}
-Observing an event $B \in \mathcal{F}$ can bring information upon another event $A\in \mathcal{F}$. In that sense, we introduce the conditional probability of $A$ given $B$:
-\begin{definition}[Conditional Probability]
-  \label{def:cond_proba}
-  Let $A$, $B \in \mathcal{F}$
+Observing an event $B \in \mathcal{F}$ can bring information upon another event $A\in \mathcal{F}$. In that sense, we introduce the conditional probability of $A$ given $B$.
+\label{def:cond_proba}
+  Let $A$, $B \in \mathcal{F}$.
   The event $A$ given $B$ is written $A | B$ and its probability is
   \begin{equation}
     \Prob[A | B] = \frac{\Prob[A \cap B]}{\Prob[B]}
   \end{equation}
 \end{definition}
-Formally, an event can be seen as an outcome of some uncertain experiment
-\begin{definition}[Random Variable]
+Formally, an event can be seen as an outcome of some uncertain experiment, and its probability is ``how likely'' this event will happen.
+
+Let us now introduce a measurable state (or sample) space $(S, \mathcal{B}(S))$.
+\begin{definition}[Random Variable, Expectation]
   \label{def:random_variable}
-  A random variable (abbreviated as r.v.) $Y$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an uppercase letter
+  A random variable (abbreviated as r.v.) $X$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an upper case letter. A realisation or observation $x$ of the r.v. $X$ is the actual image of $\omega\in\Omega$ under $X$: $x = X(\omega)$. If $S$ is countable, the random variable is said to be \emph{discrete}.
+  
+  \label{def:expectation}
+  The expectation of a r.v. $X:\Omega \rightarrow S$ is defined as
+  \begin{equation*}
+    \Ex[X] = \int_{\Omega} X(\omega) \,\mathrm{d}\Prob(\omega)
+  \end{equation*}
 \end{definition}
 \begin{remark}
   When $S = \mathbb{R}^p$ with $p > 1$, and $\mathcal{B}(\mathbb{R}^p)$ the usual borelian $\sigma$-algebra on $\mathbb{R}^p$, a random variable is called a random vector.
 \end{remark}
 
-\begin{definition}[Expectation of a r.v.]
-  \label{def:expectation}
-  The expectation of a r.v. $Y:\Omega \rightarrow S$ is defined as
-  \begin{equation*}
-    \Ex[Y] = \int_{\Omega} Y(\omega) \,\mathrm{d}\Prob(\omega)
-  \end{equation*}
-\end{definition}
 \begin{remark}
-  Using the definition~\ref{def:expectation}, the probability of an event $A$ can be seen as the expectation of a well chosen random variable:
+  Using the \cref{def:expectation}, the probability of an event $A$ can be seen as the expectation of a well chosen random variable:
   \begin{equation*}
     \begin{array}{cccc}
       \mathbbm{1}_{A}:& \Omega& \longrightarrow& \{0,1\} \\
@@ -237,205 +247,392 @@ Formally, an event can be seen as an outcome of some uncertain experiment
 \end{remark}
 \begin{definition}[Image (Pushforward) measure]
   \label{def:image_measure}
-  Let $Y:\Omega \rightarrow S$ be a random variable, and $A \subseteq S$. The image measure (also called pushforward measure) of $\Prob$ through $Y$ is denoted by $\Prob_Y = \Prob \circ Y^{-1}$. This notation can differ slightly depending on the community in which it is applied, so one can find $ \Prob_Y = \Prob \circ Y^{-1} = Y_{\sharp}\Prob$, the latter notation especially used in transport theory. The probability, for the r.v. $Y$ to be in $A$ is equal to
+  Let $X:\Omega \rightarrow S$ be a random variable, and $A \subseteq S$. The image measure (also called pushforward measure) of $\Prob$ through $X$ is denoted by $\Prob_X = \Prob \circ X^{-1}$. This notation can differ slightly depending on the community, so one can find also $ \Prob_X = \Prob \circ X^{-1} = X_{\sharp}\Prob$, the latter notation being used in transport theory. The probability, for the r.v. $X$ to be in $A$ is equal to
   \begin{equation*}
-    \Prob[Y \in A] = \Prob_Y[A] = \int_{A}\,\mathrm{d}\Prob_Y(\omega) =  \int_{Y^{-1}(A)}\,\mathrm{d}\Prob(\omega) = \Prob[Y^{-1}(A)] = \Prob[\{\omega\,;\,Y(\omega) \in A\}]
+    \Prob[X \in A] = \Prob_X[A] = \int_{A}\,\mathrm{d}\Prob_X(\omega) =  \int_{X^{-1}(A)}\,\mathrm{d}\Prob(\omega) = \Prob[X^{-1}(A)] = \Prob[\{\omega\,;\,X(\omega) \in A\}]
   \end{equation*}
 \end{definition}
-
-\paragraph{Real-valued random variables}
-We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to the sample space $(S,\mathcal{B}(S)) = (\mathbb{R},\mathcal{B}(\mathbb{R}))$.
-\begin{definition}[Cumulative distribution function (c.d.f.) and Probability density function (p.d.f.)]
+Generally speaking, the sample space will be $S\subseteq \mathbb{R}^p$ for $p\geq 1$, so we are going to introduce useful tools and notations to caracterize these particular r.v.
+\subsubsection{Real-valued random variables}
+We are now going to focus on
+real-valued random variables, so measurable function from $\Omega$ to
+the sample space $(S,\mathcal{B}(S)) =
+(\mathbb{R},\mathcal{B}(\mathbb{R}))$.
+\begin{definition}[Distribution of a real-valued r.v.]
   \label{def:distribution}
-  The \emph{cumulative distribution function} (further abbreviated as cdf) of a real-valued r.v. $Y$ is defined as the probability of the right closed intervals that generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R})$ of the real line.
-  \begin{equation*}
-    F_{Y}(y) = \Prob\left[Y \leq y\right] = \Prob_Y\big[\,]-\infty; y]\, \big]
-  \end{equation*}
-and $\lim_{-\infty}F_Y = 0$ and $\lim_{+\infty} F_Y = 1$
+  The distribution of a r.v. can be characterized by a few functions:
+  \begin{itemize}
+  \item The \emph{cumulative distribution function} (further
+abbreviated as cdf) of a real-valued r.v. $X$ is defined as the
+probability of the right closed intervals that generate the Borel
+$\sigma$-algebra $\mathcal{B}(\mathbb{R})$ of the real line.
+  \begin{equation*} F_{X}(x) = \Prob\left[X \leq x\right] =
+\Prob_X\big[\,]-\infty; x]\, \big]
+  \end{equation*} and $\lim_{-\infty}F_X = 0$ and $\lim_{+\infty} F_X
+= 1$
+If the cdf of a random variable is continuous, the r.v. is said to be \emph{continuous} as well.
   
-  If the pushforward measure $\Prob_Y$ is absolutely continuous with respect to the Lebesgue measure $\lambda$ defined as $\lambda\left(]a, b]\right) = b-a$, then according to Radon-Nikodym theorem, there exists a function $p_Y$, such that for all measurable set $A$,
-  \begin{equation*}
-    \Prob_Y[A] = \Prob[Y \in A] = \int_A \,\mathrm{d}\Prob_Y(\omega) = \int_A p_Y(y)\,\mathrm{d}y
+\item The \emph{quantile function} $Q_X$ is the generalized inverse function
+of the cdf:
+  \begin{equation*} Q_X(p) = \inf\{q:\, F_X(q)\geq p\}
   \end{equation*}
-  This function $p_Y: S\subseteq\mathbb{R} \rightarrow \mathbb{R}$, is called the \emph{probability density function} (abbreviated pdf) of $Y$,  called the Radon-Nikodym derivative of $\Prob_Y$ wrt $\lambda$: $p_Y=\frac{\mathrm{d}\Prob_Y}{\mathrm{d} \lambda} = \frac{\mathrm{d} F_Y}{\mathrm{d} y}$.
-  As $Y$ is real-valued, the probability for $Y$ to be in an interval is
-  \begin{equation*}
-    \Prob_Y\big[]a;\,b]\big]=\Prob[a \leq Y < b] = \int_{a}^b p_Y(y)\,\mathrm{d}y = F_Y(b) - F_Y(a)
-  \end{equation*}
-  and $\Prob_Y[\mathbb{R}] = \int_{\mathbb{R}}p_Y(y)\,\mathrm{d}y=1$. By slight abuse of notation, the notation $\Prob_Y\left[\right]$ will be used to indicate that the probability is to be taken wrt $Y$
+\item If there exists a function $f: S\rightarrow \mathbb{R}^{+}$ such that
+  for all measurable sets $A$
+  \begin{equation*} \Prob[X \in A] = \int_A \,\mathrm{d}\Prob_X(\omega) = \int_A f(x)\,\mathrm{d}x
+\end{equation*}
+then $f$ is called the \emph{probability density function} (abbreviated pdf) of $X$ and is denoted $p_X$.
+As $\Prob[X \in S] = 1$, it follows trivially that $\int_{S}f(x)\,\mathrm{d}x=1$.
+
+  % If the pushforward measure $\Prob_X$ is absolutely continuous
+% with respect to the Lebesgue measure $\lambda$ defined as
+% $\lambda\left(]a, b]\right) = b-a$, then according to Radon-Nikodym
+% theorem, there exists a function $p_X$, such that for all measurable
+% set $A$,
+%   \begin{equation*} \Prob_X[A] = \Prob[X \in A] = \int_A
+% \,\mathrm{d}\Prob_X(\omega) = \int_A p_X(y)\,\mathrm{d}y
+%   \end{equation*} This function $p_X: S\subseteq\mathbb{R} \rightarrow
+% \mathbb{R}$, is called the \emph{probability density function}
+% (abbreviated pdf) of $X$, called the Radon-Nikodym derivative of
+% $\Prob_X$ wrt $\lambda$: $p_X=\frac{\mathrm{d}\Prob_X}{\mathrm{d}
+% \lambda} = \frac{\mathrm{d} F_X}{\mathrm{d} y}$.  As $X$ is
+% real-valued, the probability for $X$ to be in an interval is
+%   \begin{equation*} \Prob_X\big[]a;\,b]\big]=\Prob[a \leq X < b] =
+% \int_{a}^b p_X(y)\,\mathrm{d}y = F_X(b) - F_X(a)
+%   \end{equation*} and $\Prob_X[\mathbb{R}] =
+% \int_{\mathbb{R}}p_X(y)\,\mathrm{d}y=1$. 
+  \end{itemize}
 \end{definition}
 \begin{remark}
-  If the random variable $Y$ admits a density $p_Y$, its expectation can be rewritten as
+  When restricting this search to ``classical'' functions, $p_X$ may not exist. However, allowing generalized functions such as the \emph{dirac delta function}, provides a way to consider simultaneously all types of real-valued random variables (continous, discrete, and mixture of both). Dirac's delta function can (in)formally be defined as
   \begin{equation*}
-    \Ex\left[Y\right] = \int_{\Omega} Y(\omega) \,\mathrm{d}\Prob(\omega) = \int_{\mathbb{R}} y \,\mathrm{d}\Prob_{Y}(y) = \int_{\mathbb{R}} y\,p_Y(y)\,\mathrm{d}y
+    \delta_{x_0}(x) = 
+    \begin{cases}
+      +\infty \text{ if } x=x_0 \\
+      0 \text{ elsewhere}
+    \end{cases} \quad \text{ and }
+    \int_S \delta_{x_0}(x)\,\mathrm{d}x = 1
   \end{equation*}
-  using the change of variable $Y(\omega) = y$
 \end{remark}
-\begin{definition}[Quantile function]
-  For a r.v. $Y$, the quantile function $Q_Y$ is the generalized inverse function of the cdf:
+\begin{example}
+  \label{ex:X_rv}
+  Let us consider the random variable $X$ that takes the value $1$ with probability $0.5$, and follows a uniform distribution with probability $0.5$ over $[2;4]$. Its cdf can be expressed as
   \begin{equation*}
-    Q_y(p) = \inf\{q:\, F_Y(q)\geq p\}
+    F_X(x) =
+    \begin{cases}
+      0 \text{ if } x < 1 \\
+      0.5 \text{ if } 1 \leq x < 2 \\
+      0.5 + \frac{x-2}{8} \text{ if } 2 \leq x < 4 \\
+      1 \text{ if } 4 \leq x
+    \end{cases}
+  \end{equation*}
+  and its pdf (as a generalized function)
+  \begin{equation*}
+    p_X(x) = \frac{1}{2}\delta_{1}(x) + \frac{1}{4}\mathbbm{1}_{\{2\leq x < 4\}}(x) 
+  \end{equation*}
+\end{example}
+\begin{figure}[!h]
+  \centering
+  \input{example_cdf_pdf.pgf}
+  \caption{Cdf and Pdf of $X$ defined in \cref{ex:X_rv}. The arrow indicates a dirac delta function}
+  \label{fig:example_pdf_cdf}
+\end{figure}
+
+\begin{definition}[Moments of a r.v. and $L^s$ spaces]
+  Let $X$ be a random variable.
+  The moment of order $s$ is defined as $\Ex\left[X^s\right]$, and the centered moment of order $s$ is defined as
+  \begin{equation*}
+    \Ex[(X-\Ex[X])^s]=\int \left(X(\omega) - \Ex[X]\right)^s \,\mathrm{d}\Prob(\omega) = \int (x-\Ex[X])^s\cdot p_X(x)\,\mathrm{d}x
+  \end{equation*}
+  To ensure that those moments exists, let us define $L^s(\Prob)$ as the space of random variables $X$ such that $\Ex\left[|X|^s\right] < +\infty$.
+  If $X\in L^2(\Prob)$, the centered moment of order $2$ is called the variance:
+  \begin{equation*}
+    \label{eq:variance_def}
+    \Ex\left[(X-\Ex[X])^2 \right] = \Var[X] \geq 0
   \end{equation*}
 \end{definition}
 
-\paragraph{Real-valued random vectors}
 
+Extending those definitions from real-valued random variables to real-valued random vectors is pretty straightforward
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
+\subsubsection{Real-valued random vectors}
 \begin{definition}[Joint, marginal and conditional densities]
-  \label{def:joint_marginal_cond_densities}
-  Let $X=[X_1,\cdots,X_p]$ be a random vector from $\Omega \rightarrow S\subseteq\mathbb{R}^p$
-  The cdf of $X$ at the point $x=[x_1,\dots x_p]$ is
+ \label{def:joint_marginal_cond_densities}
+ Let $X=[X_1,\cdots,X_p]$ be a random vector from $\Omega \rightarrow S\subseteq\mathbb{R}^p$
+
+ \begin{itemize}
+ \item The expected value of a random vector is the expectation taken component-wise
+  \begin{equation*}
+    \Ex[X] = \left[\Ex[X_1],\dots,\Ex[X_p]\right]
+  \end{equation*}
+  
+\item The covariance matrix $\Sigma \in \mathbb{R}^{p\times p}$ of $X$ is defined as
+  \begin{equation*}
+    \Sigma = \Cov(X)= \Ex\left[\left(X - \Ex[X]\right)\left(X-\Ex[X]\right)^T\right]
+  \end{equation*}
+  
+\item More generally, the covariance matrix of two random vector $X$ and $Y$ is defined as
+  \begin{equation*}
+    \Cov\left[X,Y\right] = \Ex\left[(X-\Ex[X])(Y - \Ex[Y])^T\right]
+  \end{equation*}
+ \item The cdf of $X$ at the point $x=[x_1,\dots x_p]$ is
   \begin{equation*}
     F_{X}(x) = F_{X_1,\dots, X_p}(x_1,\dots, x_p) = \Prob\left[X_1 \leq x_1, \cdots, X_p\leq x_p\right] = \Prob\left[\bigcap_{i=1}^p \{\omega;\,X_i(\omega) \leq x_i\}\right]
   \end{equation*}
-  Similarly as in the real-valued case, we can define the pdf of the random vector, by derivating with respect to the variables:
+  
+\item Similarly as in the real-valued case, we can define the pdf of the random vector, or \emph{joint pdf} by derivating with respect to the variables:
   \begin{equation*}
     p_{X}(x)= p_{X_1,\dots, X_p}(x_1,\dots, x_p) =\frac{\partial^p F_X}{\partial x_1 \cdots \partial x_p}(x)
   \end{equation*}
-  and $\int_{\mathbb{R}^p}p_{X_1,\dots, X_p}(x_1,\dots, x_p)\,\mathrm{d}(x_1,\dots, x_p)=1$
+  
+  and $\int_{S}p_{X_1,\dots, X_p}(x_1,\dots, x_p)\,\mathrm{d}(x_1,\dots, x_p)=1$
 
-  For notation clarity, we are going to set $X = [Y,Z]$
-  We can now define the marginals
-  \begin{equation*}
+  
+\item For notation clarity, we are going to set $X = [Y,Z]$
+  We can now define the \emph{marginal densities}
+  \begin{equation}
+    \label{eq:marginals_def}
     p_{Y}(y) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}z \quad \text{ and } \quad p_{Z}(z) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}y
-  \end{equation*}
+  \end{equation}
   The random variable $Y$ given $Z$, denoted by $Y \mid Z$ has the conditional density
   \begin{equation*}
     p_{Y \mid Z}(y \mid z) = \frac{p_{Y,Z}(y,z)}{p_Z(z)}
   \end{equation*}
+  allowing us to rewrite the marginals as
+  \begin{align}
+    \label{eq:marginal_conditioned}
+        p_{Y}(y) = \int_{\mathbb{R}}p_{Y|Z}(y|z)p_Z(z) \,\mathrm{d}z=\Ex_Z\left[p_{Y|Z}(y|z)\right] \\ p_{Z}(z) = \int_{\mathbb{R}}p_{Z|Y}(z|y)p_Y(y) \,\mathrm{d}y = \Ex_{Y}\left[p_{Z|Y}(z|y)\right]
+  \end{align}
+  
+
+\end{itemize}
 \end{definition}
 \begin{definition}[Independence]
   Let $A,B\in \mathcal{F}$. Those two events are deemed independent if $\Prob[A \cap B] = \Prob[A]\Prob[B]$.
   Quite similarly, two real-valued random variables $Y$ and $Z$ are said to be independent if $F_{Y,Z}(y,z) = F_Y(y) F_Z(z)$ or equivalently, $p_{Y,Z}(y,z) = p_Y(y) p_Z(z)$
 \end{definition}
-
+We are now going to introduce one of the most important distribution
+\begin{example}[The Normal Distribution]
+  \label{ex:gaussian_distribution}
+  One central example is the normal (or Gaussian) distribution. Let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}$.
+  $X$ follows the normal distribution of mean $\mu \in \mathbb{R}$ and variance $\sigma^2>0$ when
+  \begin{equation*}
+    p_X(x) = \phi(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{1}{2}\frac{(x-\mu)^2}{\sigma^2}\right)
+  \end{equation*}
+and we write $X \sim \mathcal{N}(\mu,\sigma^2)$
+For the multidimensional case, so when $X$ is a r.v.\ from $\Omega$ to $\mathbb{R}^p$,
+$X$ follows a normal distribution of mean $\mu \in \mathbb{R}^p$ and covariance matrix $\Sigma \in \mathbb{R}^{p\times p}$, where $\Sigma$ is semi-definite positive.
+In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector $X$ can be written as
+\begin{equation*}
+    p_X(x) = (2\pi)^{-\frac{d}{2}}\lvert\Sigma\rvert^{-1}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
+  \end{equation*}
+  where $|\Sigma|$ is the determinant of the matrix $\Sigma$, and $(\cdot)^T$ is the transposition operator.
+  As the covariance matrix appears through its inverse, another encountered parametrization is to use the precision matrix $\Sigma^{-1}$
+\end{example}
+\begin{figure}[!h]
+  \centering
+  \input{example_normal.pgf}
+  \caption{Densities of 1D Gaussian distributed r.v. (left), and density of a 2D Gaussian r.v.}
+  \label{fig:example_normal}
+\end{figure}
 
 \subsubsection{Bayes' Theorem}
 \label{ssec:bayes_theorem}
+
+The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, or by considering the pdf of r.v.\ in~\cref{def:joint_marginal_cond_densities}.
+
 \begin{theorem}[Bayes' theorem]
-  \begin{equation}
-  p(\theta \mid y) = \frac{\mathcal{L}(\theta;y)p(\theta)}{p(y)} \propto \mathcal{L}(\theta;y)p(\theta)
-  \end{equation}
-  where
-  \begin{equation}
-    p(y) = \int_{\theta \in \Theta} \mathcal{L}(\theta;y)p(\theta)\, \mathrm{d}\theta
-  \end{equation}
+  Let $A, B\in\mathcal{F}$. Bayes' theorem states that
+  \begin{align*}
+    \Prob[A\mid B]\cdot \Prob[B] = \Prob[B \mid A]\cdot\Prob[A] \\
+    \Prob[A \mid B] = \frac{\Prob[B \mid A]\cdot\Prob[A]}{\Prob[B]} \text{ if } \Prob[B] \neq 0
+  \end{align*}
+ In terms of densities, the formulation is sensibly the same.
+  Let $Y$ and $Z$ be two random variables. The conditional density of $Y$ given $Z$ can be expressed using the conditional density of $Z$ given $Y$.
+  \begin{equation*}
+    p_{Y|Z}(y \mid z) = \frac{p_{Z|Y}(z\mid y) p_Y(y)}{p_Z(z)} = \frac{p_{Z|Y}(z\mid y) p_Y(y)}{\int p_{Z,Y}(z,y) \,\mathrm{d}y}  \propto p_{Z|Y}(z\mid y) p_Y(y)
+  \end{equation*}
 \end{theorem}
+Bayes' theorem is central as it links in a simple way conditional densities. In the inverse problem framework, if $Y$ represents the state of information on the parameter space, while $Z$ represents the information on the data space, $Z|Y$ can be seen as the forward problem. Bayes' theorem allow us to ``swap'' the conditioning, and get information on $Y|Z$, that can be seen as the inverse problem.
 
-\subsubsection{Measure of the discrepancy}
-
- It involves then to compare the output of the mathematical model, with the output of the physical process $y$, usually by defining a kind of discrepancy $D$ between two elements of $\Yspace$ verifying:
-\begin{itemize}
-\item 
-\begin{equation*}
-  \begin{array}{cccc}
-    D:& \Yspace \times \Yspace& \longrightarrow&\mathbb{R}^+ \\
-     & (y,y^{\prime}) & \longmapsto & D(y, y^{\prime})
-  \end{array}
-\end{equation*}
-\item for all $y$ and all $y^{\prime}$, $D(y, y^{\prime})\geq 0$
-\item $D(y, y^{\prime}) = 0 \Rightarrow y = y^{\prime}$
-\end{itemize}
-If $\Yspace$ is a metric space, one obvious choice for $D$ is to take the associated metric. In the following, unless stated otherwise, $\Yspace$ will have a finite dimension, and $D$ will be defined as
-\begin{equation}
-  D(y, y^{\prime}) = \|y - y^{\prime}\|_{\Sigma} = \sqrt{(y - y^{\prime})^T\Sigma^{-1}(y - y^{\prime})}
-\end{equation}
-\subsubsection{From the physical experiment to the model}
+\section{Parameter inference}
+\subsection{From the physical experiment to the model}
 \label{ssec:inv_problem}
-The physical system (the reality) that is observed can formally be represented by a model, so by an operator $\mathscr{M}$, applied to a set of parameters $\vartheta \in \Theta_0$:
+The physical system (the reality) that is observed can formally be represented by a model, so by an operator $\mathscr{M}$, applied to a set of parameters $\vartheta \in \Theta_{\mathrm{real}}$ that is unknown:
 \begin{equation*}
   \begin{array}{llll}
-    \mathscr{M} :& \Theta_0 &\longrightarrow& \Yspace \\
+    \mathscr{M} :& \Theta_{\mathrm{real}} &\longrightarrow& \Yspace \\
                  & \vartheta & \longmapsto& \mathscr{M}(\vartheta)
   \end{array}
 \end{equation*}
-Let us assume that we dispose of a model $(\mathcal{M}, \Theta)$, at the input $x$, 
+The physical reality yields some observations $\mathscr{M}(\vartheta)$, shortened as $\mathscr{M}(\vartheta) = y\in\Yspace$.
+
+The main objective is to find an appropriate model $(\mathcal{M},\Theta)$, that represents as accurately as possible the given reality.
+% \begin{equation*}
+%     \mathscr{M}(x, \vartheta) = \mathcal{M}(x, \theta) + \delta(x,\theta)
+% \end{equation*}
+% When evaluated on a fixed vector $x_{\mathrm{grid}} = (x_1,\dots,x_n)$, we will omit the input, and define
 \begin{equation*}
-    \mathscr{M}(x, \vartheta) = \mathcal{M}(x, \theta) + \delta(x,\theta)
+    % \mathscr{M}(x_{\mathrm{grid}}, \vartheta) = 
+    \mathscr{M}(\vartheta) = % \mathcal{M}(x_{\mathrm{grid}}, \theta) + \delta(x_{\mathrm{grid}},\theta) =
+    \mathcal{M}(\theta) + \delta(\theta) \in \Yspace \subseteq \mathbb{R}^p
+  \end{equation*}
+  
+The difference $\delta(\theta) = \mathscr{M}(\vartheta) - \mathcal{M}(\theta)$ is the error between the physical model and the model, called sometimes the misfit, or the residuals error.
+
+\subsection{Frequentist inference, MLE}
+\label{sec:frequentist_inference_MLE}
+
+For a given choice of parameter $\theta\in\Theta$, one common assumption is that those residuals are normally distributed $\delta(\theta) \sim \mathcal{N}(0, \Sigma)$, with a given covariance matrix $\Sigma$, so the observations $\mathscr{M}(\vartheta) - \delta(\theta)=Y$ form a random variable, and as we assume that $\Yspace \subseteq \mathbb{R}^p$, $Y$ is a random vector with the following distribution:
+\begin{equation}
+  \label{eq:lik_gaussian}
+  Y  \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
+\end{equation}
+Its pdf will be denoted of this random variable will be  $y \mapsto p_Y(y;\theta)$ to show the depedency with respect to $\theta$. Instead of looking at this function as a pdf, we may look at it instead as a function of $\theta$, as the observations $y\in\Yspace$ do not vary
+\begin{definition}[Likelihood function, MLE]
+  \label{def:mle}
+  The probability density function of the observations for a set of parameters is called the likelihood of those parameters given the observations, and is written $\mathcal{L}$:
+  \begin{align}
+    \label{eq:likelihood_definition}
+    \mathcal{L}(\cdot ;y): \theta \mapsto p_{Y}(y;\theta) &= \mathcal{L}(\theta;y) \\
+    &=(2\pi)^{-n/2}\lvert \Sigma \rvert^{-1/2}\exp\left(-\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)\right)
+  \end{align}
+
+  Based on the likelihood function, we can define the \emph{Maximum Likelihood Estimator}, or \emph{MLE}, that maximizes the likelihood defined above:
+  \begin{equation}
+    \label{eq:def_MLE}
+    \estimtxt{\theta}{MLE} = \argmax_{\theta\in\Theta}\mathcal{L}(\theta;y) = \argmin_{\theta \in \Theta} -\log \mathcal{L}(\theta;y)
+  \end{equation}
+
+\end{definition}
+  In practice, instead of maximizing the likelihood, one looks for minimizing the negative log-likelihood. Given the~\cref{def:mle}
+  \begin{equation}
+    \estimtxt{\theta}{MLE} = \argmin_{\theta \in \Theta} -\log \mathcal{L}(\theta;y)
+  \end{equation}
+  where
+  \begin{equation*}
+    -\log\mathcal{L}(\theta;y) = \frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)+  \frac{n}{2}\log(2\pi) + \frac{1}{2}\log\lvert \Sigma \rvert
+  \end{equation*}
+  Removing the constant terms,
+  \begin{align*}
+    \estimtxt{\theta}{MLE} &= \argmin_{\theta \in \Theta}\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)\\ &= \argmin_{\theta \in \Theta}\frac12 \|\mathcal{M}(\theta) - y \|^2_{\Sigma^{-1}}
+  \end{align*}
+
+  Frequentist inference and Maximum Likelihood estimation boils down to Generalized non-linear least-square regression, that minimizes the squared Mahalabonis distance between $\mathcal{M}{\theta}$ and $y$. This is only true as we assumed a Gaussian form of the errors in \cref{eq:lik_gaussian}. Other choices of likelihood will bring different forms of objective functions. 
+  \todo{insert examples / elliptical distributions ?}
+
+\subsection{Bayesian Inference}
+\label{sec:bayesian_inference_MAP}
+In Bayesian inference, the uncertainty present on $\theta$ is modelled as considering it as a random variable. In that sense, we assume that we have a \emph{prior distribution} on $\theta$, denoted $p_{\theta}$, that represents the current state of belief upon the parameter. We will develop later on the choice of this prior distribution.
+The modelled likelihood of the frequentist approach can be almost be rewritten as is, just by conditioning $Y$ with $\theta$.
+\Cref{eq:lik_gaussian} becomes
+\begin{equation}
+  Y | \theta \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
+\end{equation}
+and the likelihood is $\mathcal{L}(\theta;y) = p_{Y|\theta}(y | \theta)$.
+Using Bayes' theorem, the \emph{posterior distribution} of the parameters given the observed data is
+\begin{equation}
+  \label{eq:bayes_posterior}
+  p_{\theta |Y}(\theta |y) = \frac{p_{Y|\theta}(y | \theta)p_{\theta}(\theta)}{p_Y(y)} = \frac{\mathcal{L}(\theta;y)p_{\theta}(\theta)}{p_Y(y)} \propto \mathcal{L}(\theta;y)p_{\theta}(\theta)
+\end{equation}
+
+This posterior distribution is central in a Bayesian setting, as it represents the information we have on the parameter, given the data.
+
+\subsubsection{Choice of prior distribution}
+\label{sec:choice_prior}
+
+
+\subsubsection{Bayesian Point estimates}
+\label{sec:bayes_point_estimates}
+Bayesian point estimates usually refer to point estimation of the parameter $\theta$, using the posterior distribution $p_{\theta |Y}$. Those estimates are usually constructed to capture a central tendency of the posterior distribution. 
+This can be done by defining Bayesian loss functions $L: \Theta \times \Theta \rightarrow \mathbb{R}^+$, and defining the associated point estimate as a minimizer of the expected value of the loss function, taken under the posterior distribution.
+\begin{equation}
+  \theta_{L} = \argmin_{\theta^{\prime} \in \Theta} \Ex_{\theta|Y}\left[L(\theta^{\prime}, \theta) | y\right]
+\end{equation}
+
+\paragraph{Posterior mean}
+By taking a loss function as the squared error $L(\theta^{\prime}, \theta) = (\theta^{\prime} - \theta)^2$, we can define the Mean Squared Error (MSE) as $\mathrm{MSE}: \theta^{\prime}\mapsto\Ex_{\theta|Y}\left[(\theta^{\prime} - \theta)^2\right]$. Finally, the value corresponding to the Minimum Mean Squared Error is
+\begin{equation}
+  \estimtxt{\theta}{MMSE} = \argmin_{\theta^{\prime}\in\Theta}\Ex_{\theta|Y}\left[(\theta^{\prime} - \theta)^2 | y\right]
+\end{equation}
+Simple algebraic manipulations show that the minimizer is in fact the posterior mean:
+\begin{equation*}
+  \estimtxt{\theta}{MMSE} = \Ex_{\theta|Y}[\theta | y] = \int_{\Theta}\theta\cdot p_{\theta|Y}(\theta | y)\,\mathrm{d}\theta
 \end{equation*}
 
-The difference $\delta$ is the error between the physical model and the model.
-One current assumption, is that $\delta(x, \theta)$ is normally distributed $\delta(\theta) \sim \mathcal{N}(0, \Sigma)$ 
-\begin{equation}
-  y\mid \theta \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
-\end{equation}
-Its probability density function can be written as
-\begin{equation}
-  p(y\mid \theta) = (2\pi)^{-n/2}(\mathrm{det} \Sigma)^{-1/2}\exp\left(-\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)\right)
-\end{equation}
-\begin{remark}
-  If $\Sigma = \sigma^2 I$, the pdf can be rewritten as
-  \begin{equation*}
-    p(y \mid \theta) = (2\pi)^{-n/2} \sigma^{-n} \exp\left(-\frac{1}{2\sigma^2}(\mathcal{M}(\theta) - y)^T(\mathcal{M}(\theta) - y)\right)
-  \end{equation*}
-\end{remark}
 
-\begin{definition}
-  The probability density function of the observation given the parameters is also called the likelihood, $\mathcal{L}$
-  \begin{equation}
-    \label{eq:likelihood_definition}
-    \mathcal{L}(\theta;y) = p(y \mid \theta)
-  \end{equation}
-\end{definition}
-\section{Parameter inference}
-\subsection{Choosing a likelihood model}
-\begin{align*}
-  p(y | k, u, \sigma^2) &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2}SS(k,u)\right] \\
-                         &= \frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2\sigma^2} \|\mathcal{M}(k,u) - y \|^2_{\Sigma}\right]
-\end{align*}
-\subsection{Quantities derived from the likelihood}
-\subsubsection{The score function}
-\label{sec:score_function}
-Given the data $y$, the likelihood function is $\mathcal{L}(\theta ; y)$, and the log likelihood is $l(\theta;y) = \log \mathcal{L}(\theta;y)$
-The score function is defined as
+\paragraph{Posterior Median}
+Instead of a squared error, one can define $L(\theta^{\prime}, \theta) = \lvert\theta^{\prime} - \theta\rvert$, and the the bayesian risk associated is called the mean absolute error. Again, one can show that the Minimum Mean Absolute Error (MMAE) is in fact the median of the posterior distribution.
 \begin{equation}
-  \label{eq:def_score_function}
-  s(\theta) = \frac{\partial \log \mathcal{L}}{\partial \theta}(\theta; y)
+  \label{eq:def_MMAE}
+  \estimtxt{\theta}{MMAE} = \argmin_{\theta^{\prime}\in\Theta}\Ex_{\theta|Y}\left[\lvert \theta^{\prime} - \theta \rvert \mid y\right] = \mathop{\mathrm{Median}}(\theta |y)
 \end{equation}
-and the MLE $\hat{\theta}$ verifies
-\begin{equation}
-  \label{eq:MLE}
-  s(\hat{\theta}) = 0
-\end{equation}
-For the true parameter $\bar{\theta}$, averaging over all possible information yields $0$:
-\begin{align}
-  \Ex\left[s(\bar{\theta}) \mid \bar{\theta}\right] = \Ex\left[\frac{\frac{\partial p(y|\theta)}{\partial \theta}}{p(y|\theta)} \mid \bar{\theta}\right] = \int \frac{\frac{\partial p(y|\bar\theta)}{\partial \theta}}{p(y\mid\bar\theta)} p (y \mid \bar\theta) \,\mathrm{d}y = \frac{\partial}{\partial \theta} \int p(y|\bar\theta) \,\mathrm{d}y = 0
-\end{align}
-The variance of the score is the Fisher Information matrix
 
-\subsubsection{Fisher Information Matrix}
-\label{sec:fisher_information_matrix}
+\paragraph{Posterior Mode: the MAP}
+Taking $L(\theta^{\prime},\theta) = \mathbbm{1}_{\theta^{\prime} \neq \theta}$ that is $0$ if $\theta^{\prime}=\theta$, and $1$ elsewhere, one can show that the minimizer of $\Ex_{\theta|Y}\left[\mathbbm{1}_{\theta^{\prime} \neq \theta}\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):
 \begin{align}
-  \label{eq:def_fisher_information_matrix}
-  \mathcal{I}(\theta) &= \Ex\left[\left(\frac{\partial \log \mathcal{L}}{\partial \theta}\right)^2 \mid \theta\right] \\
-                        &=\Ex\left[-\frac{\partial^2 \log \mathcal{L}}{\partial \theta^2} \mid \theta\right]
+  \label{eq:def_MAP}
+  \estimtxt{\theta}{MAP} &= \argmin_{\theta^{\prime} \in \Theta}\Ex_{\theta|Y}\left[\mathbbm{1}_{\theta^{\prime} \neq \theta}|y\right] = \argmin_{\theta^{\prime} \in \Theta} -p_{\theta|Y}(\theta^{\prime}|y) \\
+                         &= \argmax_{\theta^{\prime} \in \Theta} p_{\theta|Y}(\theta^{\prime} |y)
+                           \nonumber
 \end{align}
 
-\subsection{Priors}
-\subsubsection{Informative priors}
-\label{sec:informative_priors}
 
-\begin{align*}
-  K \sim \mathcal{U}(\mathbb{K}), \quad p(k) \\
-  U \sim \mathcal{U}(\mathbb{U}), \quad p(u)
-\end{align*}
 
-\subsubsection{Non-informative priors}
-\label{sec:non-info_priors}
-Non-informative priors 
-Now to Bayes' theorem
-\begin{align*}
-  p(k,u | y,\sigma^2) = \frac{p(y | k, u, \sigma^2) p(k,u)}{\iint_{\mathbb{K}\times\mathbb{U}} p(y | k, u, \sigma^2) p(k,u) \, \mathrm{d}(k,u)}
-\end{align*}
-  Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
 
-In the following, we write $\theta = (k, u)\in \Theta$ when no distinction is needed, or a general notation is needed.
+% \subsection{Quantities derived from the likelihood}
+% \subsubsection{The score function}
+% \label{sec:score_function}
+% Given the data $y$, the likelihood function is $\mathcal{L}(\theta ; y)$, and the log likelihood is $l(\theta;y) = \log \mathcal{L}(\theta;y)$
+% The score function is defined as
+% \begin{equation}
+%   \label{eq:def_score_function}
+%   s(\theta) = \frac{\partial \log \mathcal{L}}{\partial \theta}(\theta; y)
+% \end{equation}
+% and the MLE $\hat{\theta}$ verifies
+% \begin{equation}
+%   \label{eq:MLE}
+%   s(\hat{\theta}) = 0
+% \end{equation}
+% For the true parameter $\bar{\theta}$, averaging over all possible information yields $0$:
+% \begin{align}
+%   \Ex\left[s(\bar{\theta}) \mid \bar{\theta}\right] = \Ex\left[\frac{\frac{\partial p(y|\theta)}{\partial \theta}}{p(y|\theta)} \mid \bar{\theta}\right] = \int \frac{\frac{\partial p(y|\bar\theta)}{\partial \theta}}{p(y\mid\bar\theta)} p (y \mid \bar\theta) \,\mathrm{d}y = \frac{\partial}{\partial \theta} \int p(y|\bar\theta) \,\mathrm{d}y = 0
+% \end{align}
+% The variance of the score is the Fisher Information matrix
+
+% \subsubsection{Fisher Information Matrix}
+% \label{sec:fisher_information_matrix}
+% \begin{align}
+%   \label{eq:def_fisher_information_matrix}
+%   \mathcal{I}(\theta) &= \Ex\left[\left(\frac{\partial \log \mathcal{L}}{\partial \theta}\right)^2 \mid \theta\right] \\
+%                         &=\Ex\left[-\frac{\partial^2 \log \mathcal{L}}{\partial \theta^2} \mid \theta\right]
+% \end{align}
+
+% \subsection{Priors}
+% \subsubsection{Informative priors}
+% \label{sec:informative_priors}
+
+% \begin{align*}
+%   K \sim \mathcal{U}(\mathbb{K}), \quad p(k) \\
+%   U \sim \mathcal{U}(\mathbb{U}), \quad p(u)
+% \end{align*}
+
+% \subsubsection{Non-informative priors}
+% \label{sec:non-info_priors}
+% Non-informative priors 
+% Now to Bayes' theorem
+% \begin{align*}
+%   p(k,u | y,\sigma^2) = \frac{p(y | k, u, \sigma^2) p(k,u)}{\iint_{\mathbb{K}\times\mathbb{U}} p(y | k, u, \sigma^2) p(k,u) \, \mathrm{d}(k,u)}
+% \end{align*}
+%   Let us assume an hyperprior for $\sigma^2$: $p(\sigma^2)$
+
+% In the following, we write $\theta = (k, u)\in \Theta$ when no distinction is needed, or a general notation is needed.
 
 \section{Model selection}
 \label{sec:model_selection}
 
 \subsection{Likelihood ratio test}
-The likelihood ratio test is a useful test in the case of nested models, as described in waht follows:
+The likelihood ratio test is a useful test in the case of nested models, as described in what follows:
 
 \subsubsection{Nested models}
 \begin{definition}[Nested models]
@@ -459,8 +656,8 @@ $\mathfrak{M}_2$ is nested within $\mathfrak{M}_1$
     \mathfrak{M}_1 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \mathbb{R}^+ \text{ and } \epsilon \sim \mathcal{N}(0, I) \\
     \mathfrak{M}_2 &: (X, A, \sigma) \mapsto AX + \sigma\epsilon, \text{ with } (X, A, \sigma)\in\mathbb{R}^n \times \mathbb{R}^{n\times n} \times \{1\} \text{ and } \epsilon \sim \mathcal{N}(0, I)
   \end{align*}
+Once again in this example,  $\mathfrak{M}_2$ is nested within $\mathfrak{M}_2$
 \end{example}
-$\mathfrak{M}_2$ is nested within $\mathfrak{M}_2$
 
 \label{sec:lik_test}
 Using the likelihood defined above, we can test for the following hypotheses:
@@ -495,12 +692,12 @@ Let us set $\theta = (k,u,\phi)$ where $\phi$ represents additional parameters i
 \begin{equation}
   \mathcal{L}(\theta; y) = \mathcal{L}(k, u, \phi ; y)
 \end{equation}
-Let us assume furthermore that the maximizer of the likelihood depends only on $u$ (and implicitly on the data).
+Let us assume furthermore that the maximizer of the likelihood depends only on $u$ (we remove the dependence on $y$ in the notation, to declutter).
 \begin{equation}
   \argmax_{k \in \Kspace} \mathcal{L}(k,u, \phi) = k^*(u) = \argmax_{k \in \Kspace} \ell(k,u, \phi)
 \end{equation}
 
-Now let us consider the ratio depending on the uncertain variable $u$ (the $y$ is ignored for notational reasons):
+Now let us consider the ratio given a value $u$ and  
 \begin{equation}
   -2\log\Lambda(u, \phi^\prime) = -2\left(\ell(k, u, \phi) - \ell(k^*(u), u, \phi^\prime) \right)
 \end{equation}
@@ -535,7 +732,7 @@ Let us assume that for $\mathcal{M}$ is chosen to represent the problem at stake
   \label{eq:bayes_th_BMS}
   p(\theta | \mathcal{M}, y) = \frac{p(y | \mathcal{M}, \theta)p(\theta)}{p(y | \mathcal{M})}
 \end{equation}
-In Eq.\eqref{eq:bayes_th_BMS}, $p(y | \mathcal{M}) = \int_{\Theta}p(y | \mathcal{M}, \theta)p(\theta) \,\mathrm{d}\theta$ is called the evidence of the model $\mathcal{M}$ given the data $y$.
+In \cref{eq:bayes_th_BMS}, $p(y | \mathcal{M}) = \int_{\Theta}p(y | \mathcal{M}, \theta)p(\theta) \,\mathrm{d}\theta$ is called the evidence of the model $\mathcal{M}$ given the data $y$.
 
 \subsubsection{Bayes factor}
 When comparing two models $\mathcal{M}_1$ and $\mathcal{M}_2$, one can compute the Bayes factor, that is the ratio of the evidence of the two models:
@@ -543,65 +740,65 @@ When comparing two models $\mathcal{M}_1$ and $\mathcal{M}_2$, one can compute t
   \label{eq:bayes_factor}
   \mathrm{BF}(\mathcal{M}_1, \mathcal{M}_2) = \frac{p(y | \mathcal{M}_1)}{p(y | \mathcal{M}_1)}
 \end{equation}
-\subsection{The generalized normal distribution}
-\label{sec:generalized_normal_distribution}
-\subsubsection{Probability density function}
-\label{sec:generalized_normal_distribution_pdf}
-We consider a random variable $\xi(\kappa)$ with the following pdf
-\begin{equation}
-  \label{eq:pdf_GND}
-  f_{\kappa}(x, \mu, s) = \frac{\kappa}{2 s \Gamma(1/\kappa)} \exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right]
-\end{equation}
-that depends on the parameters $\mu$ $s>0$ and $\kappa>0$ representing respectively the location, scale and the shape parameter.
-One can notice that in the particular case where $\kappa=2$, $\xi(\kappa=2)\sim \mathcal{N}(\mu, \frac{s^2}{2})$. Similarly, when $\kappa=1$, $\xi(\kappa=1)$ is distributed according to Laplace distribution.
-One important fact is that for $x \in ]\mu - s,\mu +s[$, $\frac{\lvert x-\mu \rvert}{s} < 1$ so when $\kappa \rightarrow +\infty$, $\exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right] \rightarrow 1$ if $x \in ]\mu - s,\mu +s[$, $0$ elsewhere. This distribution converges pointwise to a uniform distribution on $]\mu - s,\mu +s[$.
+% \subsection{The generalized normal distribution}
+% \label{sec:generalized_normal_distribution}
+% \subsubsection{Probability density function}
+% \label{sec:generalized_normal_distribution_pdf}
+% We consider a random variable $\xi(\kappa)$ with the following pdf
+% \begin{equation}
+%   \label{eq:pdf_GND}
+%   f_{\kappa}(x, \mu, s) = \frac{\kappa}{2 s \Gamma(1/\kappa)} \exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right]
+% \end{equation}
+% that depends on the parameters $\mu$ $s>0$ and $\kappa>0$ representing respectively the location, scale and the shape parameter.
+% One can notice that in the particular case where $\kappa=2$, $\xi(\kappa=2)\sim \mathcal{N}(\mu, \frac{s^2}{2})$. Similarly, when $\kappa=1$, $\xi(\kappa=1)$ is distributed according to Laplace distribution.
+% One important fact is that for $x \in ]\mu - s,\mu +s[$, $\frac{\lvert x-\mu \rvert}{s} < 1$ so when $\kappa \rightarrow +\infty$, $\exp\left[-\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa\right] \rightarrow 1$ if $x \in ]\mu - s,\mu +s[$, $0$ elsewhere. This distribution converges pointwise to a uniform distribution on $]\mu - s,\mu +s[$.
 
-\subsubsection{Moments of the generalized normal distribution}
-\label{sec:generalized_normal_distribution_moments}
-Due to the symmetry of the pdf, one can directly conclude that the mode, median and mean are $\mu$:
-\begin{equation}
-  \Ex[\xi(\kappa)] = \mathrm{Mode}[\xi(\kappa)] = \mathrm{Median}[\xi(\kappa)] = \mu 
-\end{equation}
-In~\cite{pogany_characteristic_2010}, is also proven the following expression for the variance of $\xi(\kappa)$:
-\begin{align}
-  \Var\left[\xi(\kappa)\right] &= s^2 \frac{\Gamma(3 / \kappa)}{\Gamma(1/ \kappa)} = \frac{s^2}{3} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right) \\
-                               &= \frac{(2s)^2}{12} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right)
-\end{align}
-At the first order, when $\kappa\rightarrow +\infty$, the variance is the variance of a random variable on an interval of length $2s$ as expected
+% \subsubsection{Moments of the generalized normal distribution}
+% \label{sec:generalized_normal_distribution_moments}
+% Due to the symmetry of the pdf, one can directly conclude that the mode, median and mean are $\mu$:
+% \begin{equation}
+%   \Ex[\xi(\kappa)] = \mathrm{Mode}[\xi(\kappa)] = \mathrm{Median}[\xi(\kappa)] = \mu 
+% \end{equation}
+% In~\cite{pogany_characteristic_2010}, is also proven the following expression for the variance of $\xi(\kappa)$:
+% \begin{align}
+%   \Var\left[\xi(\kappa)\right] &= s^2 \frac{\Gamma(3 / \kappa)}{\Gamma(1/ \kappa)} = \frac{s^2}{3} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right) \\
+%                                &= \frac{(2s)^2}{12} - \frac{2s^2 \gamma}{3\kappa} + \frac{2s^2(3\gamma^2 +\pi^2)}{9\kappa^2} + \mathcal{O}\left(\frac{1}{\kappa^3}\right)
+% \end{align}
+% At the first order, when $\kappa\rightarrow +\infty$, the variance is the variance of a random variable on an interval of length $2s$ as expected
 
-\subsubsection{Loglikelihood for GND}
-\label{sec:loglik_GND}
+% \subsubsection{Loglikelihood for GND}
+% \label{sec:loglik_GND}
 
-\begin{align}
-  \ell_{\kappa}(x, \mu, s) &= -\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2 \\
-  &= -\left(\left(\frac{x-\mu}{s}\right)^2\right)^{\frac{\kappa}{2}} + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2
-  \end{align}
-\subsubsection{Ratio between two GND}
-\label{sec:ratio_GND}
-Let us consider two GND distribution: the ratio between the two can be written as
-\begin{align}
-  \frac{f_{\kappa_1}(x_1, \mu_1, s_1)}{f_{\kappa_2}(x_2, \mu_2, s_2)} = \frac{\kappa_1}{\kappa_2} \frac{s_2 \Gamma(1/ \kappa_2)}{s_1 \Gamma(1/ \kappa_1)} \exp \left[\left(\frac{\lvert x_2 - \mu_2 \rvert}{s_2}\right)^{\kappa_2}-\left(\frac{\lvert x_1 - \mu_1 \rvert}{s_1}\right)^{\kappa_1} \right]
-\end{align}
+% \begin{align}
+%   \ell_{\kappa}(x, \mu, s) &= -\left(\frac{\lvert x-\mu \rvert}{s}\right)^\kappa + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2 \\
+%   &= -\left(\left(\frac{x-\mu}{s}\right)^2\right)^{\frac{\kappa}{2}} + \log \kappa - \log(s) - \log \Gamma(1/\kappa) - \log 2
+%   \end{align}
+% \subsubsection{Ratio between two GND}
+% \label{sec:ratio_GND}
+% Let us consider two GND distribution: the ratio between the two can be written as
+% \begin{align}
+%   \frac{f_{\kappa_1}(x_1, \mu_1, s_1)}{f_{\kappa_2}(x_2, \mu_2, s_2)} = \frac{\kappa_1}{\kappa_2} \frac{s_2 \Gamma(1/ \kappa_2)}{s_1 \Gamma(1/ \kappa_1)} \exp \left[\left(\frac{\lvert x_2 - \mu_2 \rvert}{s_2}\right)^{\kappa_2}-\left(\frac{\lvert x_1 - \mu_1 \rvert}{s_1}\right)^{\kappa_1} \right]
+% \end{align}
 
-\subsection{The Profile Likelihood}
-\label{sec:prof_lik}
-The likelihood is defined as
-\begin{equation}
-  \label{eq:lik_def}
-  \mathcal{L}(k, u ; y) = p( y \mid k, u)
-\end{equation}
-Maximizing the likelihood yields the Maximum Likelihood Estimator:
-Given the observation $y$,
-\begin{equation}
-  \label{eq:MLE}
-  (k_{\mathrm{MLE}}, u_{\mathrm{MLE}}) = \max_{k,u} \mathcal{L}(k, u; y)
-\end{equation}
-The traditional profile likelihood is obtained by profiling the nuisance parameters:
-\begin{equation}
-  \label{eq:plik_def}
-  \mathcal{L}_p(k) = \sup_{u\in\Uspace}\mathcal{L}(k, u; y)
-\end{equation}
-Immediately, one can see that maximizing the profile likelihood leads to the MLE.
+% \subsection{The Profile Likelihood}
+% \label{sec:prof_lik}
+% The likelihood is defined as
+% \begin{equation}
+%   \label{eq:lik_def}
+%   \mathcal{L}(k, u ; y) = p( y \mid k, u)
+% \end{equation}
+% Maximizing the likelihood yields the Maximum Likelihood Estimator:
+% Given the observation $y$,
+% \begin{equation}
+%   \label{eq:MLE}
+%   (k_{\mathrm{MLE}}, u_{\mathrm{MLE}}) = \max_{k,u} \mathcal{L}(k, u; y)
+% \end{equation}
+% The traditional profile likelihood is obtained by profiling the nuisance parameters:
+% \begin{equation}
+%   \label{eq:plik_def}
+%   \mathcal{L}_p(k) = \sup_{u\in\Uspace}\mathcal{L}(k, u; y)
+% \end{equation}
+% Immediately, one can see that maximizing the profile likelihood leads to the MLE.
 \newpage
 \section{GP, RR-based family of estimators}
 \subsection{Random processes}
@@ -641,7 +838,7 @@ Using those kriging weights $\mathbf{W}$, a few additional conditions must be ad
 \item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
 \item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
 \end{itemize}
-Translating using Eq.\eqref{eq:lin_est}:
+Translating using \cref{eq:lin_est}:
 \begin{equation}
   \Ex[\hat{Z}(x) - Z(x)]=0 \iff m(\sum_{i=1}^n w_i(x)-1) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
 \end{equation}
@@ -780,55 +977,64 @@ Considering the joint distribution of $Y(\mathbf{k},\mathbf{u})$ and $Y^*(\mathb
 \right)
 \end{equation}
 By multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ yields
+
 \begin{align}
   \Delta_{\alpha}(\mathbf{k},\mathbf{u}) &\sim \mathcal{N}\left(m_{\Delta}(\mathbf{k},\mathbf{u}); \sigma^2_{\Delta}(\mathbf{k},\mathbf{u})\right) \\
   m_{\Delta}(\mathbf{k},\mathbf{u}) &= m_Y(\mathbf{k},\mathbf{u}) - \alpha m_Y^*(\mathbf{u}) \\
-  \sigma^2_{\Delta}(\mathbf{k},\mathbf{u}) &= \sigma_Y^2(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma_{Y^*}^2(\mathbf{k},\mathbf{u}) - 2\alpha C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right)
+  \sigma^2_{\Delta}(\mathbf{k},\mathbf{u}) &= \sigma_Y^2(\mathbf{k},\mathbf{u}) + \alpha^2 \sigma_{Y^*}^2(\mathbf{k},\mathbf{u}) - 2\alpha C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) \label{eq:variance_delta}
 \end{align}
+
 Assuming that $C((\mathbf{k},\mathbf{u}), (\mathbf{k}',\mathbf{u}')) = s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(\|u_j - u'_j\|)$
 \begin{align}
   C\left((\mathbf{k},\mathbf{u}),(\mathbf{k}^*(\mathbf{u}),\mathbf{u})\right) &= s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)\prod_{j\in\mathcal{I}_{\mathbf{u}}} \rho_{\theta_j}(0) \\
   &=s \prod_{i\in\mathcal{I}_{\mathbf{k}}}\rho_{\theta_i}(\|k_i - k^*_i(\mathbf{u})\|)
 \end{align}
-\subsubsection{Approximation of the objective probability using GP}
+
+Decomposing the variance $\delta$ in \cref{eq:variance_delta}, 2 sources of uncertainty:
+\begin{itemize}
+\item $\sigma^2_{Y}$ is the prediction variance of the GP on $J$, that is directly reduced when additional points are evaluated
+\item $\sigma^2_{Y^*}$ is the variance of the predicted value of the minimizer. 
+\end{itemize}
+\subsubsection{Approximation of the targeted probability using GP}
+In order to get to $(\mathbf{k}_p, \alpha_p,p)$.
 We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP.
 
-Defined somewhere else, we have
+For a given $\mathbf{k}\in\Kspace$, the coverage probability of $\alpha$-acceptable region, i.e.\ the probability for $\mathbf{k}$ to be $\alpha$-acceptable is
 \begin{align}
   \Gamma_{\alpha}(\mathbf{k}) &= \Prob_{\mathbf{U}}\left[J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})\right] \\
                               & =\Ex_{\mathbf{U}}\left[\mathbbm{1}_{J(\mathbf{k},\mathbf{U}) \leq \alpha J^*(\mathbf{U})}\right]
 \end{align}
+As $J$ is not known perfectly, it devolves into a classification problem
 This classification problem can be approached with a plug-in approach, or a probablistic one:
 \begin{align}
   \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \mathbbm{1}_{m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u})} \\
   \mathbbm{1}_{J(\mathbf{k},\mathbf{u}) \leq \alpha J^*(\mathbf{u})} &\approx   \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0 \right] = \pi_{\alpha}(\mathbf{k},\mathbf{u})
 \end{align}
-Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our meta model to verify the inequality is given by
+Using the GPs, for a given $\mathbf{k}$, $\alpha$ and $\mathbf{u}$, the probability for our metamodel to verify the inequality is given by
 Based on those two approximation, the approximated probability $\Gamma$ is
 \begin{align}
   \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Prob_U\left[m_Y(\mathbf{k},\mathbf{u}) \leq \alpha m_Y^*(\mathbf{u}) \right] \tag{plug-in} \\
   \hat{\Gamma}_{\alpha, n}(\mathbf{k}) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\mathbf{k},\mathbf{u}) \leq 0\right]\right]  = \Ex_U\left[\pi_{\alpha}(\mathbf{k},\mathbf{u})\right]\tag{Probabilistic approx} \\
 \end{align}
 
-The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$:
+The probability of coverage for the set $\{Y - \alpha Y^*\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$
 \begin{equation}
   \pi_{\alpha}(\mathbf{k},\mathbf{u}) = \Phi\left(-\frac{m_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}{\sigma_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}\right)
 \end{equation}
 Finally, averaging over $\mathbf{u}$ yields
 \begin{equation}
-  \hat{\Gamma}(\mathbf{k}) = \int_{\Uspace}\pi_{\alpha}(\mathbf{k},\mathbf{u})p(\mathbf{u}) \,\mathrm{d}\mathbf{u}
+  \hat{\Gamma}_{\alpha,n}(\mathbf{k}) = \Ex_U\left[\pi_{\alpha}(\mathbf{k},\mathbf{u})\right]=\int_{\Uspace}\pi_{\alpha}(\mathbf{k},\mathbf{u})p(\mathbf{u}) \,\mathrm{d}\mathbf{u} = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}{\sigma_{\Delta_\alpha}(\mathbf{k},\mathbf{u})}\right)p(\mathbf{u}) \,\mathrm{d}\mathbf{u}
 \end{equation}
 \subsection{Sources, quantification of uncertainties, and SUR strategy ?}
-
-Formally, for a given point $(\mathbf{k},\mathbf{u})$, the event ``the point is $\alpha$-acceptable'' has probability $\pi(\mathbf{k},\mathbf{u})$ and variance $\pi(\mathbf{k},\mathbf{u}) (1-\pi(\mathbf{k},\mathbf{u}))$. Obviously, the points with the highest uncertainty have the highest variance, so have a coverage probability $\pi$ around 0.5.
+Formally, for a given point $(\mathbf{k},\mathbf{u})$, the event ``the point is $\alpha$-acceptable'' has probability $\pi_{\alpha}(\mathbf{k},\mathbf{u})$ and variance $\pi_{\alpha}(\mathbf{k},\mathbf{u}) (1-\pi_{\alpha}(\mathbf{k},\mathbf{u}))$. Obviously, the points with the highest uncertainty have the highest variance, so have a coverage probability around $0.5$.
 
 \subsubsection{Random sets}
-Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (ref thèse Reda), \cite{heinrich_level_2012}.
+Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019},~\cite{heinrich_level_2012}. 
 
 
 Let us consider $A$, a random closed set, such that its realizations are subsets of $\Xspace$, and $p$ is its coverage probability, that is
 \begin{equation}
-  p(x) = \Prob\left[x\in A\right], x\in\Xspace
+  p(\theta) = \Prob\left[\theta\in A\right], \theta\in\Xspace
 \end{equation}
 For $\eta \in [0, 1]$, we define the $\eta$-level set of $p$,
 \begin{equation}
@@ -839,26 +1045,28 @@ It may seem trivial, but let us still note that those sets are decreasing:
   0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
 \end{equation}
 
-Using those level sets for the level $\eta=0.05$ for instance:
-\begin{equation}
-  Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}
-\end{equation}
-Recalling the objective, it gives upper bounds and lower bounds of the confidence interval of level $\eta$ on the probability for each $\mathbf{k}$:
-\begin{align}
-  \hat{\Gamma_{\alpha}}^{U}(\mathbf{k}) &= \Prob_\mathbf{U}\left[x=(\mathbf{k},\mathbf{u}) \in Q_{1-\frac{\eta}{2}}\right] \\
-  \hat{\Gamma_{\alpha}}^{L}(\mathbf{k}) &= \Prob_\mathbf{U}\left[x=(\mathbf{k},\mathbf{u}) \in Q_{\frac{\eta}{2}}\right]
-\end{align}
-In \cite{dubourg_reliability-based_2011} is introduced the Margin of uncertainty, defined as the following set difference
-\begin{equation}
-  \mathbb{M}_{\eta} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
-\end{equation}
-Considering the 
-
 Let $\mu$ be a Borel $\sigma$-finite measure on $\Xspace$. We define Vorob'ev expectation, as the $\eta^*$-level set of $A$ verifying
 \begin{equation}
   \forall \beta < \eta^* \quad \mu(Q_{\beta}) \leq \Ex[\mu(A)] \leq \mu(Q_{\eta^*})
 \end{equation}
 that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
+
+\subsubsection{Margin of uncertainty}
+\label{sec:margin_of_uncertainty}
+Using the quantiles of this level set, we can construct the $\eta$-margin of uncertainty, as~\cite{dubourg_reliability-based_2011}.
+Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
+\begin{equation*}
+  \mathbb{M}_{\eta} = \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
+\end{equation*}
+
+
+Recalling the objective, it gives upper bounds and lower bounds of the confidence interval of level $\eta$ on the probability for each $\mathbf{k}$:
+\begin{align}
+  \hat{\Gamma}_{\alpha}^{U}(\mathbf{k}) &= \Prob_\mathbf{U}\left[\theta=(\mathbf{k},\mathbf{u}) \in Q_{1-\frac{\eta}{2}}\right] \\
+  \hat{\Gamma}_{\alpha}^{L}(\mathbf{k}) &= \Prob_\mathbf{U}\left[\theta=(\mathbf{k},\mathbf{u}) \in Q_{\frac{\eta}{2}}\right]
+\end{align}
+
+
 
 \subsubsection{SUR Strategies}
 The main idea behind Stepwise Uncertainty Reduction is to define a criterion, say $\kappa_n$, that encapsulates the epistemic uncertainty, and to minimize this criterion, in order to select the next point:
@@ -898,7 +1106,7 @@ In order to increase the accuracy of the surrogate model around some region of i
 \begin{equation}
   w-\IMSE(Y\mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)\ProbGP\left[x \in \mathbb{M}_{\eta}\right]\,\mathrm{d}x
 \end{equation}
-where $\mathcal{M}_{\eta}$ is the $\eta$-margin of uncertainty.
+where $\mathbb{M}_{\eta}$ is the $\eta$-margin of uncertainty.
 
 \subsubsection{UB-LB for $(p, \alpha_p, \mathbf{k}_p)$}
 Let us assume that we have set a probability $p\in [0,1]$. Let us recall that the triplet $(p, \alpha_p, \mathbf{k}_p)$ verifies
@@ -935,13 +1143,38 @@ For a fixed $p\in (0, 1]$, and an initial design $\mathcal{X}$. Set an initial v
   \end{itemize}
 \end{itemize}
 
+\subsubsection{Sampling based criterion}
+\label{sec:sampling_based_criterion}
+ref \cite{dubourg_reliability-based_2011}
+Let assume that we derived a criterion $\kappa$. And let $f(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$. $f$ can be seen as a density.
+  Using an appropriate sampler, we $N$ samples from this criterion:
+  
+
+\begin{equation*}
+  x_i \sim f
+\end{equation*}
+And find cluster those $N$ samples in order to get $p$ points to evaluate
+ 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{/home/victor/acadwriting/sampling_estimation_Meta.pdf}
+  \caption{\label{fig:label} }
+\end{figure}
 
 
+\section{Application to CROCO}
+\label{sec:croco_application}
 
-
+\begin{figure}[!h]
+  \centering
+  \scalebox{0.6}{\input{/home/victor/acadwriting/ocean_floor.pgf}}
+  \caption{Ocean floor depth}
+\end{figure}
 \bibliographystyle{abbrvnat}
 \bibliography{/home/victor/acadwriting/bibzotero}
 \end{document}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
