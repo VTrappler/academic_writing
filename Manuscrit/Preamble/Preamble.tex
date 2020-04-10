@@ -24,6 +24,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{natbib}
 %\usepackage{cmap}
 %\usepackage{ucs}
 \usepackage[english]{babel} % if babel greek : probleme avec la liste de nomenclature
@@ -31,7 +32,6 @@
 %\frenchbsetup{AutoSpacePunctuation=false}
 \usepackage[babel=true]{microtype}
 \microtypecontext{kerning=english} 	% Set microtype to french
-\usepackage{natbib}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,6 +59,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{mathrsfs}
+\usepackage{bbm}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,7 +114,7 @@
 	%pdfkeywords = {keyword1, key2, key3},
 }
 \urlstyle{same}
-
+\usepackage[capitalize, nameinlink]{cleveref}
 
 
 \usepackage{setspace}
@@ -136,6 +137,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 					PACKAGE TODO				%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xkeyval}
 \setlength{\marginparwidth }{2cm} % A enlever pour l'impression finale? C'est pour que les todo dans les marges ne posent pas de problèmes
 \usepackage[colorinlistoftodos,prependcaption,textsize=small, textwidth=2.7cm]{todonotes}
 
@@ -192,6 +194,11 @@
 \definecolor{Black}{cmyk}{0, 0, 0, 0}
 \definecolor{blueGreen}{HTML}{4CA6A7}
 \definecolor{blueGreenN2}{HTML}{3964B4}
+% Using colorbrewer, 1 is lightest colour, 4 is darkest
+\definecolor{brewsuperlight}{HTML}{F0F9E8}
+\definecolor{brewlight}{HTML}{BAE4BC}
+\definecolor{brewdark}{HTML}{7BCCC4}
+\definecolor{brewsuperdark}{HTML}{2B8CBE}
 
 
 \colorlet{cfgHeaderBoxColor}{blueGreen} %{green!50!blue!70}
@@ -199,7 +206,11 @@
 \colorlet{cfgUrlColor}{blueGreen}  % vLionel : RoyalBlue
 \colorlet{cfgLinkColor}{blueGreen} % vLionel : blueGreenN2
 
-
+%%% VICTOR COLORS ----------------------------------------
+\colorlet{cfgHeaderBoxColor}{brewsuperdark} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{RoyalBlue} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{RoyalBlue}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{RoyalBlue} % vLionel : blueGreenN2
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -385,17 +396,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			ENVIRONNEMENTS DES THEOREMES		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \usepackage[framemethod=tikz]{mdframed}
 \newtheoremstyle{defi}
-  {\topsep}%
+  {1em}%\topsep}%
   {\topsep}%
   {\normalfont}%
   {}%
   {\bfseries}% 
   {:}%
   {.5em}%
-  {\thmname{#1}\thmnote{~(#3)}}
+  {\thmname{#1~}\thmnumber{#2}\thmnote{ -- #3}}
   %
+  \theoremstyle{defi}
 \mdfdefinestyle{theoremStyle}{
 	hidealllines=true,
 	leftline=true,
@@ -408,14 +421,14 @@
 }
 \newcounter{thmCounter}[section]
 \numberwithin{thmCounter}{section}
-\newmdtheoremenv[style=theoremStyle]{envThm}[thmCounter]{Théorème}
-\newmdtheoremenv[style=theoremStyle]{envDef}[thmCounter]{Définition}
-\newmdtheoremenv[style=theoremStyle]{envConj}[thmCounter]{Conjecture}
-\newmdtheoremenv[style=theoremStyle]{envLem}[thmCounter]{Lemme}
-\newmdtheoremenv[style=theoremStyle]{envRem}[thmCounter]{Remarque}
-\newmdtheoremenv[style=theoremStyle]{envEx}[thmCounter]{Example}
-\newmdtheoremenv[style=theoremStyle]{envProp}[thmCounter]{Proposition}
-\newmdtheoremenv[style=theoremStyle]{envCor}[thmCounter]{Corollaire}
+\newmdtheoremenv[style=theoremStyle]{theorem}[thmCounter]{Theorem}
+\newmdtheoremenv[style=theoremStyle]{definition}[thmCounter]{Definition}
+\newmdtheoremenv[style=theoremStyle]{conjecture}[thmCounter]{Conjecture}
+\newmdtheoremenv[style=theoremStyle]{lemma}[thmCounter]{Lemma}
+\newmdtheoremenv[style=theoremStyle]{remark}[thmCounter]{Remark}
+\newmdtheoremenv[style=theoremStyle]{example}[thmCounter]{Example}
+\newmdtheoremenv[style=theoremStyle]{proposition}[thmCounter]{Proposition}
+\newmdtheoremenv[style=theoremStyle]{corollary}[thmCounter]{Corollary}
 
 \mdfdefinestyle{alertStyle}{
 backgroundcolor=red!27,
@@ -434,7 +447,6 @@ middlelinewidth=0pt
 ]{framedThmStyle}
 \declaretheorem[style=framedThmStyle, title=Théorème, numberlike=thmCounter]{repenvThm}
 \declaretheorem[style=framedThmStyle, title=Conjecture, numberlike=thmCounter]{repenvConj}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -14,9 +14,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Référencer des tables, figures
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\figref{Fig.~\ref}
-\newcommand\tabref{Table~\ref}
-\newcommand\secref{Sec.~\ref}
+% \newcommand\figref{Fig.~\ref}
+% \newcommand\tabref{Table~\ref}
+% \newcommand\secref{Sec.~\ref}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -111,27 +111,18 @@
 %================================================
 %% Faciliter l'écriture
 %================================================
-\def \first*{$1^{st}$}
-\def \second*{$2^{nd}$}
-\def \third*{$3^{rd}$}
-
-\def \r3*{$\mathbb{R}^3$}
-
-\def \kl*{Karhunen-Loève}
-
-\def \degre{$^{\circ}$}
-
-
-\DeclareMathOperator*{\argmin}{argmin}
-\DeclareMathOperator*{\Ex}{\mathbb{E}}
-\DeclareMathOperator*{\Prob}{\mathbb{P}}
-\DeclareMathOperator*{\ProbGP}{\mathcal{P}}
-\DeclareMathOperator*{\Var}{\mathbb{V}\mathrm{ar}}
-\DeclareMathOperator*{\Cov}{\mathbb{C}\mathrm{ov}}
+\DeclareMathOperator*{\argmin}{arg\,min \,}
+\DeclareMathOperator*{\argmax}{arg\,max \,}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\ProbGP}{\mathcal{P}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Cov}{\mathbb{C}\mathrm{ov}}
 \newcommand{\Kspace}{\mathbb{K}}
 \newcommand{\Uspace}{\mathbb{U}}
 \newcommand{\Xspace}{\mathbb{X}}
 \newcommand{\Yspace}{\mathbb{Y}}
+\newcommand{\estimtxt}[2]{\hat{#1}_{\mathrm{#2}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% TikZ Cmds
@@ -158,7 +149,7 @@
 \newcommand{\reformuler}{\change{Reformuler}}
 
 % Pavé coloré petit dans le texte pour les citations à ajouter
-\newcommand{\aciter}[1]{\todo[linecolor=violet,backgroundcolor=violet!25,bordercolor=violet, inline, inlinewidth=5cm, noinlinepar]{~ #1 ~}}
+\newcommand{\aciter}[1]{\todo[linecolor=violet,backgroundcolor=violet!25,bordercolor=violet, inline, , noinlinepar]{~ #1 ~}}
 
 % Texte coloré dans les paragraphes, pour signaler que c'est des infos/des formulations à vérifier
 \newcommand{\tocheck}[1]{{\color{red}{#1}} \addcontentsline{tdo}{todo}{#1}}

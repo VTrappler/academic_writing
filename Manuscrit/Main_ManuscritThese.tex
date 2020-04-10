@@ -7,8 +7,7 @@
 
 \begin{document}
 	
-	
-	
+
 	\renewcommand{\subfileLocal}[1]{}
 	\renewcommand{\subfileGlobal}[1]{#1}
 	
@@ -25,6 +24,7 @@
 	%% Sommaire
 	\cleartoleftpage %% On veut que les pages du sommaires de fassent face
 	\pagestyle{empty} % Disable any style
+        
 	\dominitoc
 	\ForceEmptyStyle{\tableofcontents}
 	
@@ -65,7 +65,7 @@
 	\subfile{Text/Introduction/Introduction.tex}
 	
 	%%% Le contenu de la thèse à proprement parler
-	\adjustmtc % Recaler les minis sommaires
+	% \adjustmtc % Recaler les minis sommaires
 	\subfile{Text/Chapter2/Chapter2.tex}
 	\subfile{Text/Chapter3/Chapter3.tex}
 	\subfile{Text/Chapter4/Chapter4.tex}
@@ -89,11 +89,6 @@
 	
 \end{document}
 
-
-%%%% TODO
-% Main page
-% Index - NON
-% Couleurs?
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
