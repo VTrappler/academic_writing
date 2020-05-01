@@ -7,8 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 
+# -> Manuscrit 415.41025
+# -> Notes 418.25368
 
-def get_figsize(columnwidth=418.25368, wf=0.5, hf=(5.**0.5 - 1.0) / 2.0):
+
+def get_figsize(columnwidth=415.41025, wf=0.5, hf=(5.**0.5 - 1.0) / 2.0):
     """Parameters:
       - wf [float]:  width fraction in columnwidth units
       - hf [float]:  height fraction in columnwidth units.
@@ -17,16 +20,17 @@ def get_figsize(columnwidth=418.25368, wf=0.5, hf=(5.**0.5 - 1.0) / 2.0):
                              using \showthe\columnwidth
     Returns:  [fig_width,fig_height]: that should be given to matplotlib
     """
-    fig_width_pt = columnwidth * wf 
+    fig_width_pt = columnwidth * wf
     inches_per_pt = 1.0 / 72.27               # Convert pt to inch
     fig_width = fig_width_pt * inches_per_pt  # width in inches
     fig_height = fig_width * hf      # height in inches
     return [fig_width, fig_height]
 
+
 params = {'backend': 'pgf',
           'axes.labelsize': 10,
-          # 'text.fontsize': 11,
-          'image.cmap': u'viridis'} # extend as needed
+          'axes.titlesize': 11,
+          'image.cmap': u'viridis'}  # extend as needed
 
 
 mpl.use('pgf')

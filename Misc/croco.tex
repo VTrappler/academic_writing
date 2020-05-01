@@ -2,16 +2,28 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \lstset{basicstyle=\ttfamily,
   showstringspaces=false,
   commentstyle=\color{red},
   keywordstyle=\color{blue},
-  otherkeywords={defined,define, \#}
+  otherkeywords={defined,define, \#},
+  frame=single
 }
+
+\lstnewenvironment{fortran}[1][]
+{\lstset{language=fortran,
+    escapechar=|,
+    morekeywords={for},
+    keywordstyle=\color{blue},
+  #1}}
+{}
+\lstset{escapeinside={(*|}{|*)}}
 \author{Victor Trappler}
 \title{CROCO}
 \date{\today}
+
 \begin{document}
 \maketitle
 
@@ -33,7 +45,7 @@ In this document, I will try to provide a summary of my understanding of this mo
   (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b)
 \end{equation}
 \paragraph{Quadratic with Von Karman log-layer}
-\begin{align}
+\begin{align}c
   \label{eq:quadratic_friction_vonkarman}
   (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b) \\  
   C_d = \left\{\begin{array}{ll}
@@ -198,6 +210,145 @@ Here, the forcing filename is generated using \textsc{MATLAB/OCTAVE} and the \te
 \end{lstlisting}
 
 \subsection{Toward a black-box utilisation using \texttt{crocopy}}
+TBD
+\clearpage
+
+\section{File structure, definition and calls}
+
+\subsection{\texttt{optim\_driver.F}}
+  \begin{itemize}
+  \item[Subroutines]
+    \begin{itemize}
+    \item  \hyperref[statecontrol]{\texttt{state\_control}}
+    \item \hyperref[rmsfunstep]{\texttt{rms\_fun\_step}}
+    \item \hyperref[rmsfunstep2d]{\texttt{rms\_fun\_step\_2d}}
+    \end{itemize}
+  \item[Functions]
+    \begin{itemize}
+    \item \texttt{rms}
+    \end{itemize}
+  \end{itemize}
+
+\begin{fortran}[label=statecontrol]
+  state_control(iicroot)
+\end{fortran}
+
+\begin{fortran}
+    call init_control |\label{initcontrol}
+\end{fortran}
+ set \texttt{ad\_x, ad\_g} to $0$
+\begin{fortran}
+    call simul
+\end{fortran}
+  \begin{itemize}
+  \item get cost and gradient on each processor (suffix \texttt{\_f}
+    indicates that this is the full vector (in contrast to the vector
+    on each proc))
+  \item \texttt{ad\_g\_f} is constructed from \texttt{ad\_g}
+  \item \texttt{cost\_f} is updated
+  \end{itemize}
+  \begin{fortran}
+    call set_state(ad_x_f) |\label{setstate}
+  \end{fortran}|
+
+\subsection{\texttt{ATLN2/cost\_fun.F}}
+\begin{itemize}
+\item[Subroutines]
+  \begin{itemize}
+  \item \hyperref[adstep]{ad\_step}
+  \item \hyperref[costfun]{cost\_fun}
+  \item \hyperref[costfunstep]{cost\_fun\_step}
+  \item \hyperref[costfunstep]{cost\_fun\_step\_2d}
+  \item \hyperref[costfunstep]{cost\_fun\_step\_2d\_tile}
+  \item \hyperref[setstate]{set\_state}
+  \item \hyperref[setstate]{set\_state\_2d}
+  \item \hyperref[setstate]{set\_state\_2d\_tile}
+  \item \hyperref[initcontrol]{init\_control}
+  \item \hyperref[savecrocostate]{save\_croco\_state}
+  \item \hyperref[restorecrocostate]{restore\_croco\_state}
+  \item \hyperref[initlocalarrays]{init\_local\_arrays}
+  \end{itemize}
+\end{itemize}
+\begin{itemize}
+\item[ad\_step]  \begin{fortran}[label=adstep]
+  ad_step
+\end{fortran}
+calls \texttt{ad\_ns} (defined in adparam.h) in a row the step subroutine
+\item[cost\_fun]
+\begin{fortran}[label=costfun]
+  cost_fun(ad_x, cost):
+  call |\hyperref[setstate]{set\_state}|
+  for ta=1, ad_nt
+      call |\hyperref[adstep]{ad\_step()}|
+      call |\hyperref[costfunstep]{cost\_fun\_step()}|
+    \end{fortran}
+
+\item[cost\_fun\_step, \_2d, \_tile]
+  \begin{fortran}[label=costfunstep]
+    cost_fun_step(ad_x, icost, ad_nt, mode)
+  \end{fortran}
+  Loops over tiles etc
+  \begin{align*}
+    \text{if mode}=3&:\quad \xi(\mathtt{i},\mathtt{j},\mathtt{knew}) - \mathtt{ad\_obs}(\mathtt{i},\mathtt{j},\mathtt{ta}+2) \\
+    \text{if mode}=2&:\quad \mathtt{z0b} - \mathtt{z0b\_bck}
+  \end{align*}
+  and stores it to \texttt{cost}
+  
+\item[set\_state, \_2d, \_tile]
+  \begin{fortran}[label=setstate]
+set_state():
+    z0b = ad_x
+  \end{fortran}
+  then saves \texttt{z0b} and $\xi$ to the files \texttt{z0b.proc.iteration} and \texttt{ssh.proc.iteration}
+  
+\item[init\_control]
+  \begin{fortran}[label=initcontrol]
+init_control():
+    ad_x = 0
+    ad_g = 0
+    call init_local_arrays(ad_x)
+  \end{fortran}
+  
+\item[save\_croco\_state]
+  \begin{fortran}[label=savecrocostate]
+save_croco_state:
+    *_bck = *
+  \end{fortran}
+  
+\item[restore\_croco\_state]
+\begin{fortran}[label=restorecrocostate]
+restore_croco_state:
+    * = *_bck
+  \end{fortran}
+  
+\item[init\_local\_arrays]
+  \begin{fortran}[label=initlocalarrays]
+init_local_arrays
+  \end{fortran}
+\end{itemize}
+
+
+\subsection{\texttt{adj\_driver}}
+\begin{itemize}
+\item[Subroutines]
+  \begin{itemize}
+  \item \hyperref[simul]{simul}
+  \end{itemize}
+\end{itemize}
+
+
+\begin{itemize}
+\item[simul]
+  \begin{fortran}[label=simul]
+simul(indic, sn, ad_x, cost, ad_g, izs, rzs, dzs)
+    call save_croco_state
+    call cost_fun
+    rms()
+    call restore_croco_state
+    call cost_fun_b() ! adjoint run
+    call restore_croco_state
+  \end{fortran}
+\end{itemize}
 
 
 
