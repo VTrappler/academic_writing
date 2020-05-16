@@ -17,7 +17,7 @@
 % \newcommand\figref{Fig.~\ref}
 % \newcommand\tabref{Table~\ref}
 % \newcommand\secref{Sec.~\ref}
-
+\renewcommand\eqref{\cref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Norme
@@ -125,6 +125,7 @@
 \newcommand{\Xspace}{\mathbb{X}}
 \newcommand{\Yspace}{\mathbb{Y}}
 \newcommand{\estimtxt}[2]{\hat{#1}_{\mathrm{#2}}}
+\newcommand{\DKL}[2]{D_{\mathrm{KL}}\left(#1 \| #2\right)}
 \newcommand{\kk}{k}
 \newcommand{\uu}{u}
 
@@ -153,7 +154,7 @@
 \newcommand{\reformuler}{\change{Reformuler}}
 
 % Pavé coloré petit dans le texte pour les citations à ajouter
-\newcommand{\aciter}[1]{\todo[linecolor=violet,backgroundcolor=violet!25,bordercolor=violet, inline, , noinlinepar]{~ #1 ~}}
+\newcommand{\aciter}[1]{\todo[linecolor=violet,backgroundcolor=violet!25,bordercolor=violet, inline]{~ #1 ~}}
 
 % Texte coloré dans les paragraphes, pour signaler que c'est des infos/des formulations à vérifier
 \newcommand{\tocheck}[1]{{\color{red}{#1}} \addcontentsline{tdo}{todo}{#1}}

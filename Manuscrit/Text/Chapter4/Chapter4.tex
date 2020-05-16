@@ -3,6 +3,8 @@
 \subfileGlobal{
 \renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
 }
+\newcommand{\IMSE}{\mathop{IMSE}}
+\newcommand{\UU}{\mathbf{U}}
 
 % For cross referencing
 \subfileLocal{
@@ -32,9 +34,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 				SECTION 0 : Introduction	   %%%
 
-\section{Gaussian Processes}
-\label{sec:GP}
 
+
+\section{GP, RR-based family of estimators}
+\subsection{Random processes and Gaussian Process Regression}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
 \begin{align}
   \begin{array}{rrcl}
@@ -71,11 +74,11 @@ Using those kriging weights $\mathbf{W}$, a few additional conditions must be ad
 \item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
 \item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
 \end{itemize}
-Translating using Eq.\eqref{eq:lin_est}:
+Translating using~\cref{eq:lin_est}:
 \begin{equation}
   \Ex[\hat{Z}(x) - Z(x)]=0 \iff m(\sum_{i=1}^n w_i(x)-1) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
 \end{equation}
-For the minimum of variance, we introduce the augmented vector $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$, and
+For the minimum of variance, we introduce the augmented random vectors $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$ and $\mathbf{Z}_n = [Z(x_1),\dots Z(x_n)]$, and
 the variance can be expressed as:
 \begin{align}
   \Ex[(\hat{Z}(x) - Z(x))^2] &= \Cov\left[[\mathbf{W}^T, -1] \cdot \mathbf{Z}_n(x) \right] \\
@@ -85,31 +88,16 @@ In addition, we have
 \begin{equation}
   \Cov\left[\mathbf{Z}_n(x) \right] =
   \begin{bmatrix}
-    \Cov\left[
-      \begin{bmatrix}
-        Z(x_1) \dots Z(x_n)
-      \end{bmatrix}^T\right]
-    & \Cov\left[
-      \begin{bmatrix}
-        Z(x_1) \dots Z(x_n)
-      \end{bmatrix}^T, Z(x) \right]
+    \Cov\left[ \mathbf{Z}_n^T\right]
+    & \Cov\left[\mathbf{Z}_n^T, Z(x) \right]
   \\
-  \Cov\left[
-    \begin{bmatrix}
-      Z(x_1) \dots Z(x_n)
-    \end{bmatrix}^T, Z(x) \right]^T & \Var\left[Z(x)\right]
+  \Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T & \Var\left[Z(x)\right]
   \end{bmatrix}
 \end{equation}
 Once expanded, the kriging weights solve then the following optimisation problem:
 \begin{align}
-  \min_{\mathbf{W}} ~&\mathbf{W}^T \Cov\left[Z(x_1) \dots Z(x_n)\right] \mathbf{W}\\ &-\Cov\left[
-    \begin{bmatrix}
-      Z(x_1) \dots Z(x_n)
-    \end{bmatrix}^T, Z(x) \right]^T \mathbf{W}\\ &- \mathbf{W}^T\Cov\left[
-    \begin{bmatrix}
-      Z(x_1) \dots Z(x_n)
-    \end{bmatrix}^T, Z(x) \right] \\ &+ \Var\left[Z(x)\right] \\
-  \text{s.t.}& \mathbf{W}^T \mathbf{1} = \mathbf{1}
+  \min_{\mathbf{W}} ~&~\mathbf{W}^T \Cov\left[\mathbf{Z}_n\right] \mathbf{W}+ \Var\left[Z(x)\right] \\ &-\Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T \mathbf{W}- \mathbf{W}^T\Cov\left[\mathbf{Z}_n^T, Z(x) \right] \\ 
+  \text{s.t. }&  \mathbf{1}^T\mathbf{W} = 1
 \end{align}
 This leads to
 \begin{align}
@@ -118,14 +106,11 @@ This leads to
   \end{bmatrix}
   &=
   \begin{bmatrix}
-    \Cov\left[Z(x_1) \dots Z(x_n)\right] & \mathbf{1} \\
+    \Cov\left[\mathbf{Z}_n\right] & \mathbf{1} \\
   \mathbf{1}^T & 0
 \end{bmatrix}^{-1}
                  \begin{bmatrix}
-                  \Cov\left[
-    \begin{bmatrix}
-      Z(x_1) \dots Z(x_n)
-    \end{bmatrix}^T, Z(x) \right]^T \\ 1 
+                  \Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T \\ 1 
 \end{bmatrix}
   \\ &=
     \begin{bmatrix}
@@ -143,14 +128,368 @@ This leads to
                          1
                        \end{bmatrix}
 \end{align}
-
+and
+\begin{equation}
+  \hat{Z}(x) =
+      \begin{bmatrix}
+      C(x_1, x) &
+      C(x_2, x) &
+      \dots &
+      C(x_n, x)
+      \end{bmatrix}
+      \left(\begin{bmatrix} C(x_1, x_1) & \cdots & C(x_1, x_n)\\
+      C(x_2, x_1) & \cdots & C(x_2, x_n) \\
+      \vdots & \ddots & \vdots  \\
+      C(x_n, x_1) & \cdots & C(x_n, x_n) \\
+    \end{bmatrix}^{-1}\right)^T
+  \begin{bmatrix}
+    f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n)
+  \end{bmatrix}
+\end{equation}
 \subsection{Covariance functions}
+\todo{to write}
 \label{sec:cov_fun}
+\begin{itemize}
+\item Desired properties
+  \begin{itemize}
+  \item isotropy (?)
+  \item stationarity
+  \item semi-definite positiveness
+  \end{itemize}
+\item parametric models of covariance
+\item examples
+\item usual hyperparameters estimation
+\end{itemize}
+
+\subsection{Enrichment strategies for Gaussian Processes}
+\label{sec:enrichment_strategies}
+For a unknown function $f$, a GP is initally constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Y \mid \mathcal{X}$ and:
+\begin{equation}
+  \label{eq:YgivenXGP}
+  Y\mid \mathcal{X} \sim \mathcal{N}(m_{Y\mid\mathcal{X}}(x),\sigma^2_{Y\mid\mathcal{X}}(x))
+\end{equation}
+The main idea behind Stepwise Uncertainty Reduction is to define a criterion, say $\kappa_n$, that measures in a way the uncertainty upon a certain objective associated with the GP and $f$, and to maximize this criterion, in order to select the next point:
+\begin{equation}
+  x_{n+1} = \argmax_{x\in\Xspace} \kappa_n(x) = \argmax_{x\in\Xspace} \kappa(x; Y \mid \mathcal{X})
+\end{equation}
+This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1})\}$.
+\subsubsection{Exploration based criteria}
+
+We are going to introduce common criteria of enrichment, that aim at exploring the input space $\Xspace$
+
+\paragraph{Maximum variance}
+A measure of uncertainty on the GP is $\max_{x\in\Xspace} \sigma_{Y \mid \mathcal{X}}^2(x)$, the maximum value of the prediction variance on the space.
+A simple criterion is to select and evaluate the point corresponding to this maximum of variance:
+\begin{equation}
+  x_{n+1} = \argmax_{x\in \Xspace} \kappa_n(x) = \argmax_{x \in \Xspace} \sigma^2_{Y \mid \mathcal{X}}(x)
+\end{equation}
+This criterion by its simplicity is easy to implement, as the prediction variance is cheap to compute given a GP, and does not depend directly on the evaluations of the function $f(x_i)$, uniquely on the distance between the inputs points and the covariance parameters.
+
+\paragraph{Integrated Mean Square Error}
+\cite{sacks_designs_1989}
+The prediction variance is directly given by $\sigma^2_{Y\mid \mathcal{X}}$ and represents the uncertainty on the Gaussian regression. To summarize this uncertainty on the whole space $\mathcal{X}$, we define the Integrated Mean Square Error (IMSE) as
+\begin{equation}
+  \IMSE(Y \mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)\,\mathrm{d}x
+\end{equation}
+For practical reasons, we can consider to integrate the MSE only on a subset $\mathfrak{X}\subset \mathcal{X}$ that yields
+\begin{equation}
+  \IMSE\left(Y,\mathfrak{X} \mid \mathcal{X} \right) = \int_{\mathcal{X}} \sigma^2_{Y\mid \mathcal{X}}(x)  \mathbbm{1}_{\{x \in \mathfrak{X}\}}(x)\,\mathrm{d}x = \int_{\mathfrak{X}} \sigma^2_{Y\mid \mathcal{X}}(x)\,\mathrm{d}x
+\end{equation}
+
+Unfortunately, exact evaluation of this integral is impossible, so it needs to be approximated using numerical integration, such as Monte-carlo or quadrature rules:
+\begin{equation}
+  \IMSE(Y,\mathfrak{X} \mid \mathcal{X}) \approx \sum_{i=1}^{n_{\mathrm{quad}}} w_i \sigma_{Y\mid\mathcal{X}}(x_i)
+\end{equation}
+
+For a given $x\in \Xspace$ and an outcome $y\in\Yspace$, the augmented design is defined as the experimental design, $\mathcal{X} \cup \left\{(x, y)\right\}$, and the IMSE of the augmented design is $\IMSE\left(Y \mid \mathcal{X} \cup \left\{(x, y)\right\} \right)$. Before the actual experiment though, $y$ is unknown, but we can model it by its distribution given by the GP (per~\cref{eq:YgivenXGP}). So for a given candidate $x$, the mean prediction error we will get when evaluating $x$ is given by
+\begin{equation}
+  \label{eq:IMSE_augmented}
+  \Ex_{Y(x)}\Big[\IMSE\big(Y \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\Big]
+\end{equation}
+where the expectation is to be taken with respect to different realisations of $Y(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy ffound for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Y(x)$, corresponding to evenly spaced quantiles of the its distribution.
+It is maybe important to note that the hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.
+
+To enrich the design with the best point, that reduces the most the prediction error, a simple $1$-step strategy is to minimize the expectation of~\cref{eq:IMSE_augmented}.
+\begin{equation}
+  x_{n+1} = \argmin_{x\in \Xspace}\Ex_{Y(x)}\Big[\IMSE\big(Y \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\Big]
+\end{equation}
 
 
 
+\subsubsection{Contour and volume estimation}
+Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019},~\cite{heinrich_level_2012}). 
 
 
+Let us consider $A$, a random closed set, such that its realizations are subsets of $\Xspace$, and $p$ is its coverage probability, that is
+\begin{equation}
+  p(\theta) = \Prob\left[\theta\in A\right], \theta\in\Xspace
+\end{equation}
+For $\eta \in [0, 1]$, we define the $\eta$-level set of $p$,
+\begin{equation}
+  Q_{\eta} = \{x\in\Xspace \mid p(x) \geq \eta \}
+\end{equation}
+It may seem trivial, but let us still note that those sets are decreasing:
+\begin{equation}
+  0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
+\end{equation}
+
+Let $\mu$ be a Borel $\sigma$-finite measure on $\Xspace$. We define Vorob'ev expectation, as the $\eta^*$-level set of $A$ verifying
+\begin{equation}
+  \forall \beta < \eta^* \quad \mu(Q_{\beta}) \leq \Ex[\mu(A)] \leq \mu(Q_{\eta^*})
+\end{equation}
+that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
+
+\subsubsection{Margin of uncertainty}
+\label{sec:margin_of_uncertainty}
+Using the quantiles of this level set, we can construct the $\eta$-margin of uncertainty, as~\cite{dubourg_reliability-based_2011}.
+Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
+\begin{equation*}
+  \mathbb{M}_{\eta} = \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
+\end{equation*}
+
+
+% \subsubsection{Contour and volume estimation}
+
+% Let $Y$ be a random process over $\Xspace$, and let us follow what has been done in~\cite{bect_sequential_2012}.
+% Let $\mathfrak{F} \subset \mathbb{R}$ be a region of failure: $f^{-1}(\mathfrak{F})$
+
+
+
+\subsection{Estimation of relative-regret quantities}
+\subsubsection{GP of the penalized cost function $\Delta_{\alpha}$}
+\label{ssec:gp_delta_alpha}
+We assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\kk^{(1)},\uu^{(1)}),\dots,(\kk^{(n)},\uu^{(n)}) \right\}$, denoted as $(\kk,\uu)\mapsto Y(\kk,\uu)$.
+
+As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $C(\cdot, \cdot)$, while $\sigma^2_Y(\kk,\uu) = C((\kk,\uu), (\kk,\uu))$
+\begin{equation}
+  Y(\kk,\uu) \sim \mathcal{N}\left(m_{Y}(\kk,\uu), \sigma^2_Y(\kk,\uu) \right)
+\end{equation}
+Let us consider now the conditional minimiser:
+\begin{align}
+  J^*(\uu) = J(\kk^*(\uu),\uu) = \min_{\kk\in\Kspace} J(\kk,\uu)
+\end{align}
+
+Analogous to $J$ and $J^*$, we define $Y^*$ as
+\begin{equation}
+  Y^*(\uu) \sim \mathcal{N}\left(m^*_Y(\uu), \sigma^{2,*}_Y(\uu)\right)
+\end{equation}
+where
+\begin{align}
+  m^*_Y(\uu) = \min_{\kk\in\Kspace} m_Y(\kk,\uu) = m_Y(\kk^*(\uu)) \\
+  \sigma^{2,*}_Y(\uu) = \sigma^{2,*}_Y(\kk^*(\uu)) 
+\end{align}
+The surrogate conditional minimiser is used in~\cite{ginsbourger_bayesian_2014} for instance, but other choices could be considered, such as $m_Y(\kk^*(\uu)) - \beta \sigma^{2,*}_Y(\kk^*(\uu))$. This choice for instance would lead to be more ``optimistic'' in the estimation of the minimum (i.e.\ a lower minimum), and in turn, would have a tendency to overestimate the estimated value of $\alpha$.
+
+The $\alpha$-relaxed difference defined as  $\Delta_{\alpha} = Y - \alpha Y^*$ is a linear combination of correlated Gaussian processes. Its distribution is Gaussian and can be derived by first considering the joint distribution of $Y(\kk,\uu)$ and $Y^*(\uu) = Y(\kk^*(\uu), \uu)$:
+\begin{equation}
+  \begin{bmatrix}
+    Y(\kk,\uu) \\
+    Y^*(\uu)
+  \end{bmatrix}
+  \sim \mathcal{N}\left(
+    \begin{bmatrix}
+      m_Y(\kk,\uu) \\
+      m_Y^*(\uu)
+    \end{bmatrix}
+    ;\,
+    \begin{bmatrix}
+      C\left((\kk,\uu),(\kk,\uu)\right) & C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) \\
+      C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) & C\left((\kk^*(\uu),\uu),(\kk^*(\uu),\uu)\right)
+    \end{bmatrix}
+\right)
+\end{equation}
+Multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ yields
+
+\begin{align}
+  \Delta_{\alpha}(\kk,\uu) &\sim \mathcal{N}\left(m_{\Delta}(\kk,\uu); \sigma^2_{\Delta}(\kk,\uu)\right)  \label{eq:delta_GP}\\
+  m_{\Delta}(\kk,\uu) &= m_Y(\kk,\uu) - \alpha m_Y^*(\uu) \label{eq:mu_delta_GP}\\
+  \sigma^2_{\Delta}(\kk,\uu) &= \sigma_Y^2(\kk,\uu) + \alpha^2 \sigma_{Y^*}^2(\kk,\uu) - 2\alpha C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) \label{eq:variance_delta_GP}
+\end{align}
+
+
+Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP}, 3 sources of uncertainty arise:
+\begin{itemize}
+\item $\sigma^2_{Y}$ is the prediction variance of the GP on $J$, that is directly reduced when additional points are evaluated
+\item $\sigma^2_{Y^*}$ is the variance of the predicted value of the minimizer.
+  
+\item Assuming a stationary form of the covariance, the third term is directly dependent on the distance between $\kk$ and $\kk^*(\uu)$. As the covariance term can be written $C((\kk,\uu), (\kk',\uu')) = s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\uu}} \rho_{\theta_j}(\|u_j - u'_j\|)$, substituting $\kk^*(\uu)$ for $\kk^\prime$ gives
+\begin{align}
+  C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) &= s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k^*_i(\uu)\|)\prod_{j\in\mathcal{I}_{\uu}} \rho_{\theta_j}(0) \\
+  &=s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k^*_i(\uu)\|)
+\end{align}
+\end{itemize}
+This decomposition highlights the fact that the uncertainty measured at a point $(\kk, \uu)$ using $\sigma_{\Delta}^2$ will not be reduced completely by evaluating the function at this point, as only the prediction variance $\sigma_Y^2$ will be significantly affected in general. In this case, reducing the uncertainty on a slice of constant $\kk$ (candidate) will not result necessarily in an evaluation on this slice.
+
+
+\subsubsection{Approximation of the targeted probability using GP}
+
+% We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP:
+% \begin{equation}
+%   \ProbGP[A] = \int_{A} \, \mathrm{d}\ProbGP(\xi)
+% \end{equation}
+  
+\paragraph{Through the probability of coverage}
+
+
+For a given $\kk\in\Kspace$, the coverage probability of the $\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be $\alpha$-acceptable is
+\begin{align}
+  \Gamma_{\alpha}(\kk) &= \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right] \\
+                              & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
+\end{align}
+As $J$ is not known perfectly, it devolves into a classification problem
+This classification problem can be approached with a plug-in approach in~\cref{eq:plugin_indicator}, or a probabilistic one in~\cref{eq:prob_indicator}:
+\begin{align}
+  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \mathbbm{1}_{m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu)} \label{eq:plugin_indicator} \\
+  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
+\end{align}
+Using the GPs, for a given $\kk$, $\alpha$ and $\uu$, the probability for our metamodel to verify the inequality is given by
+Based on those two approximation, we can define different estimations of $\Gamma$
+\begin{align}
+  \hat{\Gamma}_{\alpha, n}(\kk) &= \Prob_U\left[m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu) \right] \tag{plug-in} \\
+  \hat{\Gamma}_{\alpha, n}(\kk) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0\right]\right]  = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]\tag{Probabilistic approx} \\
+\end{align}
+
+The probability of coverage for the set $\{Y - \alpha Y^*\leq 0\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$, because $\Delta_{\alpha}$ is a GP, as defined in~\cref{eq:delta_GP,eq:mu_delta_GP,eq:variance_delta_GP}
+\begin{equation}
+  \pi_{\alpha}(\kk,\uu) = \Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)
+\end{equation}
+Finally, averaging over $\uu$ yields
+\begin{equation}
+  \hat{\Gamma}_{\alpha,n}(\kk) = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]=\int_{\Uspace}\pi_{\alpha}(\kk,\uu)p(\uu) \,\mathrm{d}\uu = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)p(\uu) \,\mathrm{d}\uu
+\end{equation}
+
+The estimation of $\Gamma$ is then maximised with respect to $\kk$ to get the candidate probability
+\begin{equation}
+\max_{\kk\in\Kspace}  \hat{\Gamma}_{\alpha,n}(\kk) 
+\end{equation}
+By tweaking the value of $\alpha$, we can get the estimate $\hat{\Gamma}$ to have its maximum equal to the targeted probability. 
+As pointed out earlier the estimation of $\alpha_p$ depends on the estimation of $\hat{\Gamma}$.
+\paragraph{$\alpha$ through quantiles}
+Instead of maximizing for each $\alpha$ the estimated $\hat{\Gamma}$, we are now going to derive an approach based on the quantiles:
+Let $Y(\kk, \uu) \sim \mathcal{N}(m_Y(\kk,\uu), \sigma^2_{Y}(\kk, \uu))$ be the GP fitted using $\mathcal{X}$. A realisation $y\sim Y$ is then a function from $\Kspace \times \Uspace$ to $\mathbb{R}^{+}_*$.
+Again, the plug-in approach is to compute the ratio $m_Y(\kk, \uu) / m^*_Y(\uu)$ on a large grid for $\uu$ and for each $\kk$, look for the quantile of order $p$ with respect to $\UU$
+\begin{equation}
+  \alpha_{m_{Y}}(\kk) = Q_{U}\left(p;~\frac{m_Y(\kk, \UU)}{m^*_Y(\UU)}\right)
+\end{equation}
+the estimation of the relaxation value $\hat{\alpha}_p$ is then the minimal value of the quantiles with respect to $\kk$:
+\begin{equation}
+    \label{eq:def_plugin_alpha}
+  \hat{\alpha}^{\mathrm{PI}}_p = \min_{\kk \in \Kspace} Q_U\left(p;~\frac{m_Y(\kk, \UU)}{m^*_Y(\UU)}\right)  \tag{plug-in}
+\end{equation}
+Moreover, as we can sample quite easily from the GP, we can have an idea of the uncertainty in the estimation of $\hat{\alpha}_p$.
+Let us say that we sampled $N$ function from $Y$, namely $y^{(i)}$ for $1 \leq i \leq N$. For each of these samples, we can get $\alpha_{y^{(i)}}(\kk)$, shortened as $\alpha^{(i)}(\kk)$. Using Monte-Carlo, we can approximate the usual moments for $\alpha$.
+
+\begin{equation}
+ \Ex_{Y}\left[\alpha_{Y}(\kk) \right] \approx \frac{1}{N} \sum_{i=1}^N \alpha^{(i)}(\kk) = \alpha^{\mathrm{MC}}(\kk)
+\end{equation}
+
+and finally,
+\begin{equation}
+  \hat{\alpha}_p^{\mathrm{MC}} = \min_{\kk \in \Kspace} \alpha^{\mathrm{MC}}(\kk)
+\end{equation}
+
+
+\paragraph{Iterative procedure}
+The general
+\cref{ssec:gp_delta_alpha}
+\begin{itemize}
+\item Find a measure of uncertainty that depends as a function of $\kk \times \Uspace$.
+\item Find the point that reduces the most the uncertainty on this slice
+\item Update
+\end{itemize}
+
+At the step $n$:
+\begin{itemize}
+\item First, using the GP, $\alpha_p$ is estimated using Monte-carlo and samples from the GP, giving $\hat{\alpha}_{n,.99}$
+\item We choose the candidate $\kk_{\mathrm{candidate}}$ as the minimizer of the sampled quantiles: $\kk_{\mathrm{candidate}} = \argmin_{\kk} \alpha^{\mathrm{MC}}(\kk)$.
+\item We optimize the wIMSE, defined as $\IMSE(Y_n \mid \mathcal{X}, \{\kk_{\mathrm{candidate}}\}\times \Uspace )$ to get the next point to sample
+\end{itemize}
+On Figure~\cref{fig:alpha_MC} is shown the procedure applied on BHs, based on a initial design of $30$ points. The wIMSE is computed by sampling a $50$-point LHS on $\{\kk_{\mathrm{candidate}} \times \Uspace\}$.
+The estimation using Monte-carlo seems to show convergence towards the true value, while the plug-in approach does not evolve much with the iterations
+\begin{figure}[!h]
+  \centering
+  \input{/home/victor/acadwriting/Misc/alpha_estimation_MC.pgf}
+  \label{fig:alpha_MC}
+  \caption{$\hat{\alpha}_{n,.99}$ estimated by MC }
+\end{figure}
+
+% \begin{figure}[!h]
+%   \centering
+%   \input{alpha_estimation_plugin.pgf}
+% \end{figure}
+
+% \subsubsection{Weighted IMSE}
+% The IMSE presented above is not objective driven, as the IMSE (integrated implicitly on the whole space $\Xspace$) aims solely at improving the prediction (though that can be the objective in itself).
+
+% To include a more precise objective than the enrichment of the design, one can add a weight function to the integral, giving the weighted IMSE.
+% \begin{equation}
+%   \label{eq:w-imse}
+%   w\IMSE(Y\mid \mathcal{X}) = \int_{\Xspace} \sigma_{Y\mid\mathcal{X}}^2(x)w(x)\,\mathrm{d}x
+% \end{equation}
+
+
+
+\subsection{Sources, quantification of uncertainties, and SUR strategy?}
+Formally, for a given point $(\kk,\uu)$, the event ``the point is $\alpha$-acceptable'' has probability $\pi_{\alpha}(\kk,\uu)$ and variance $\pi_{\alpha}(\kk,\uu) (1-\pi_{\alpha}(\kk,\uu))$. Obviously, the points with the highest uncertainty have the highest variance, so have a coverage probability around $0.5$.
+
+
+Recalling the objective, it gives upper bounds and lower bounds of the confidence interval of level $\eta$ on the probability for each $\kk$:
+\begin{align}
+  \hat{\Gamma}_{\alpha}^{UB}(\kk) &= \Prob_U\left[\theta=(\kk,\uu) \in Q_{1-\frac{\eta}{2}}\right] \\
+  \hat{\Gamma}_{\alpha}^{LB}(\kk) &= \Prob_U\left[\theta=(\kk,\uu) \in Q_{\frac{\eta}{2}}\right]
+\end{align}
+
+
+
+\subsubsection{UB-LB for $(p, \alpha_p, \kk_p)$}
+Let us assume that we have set a probability $p\in [0,1]$. Let us recall that the triplet $(p, \alpha_p, \kk_p)$ verifies
+\begin{align}
+  \max_{\kk} \Gamma_{\alpha_p}(\kk) = \Gamma_{\alpha_p}(\kk_p) = \Prob_{\uu}\left[J(\kk_p,\uu) \leq \alpha_p J^*(\uu)\mid \uu = \uu\right] = p
+\end{align}
+Let us say that $\bar{\Gamma}$ is the $\eta$-upper-bound, while $\underline{\Gamma}$ is the $\eta$-lower bounds, so
+\begin{equation}
+  \ProbGP\left[\underline{\Gamma}(\kk) \leq \Gamma_n(\kk) \leq \bar{\Gamma}(\kk)\right] = \eta
+\end{equation}
+\begin{itemize}
+\item If $\underline{\Gamma}(\kk)>p$, we are too permissive, so we should decrease $\alpha$
+  \begin{itemize}
+  \item by how much ?
+  \end{itemize}
+\item If $\bar{\Gamma}(\kk)<p$, we are too conservative, so we should increase $\alpha$
+  \begin{itemize}
+  \item by how much again ?
+  \end{itemize}
+ \item If $\underline{\Gamma}(\kk)<p<\bar{\Gamma}(\kk)$, reduce uncertainty on $\kk_p$
+\end{itemize}
+Changing the value of $\alpha$ does not require any further evaluation of the objective function, so can be increased until $\max \hat{\Gamma} = p$ ? by dichotomy for instance. This $\hat{\kk}_p$ is then the candidate.
+
+Criterion: stepwise reduction of the variance of the estimation of $\hat{\Gamma}(\hat{\kk}_p) = \max_{\kk}\hat{\Gamma}(\hat{\kk})$
+
+For a fixed $p\in (0, 1]$, and an initial design $\mathcal{X}$. Set an initial value for $\alpha \geq 1$. 
+\begin{itemize}
+\item Define $\Delta_{\alpha}$, using $Y \mid \mathcal{X}$
+\item Update $\alpha$ such that $\max \hat{\Gamma}_{\alpha,n} = p$
+\item Compute measure of uncertainty that we want to reduce:
+  \begin{itemize}
+  \item $\bar{\Gamma}_{\alpha,n}(\kk) - \underline{\Gamma}_{\alpha,n}(\kk)$
+  \item $\pi_{\alpha}(\kk,\uu)(1-\pi_{\alpha}(\kk,\uu))$
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Sampling based criterion}
+\label{sec:sampling_based_criterion}
+This technique is described in~\cite{dubourg_reliability-based_2011}
+Let assume that we derived a criterion $\kappa$. And let $f(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$. $f$ can be seen as a density.
+  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $\{x_i\}_{1\leq i \leq N}$
+  
+  However, as $N$ should be large, there is no point in evaluating all the samples $x_i$. This goes by the statistical reduction of the samples:
+  This can be done by KMeans algorithm, 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{/home/victor/acadwriting/sampling_estimation_Meta.pdf}
+  \caption{\label{fig:label} }
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

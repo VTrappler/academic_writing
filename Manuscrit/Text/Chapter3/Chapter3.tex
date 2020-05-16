@@ -27,13 +27,41 @@
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Localized optimization pitfalls}
-\label{sec:local_optimization_pitfalls}
-
 \section{Defining Robustness}
+\aciter{\cite{andreassian_all_2012}~\cite{kuczera_there_2010}}
 \label{sec:def_robustness}
-
+% \begin{table}[]
+% \centering
+% \resizebox{\textwidth}{!}{%
+% \begin{tabular}{@{}clllll@{}}
+% \multicolumn{1}{l}{}         & \multicolumn{5}{c}{$\underrightarrow{\text{Robustness}}$}                                                                                           \\
+% \multirow{5}{*}{\rotatebox[origin=c]{270}{$\underrightarrow{\text{Reliability}}$}} & \multicolumn{2}{l}{\multirow{2}{*}{}}          & \multirow{2}{*}{no objective} & \multicolumn{2}{l}{objective}           \\
+%                              & \multicolumn{2}{l}{}                           &                               & deterministic inputs & uncertain inputs \\
+%                              & \multicolumn{2}{l}{No constraint}              &                               &                      &                  \\
+%                              & \multirow{2}{*}{Unconstrained} & deterministic &                               &                      &                  \\
+%                              &                                & uncertain     &                               &                      &                 
+% \end{tabular}%
+% }
+% \caption{\cite{lelievre_consideration_2016}}
+% \end{table}
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+  \begin{tabular}{clllll}
+    \toprule
+\multicolumn{1}{l}{} & \multicolumn{5}{c}{Robustness}                                                              \\ \midrule
+\multirow{5}{*}{Reliability} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{l}{objective}                  \\ \midrule
+                     & \multicolumn{2}{l}{}              &            & deterministic inputs & uncertain inputs    \\
+                     & \multicolumn{2}{l}{Unconstrained} & No problem & Optimal              & Robust              \\
+                             & \multirow{2}{*}{Constrained} & deterministic & admissible                    & Optimal and admissible & Robust and admissible \\
+                     &             & uncertain           & reliable   & Optimal and reliable & Robust and reliable \\ \bottomrule
+\end{tabular}%
+}
+\cite{lelievre_consideration_2016}.
+\end{table}
 \section{Robustness based on the moments of an objective funciton}
 \label{sec:rob_moments}
 
