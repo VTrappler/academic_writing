@@ -511,16 +511,26 @@ and
 \end{equation}
 \subsection{Covariance functions}
 \todo{to write}
+We are first going to focus on $1D$ covariance functions, as 
 \label{sec:cov_fun}
 \begin{itemize}
 \item Desired properties
   \begin{itemize}
-  \item isotropy (?)
   \item stationarity
+    One important property usually assumed is the stationarity of the covariance. This property implies that the covariance function for two points $x$ and $x^{\prime}$ is a function of their difference, that is $C(x,x^{\prime}) = \gamma(x - x^{\prime})$.
+    Moreover,
+    \begin{align}
+      \gamma(0) \geq \gamma(h) \forall h \\
+      \gamma(h) = \gamma(-h)\\
+      \gamma \text{ decreases when } h\geq 0 \text{ increases} 
+    \end{align}
+    This properties encodes the fact that knowledge on a specific point improves the knowledge on its neighbourhood, in either directions.
   \item semi-definite positiveness
   \end{itemize}
 \item parametric models of covariance
 \item examples
+  
+\item In the multidimensional case, the 
 \item usual hyperparameters estimation
 \end{itemize}
 
@@ -807,7 +817,7 @@ Recalling the objective, it gives upper bounds and lower bounds of the confidenc
 \subsubsection{UB-LB for $(p, \alpha_p, \kk_p)$}
 Let us assume that we have set a probability $p\in [0,1]$. Let us recall that the triplet $(p, \alpha_p, \kk_p)$ verifies
 \begin{align}
-  \max_{\kk} \Gamma_{\alpha_p}(\kk) = \Gamma_{\alpha_p}(\kk_p) = \Prob_{\uu}\left[J(\kk_p,\uu) \leq \alpha_p J^*(\uu)\mid \uu = \uu\right] = p
+  \max_{\kk} \Gamma_{\alpha_p}(\kk) = \Gamma_{\alpha_p}(\kk_p) = \Prob_{U}\left[J(\kk_p,\UU) \leq \alpha_p J^*(\UU)\right] = p
 \end{align}
 Let us say that $\bar{\Gamma}$ is the $\eta$-upper-bound, while $\underline{\Gamma}$ is the $\eta$-lower bounds, so
 \begin{equation}

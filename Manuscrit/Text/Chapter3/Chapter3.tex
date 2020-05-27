@@ -18,17 +18,62 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
+\dominitoc
+\faketableofcontents
 % \subfileLocal{\setcounter{chapter}{1}}
-\specialchapter{Robust estimators in the presence of uncertainties} 
+\chapter{Robust estimators in the presence of uncertainties} 
 \label{chap:robust_estimators}
 \minitoc
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Defining Robustness}
-\aciter{\cite{andreassian_all_2012}~\cite{kuczera_there_2010}}
+
+\section{Diverse notions of robustness}
+The notion of \emph{Robustness} is dependent on the field in which it is used. Worse, in the same community, robustness may carry a lot of different meanings. Robust is often used to describe something that behaves still nicely under uncertainties, or to put it in an other way, that is insensitive up to certain extent to some perturbations.
+
+For instance, Bayesian approaches are sometimes criticized for their use of subjective probabilities that represent the state of beliefs, especially on the choice of prior distributions. In that sense, robust Bayesian analysis aims at quantifying the sensitivity of the choice of the prior distribution on the resulting inference and relative Bayesian quantities derived. In the statistical community, robustness is often implied as the non-sensitivity on the outliers in the sample set.
+
+Moreover, robustness is often linked and sometimes confused to the semantically close notion of \emph{reliability}. In~\cite{lelievre_consideration_2016} we can find summarized in~\cref{tab:lelievre} the difference between these notions,  by defining optimality as the deterministic counterpart of robustness, and admissibility as the counterpart of reliability.
+
+\begin{table}[htb]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}clllll@{}}
+\multicolumn{1}{l}{}         & \multicolumn{5}{c}{Robustness}                                                                                                \\ \cmidrule(l){2-6} 
+\multirow{5}{*}{Reliability} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{c}{objective}                  \\ \cmidrule(l){5-6} 
+                             & \multicolumn{2}{l}{}                         &                               & \multicolumn{1}{c}{deterministic inputs}  & uncertain inputs      \\ \cmidrule(l){2-6} 
+                             & \multicolumn{2}{l}{Unconstrained}            & No problem                    & Optimal                & Robust                \\ % \cmidrule(l){2-6} 
+                             & \multirow{2}{*}{Constrained} & \multicolumn{1}{r}{deterministic constraints} & Admissible                    & Optimal and admissible & Robust and admissible \\
+                             &                              & \multicolumn{1}{r}{uncertain constraints}     & Reliable                      & Optimal and reliable   & Robust and reliable   \\ \cmidrule(l){2-6} 
+\end{tabular}%
+}
+\caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Reproduced from~\cite{lelievre_consideration_2016}}
+\label{tab:lelievre}
+\end{table}
+
+\section{Robustness under parameteric misspecification}
+In this thesis we are interested in a slightly different notion of robustness, that can be qualified as a `\emph{robustness under parametric model misspecification}:
+
+
+As established before, we have an objective function that takes two distinct inputs:
+\begin{equation}
+  \label{eq:def_J}
+  \kk, \uu \longmapsto J(\kk,\uu)
+\end{equation}
+where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as being a realisation of a random variable $\UU$.
+
+\subsection{Classifying the uncertainties}
+Both parameters are unkown but each in a different way, and represents two different type of uncertainties, as described in~\cite{walker_defining_2003}:
+\begin{itemize}
+\item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
+\item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
+\end{itemize}
+The epistemic uncertainty can then be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to the objective function defined in~\cref{eq:def_J}.
+The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change.
+
+Choosing a specific $\uu \in \Uspace$ leads to localized optimization,  coined by \aciter{ref}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations.
+In geophysics and especially in hydrological models, not taking account of the uncertainties leads to the appearance of abberations in predictions~\cite{kuczera_there_2010}.
+\aciter{\cite{andreassian_all_2012}}
 \label{sec:def_robustness}
 % \begin{table}[]
 % \centering
@@ -47,21 +92,8 @@
 % Please add the following required packages to your document preamble:
 % \usepackage{multirow}
 % \usepackage{graphicx}
-\begin{table}[]
-\centering
-\resizebox{\textwidth}{!}{%
-  \begin{tabular}{clllll}
-    \toprule
-\multicolumn{1}{l}{} & \multicolumn{5}{c}{Robustness}                                                              \\ \midrule
-\multirow{5}{*}{Reliability} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{l}{objective}                  \\ \midrule
-                     & \multicolumn{2}{l}{}              &            & deterministic inputs & uncertain inputs    \\
-                     & \multicolumn{2}{l}{Unconstrained} & No problem & Optimal              & Robust              \\
-                             & \multirow{2}{*}{Constrained} & deterministic & admissible                    & Optimal and admissible & Robust and admissible \\
-                     &             & uncertain           & reliable   & Optimal and reliable & Robust and reliable \\ \bottomrule
-\end{tabular}%
-}
-\cite{lelievre_consideration_2016}.
-\end{table}
+
+
 \section{Robustness based on the moments of an objective funciton}
 \label{sec:rob_moments}
 
@@ -78,12 +110,12 @@
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}
-	\bibliography{../../bibzotero}
+	\bibliography{/home/victor/acadwriting/bibzotero}
       }
 \end{document}
 
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../../Main_ManuscritThese"
+%%% TeX-master: t %"../../Main_ManuscritThese"
 %%% End:

@@ -29,9 +29,10 @@
 % \renewcommand{\thechapter}{\arabic{chapter}}%
 \chapter{Inverse Problem and calibration}
 \label{chap:inverse_problem}
-\mtcsetdepth{minitoc}{2} 
+\mtcsetdepth{minitoc}{4} 
 
 \minitoc
+\todo{j'ai gardé un sommaire très détaillé temporairement}
 \listoftodos
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
@@ -40,7 +41,7 @@
 
 \section{Introduction}
 \label{sec:intro_chap2}
-In this chapter we will first lay the ground for developing the general ideas behind calibration, by introducing the notions of models and forward and inverse problems in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also a short review of notions of probability theory. Calibration will be defined in \cref{sec:parameter_inference} as the optimization of a certain objective function: Maximum likelihood estimation in a frequentist setting, or posterior maximization using Bayes' theorem. The optimization in practice is performed using adjoint method, as described in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going to discuss two aspects related to calibration, namely model selection in \cref{sec:model_selection} and the influence of nuisance parameters and model misspecification in calibration in \cref{sec:model_misspecification}.
+In this chapter we will first lay the ground for developing the general ideas behind calibration, by introducing the notions of models and forward and inverse problems in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also a short review of notions of probability theory. Calibration will be defined in \cref{sec:parameter_inference} as the optimization of a certain objective function: Maximum likelihood estimation in a frequentist setting, or posterior maximization using Bayes' theorem. In practice, for large-scale applications, the optimization is performed using gradient-descent, and the computational cost of gradient computation can be overcome by adjoint method, as described in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going to discuss two aspects related to calibration, namely model selection in \cref{sec:model_selection} and the influence of nuisance parameters and model misspecification in calibration in \cref{sec:model_misspecification}.
 
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
@@ -349,7 +350,7 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
   \label{fig:example_normal}
 \end{figure}
 
-
+\todo{mieux transition?}
 Comparing two real valued random variables $X$ and $Y$, can be done in a lot of ways, from 
 \begin{definition}[KL--divergence]
   
@@ -420,12 +421,12 @@ As mentioned before, we can model the observations as a random variable, say $Y$
   \label{eq:family_pdf}
   \left\{y\mapsto p_{Y}(y; \theta) ; \theta\in\Theta \right\}
 \end{equation}
-The choice has been made to keep explicit the dependency on $\theta$. For instance, we can use the hypothesis that the residual are normally distributed with a given covariance matrix $\Sigma$. As we assume that $\Yspace \subseteq \mathbb{R}^p$, $Y$ is a random vector such that:
+The choice has been made to keep explicit the dependency on $\theta$. For instance, we can use the hypothesis that the residual are normally distributed with a given covariance matrix $\Sigma$. As we assume that $\Yspace \subseteq \mathbb{R}^p$, $Y$ is a random vector distributed as
 \begin{equation}
   \label{eq:lik_gaussian}
   Y  \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
 \end{equation}
-and the data $y$ is a sample.
+whose one sample is $y=\mathscr{M}(\vartheta)$.
 Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions mapping the sample space $\Yspace$ to $\mathbb{R}$, we may look at it instead as a function of $\theta$, as the observations $y\in\Yspace$ do not vary. We can then define the likelihood function and its associated extremum estimator.
 \begin{definition}[Likelihood function, MLE]
   \label{def:mle}
@@ -435,7 +436,7 @@ Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions ma
     \mathcal{L}(\cdot ;y): \theta \mapsto p_{Y}(y;\theta) &= \mathcal{L}(\theta;y) \\
     &=(2\pi)^{-n/2}\lvert \Sigma \rvert^{-1/2}\exp\left(-\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y)\right)
   \end{align}
-  If $\Sigma = \mathrm{diag}(\sigma^2_1,\dots, \sigma^2_p)$, the likelihood can be written as the product ot 1D Gaussians:
+  If $\Sigma = \mathrm{diag}(\sigma^2_1,\dots, \sigma^2_p)$, the likelihood can be written as the product of 1D Gaussians:
   \begin{align}
     \mathcal{L}(\theta;y) &= \left(\prod_{i=1}^p\frac{1}{\sqrt{2\pi}\sigma_i}\right)\exp\left(\sum_{i=1}^p -\frac{(\mathcal{M}(\theta)_i - y_i)^2}{2\sigma^2_i}\right) \\
                           &= \prod_{i=1}^p\frac{1}{\sqrt{2\pi}\sigma_i}\exp\left(-\frac{(\mathcal{M}(\theta)_i - y_i)^2}{2\sigma^2_i}\right)
@@ -473,8 +474,22 @@ As the optimization is performed on $\theta$, we can remove the constant terms o
 \end{align}
 In this situation, the MLE minimizes the empirical KL-divergence between the true distribution of the observations, and the sampling distribution of the observation (that depends on $\theta$).
 
-\subsubsection{(Asymptotic) Properties of the MLE}
-\todo{à garder ?}
+\subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
+In the following, the log-likelihood will be denoted $\ell(\theta) = \log \mathcal{L}(\theta;y)$, and the derivative of the log-likelihood with respect to $\theta$ is the score vector $s(\theta) = \pfrac{\ell(\theta)}{\theta}$.
+Implicitly, $s$ is a function of the observation $Y$ modelled by a random variable of density $p_Y(y;\vartheta)$, so by taking the expected value of the score wrt to this r.v.\, we can see that the score function at the true value $\vartheta$ has mean $0$.
+\begin{align}
+  \Ex\left[s(\vartheta)\right] &= \int_{\Yspace} p_{Y}(y ; \vartheta) s(\vartheta) \,\mathrm{d}y = \int_{\Yspace} p_{Y}(y ; \vartheta) \pfrac{\log p_Y(y ; \vartheta)}{\vartheta} \,\mathrm{d}y \\
+                            & = \int_{\Yspace} \pfrac{p_Y(y ; \vartheta)}{\vartheta} \,\mathrm{d}y = \frac{\partial}{\partial \vartheta} \int_{\Yspace} p_Y(y ; \vartheta) \,\mathrm{d}y \\
+                            &= 0
+\end{align}
+
+The covariance matrix of the score function is the \emph{Fisher Information Matrix}:
+\begin{equation}
+  \mathcal{I}(\theta) = \Cov\left[s(\theta)\right]=  \Ex\left[s(\theta) s(\theta)^T\right] = \Ex\left[\left(\pfrac{}{\theta}\log \mathcal{L}(\theta;y)\right) \left(\pfrac{}{\theta}\log \mathcal{L}(\theta;y)\right)^T\right]
+\end{equation}
+\begin{equation}
+  \mathcal{J}(\theta) = \Ex\left[-\nabla^2 \ell(\theta)\right]
+\end{equation}
 
   Frequentist approaches do not take into account any information we could have on the possible values taken on $\theta$, except for its parameter space $\Theta$.
 \subsection{Bayesian Inference}
@@ -575,17 +590,17 @@ In this context of calibration, we can then summarize the estimation as a minimi
 
 \section{Calibration using adjoint-based optimization}
 \label{sec:calibration_adjoint_optimization}
-Point estimates in this context take the form of extremum estimators, that is extremum of some given objective function $J$. This function takes the form of the log-likelihood, or the log-posterior for the MLE and MAP, but other misfits can be considered, such as optimal transport based metrics.
-Efficient optimization is wide topic, and a lot of algorithm are available to treat this problem, depending on the underlying assumptions.
-We assume here that $\Theta$ is compact. For differentiable problems, most of minimization instances are solved using gradient based methods, such as quasi-newton methods etc...
-However, this implies to be able to compute efficiently the gradient of the cost function $J$ with respect to the parameter: $\frac{\mathrm{d}J}{\mathrm{d}\theta}$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
+Point estimates in this context take the form of extremum estimators, that is an extremum of some given objective function $J$. This function takes the form of the log-likelihood, or the log-posterior for the MLE and MAP, but other misfits can be considered, such as optimal transport based metrics. The formulation is then quite simple, but the problem of efficient optimization remains. For differentiable problems, most of minimization instances are solved using gradient based methods, such as gradient descent, quasi-newton methods.
+However, this implies to be able to compute efficiently the gradient of the cost function $J$ with respect to the parameter: $\frac{\mathrm{d}J}{\mathrm{d}\theta}$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one which is $1$. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
 \begin{equation}
   \label{eq:finite_diff}
   \frac{\mathrm{d}J}{\mathrm{d}\theta} \approx \left[\frac{J(\theta + \epsilon e_1) - J(\theta)}{\epsilon}, \frac{J(\theta + \epsilon e_2) - J(\theta)}{ \epsilon},\dots, \frac{J(\theta + \epsilon e_n)- J(\theta)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
 \end{equation}
-However, in addition to the run of the model at $\theta$, we have to evaluate the model $n$ times, for each one of the coordinate of $\theta$. If this is feasible in practice for low dimensional problems, this is impossible for large problems that cumulate more than hundreds of parameters. Nevertheless, different methods can be used to compute the gradient, atleast approximately for optimization purpose: for instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation Stochastic Approximation to approximate the gradient using only one additional run, indepedently on the number of parameters.
+In addition to the run of the model at $\theta$, we have to evaluate the model $n$ times, for each one of the coordinate of $\theta$. If this is feasible in practice for low dimensional problems, this is impossible for large problems that cumulate more than hundreds of parameters. Nevertheless, different methods can be used to compute the gradient, atleast approximately for optimization purpose: for instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation Stochastic Approximation to approximate the gradient using only one additional run, indepedently on the number of parameters.
 
-In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost, and to apply gradient-based optimization method, as performed in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}.
+In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost. This gradient is used afterward in optimization methods such as conjuguate gradient, or BFGS for instance. This procedure is common in data assimilation, as shown in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}.
+
+\unsure{approche lagrangien ou TLM?}
 To derive the adjoint equations, we will first rewrite the cost function as a function of the forward operator and the parameter: $J(\theta) = J(\mathcal{M}(\theta),\theta)$:
 The estimation of the parameter can be written as the following constrained optimisation problem:
 \begin{equation}
@@ -596,30 +611,30 @@ The estimation of the parameter can be written as the following constrained opti
 \end{equation}
 where the constraint on $\mathcal{F}$ signifies that the model is admissible.
 
-Differentiating the~\cref{eq:def_J_adjoint} with respect to $\theta$ gives
+% Differentiating the~\cref{eq:def_J_adjoint} with respect to $\theta$ gives
+% \begin{equation}
+%   \begin{aligned}
+%   \frac{\mathrm{d}J}{\mathrm{d}\theta} &= \pfrac{J}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{J}{\theta}\\
+%     \frac{\mathrm{d}\mathcal{F}}{\mathrm{d}\theta} &= \pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}
+%   \end{aligned} \label{eq:aze}
+% \end{equation}
+Introducing the Lagrange multiplier  $\lambda \in \Yspace$, we can write the Lagrangian $\mathscr{L}$
 \begin{equation}
-  \begin{aligned}
-  \frac{\mathrm{d}J}{\mathrm{d}\theta} &= \pfrac{J}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{J}{\theta}\\
-    \frac{\mathrm{d}\mathcal{F}}{\mathrm{d}\theta} &= \pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}
-  \end{aligned} \label{eq:aze}
+  \mathscr{L}(\theta, y, \lambda) = J(y,\theta) - \innerprod{\lambda}{\mathcal{F}(y, \theta)}
 \end{equation}
-Introducing the Lagrange multiplier  $\lambda \in \Yspace$, we can write the Lagrangian $\mathcal{L}$
+The equivalent unconstrained minimization problem~\cref{eq:def_J_adjoint} is then
 \begin{equation}
-  \mathcal{L}(\theta, y, \lambda) = J(y,\theta) - \innerprod{\lambda}{\mathcal{F}(y, \theta)}
+  \min_{\theta,y,\lambda} \mathscr{L}(\theta,y,\lambda)
 \end{equation}
-The minimization problem~\cref{eq:def_J_adjoint} is then
+The first-order condition of optimality for the Lagrangian: $\pfrac{\mathscr{L}}{\theta} = \pfrac{\mathscr{L}}{y} = \pfrac{\mathscr{L}}{\lambda} = 0$ translates into the optimality condition, adjoint equation and the state equation:
 \begin{equation}
-  \min_{\theta,y,\lambda} \mathcal{L}(\theta,y,\lambda)
-\end{equation}
-The condition of optimality $\pfrac{\mathcal{L}}{\theta} = \pfrac{\mathcal{L}}{y} = \pfrac{\mathcal{L}}{\lambda} = 0$ translates into the optimality condition, adjoint equation and the state equation:
-\begin{equation}
-  \pfrac{\mathcal{L}}{\lambda} = - \mathcal{F}(y,\theta) = 0 \tag{State equation}
+  \pfrac{\mathscr{L}}{\lambda} = - \mathcal{F}(y,\theta) = 0 \tag{State equation}
 \end{equation}
 \begin{equation}
-  \pfrac{\mathcal{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation} 
+  \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation} 
 \end{equation}
 \begin{align}
-    \pfrac{\mathcal{L}}{\theta}%  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
+    \pfrac{\mathscr{L}}{\theta}%  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
                                % &=\pfrac{J}{\mathcal{M}}\pfrac{\mathcal{M}}{\theta}+ \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}} \\  
                                % &= \left(\pfrac{J}{\mathcal{M}} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}}} \right) \pfrac{\mathcal{M}}{\theta} + \left( \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} \right) \\
                                &= \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
@@ -646,7 +661,7 @@ The likelihood ratio is defined as the ratio of the largest values taken by the 
   \label{eq:def_lik_ratio}
   \Lambda(y) = \frac{\sup_{\theta \in \Theta_2} \mathcal{L}(\theta ; y)}{\sup_{\theta \in \Theta_1} \mathcal{L}(\theta ; y)} = \frac{\mathcal{L}(\hat{\theta}_2 ; y)}{\mathcal{L}(\hat{\theta}_1 ; y)}
 \end{equation}
-Under the null hypothesis (that the models are equivalent), $-2 \log \Lambda$, (sometimes found follows asymptotically (as the number of observations becomes large) a $\chi^2$ distribution, whose degrees of freedom is given by the difference of dimensionality between the two models:
+Under the null hypothesis (that the models are equivalent), $-2 \log \Lambda$, (sometimes called the deviance) follows asymptotically (as the number of observations becomes large) a $\chi^2$ distribution, whose degrees of freedom is given by the difference of dimensionality between the two models:
 \begin{equation}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
 \end{equation}
@@ -683,7 +698,8 @@ The AIC: Akaike's Criterion Information is defined as
 where $\mathcal{L}$ is the likelihood function for the model $\mathfrak{M} = (\mathcal{M},\Theta)$.
  % of the AIC are the deviance of a modely the number of parameters needed to describe this model.
 Small values of the AIC tend towards a better representation of the reality, whilst avoiding overfitting due to the penalization term.
-Contrary to the Likelihood ratio test that compares two nested models, the AIC let us compare non-nested models: the difference between the AIC can be considered as an indication toward one or the other model~\cite{burnham_multimodel_2004}
+Contrary to the Likelihood ratio test that compares two nested models, the AIC let us compare non-nested models: the difference between the AIC can be considered as an indication toward one or the other model~\cite{burnham_multimodel_2004}.
+When both models have the same number of dimension, the difference of AIC is equal to the deviance.
 \subsection{Bayesian model comparison and model averaging}
 For a model $\mathfrak{M}$, the model evidence as introduced in~\cref{def:model_evidence}, is the likelihood marginalized over the parameter space, and will be written $p_{Y\mid \mathfrak{M}}$. This evidence represents how likely have the data $y$ been generated using the statistical model $\mathfrak{M}$.
 
@@ -693,8 +709,9 @@ The Bayes' factor is defined as the ratio of the evidence of the two models.
   \mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)= \frac{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_1) }{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_2)}
 \end{equation}
 % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
-Quite similarly as the AIC, introduced in \cref{sec:AIC_crit}, the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favors $\mathfrak{M}_1$: for~\cite{kass_bayes_1995}, if $\log\mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)>2$, there is ``decisive'' evidence for $\mathfrak{M}_1$ against $\mathfrak{M}_2$, while lower values will indicate ``strong'', ``substantial'' and then ``not worth mentioning'' difference of evidence.
+Quite similarly as the AIC introduced in \cref{sec:AIC_crit}, the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favors $\mathfrak{M}_1$: for~\cite{kass_bayes_1995}, if $\log\mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)>2$, there is ``decisive'' evidence for $\mathfrak{M}_1$ against $\mathfrak{M}_2$, while lower values will indicate ``strong'', ``substantial'' and then ``not worth mentioning'' difference of evidence.
 
+\unsure{parler de model averaging ? AIC weights et Bayesian factor as weights}
 
 
 \section{Parametric model misspecification and nuisance parameters}
@@ -705,16 +722,21 @@ In practice, the parameter space $\Theta$ does not contain all the parameters ne
 The environmental parameters introduced before, are in fact a bit different from the calibration parameters generically introduced as $\theta$. Bayesian framework and more specifically Bayesian update of the prior by the likehihood puts the emphasis on the update of the information on the \emph{parameter of interest}. However the environmental parameters have a inherent variability. In that sense, it may not be worth spending time and resources to infer these parameter values. Moreover, we can only get information on the environmental conditions used to generate the observations.
 We aim at letting this parameter stay free, and at finding a good value of the calibration parameter $\theta$, without doing any inference on $\uu$.
 
+\subsection{Nuisance parameters}
+\label{sec:nuisance_parameters}
+\cite{berger_integrated_1999}
+
 
 \subsection{Model misspecification}
 
 We have then a family of models, indexed by $u$: $\{(\mathcal{M}(\cdot,u) , \Theta);\, \uu \in \Uspace\}$ that have to be compared with the reality: $(\mathscr{M}, \Theta_{\mathrm{real}})$, that has been ``evaluated'' at a value $\vartheta \notin \Theta$, so for each $\uu$, we have an inverse problem.
-The main issue that arises is that every choice of $\uu$ for $\mathcal{M}$ will lead to another inverse problem. When looking at an extremum estimator, $\estimtxt{\theta}{}(\uu) = \argmin_{\theta \in \Theta} J(\theta,\uu)$, it becomes clear that the estimation of the parameter $\theta$ depends on $\uu$.
+The main issue that arises is that every choice of $\uu$ for $\mathcal{M}$ will lead to another inverse problem: When looking at an extremum estimator, $\estimtxt{\theta}{}(\uu) = \argmin_{\theta \in \Theta} J(\theta,\uu)$, it becomes clear that the estimation of the parameter $\theta$ depends on $\uu$.
 
+Similarly to the characterization of the MLE inf~\cref{sec:frequentist_inference_MLE}, for each $u$, $\estimtxt{\theta}{MLE}(u)$ minimizes the empirical KL-divergence between the true distribution of the observations and the misspecified sampling model, and can be seen as the ``best'' value given $u$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
 
 % Robustness under parametric model misspecification
 
-\cite{white_maximum_1982}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
