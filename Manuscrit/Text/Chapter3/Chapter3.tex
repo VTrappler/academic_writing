@@ -40,9 +40,9 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}clllll@{}}
 \multicolumn{1}{l}{}         & \multicolumn{5}{c}{Robustness}                                                                                                \\ \cmidrule(l){2-6} 
-\multirow{5}{*}{Reliability} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{c}{objective}                  \\ \cmidrule(l){5-6} 
+\multirow{5}{*}{\rotatebox{90}{Reliability}} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{c}{objective}                  \\ \cmidrule(l){5-6} 
                              & \multicolumn{2}{l}{}                         &                               & \multicolumn{1}{c}{deterministic inputs}  & uncertain inputs      \\ \cmidrule(l){2-6} 
-                             & \multicolumn{2}{l}{Unconstrained}            & No problem                    & Optimal                & Robust                \\ % \cmidrule(l){2-6} 
+                             & \multicolumn{2}{c}{Unconstrained}            & No problem                    & Optimal                & Robust                \\ % \cmidrule(l){2-6} 
                              & \multirow{2}{*}{Constrained} & \multicolumn{1}{r}{deterministic constraints} & Admissible                    & Optimal and admissible & Robust and admissible \\
                              &                              & \multicolumn{1}{r}{uncertain constraints}     & Reliable                      & Optimal and reliable   & Robust and reliable   \\ \cmidrule(l){2-6} 
 \end{tabular}%
@@ -52,28 +52,30 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \end{table}
 
 \section{Robustness under parameteric misspecification}
-In this thesis we are interested in a slightly different notion of robustness, that can be qualified as a `\emph{robustness under parametric model misspecification}:
-
+In this thesis we are interested in a slightly different notion of robustness, that we can qualify as \emph{robustness under parametric model misspecification}:
 
 As established before, we have an objective function that takes two distinct inputs:
 \begin{equation}
   \label{eq:def_J}
   \kk, \uu \longmapsto J(\kk,\uu)
 \end{equation}
-where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as being a realisation of a random variable $\UU$.
+where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as a realisation of a random variable $\UU$.
+Not taking into account this uncertainty may be an issue in the modelling, especially if the influence of this variable is non-negligible.
+Choosing a specific $\uu \in \Uspace$ leads to localized optimization, coined by \aciter{ref}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations. 
+In geophysics and especially in hydrological models, not taking account of the uncertainties leads to the appearance of abberations in predictions, as those uncertainties are the source of the ``Hydrological monsters'' as~\cite{kuczera_there_2010} puts it. \cite{andreassian_all_2012}
 
 \subsection{Classifying the uncertainties}
-Both parameters are unkown but each in a different way, and represents two different type of uncertainties, as described in~\cite{walker_defining_2003}:
+In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
+
+In that context, the very notion of uncertainty can be roughly split in two, as described in~\cite{walker_defining_2003}:
 \begin{itemize}
 \item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
 \item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
 \end{itemize}
-The epistemic uncertainty can then be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to the objective function defined in~\cref{eq:def_J}.
-The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change.
+According to this division,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to the objective function defined in~\cref{eq:def_J}.
+The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction is not as sharp as it may seem, as~\cite{kiureghian_aleatory_2009} conclude that the choice of the distinction is up to the modeller.
+In this thesis we are interested in a slightly different notion of robustness, that we can qualify as \emph{robustness under parametric model misspecification}:
 
-Choosing a specific $\uu \in \Uspace$ leads to localized optimization,  coined by \aciter{ref}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations.
-In geophysics and especially in hydrological models, not taking account of the uncertainties leads to the appearance of abberations in predictions~\cite{kuczera_there_2010}.
-\aciter{\cite{andreassian_all_2012}}
 \label{sec:def_robustness}
 % \begin{table}[]
 % \centering

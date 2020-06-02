@@ -594,30 +594,31 @@ Point estimates in this context take the form of extremum estimators, that is an
 However, this implies to be able to compute efficiently the gradient of the cost function $J$ with respect to the parameter: $\frac{\mathrm{d}J}{\mathrm{d}\theta}$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one which is $1$. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
 \begin{equation}
   \label{eq:finite_diff}
-  \frac{\mathrm{d}J}{\mathrm{d}\theta} \approx \left[\frac{J(\theta + \epsilon e_1) - J(\theta)}{\epsilon}, \frac{J(\theta + \epsilon e_2) - J(\theta)}{ \epsilon},\dots, \frac{J(\theta + \epsilon e_n)- J(\theta)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
+  \nabla_{\theta} J  \approx \left[\frac{J(\theta + \epsilon e_1) - J(\theta)}{\epsilon}, \frac{J(\theta + \epsilon e_2) - J(\theta)}{ \epsilon},\dots, \frac{J(\theta + \epsilon e_n)- J(\theta)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
 \end{equation}
 In addition to the run of the model at $\theta$, we have to evaluate the model $n$ times, for each one of the coordinate of $\theta$. If this is feasible in practice for low dimensional problems, this is impossible for large problems that cumulate more than hundreds of parameters. Nevertheless, different methods can be used to compute the gradient, atleast approximately for optimization purpose: for instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation Stochastic Approximation to approximate the gradient using only one additional run, indepedently on the number of parameters.
 
-In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost. This gradient is used afterward in optimization methods such as conjuguate gradient, or BFGS for instance. This procedure is common in data assimilation, as shown in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}.
+In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost. This gradient is used afterward in optimization methods such as conjuguate gradient, or BFGS for instance. Adjoint methods are thus very popular in large-scale optimization of Computational Fluid Dynamics codes, as the additional cost of implementation is often worth the gain in the short term. This situation is common in data assimilation, as shown in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}, or in shape optimization of airfoils in~\cite{huyse_free-form_2001}.
 
-\unsure{approche lagrangien ou TLM?}
 To derive the adjoint equations, we will first rewrite the cost function as a function of the forward operator and the parameter: $J(\theta) = J(\mathcal{M}(\theta),\theta)$:
 The estimation of the parameter can be written as the following constrained optimisation problem:
 \begin{equation}
   \begin{aligned}
-  \min_{\theta \in \Theta} J(\theta) &= J(\mathcal{M}(\theta), \theta) \label{eq:def_J_adjoint} \\
-  \text{such that } &\mathcal{F}(\mathcal{M}(\theta), \theta) = 0 % \label{eq:contraint_adjoint}
+  \min_{\theta \in \Theta} J(\theta) &= J(y, \theta) \label{eq:def_J_adjoint} \\
+  \text{such that } &\mathcal{F}(y, \theta) = 0 % \label{eq:contraint_adjoint}
   \end{aligned}
 \end{equation}
-where the constraint on $\mathcal{F}$ signifies that the model is admissible.
+where the constraint on $\mathcal{F}$ signifies that the model is admissible, i.e.\ that $y = \mathcal{M}(\theta)\in \Yspace$.
 
-% Differentiating the~\cref{eq:def_J_adjoint} with respect to $\theta$ gives
-% \begin{equation}
-%   \begin{aligned}
-%   \frac{\mathrm{d}J}{\mathrm{d}\theta} &= \pfrac{J}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{J}{\theta}\\
-%     \frac{\mathrm{d}\mathcal{F}}{\mathrm{d}\theta} &= \pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}
-%   \end{aligned} \label{eq:aze}
-% \end{equation}
+ Differentiating the~\cref{eq:def_J_adjoint} with respect to $\theta$ using the chain rule gives
+\begin{equation}
+  \begin{aligned}
+  \nabla_\theta J &= \pfrac{J}{y} \pfrac{y}{\theta} + \pfrac{J}{\theta}\\
+    \nabla_\theta \mathcal{F} &= \pfrac{\mathcal{F}}{y} \pfrac{y}{\theta} + \pfrac{\mathcal{F}}{\theta}
+  \end{aligned} \label{eq:aze}
+\end{equation}
+In those equations, the partial derivatives with respect to $\theta$ are quite easily attainable, while the real challenge is to obtain the derivative with respect to the state variable.
+
 Introducing the Lagrange multiplier  $\lambda \in \Yspace$, we can write the Lagrangian $\mathscr{L}$
 \begin{equation}
   \mathscr{L}(\theta, y, \lambda) = J(y,\theta) - \innerprod{\lambda}{\mathcal{F}(y, \theta)}
@@ -627,18 +628,23 @@ The equivalent unconstrained minimization problem~\cref{eq:def_J_adjoint} is the
   \min_{\theta,y,\lambda} \mathscr{L}(\theta,y,\lambda)
 \end{equation}
 The first-order condition of optimality for the Lagrangian: $\pfrac{\mathscr{L}}{\theta} = \pfrac{\mathscr{L}}{y} = \pfrac{\mathscr{L}}{\lambda} = 0$ translates into the optimality condition, adjoint equation and the state equation:
+When differentiating with respect to the adjoint variable, we retrieve the state equation:
 \begin{equation}
   \pfrac{\mathscr{L}}{\lambda} = - \mathcal{F}(y,\theta) = 0 \tag{State equation}
 \end{equation}
+When differentiating with respect to the state variable, the equation that verifies the adjoint variable is called the adjoint equation
 \begin{equation}
-  \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation} 
+  \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation}
 \end{equation}
+Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the cost function can be expressed using the partial derivative \emph{with respect to $\theta$} of the cost function and of the forward model, and the adjoint variable.
+
 \begin{align}
-    \pfrac{\mathscr{L}}{\theta}%  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
+    \pfrac{\mathscr{L}}{\theta} = \nabla_\theta J %  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
                                % &=\pfrac{J}{\mathcal{M}}\pfrac{\mathcal{M}}{\theta}+ \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}} \\  
                                % &= \left(\pfrac{J}{\mathcal{M}} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}}} \right) \pfrac{\mathcal{M}}{\theta} + \left( \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} \right) \\
                                &= \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
 \end{align}
+
 
 
 
@@ -722,17 +728,36 @@ In practice, the parameter space $\Theta$ does not contain all the parameters ne
 The environmental parameters introduced before, are in fact a bit different from the calibration parameters generically introduced as $\theta$. Bayesian framework and more specifically Bayesian update of the prior by the likehihood puts the emphasis on the update of the information on the \emph{parameter of interest}. However the environmental parameters have a inherent variability. In that sense, it may not be worth spending time and resources to infer these parameter values. Moreover, we can only get information on the environmental conditions used to generate the observations.
 We aim at letting this parameter stay free, and at finding a good value of the calibration parameter $\theta$, without doing any inference on $\uu$.
 
+We have then a family of models, indexed by $u$: $\{(\mathcal{M}(\cdot,u) , \Theta);\, \uu \in \Uspace\}$ that have to be compared with the reality: $(\mathscr{M}, \Theta_{\mathrm{real}})$, that has been ``evaluated'' at a value $\vartheta \notin \Theta$.
+The main issue that arises is that every choice of $\uu$ for $\mathcal{M}$ will lead to a specific inverse problem, misspecified in the sense that $\vartheta \notin \Theta$.  When looking at an extremum estimator, that is an estimator that minimizes an objective function $J$ $\estimtxt{\theta}{}(\uu) = \argmin_{\theta \in \Theta} J(\theta,\uu)$, it becomes clear that the estimation of the parameter $\theta$ depends on $\uu$.
+
+Similarly to the characterization of the MLE inf~\cref{sec:frequentist_inference_MLE}, for each $u$, $\estimtxt{\theta}{MLE}(u)$ minimizes the empirical KL-divergence between the true distribution of the observations and the misspecified sampling model, and can be seen as the ``best'' value given $u$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
+
+
+In the following, we assume that $\uu$ is sampled from a random variable $\UU$, with density $p_U$, and that $p_{\theta,\UU}(\theta,\uu) = p_{\theta}(\theta) p_{\UU}(\uu)$, that is independence through the prior distributions.
+All the equations written above still hold, and can be derived by doing the substitution $\theta \gets (\theta,u)$
+
 \subsection{Nuisance parameters}
 \label{sec:nuisance_parameters}
 \cite{berger_integrated_1999}
+\subsubsection{Profile and integrated Likelihood}
+
+The likelihood is now $\mathcal{L}(\theta, u ;y)$. One common way to deal with the ``corrupted'' likelihood, in the sense that it depends on the uncertain variable, is to define the \emph{profile} likelihood:
+\begin{equation}
+  \label{eq:eq:def_profile_lik}
+  \mathcal{L}_{\mathrm{profile}}(\theta;y) = \max_{\uu \in \Uspace} \mathcal{L}(\theta,u;y)
+\end{equation}
+Another alternative is to define the \emph{integrated} likelihood as
+\begin{align}
+  \mathcal{L}_{\mathrm{integrated}}(\theta;y) &= \int_{\Uspace} \mathcal{L}(\theta,\uu;y) p_{\UU}(\uu) \,\mathrm{d}\uu \\
+                                              &=\int_{\Uspace} p_{Y|\theta,\UU}(y \mid \theta,u) p_{\UU}(\uu) \,\mathrm{d}\uu \\
+                                              &=\int_{\Uspace} p_{Y,\UU|\theta}(y,u \mid \theta)\,\mathrm{d}\uu \\
+\end{align}
+
 
 
 \subsection{Model misspecification}
 
-We have then a family of models, indexed by $u$: $\{(\mathcal{M}(\cdot,u) , \Theta);\, \uu \in \Uspace\}$ that have to be compared with the reality: $(\mathscr{M}, \Theta_{\mathrm{real}})$, that has been ``evaluated'' at a value $\vartheta \notin \Theta$, so for each $\uu$, we have an inverse problem.
-The main issue that arises is that every choice of $\uu$ for $\mathcal{M}$ will lead to another inverse problem: When looking at an extremum estimator, $\estimtxt{\theta}{}(\uu) = \argmin_{\theta \in \Theta} J(\theta,\uu)$, it becomes clear that the estimation of the parameter $\theta$ depends on $\uu$.
-
-Similarly to the characterization of the MLE inf~\cref{sec:frequentist_inference_MLE}, for each $u$, $\estimtxt{\theta}{MLE}(u)$ minimizes the empirical KL-divergence between the true distribution of the observations and the misspecified sampling model, and can be seen as the ``best'' value given $u$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
 
 % Robustness under parametric model misspecification
 
