@@ -18,8 +18,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\dominitoc
-\faketableofcontents
+% \dominitoc
+% \faketableofcontents
 % \subfileLocal{\setcounter{chapter}{1}}
 \chapter{Robust estimators in the presence of uncertainties} 
 \label{chap:robust_estimators}
@@ -28,7 +28,8 @@
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Diverse notions of robustness}
+\section{Defining robustness}
+\subsection{Robustness or reliability ?}
 The notion of \emph{Robustness} is dependent on the field in which it is used. Worse, in the same community, robustness may carry a lot of different meanings. Robust is often used to describe something that behaves still nicely under uncertainties, or to put it in an other way, that is insensitive up to certain extent to some perturbations.
 
 For instance, Bayesian approaches are sometimes criticized for their use of subjective probabilities that represent the state of beliefs, especially on the choice of prior distributions. In that sense, robust Bayesian analysis aims at quantifying the sensitivity of the choice of the prior distribution on the resulting inference and relative Bayesian quantities derived. In the statistical community, robustness is often implied as the non-sensitivity on the outliers in the sample set.
@@ -50,20 +51,6 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Reproduced from~\cite{lelievre_consideration_2016}}
 \label{tab:lelievre}
 \end{table}
-
-\section{Robustness under parameteric misspecification}
-In this thesis we are interested in a slightly different notion of robustness, that we can qualify as \emph{robustness under parametric model misspecification}:
-
-As established before, we have an objective function that takes two distinct inputs:
-\begin{equation}
-  \label{eq:def_J}
-  \kk, \uu \longmapsto J(\kk,\uu)
-\end{equation}
-where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as a realisation of a random variable $\UU$.
-Not taking into account this uncertainty may be an issue in the modelling, especially if the influence of this variable is non-negligible.
-Choosing a specific $\uu \in \Uspace$ leads to localized optimization, coined by \aciter{ref}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations. 
-In geophysics and especially in hydrological models, not taking account of the uncertainties leads to the appearance of abberations in predictions, as those uncertainties are the source of the ``Hydrological monsters'' as~\cite{kuczera_there_2010} puts it. \cite{andreassian_all_2012}
-
 \subsection{Classifying the uncertainties}
 In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
 
@@ -74,30 +61,41 @@ In that context, the very notion of uncertainty can be roughly split in two, as 
 \end{itemize}
 According to this division,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to the objective function defined in~\cref{eq:def_J}.
 The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction is not as sharp as it may seem, as~\cite{kiureghian_aleatory_2009} conclude that the choice of the distinction is up to the modeller.
+
+
+
+\subsection{Robustness under parameteric misspecification}
 In this thesis we are interested in a slightly different notion of robustness, that we can qualify as \emph{robustness under parametric model misspecification}:
 
-\label{sec:def_robustness}
-% \begin{table}[]
-% \centering
-% \resizebox{\textwidth}{!}{%
-% \begin{tabular}{@{}clllll@{}}
-% \multicolumn{1}{l}{}         & \multicolumn{5}{c}{$\underrightarrow{\text{Robustness}}$}                                                                                           \\
-% \multirow{5}{*}{\rotatebox[origin=c]{270}{$\underrightarrow{\text{Reliability}}$}} & \multicolumn{2}{l}{\multirow{2}{*}{}}          & \multirow{2}{*}{no objective} & \multicolumn{2}{l}{objective}           \\
-%                              & \multicolumn{2}{l}{}                           &                               & deterministic inputs & uncertain inputs \\
-%                              & \multicolumn{2}{l}{No constraint}              &                               &                      &                  \\
-%                              & \multirow{2}{*}{Unconstrained} & deterministic &                               &                      &                  \\
-%                              &                                & uncertain     &                               &                      &                 
-% \end{tabular}%
-% }
-% \caption{\cite{lelievre_consideration_2016}}
-% \end{table}
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
-% \usepackage{graphicx}
+As established before, we have an objective function that takes two distinct inputs:
+\begin{equation}
+  \label{eq:def_J}
+  \kk, \uu \longmapsto J(\kk,\uu)
+\end{equation}
+where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as a realisation of a random variable $\UU$.
+Not taking into account this uncertainty may be an issue in the modelling, especially if the influence of this variable is non-negligible.
+Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimization} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations, or in layman's term according to~\cite{andreassian_all_2012}: being lured by fool's gold.
+In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in predictions, as those uncertainties become a prevalent source of errors and feed ``Hydrological monsters'' as~\cite{kuczera_there_2010} puts it.
 
 
+
+\subsection{Joint posterior distribution}
+The likelihood of the data given $\kk$ and $\uu$ is
+\begin{equation}
+  \mathcal{L}(\kk,\uu;y) = p_{Y \mid \KK, \UU}(y\mid \kk,\uu)
+\end{equation}
+The ``full'' posterior distribution can be written as:
+\begin{equation}
+  p_{\KK,\UU \mid Y}(\kk,\uu \mid y) = \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu)
+\end{equation}
+Here, the posterior is ued to do inference on $\kk$ and $\uu$ jointly.
 \section{Robustness based on the moments of an objective funciton}
 \label{sec:rob_moments}
+Let us define $J$ as the negative log-likelihood, or negative log-posterior.
+Because of the random nature of $\UU$, we in fact can define a indexed family of real random variables: $\{J(\kk,\UU) \mid \kk \in \Kspace\}$
+\begin{equation}
+  \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
+\end{equation}
 
 \section{Relative-regret estimators family}
 \label{sec:rr_family}
@@ -119,5 +117,5 @@ In this thesis we are interested in a slightly different notion of robustness, t
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: t %"../../Main_ManuscritThese"
+%%% TeX-master: "../../Main_ManuscritThese"
 %%% End:

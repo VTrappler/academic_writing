@@ -18,8 +18,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\dominitoc
-\faketableofcontents
+% \dominitoc
+% \faketableofcontents
 % Rappel du précédent style, pour qu'il aille jusqu'à la dernière page (?? latex...)
 % \pagestyle{introStyle}
 % \TitleBtwLines
@@ -636,21 +636,21 @@ When differentiating with respect to the state variable, the equation that verif
 \begin{equation}
   \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation}
 \end{equation}
-Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the cost function can be expressed using the partial derivative \emph{with respect to $\theta$} of the cost function and of the forward model, and the adjoint variable.
+Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the cost function can be expressed using the partial derivative \emph{with respect to $\theta$} of the cost function and of the forward model, and the adjoint variable:
 
-\begin{align}
+\begin{equation}
     \pfrac{\mathscr{L}}{\theta} = \nabla_\theta J %  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
                                % &=\pfrac{J}{\mathcal{M}}\pfrac{\mathcal{M}}{\theta}+ \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}} \pfrac{\mathcal{M}}{\theta} + \pfrac{\mathcal{F}}{\theta}} \\  
                                % &= \left(\pfrac{J}{\mathcal{M}} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\mathcal{M}}} \right) \pfrac{\mathcal{M}}{\theta} + \left( \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} \right) \\
-                               &= \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
-\end{align}
+                               = \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
+\end{equation}
 
 
 
 
 \section{Model selection}
 \label{sec:model_selection}
-So far, we have discussed the calibratation of a specific model given some observations, thus solving an inverse problem and finding $\estimtxt{\theta}{}$ as an extremum of a specified objective function.
+So far, we have discussed the calibration of a specific model $(\mathcal{M}, \Theta)$ given some observations, thus solving an inverse problem and finding $\estimtxt{\theta}{}$ as an extremum of a specified objective function. In terms of models, it can be described as reducing the model $(\mathcal{M}, \Theta)$ to $(\mathcal{M}, \{\estimtxt{\theta}{}\})$, thus reducing the dimension of the original model.
 \todol{Occam's razor}
 
 \subsection{Likelihood ratio test}
@@ -778,5 +778,5 @@ Another alternative is to define the \emph{integrated} likelihood as
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: t %"../../Main_ManuscritThese"
+%%% TeX-master: "../../Main_ManuscritThese"
 %%% End:
