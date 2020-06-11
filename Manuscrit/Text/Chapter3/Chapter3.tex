@@ -88,14 +88,37 @@ The ``full'' posterior distribution can be written as:
 \begin{equation}
   p_{\KK,\UU \mid Y}(\kk,\uu \mid y) = \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu)
 \end{equation}
-Here, the posterior is ued to do inference on $\kk$ and $\uu$ jointly.
+Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly, so in order to suppress the dependencèy in $u$, we can marginalize directly, and get the marginalized posterior:
+\begin{align}
+  p_{\KK \mid Y}(\kk \mid y) &= \int_{\Uspace} p_{\KK,\UU\mid Y}(\kk,\uu\mid y)\,\mathrm{d}u\\
+                             &=\int_{\Uspace} \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu)\,\mathrm{d}u \\
+                             &=\int_{\Uspace}p_{\KK\mid Y,\UU}(\kk,\mid y,\uu)p_{\UU}(\uu)\,\mathrm{d}u \\
+                             &= \Ex_{\UU}\left[p_{\KK\mid Y,\UU}(\kk,\mid y,\uu)\right]
+\end{align}
+We can then define the marginalized maximum as posteriori (MMAP)~\cite{doucet_marginal_2002} as the following maximizer:
+\begin{align}
+  \label{eq:def_MMAP}
+  \estimtxt{\kk}{MMAP} &= \argmax_{\kk\in\Kspace} p_{\KK \mid Y}(\kk\mid y) \\
+                        &= \argmin_{\kk\in\Kspace} -\log \left(\int_{\Uspace} p_{\KK\mid Y,\UU}(\kk\mid y, u) p_{\UU}(\uu)\,\mathrm{d}\uu \right)
+\end{align}
+
 \section{Robustness based on the moments of an objective funciton}
 \label{sec:rob_moments}
-Let us define $J$ as the negative log-likelihood, or negative log-posterior.
-Because of the random nature of $\UU$, we in fact can define a indexed family of real random variables: $\{J(\kk,\UU) \mid \kk \in \Kspace\}$
+Let us define $J:\Kspace \times \Uspace\rightarrow \mathbb{R}^+$ as an objective function, and assume that for all $\kk \in \Kspace$, $J(\kk, \cdot)$ is a measurable function. 
+Because of the random nature of $\UU$, we in fact can define a family of real random variables, indexed by $\kk in \Kspace$: $\{J(\kk,\UU) \mid \kk \in \Kspace\}$. Quite intuitively, we want to minimize some kind of central tendency of those random variables.
 \begin{equation}
   \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
 \end{equation}
+
+
+by the assumption that $J(\kk,\uu) \propto -\log p_{Y \mid \KK,\UU}(y \mid \kk,\uu)- \log p_{\KK}(\kk)$,
+
+$\mu$ can be seen as a ``natural'' robust objective for the cost function $J$
+\begin{align}
+  \estimtxt{k}{mean} &= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{Y \mid \KK,\UU}(y \mid \kk,\uu)p_{\KK}(\kk)\right)p_{\UU}(\uu)\,\mathrm{d}\uu \\
+                     &= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{\KK \mid Y,\UU}(\kk \mid y,\uu)\right)p_{\UU}(\uu)\,\mathrm{d}\uu 
+\end{align}
+
 
 \section{Relative-regret estimators family}
 \label{sec:rr_family}
