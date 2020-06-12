@@ -241,7 +241,7 @@ One can verify that if $F_X$ is derivable, then its derivative is the density th
 \end{example}
 \begin{figure}[!h]
   \centering
-  \input{/home/victor/acadwriting/Manuscrit/Text/Chapter2/img/example_cdf_pdf.pgf}
+  \input{/home/victor/acadwriting/Manuscrit/Text/Chapter2/img/cdf_pdf_example.pgf}
   \caption{Cdf and Pdf of $X$ defined in \cref{ex:X_rv}. The arrow indicates Dirac's delta function}
   \label{fig:example_pdf_cdf}
 \end{figure}
@@ -346,20 +346,20 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
 \end{example}
 \begin{figure}[!h]
   \centering
-  \input{/home/victor/acadwriting/Manuscrit/Text/Chapter2/img/example_normal.pgf}
-  \caption{Densities of 1D Gaussian distributed r.v. (left), and density of a 2D Gaussian r.v.}
+  \input{/home/victor/acadwriting/Manuscrit/Text/Chapter2/img/gaussian_distribution_examples.pgf}
+  \caption{Densities of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)}
   \label{fig:example_normal}
 \end{figure}
 
-\todo{meilleure transition?}
-Comparing two real valued random variables $X$ and $Y$, can be done in a lot of ways, from 
+We discussed so far the different quantities associated with random variables. Various ways exist to compare random variable in the same sample space, 
+
 \begin{definition}[KL--divergence]
   
   The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
-  Let $X$, $Y$ be r.v.\ and $p_X$ and $p_Y$ their densities. If the image measure of $Y$ is absolutely continuous with respect to $X$, that is for all $A$, $\Prob_{X}\left[A\right] = 0 \implies \Prob_{Y}\left[A\right] = 0$
+  Let $X$, $X'$ be r.v.\ with the same sample space $\mathbb{X}$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall x$, $p_X(x) = 0 \implies p_{X^{\prime}}(x) =0$. The KL-divergence is defined as
   \begin{equation}
     % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
-    \DKL{p_X}{p_Y} = \int p_X(x) \log \frac{p_X(x)}{p_Y(x)} \,\mathrm{d}x
+    \DKL{p_X}{p_{X^\prime}} = \int_{\mathbb{X}} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x = \Ex_X\left[\log p_X(X)\right] - \Ex_X\left[\log p_{X^\prime}(X)\right]
   \end{equation}
 \end{definition}
 
@@ -461,7 +461,7 @@ Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions ma
   \end{equation}
   % More generally, we can show that the MLE is also the minimizer of the KL-divergence between the sampling distribution:
 
-As the optimization is performed on $\theta$, we can remove the constant terms of the objective, and rewrite the cost function as a $L2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
+As the optimization is performed on $\theta$, we can remove the constant terms of the objective, and rewrite the cost function as a $L^2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
   \begin{align}
     \estimtxt{\theta}{MLE} &= \argmin_{\theta \in \Theta}\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y) \nonumber\\
                            &= \argmin_{\theta \in \Theta}\frac12 \| \mathcal{M}(\theta) - y \|^2_{\Sigma^{-1}} \label{eq:MLE_L2norm}
@@ -471,14 +471,18 @@ As the optimization is performed on $\theta$, we can remove the constant terms o
 
   If the covariance matrix is diagonal, the residual errors are then uncorrelated, thus indepedent due to their Gaussian nature as defined in~\cref{eq:lik_gaussian}. The likelihood can be rewritten as the product of densities evaluated at the different samples $y_i$, obtained from their true distribution $Y$. By rewriting the KL-divergence between the true density $p_Y$ and the parametric sampling distribution $p_Y(\cdot;\theta)$:
   \begin{equation}
-  \DKL{p_Y}{p_Y(\cdot;\theta)} = -\int_{\Yspace} p_Y(y) \log \frac{p_Y(y;\theta)}{p_Y(y)} \,\mathrm{d}y =-\Ex_Y\left[p_Y(Y;\theta)\right]  
-  \end{equation}
+  \DKL{p_Y}{p_Y(\cdot;\theta)} = \Ex_Y\left[\log p_Y(Y)\right]-\Ex_Y\left[\log p_Y(Y;\theta)\right]  
+\end{equation}
+As the first term does not depend on $\theta$, minimizing the KL--divergence is equivalent to minimizing the second part of the equation, so
 \begin{align}
-  \estimtxt{\theta}{MLE} = \argmin_{\theta \in \Theta} -\frac{1}{p} \sum_{i=1}^p\log p_{Y_i}(y_i;\theta) &\approx \argmin_{\theta \in \Theta} -\Ex_{Y}\left[p_{Y}(y ; \theta)\right]  \\
-                                                                                                                         &= \argmin_{\theta \in\Theta} \DKL{p_Y}{p_Y\left(\cdot;\theta \right)}
+ \argmin_{\theta \in\Theta} \DKL{p_Y}{p_Y\left(\cdot;\theta \right)} = \argmin_{\theta \in \Theta} -\Ex_{Y}\left[\log p_{Y}(Y ; \theta)\right]
 \end{align}
-\todo{changer ordre}
-In this situation, the MLE minimizes the empirical KL-divergence between the true distribution of the observations, and the sampling distribution of the observation (that depends on $\theta$).
+The true distribution of the observation is unknown, but samples $y_i$ are available, so by replacing the theoretical expectation with the empirical one, we have
+
+\begin{equation}
+  \argmin_{\theta \in\Theta} D^{\mathrm{empirical}}_{\mathrm{KL}}(p_Y \| p_Y\left(\cdot;\theta \right)) = \argmin_{\theta \in\Theta} \frac{1}{p} \sum_{i=1}^p - \log p_Y(y_i;\theta) = \estimtxt{\theta}{MLE}
+\end{equation}
+The MLE minimizes the empirical KL-divergence between the true distribution of the observations, and the sampling distribution of the observation (that depends on $\theta$).
 
 \subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
 \todo{y faire référence, pas de détails}
@@ -512,13 +516,11 @@ and the likelihood is the pdf $\mathcal{L}(\theta;y) = p_{Y\mid \theta}(y \mid  
 Using Bayes' theorem, the \emph{posterior distribution} of the parameters given the observed data is
 \begin{equation}
   \label{eq:bayes_posterior}
-  p_{\theta \mid Y}(\theta \mid y) = \frac{p_{Y\mid \theta}(y \mid  \theta)p_{\theta}(\theta)}{p_Y(y)} = \frac{\mathcal{L}(\theta;y)p_{\theta}(\theta)}{p_Y(y)} \propto \mathcal{L}(\theta;y)p_{\theta}(\theta)
+  p_{\theta \mid Y}(\theta \mid y) = \frac{p_{Y\mid \theta}(y \mid  \theta)p_{\theta}(\theta)}{p_Y(y)} = \frac{\mathcal{L}(\theta;y)p_{\theta}(\theta)}{p_Y(y)}
 \end{equation}
-As the data is usually fixed, the denominator of~\eqref{eq:bayes_posterior} is constant, and the posterior is usually evaluated up to a multiplicative constant.
-
-\todo{revoir ordre}
+The denominator can be seen as normalizing constant, ensuring that $\int_{\Theta} p_{\theta \mid Y} = 1$. But it can also be seen as a measure of how well does the model explain the data obtained.
 \begin{definition}[Model Evidence]
-  \label{def:model_evidence}
+\label{def:model_evidence}
   The model evidence, (or marginal likelihood, integrated likelihood) is defined as the distribution of the data marginalised over the parameters.
   \begin{equation}
     \label{eq:model_evidence}
@@ -526,7 +528,13 @@ As the data is usually fixed, the denominator of~\eqref{eq:bayes_posterior} is c
   \end{equation}
   This quantity depends implicitly on the underlying mathematical model $\mathfrak{M} = (\mathcal{M},\Theta)$. Comparing evidence of different models allows for the comparison of those different models. However, computing the model evidence requires the expensive evaluation of an integral over the whole parameter space, and no analytical form is available except for trivial cases. Specific techniques for this evaluation are reviewed in~\cite{friel_estimating_2011}.
 \end{definition}
-\todo{soit inference, soit point estimate}
+When the $(\mathcal{M},\Theta)$ and the data $y$ is fixed, the model evidence is constant with respect to the calibration parameter $\theta$. The posterior distribution is thus often written, and evaluated up to a multiplicative constant.
+\begin{equation}
+p_{\theta \mid Y}(\theta \mid y) \propto \mathcal{L}(\theta;y)p_{\theta}(\theta)
+\end{equation}
+
+From the posterior distribution (known up to a multiplicative constant), getting samples from the posterior is the main challenge \todo{finir}
+
 \subsubsection{Posterior inference}
 \label{sec:posterior_inference}
 This posterior distribution is central in Bayesian analysis, as it gathers all the information we have on the parameter, given the observed data. Given~\cref{eq:bayes_posterior}, evaluating the posterior density at a point requires the evaluation of the model evidence, that is an expensive integral. To bypass this evaluation, several techniques have been developed to get samples from a unnormalized arbitrary function. One of the most well-known method is based on the construction of a Markov-chain whose stationary state is the searched posterior. The classical MCMC algorithm is require the use of a proposal density
@@ -537,7 +545,8 @@ A lot of refinement of this methods are available in the literature in order to 
 \subsubsection{Bayesian Point estimates}
 \label{sec:bayes_point_estimates}
 \todo{partir du choix de L}
-Bayesian point estimation refer to point estimation of the parameter $\theta$, using the posterior distribution $p_{\theta \mid Y}$.\cite{lehmann_theory_2006} provides a more complete overview of this subject.
+Instead of tracting the whole posterior distribution, one can choose and find a value of $\theta$ that summarizes this distribution. Let us define a function $L$ that measures the distance between two values: $L:\Theta\times \Theta$.
+Bayesian point estimation refer to point estimation of the parameter $\theta$, using the posterior distribution $p_{\theta \mid Y}$.\cite{lehmann_theory_2006} provides a more complete overview of this subject. Let us
 This can be done by defining the \emph{Bayesian risk}, that is the expectation of a Bayesian loss functions $L: \Theta \times \Theta \rightarrow \mathbb{R}^+$ under the posterior distribution. A Bayesian point estimate is then a minimizer of this Bayesian risk.
 \begin{equation}
   \theta_{L} = \argmin_{\theta^{\prime} \in \Theta} \Ex_{\theta\mid Y}\left[L(\theta^{\prime}, \theta) \mid y\right]
@@ -557,14 +566,14 @@ Simple algebraic manipulations show that the minimizer is in fact the posterior 
 In order to compute $\estimtxt{\theta}{MMSE}$, it is easier to compute directly the mean of the posterior samples obtained via posterior inference, than to solve the minimization problem in~\cref{eq:MMSE_mini}.
 
 \paragraph{Posterior Mode: the MAP}
-Taking $L(\theta^{\prime},\theta) = \delta_{\theta}(\theta^{\prime})$, the dirac delta function defined in~\cref{eq:def_dirac_delta}, one can show that the minimizer of $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):\todo{corriger!}
+Taking $L(\theta^{\prime},\theta) = -\delta_{\theta}(\theta^{\prime})$, the dirac delta function defined in~\cref{eq:def_dirac_delta}, one can show that the minimizer of $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):\todo{corriger!}
 \begin{align}
   \label{eq:def_MAP}
   \estimtxt{\theta}{MAP} &= \argmin_{\theta^{\prime} \in \Theta}\Ex_{\theta\mid Y}\left[\delta_{\theta}(\theta^{\prime})\mid y\right] = \argmin_{\theta^{\prime} \in \Theta} -p_{\theta\mid Y}(\theta^{\prime}\mid y) \\
                          &= \argmax_{\theta^{\prime} \in \Theta} p_{\theta\mid Y}(\theta^{\prime} \mid y) = \argmax_{\theta^{\prime} \in \Theta} \mathcal{L}(\theta^{\prime} ;y)p_{\theta}(\theta^{\prime})
                            \nonumber
 \end{align}
-We chose to use a generalized function as a tool to link the MAP to Bayesian point estimate, but it is sometimes introduced as the limit of $0-1$ loss functions. In~\cite{bassett_maximum_2019}, the authors shows that this claim does not always hold, unless some conditions are met. \todo{à enlever}
+% We chose to use a generalized function as a tool to link the MAP to Bayesian point estimate, but it is sometimes introduced as the limit of $0-1$ loss functions. In~\cite{bassett_maximum_2019}, the authors shows that this claim does not always hold, unless some conditions are met. \todo{à enlever}
 One interesting fact about the MAP, is that its evaluation does not require the full knowledge of the posterior distribution, nor samples to evaluate the integral of~\cref{eq:def_MMSE}. We can resort to classical optimization techniques for this evaluation. Similarly to the likelihood, taking the negative logarithm leads to the following minimization problem.
 \begin{equation}
   \label{eq:minimisation_MAP_log}
@@ -575,7 +584,7 @@ One interesting fact about the MAP, is that its evaluation does not require the 
 \label{sec:choice_prior}
 As seen in the application of Bayes' theorem in~\cref{eq:bayes_posterior}, the prior has a preponderant role in the formulation of the posterior distribution. Indeed, this prior distribution represents the current state of knowledge on the value of the parameter, before any experiment. This comes usually from an expert opinion, or some reasonable assumptions about the nature of $\theta$.
 
-Let us assume for instance that we have a Gaussian prior for $p_\theta$, such that $\theta \sim \mathcal{N}(\theta_{b},B)$ \todo{thetab ?} where $B$ is called the background covariance error matrix, and a Gaussian model for the errors as well, the MAP can be written as
+Let us assume for instance that we have a Gaussian prior for $\theta$: $\theta \sim \mathcal{N}(\theta_{b},B)$ where $B$ is called the background covariance error matrix and $\theta_b$ is called the \emph{background value} that act as a plausible reference value. Assuming a Gaussian form for the errors as well with covariance matrix $\Sigma$, the MAP can be written as
 \begin{equation}
   \estimtxt{\theta}{MAP} = \argmin_{\theta \in \Theta} \frac{1}{2}\| \mathcal{M}(\theta) - y\|^2_{\Sigma^{-1}} + \frac{1}{2}\|\theta - \theta_b\|^2_{B^{-1}}
 \end{equation}

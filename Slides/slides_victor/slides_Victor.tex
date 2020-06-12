@@ -1,0 +1,285 @@
+\documentclass[11pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\mathbb{K}}
+\usepackage[duration=25, lastminutes=5]{pdfpcnotes}
+\usetikzlibrary{positioning}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+% \definecolor{BlueTOL}{HTML}{222255}
+% \definecolor{BrownTOL}{HTML}{666633}
+% \definecolor{GreenTOL}{HTML}{225522}
+% \setbeamercolor{normal text}{fg=BlueTOL,bg=white}
+% \setbeamercolor{alerted text}{fg=BrownTOL}
+% \setbeamercolor{example text}{fg=GreenTOL}
+
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+\setbeamerfont{author}{size=\footnotesize}
+
+\title{Parameter control in the presence of uncertainties}
+\subtitle{Robust Estimation of Bottom friction}
+\author{{\large \bf Victor Trappler} \hfill \texttt{victor.trappler@univ-grenoble-alpes.fr} \\
+  É. Arnaud, L. Debreu, A. Vidard \\
+  AIRSEA Research team (Inria)\hfill \texttt{team.inria.fr/airsea/en/}\\
+  Laboratoire Jean Kuntzmann}
+
+
+\institute{\begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}}
+
+\date{%\textbf{AIP2019, Grenoble, 2019}}
+  {\bf } \today}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+\frame[t]{
+  \frametitle{Parameter control in the presence of uncertainties}
+  \begin{itemize}
+  \item $\bm{k}$: calibration parameter $\rightarrow$ epistemic uncertainty
+  \item $\bm{U}$: environmental/uncertain parameter $ \rightarrow$ aleatoric uncertainty
+  \end{itemize}
+  \vfill
+  \begin{center}
+  \resizebox{0.8\textwidth}{!}{
+    \input{comp_code_unc_inv_noalert.pgf}
+  }
+\end{center}
+The misfit between some observations and the output of the model is
+$J(\bm{k},\bm{U})$, that needs to be minimized with respect to $\bm{k}$.
+\begin{block}{Robustness under parametric model misspecification}
+How to be get an estimate $\hat{\bm{k}}$ that is robust with respect to the inherent variability of $\bm{U}$ ?
+\end{block}
+}
+
+
+
+
+% \frame{
+%   \frametitle{Toy Problem: Minimization of mean value}
+%   \vspace{-5ex}
+%    \begin{center}
+%     {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
+%   \end{center}
+%   \vspace{-3ex}
+%    $\longrightarrow$ Quite different from the value $\bm{k} \approx 0.1$ obtained by optimization knowing the true value of $\bm{u}_{\mathrm{ref}}$ 
+% }
+
+\frame{
+  \frametitle{Relative regret}%
+
+  Main idea: For each $\bm{u} \sim \bm{U}$, \emph{compare} the value of the cost function to its optimal value $J^*(\bm{u})$ and define
+  $\bm{k}^*(\bm{u}) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u})$:
+  \begin{itemize}
+  \item Either set $\alpha \geq 1$, and define the probability of being $\alpha$-optimal
+    \begin{equation}
+  \Gamma_{\alpha}(\bm{k}) = \Prob_U\left[J(\bm{k},\bm{U}) \leq \alpha J^*(\bm{U}) \right]
+\end{equation}
+and maximize it
+\item or for a given $0<p \leq 1$, find the quantile of order $p$ of the r.v.\ $J(\bm{k},\bm{U}) / J^*(\bm{U})$ and minimize it
+  \end{itemize}
+Puts more importance in the estimation in the region where good performances are possible (small $J^*(\bm{u})$)
+
+}
+\begin{frame}
+  \frametitle{Numerical methods}
+  
+
+  \begin{itemize}
+  \item Computer code is expensive to run
+  \item Even for for a given $\bm{u}$, getting $J^*(\bm{u})$ can be tricky
+    
+  \item[$\rightarrow$] Need for specific methods to
+    \begin{itemize}
+    \item gather information on $J(\bm{k},\bm{u})$ prior to the evaluation
+    \item gather information on $J^*(\bm{u})$ prior to the optimization
+    \item improve precision on the estimation of the probability of coverage $\Gamma_{\alpha}$
+    \item improve precision on the estimation of the quantiles of $J/J^*$
+    \end{itemize}
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[scale=.3]{marg_prob_14}
+  \end{figure}
+\end{frame}
+
+\frame{
+  \frametitle{Application: estimation of the bottom friction in the Atlantic Ocean}
+  \begin{center}
+    \begin{figure}
+    \includegraphics[width=.8\textwidth]{map4_199}
+    \end{figure}
+  \end{center}
+
+\begin{itemize}
+\item High-dimensional problem: $\bm{k} \in \mathbb{R}^{\sim 20000}$: need to reduce dimension
+\item Sensitivity to the number of number of tides components added
+\end{itemize}
+}
+% \begin{frame}
+%   \frametitle{Illustration}
+%   \begin{columns}
+%     \begin{column}{0.4\textwidth}
+%   \includegraphics<1>[scale=0.35]{relaxation_tuto_1}
+%   \includegraphics<2>[scale=0.35]{relaxation_tuto_2}
+%   \includegraphics<3>[scale=0.35]{relaxation_tuto_3}
+%   \includegraphics<4->[scale=0.35]{relaxation_tuto_4}
+% \end{column}
+% \begin{column}{.6\textwidth}
+%   \begin{itemize}
+%   \item<1-> Sample $\bm{u}\sim\bm{U}$, and solve
+%    $\bm{k}^*(\bm{u}) = \argmin_{\bm{k}\in\Kspace} J(\bm{k},\bm{u})$
+%  \item<2->Set of conditional minimisers: $\{(\bm{k}^*(\bm{u}), \bm{u}) \mid \bm{u} \in \Uspace\}$
+% \item<3-> Set $\alpha \geq 1$
+%  \item<4-> $R_{\alpha}(\bm{k}) = \{\bm{u} \mid J(\bm{k},\bm{u}) < \alpha J^*(\bm{u}) \}$
+%  \item<4-> $\Gamma_{\alpha}(\bm{k}) = \Prob_{\bm{U}}\left[\bm{U}\in R_{\alpha}(\bm{k}) \right]$
+%    \item<5-> How to choose $\alpha$? When $\max_{\bm{k}} \Gamma_\alpha(\bm{k})$ reaches fixed levels
+%  \end{itemize}
+% \end{column}
+%   \end{columns}
+% \end{frame}
+
+% % \frame{
+% % \frametitle{Illustration of the relaxation}
+% % \begin{center}
+% % \scalebox{0.45}{%
+% % \input{../Figures/regions_relax_alpha2.pgf}}
+% % \end{center}
+% % }
+
+             
+% \begin{frame}
+%   \frametitle{Choosing a $\alpha$}
+%   \pnote{
+%     Here we have our problem, and we are increasing alpha. The black curve in the bottom plot is gamma alpha of k. By increasing alpha, we increase the probability of being acceptable, and stop when this probability is 1. This can be seen on the top plot, there is a k, always in the acceptable region.
+%     What is interesting is that we have two informations. The value k of the estimation, but also the level alpha, that is controlling in a sense the regret we have relative to the best attainable performance.
+%   }
+%   \begin{center}
+%     \includegraphics<1>[height=.9\textheight, width= \textwidth]{branin0}
+%     \includegraphics<2>[height=.9\textheight, width= \textwidth]{branin1}
+%     \includegraphics<3>[height=.9\textheight, width= \textwidth]{branin2}
+%     \includegraphics<4>[height=.9\textheight, width= \textwidth]{branin3}
+%     \end{center}
+%   \end{frame}
+  
+% \begin{frame}
+%   \frametitle{Bottlenecks and problems arising}
+%   \begin{itemize}
+%   \item Computational Bottlenecks
+%     \begin{itemize}
+%      \item Computer model: \alert{expensive to run} $\rightarrow$
+%     exhaustive computations unfeasible
+%   \item $\dim \Kspace$, $\dim \Uspace$?: \alert{curse of dimensionality}
+%   \end{itemize}
+% \item Calibration context
+%   \begin{itemize}
+%   \item How to assess quality of predictions
+%   \end{itemize}
+%   \end{itemize}
+% \end{frame}
+
+% \section{Surrogates}
+% \subsection{\small{How to compute $\hat{\bm{k}}$ in a reasonable time?}}
+% \frame[t]{
+%   \pnote{We now have defined an estimator, but it is really computationally expensive to run}
+% \frametitle{Why surrogates?}
+% \begin{itemize}
+% \item Replace expensive model by a computationally cheap metamodel ($\sim$ plug-in approach)
+% \item Adapted sequential procedures e.g. EGO
+% \item Uncertainties upon $\bm{u}$ may be incorporated directly in the surrogate
+% \end{itemize}
+% \vfill
+% \begin{center}
+% 	\only<1>{\scalebox{0.9}{\input{../Figures/comp_code_surro.pgf}}}	
+% 	\only<2>{\scalebox{0.9}{\input{../Figures/surrogate.pgf}}}
+% \end{center}
+% \vfill
+% Two main forms considered in UQ:\@
+% \begin{itemize}
+% \item Kriging (Gaussian Process Regression)~\cite{matheron_traite_1962}
+% \item Polynomial Chaos Expansion~\cite{xiu_wiener--askey_2002,sudret_polynomial_2015}
+% \end{itemize}
+% }
+
+% \begin{frame}
+%   \frametitle{Estimation of $\bm{K}^*$, $J^*(\bm{U})$}
+
+%   Iterative procedures to estimate set of conditional minimum/minimisers~\cite{ginsbourger_bayesian_2014}
+%   \begin{center}
+%   \includegraphics[scale=0.5]{PEI_branin}
+% \end{center}
+
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Surrogates and dimension reduction}
+%   \begin{itemize}
+%   \item Sensitivity analysis~\cite{sudret_global_2008,le_gratiet_metamodel-based_2016}:
+%     Based on intensive computation of the metamodel, or analytic computation based on coefficients of the expansion computed
+%   \item Isotropic by groups kernels~\cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018-1}:
+%     Group variables to have a few isotropic kernels
+%   \end{itemize}
+
+% \end{frame}
+
+% \metroset{sectionpage=progressbar, subsectionpage=none}
+
+% \section{Conclusion}
+% \frame{
+% \frametitle{Conclusion}
+% \begin{block}{Wrapping up}
+% \begin{itemize}
+% \item Problem of a \emph{good} definition of robustness
+% \item Strategies rely heavily on surrogate models, to embed aleatoric uncertainties directly in the modelling
+% \end{itemize}
+% \end{block}
+
+
+% \begin{block}{Perspective and future work}
+% \begin{itemize}
+% \item Cost of computer evaluations $\rightarrow$ limited number of runs?
+% \item Dimensionality of the input space $\rightarrow$ reduction of the input space?
+% \item How to deal with uncontrollable errors $\rightarrow$ realism of the model?
+% \end{itemize}
+% \end{block}
+% }
+% \begin{frame}[shrink=1
+%   ]
+%   \frametitle{References}
+% \bibliographystyle{alpha}
+% \bibliography{/home/victor/acadwriting/bibzotero.bib}
+% \end{frame}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
