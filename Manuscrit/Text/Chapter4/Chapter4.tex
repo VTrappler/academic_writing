@@ -21,7 +21,7 @@
 \begin{document}
 
 % \subfileLocal{\setcounter{chapter}{2}}
-\specialchapter{Adaptative design enrichment for calibration using Gaussian Processes}
+\chapter{Adaptative design enrichment for calibration using Gaussian Processes}
 \label{chap:adaptative_design_gp}
 \minitoc
 \newpage
@@ -35,8 +35,8 @@
 
 
 
-\section{GP, RR-based family of estimators}
-\subsection{Random processes and Gaussian Process Regression}
+\section{Gaussian process regression}
+\subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
 \begin{align}
   \begin{array}{rrcl}
@@ -75,7 +75,7 @@ Using those kriging weights $\mathbf{W}$, a few additional conditions must be ad
 \end{itemize}
 Translating using~\cref{eq:lin_est}:
 \begin{equation}
-  \Ex[\hat{Z}(x) - Z(x)]=0 \iff m(\sum_{i=1}^n w_i(x)-1) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
+  \Ex[\hat{Z}(x) - Z(x)]=0 \iff m\left(\sum_{i=1}^n w_i(x)-1\right) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
 \end{equation}
 For the minimum of variance, we introduce the augmented random vectors $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$ and $\mathbf{Z}_n = [Z(x_1),\dots Z(x_n)]$, and
 the variance can be expressed as:
@@ -160,7 +160,7 @@ and
 \item usual hyperparameters estimation
 \end{itemize}
 
-\subsection{Enrichment strategies for Gaussian Processes}
+\section{Stepwise Enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
 For a unknown function $f$, a GP is initally constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Y \mid \mathcal{X}$ and:
 \begin{equation}
@@ -172,11 +172,11 @@ The main idea behind Stepwise Uncertainty Reduction is to define a criterion, sa
   x_{n+1} = \argmax_{x\in\Xspace} \kappa_n(x) = \argmax_{x\in\Xspace} \kappa(x; Y \mid \mathcal{X})
 \end{equation}
 This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1})\}$.
-\subsubsection{Exploration based criteria}
+\subsection{Exploration based criteria}
 
 We are going to introduce common criteria of enrichment, that aim at exploring the input space $\Xspace$
 
-\paragraph{Maximum variance}
+\subsubsection{Maximum variance}
 A measure of uncertainty on the GP is $\max_{x\in\Xspace} \sigma_{Y \mid \mathcal{X}}^2(x)$, the maximum value of the prediction variance on the space.
 A simple criterion is to select and evaluate the point corresponding to this maximum of variance:
 \begin{equation}
@@ -184,7 +184,7 @@ A simple criterion is to select and evaluate the point corresponding to this max
 \end{equation}
 This criterion by its simplicity is easy to implement, as the prediction variance is cheap to compute given a GP, and does not depend directly on the evaluations of the function $f(x_i)$, uniquely on the distance between the inputs points and the covariance parameters.
 
-\paragraph{Integrated Mean Square Error}
+\subsubsection{Integrated Mean Square Error}
 \cite{sacks_designs_1989}
 The prediction variance is directly given by $\sigma^2_{Y\mid \mathcal{X}}$ and represents the uncertainty on the Gaussian regression. To summarize this uncertainty on the whole space $\mathcal{X}$, we define the Integrated Mean Square Error (IMSE) as
 \begin{equation}
@@ -215,7 +215,7 @@ To enrich the design with the best point, that reduces the most the prediction e
 
 
 
-\subsubsection{Contour and volume estimation}
+\subsection{Contour and volume estimation}
 Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019},~\cite{heinrich_level_2012}). 
 
 
@@ -238,7 +238,7 @@ Let $\mu$ be a Borel $\sigma$-finite measure on $\Xspace$. We define Vorob'ev ex
 \end{equation}
 that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
 
-\subsubsection{Margin of uncertainty}
+\subsection{Margin of uncertainty}
 \label{sec:margin_of_uncertainty}
 Using the quantiles of this level set, we can construct the $\eta$-margin of uncertainty, as~\cite{dubourg_reliability-based_2011}.
 Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
