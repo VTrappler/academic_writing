@@ -1,0 +1,32 @@
+ \usetikzlibrary{calc, arrows, decorations.markings}
+
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 35ex, text centered
+  ]
+%  \definecolor{brewlight}{rgb}{1,0.2,0.3}
+% \fill[gray!10] (-1.8,-.7) -- (1.8,-.7) -- (1.8,2.5) -- (-1.8,2.5);
+
+ \node  (theta) at (1, 0) [circle, fill=brewdark, label=$\Theta$, minimum size=30] {$\,\,\, \cdot \theta$} ;
+\node (modelcal) at (0,0) {$\mathcal{M}$};
+\node (forwardeval) at (5, 0) [draw]{$\mathcal{M}(\theta)$};
+\node (nummodel) at (0.5, 0) [draw, rectangle, minimum height=70, minimum width=70, label=below:Numerical Model] {};
+\draw[->] (nummodel) to (forwardeval);
+%   \draw node[rectangle, fill=blue!10, right of=x, text width=15ex] (y) {Mathematical model};
+%  \draw  node[rectangle, fill=blue!10, right of = y, text width=15ex] (z) {Computer code};
+\draw[postaction = decorate] (nummodel) to node[midway, above, text width=15ex](forward) {Forward problem} (forwardeval);
+\node  (thetareal) at (11, 0) [circle, fill=brewdark, label=$\Theta_{\mathrm{real}}$, minimum size=30] {$\,\,\, \cdot \vartheta$} ;
+\node (modelscr) at (10,0) {$\mathscr{M}$};
+\node (reality) at (10.5, 0) [draw, rectangle, minimum height=70, minimum width=70, label=below:Physical Model] {};
+\node (observation) at (8, 0) [draw]{$\mathscr{M}(\vartheta)=y$};
+
+\draw[->] (reality) to (observation);
+\draw[-] (forwardeval)-- (observation) node[midway] (mid) {} ;
+\draw[->] (forwardeval) |- (mid.center) |-++(0,-2.5) |- (0.5, -2.5) node[below, near end]{Inverse Problem} |- (0.5,-2) ;
+%   \draw[postaction = decorate, very thick] (y) to node[midway, below, text width=20ex] {Discretization implementation}(z);
+% \draw node[text width = 20ex, text centered](tune) at (20ex,-7ex) {Error on the parameters};
+% \draw node[text width = 20ex] (nature) at (0ex, 10ex) {Natural variability};
+% \draw[->] (nature) to (x);
+% \draw[->] (tune) to  (55ex,-7ex);
+% \draw[->] (tune) to  (25ex,-7ex);
+\end{tikzpicture}

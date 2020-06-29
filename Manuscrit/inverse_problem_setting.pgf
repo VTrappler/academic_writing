@@ -1,0 +1,22 @@
+ \usetikzlibrary{calc, arrows, decorations.markings}
+
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 40ex, text centered
+  ]
+\tikzstyle{rr}=[rectangle, draw=green!30, fill=gray!10, minimum size = 1cm]
+\definecolor{brewlight}{rgb}{1,0.2,0.3}
+% \fill[gray!10] (-1.8,-.7) -- (1.8,-.7) -- (1.8,2.5) -- (-1.8,2.5);
+% 
+ \node  (physical) at (0, 0) [rr] {Physical system} ;
+\node (observations) at (0, -2) [rr] {Observations};
+\node (nummodel) at (0, 0) [draw, rectangle, minimum height=3, minimum width=5
+%   \draw node[rectangle, fill=blue!10, right of=x] (y) {Mathematical model};
+%  \draw  node[rectangle, fill=blue!10, right of = y] (z) {Computer code};
+%   \draw[postaction = decorate, very thick] (x) to node[midway, below, text width=20ex](az) {Simplifications, parametrizations} (y)  ;
+%   \draw[postaction = decorate, very thick] (y) to node[midway, below, text width=20ex] {Discretization implementation}(z);
+% \draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Error on the parameters};
+% \draw[->] (tune) to  (55ex,-7ex);
+% \draw[->] (tune) to  (25ex,-7ex);
+
+\end{tikzpicture}

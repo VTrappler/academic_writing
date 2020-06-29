@@ -53,7 +53,8 @@ Model calibration or parameter estimation has been widely treated in the literat
 In order to describe accurately a physical system, we have to define the notion of models, and will be following~\cite{tarantola_inverse_2005} approach to define inverse problems.
  A model represents the link between some parameters and some observable quantities. A simple example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space
 
-\begin{definition}[Model]
+ \begin{definition}[Model]
+   \label{def:model}
   A model $\mathfrak{M}$ is defined as a pair composed of a \emph{forward operator} $\mathcal{M}$, and a \emph{parameter space} $\Theta$
   \begin{equation}
     \mathfrak{M} = (\mathcal{M}, \Theta)
@@ -86,10 +87,19 @@ As said earlier, the forward operator can be a set of ODEs or PDEs, discretized 
 \subsection{Inverse Problem}
 The inverse problem is the natural counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on the one hand on the result of the experiment or the observation of the physical process and on the other hand the knowledge of the forward operator.
 
-This is done by directly comparing the output of the forward operator, and trying to reduce the mismatch between the observed data.
+This is done by directly comparing the output of the forward operator, and trying to reduce the mismatch between the observed data, as illustrated~\cref{fig:inv_problem}.
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath inv_problem.pgf}
+  \caption{Forward and inverse problem illustration}
+  \label{fig:inv_problem}
+\end{figure}
+
+
 However, a purely deterministic approach for the inverse problem is doomed to underperform: as most physical processes are not perfectly known, some uncertainties remain in the whole modelling process. Those uncertainties are ubiquitous: the observations available may be corrupted by a random noise coming from the measurement devices and the model may not represent perfectly the reality, thus introducing a systematic bias for instance. Taking into account those uncertainties is crucial to solve the inverse problem.
 
-\todol{ajouter schema}
+
 
 In that perspective we are going to introduce briefly the usual probabilistic framework, along with common notations that we will use throughout this manuscript. Those notions are well established in the scientific literature, and one can read~\cite{billingsley_probability_2008} for a more thorough description.
 
@@ -185,29 +195,11 @@ of the cdf:
 \end{equation}
 then $f$ is called the \emph{probability density function} (abbreviated pdf), or \emph{density} of $X$ and is denoted $p_X$.
 As $\Prob[X \in S] = 1$, it follows trivially that $\int_{S}f(x)\,\mathrm{d}x=1$.
-One can verify that if $F_X$ is derivable, then its derivative is the density the r.v.\ :
+One can verify that if $F_X$ is derivable, then its derivative is the density of the r.v.\ :
 \begin{equation}
   \frac{\mathrm{d}F_X}{\mathrm{d}x}(x) = p_X(x)
 \end{equation}
 
-
-  % If the pushforward measure $\Prob_X$ is absolutely continuous
-% with respect to the Lebesgue measure $\lambda$ defined as
-% $\lambda\left(]a, b]\right) = b-a$, then according to Radon-Nikodym
-% theorem, there exists a function $p_X$, such that for all measurable
-% set $A$,
-%   \begin{equation} \Prob_X[A] = \Prob[X \in A] = \int_A
-% \,\mathrm{d}\Prob_X(\omega) = \int_A p_X(y)\,\mathrm{d}y
-%   \end{equation} This function $p_X: S\subseteq\mathbb{R} \rightarrow
-%   \mathbb{R}$, is called the \emph{probability density function}
-% (abbreviated pdf) of $X$, called the Radon-Nikodym derivative of
-% $\Prob_X$ wrt $\lambda$: $p_X=\frac{\mathrm{d}\Prob_X}{\mathrm{d}
-% \lambda} = \frac{\mathrm{d} F_X}{\mathrm{d} y}$.  As $X$ is
-% real-valued, the probability for $X$ to be in an interval is
-%   \begin{equation} \Prob_X\big[]a;\,b]\big]=\Prob[a \leq X < b] =
-% \int_{a}^b p_X(y)\,\mathrm{d}y = F_X(b) - F_X(a)
-%   \end{equation} and $\Prob_X[\mathbb{R}] =
-% \int_{\mathbb{R}}p_X(y)\,\mathrm{d}y=1$. 
   \end{itemize}
 \end{definition}
 \begin{remark}
@@ -370,24 +362,23 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
   \label{fig:chi2_examples}
 \end{figure}
 
-We discussed so far the different quantities associated that characterize random variables. Let us consider now two random variables which share the same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists various way to compare those two random variables, usually by quantifying some measure of distance between their pdf when they exist. One of the most used comparison tool for continuous random variables is the Kullback-Leibler divergence
+We discussed so far the different quantities associated that characterize random variables. Let us consider now two random variables which share the same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists various way to compare those two random variables, usually by quantifying some measure of distance between their pdf when they exist. One of the most used comparison tool for random variables is the Kullback-Leibler divergence.
 
 \begin{definition}[KL--divergence]
-  
   The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
   Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall x$, $p_X(x) = 0 \implies p_{X^{\prime}}(x) =0$. The KL-divergence is defined as
   \begin{equation}
     % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
     \DKL{p_X}{p_{X^\prime}} = \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x = \Ex_X\left[\log p_X(X)\right] - \Ex_X\left[\log p_{X^\prime}(X)\right]
   \end{equation}
-  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ verifying the property above, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution. The KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
+  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ verifying the property above, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
 \end{definition}
 
 
 \subsubsection{Bayes' Theorem}
 \label{ssec:bayes_theorem}
 
-The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, or by considering the pdf of r.v.\ in~\cref{def:joint_marginal_cond_densities}.
+The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, and for random variables admitting a density in~\cref{def:joint_marginal_cond_densities}.
 
 \begin{theorem}[Bayes' theorem]
   Let $A, B\in\mathcal{F}$. Bayes' theorem states that
@@ -407,17 +398,18 @@ Bayes' theorem is central as it links in a simple way conditional densities. In 
 \label{sec:parameter_inference}
 \subsection{From the physical experiment to the model}
 \label{ssec:inv_problem}
-The physical system (the reality) that is observed can formally be represented by a model $\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by a forward operator $\mathscr{M}$, and a parameter space $\Theta_{\mathrm{real}}$.\todo{mieux détailler ce qu'il se passe}
-Observing the physical system means to get $y\in \Yspace$ that is the image of a \emph{unknown} parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the forward operator, so $y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
+We can represent both the reality and the computer simulation as models, defined in~\cref{def:model}.
+The physical system (the reality) that is observed can be represented by a model $\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by a forward operator $\mathscr{M}$, and a parameter space $\Theta_{\mathrm{real}}$.
+Observing the physical system means to get access to $y\in \Yspace$ that is the image of an \emph{unknown} parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the forward operator, so $y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
 
-Let us assume that a numerical model of the reality is available: $(\mathcal{M},\Theta)$, the main objective of calibration is to find $\hat{\theta}$ such that the numerical model $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)$. \cite{kennedy_bayesian_2001,higdon_combining_2004}
+On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)$. \cite{kennedy_bayesian_2001,higdon_combining_2004}
 % \begin{equation}
 %     \mathscr{M}(x, \vartheta) = \mathcal{M}(x, \theta) + \delta(x,\theta)
 % \end{equation}
 % When evaluated on a fixed vector , we will omit the input, and define
 % 
 
-First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}$, so we can rewrite the link between the reality and the model  at this value as
+First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}$, so we can rewrite the link between the reality and the model at this value as
 \begin{equation}
   \label{eq:vartheta_models}
     % \mathscr{M}(x_{\mathrm{grid}}, \vartheta) = 
@@ -425,8 +417,8 @@ First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}
     \mathcal{M}(\vartheta) + \epsilon(\vartheta) \in \Yspace \subseteq \mathbb{R}^p
   \end{equation}
  
-  The difference $\epsilon(\vartheta) = \mathscr{M}(\vartheta) - \mathcal{M}(\vartheta)$ is the error between the physical model and the model, called sometimes the misfit, or the residual error.\todol{ajouter schéma}
-  This error is unknown and encompasses different sources of uncertainties, such as measurement errors, or model bias (with respect to the reality). To deal with this unknown, we are going to model it as a sample of a random variable, leading us to treat the obtained data as a random sample as well
+  The difference $\epsilon(\vartheta) = \mathscr{M}(\vartheta) - \mathcal{M}(\vartheta)$ is the error between the physical model and the model, called sometimes the misfit, or the residual error.
+  This error is unknown and encompasses different sources of uncertainties, such as measurement errors, or model bias (with respect to the reality). To deal with this unknown, we are going to model it as a sample of a random variable, leading us to treat the obtained data as a random sample as well.
 
   From the diverse assumptions we can make upon this sampled random variable, we can then treat the calibration procedure as a parameter estimation problem of a random variable.
   In this thesis, we are looking for an extremum estimator, estimator defined as the optimizer of a given objective function.
@@ -499,11 +491,10 @@ The true distribution of the observation is unknown, but samples $y_i$ are avail
 \begin{equation}
   \argmin_{\theta \in\Theta} D^{\mathrm{empirical}}_{\mathrm{KL}}(p_Y \| p_Y\left(\cdot;\theta \right)) = \argmin_{\theta \in\Theta} \frac{1}{p} \sum_{i=1}^p - \log p_Y(y_i;\theta) = \estimtxt{\theta}{MLE}
 \end{equation}
-Thus, the MLE minimizes the empirical KL-divergence between the true distribution of the observations, and the sampling distribution of the observation (that depends on $\theta$).
+Thus, the MLE minimizes the empirical KL-divergence between the true distribution of the observations and the sampling distribution of the observation (that depends on $\theta$).
 
-The MLE possesses nice asymptotic properties, such as asymptotic normality when the number of observations grows large.
+The MLE possesses nice asymptotic properties, such as asymptotic normality when the number of observations grows large. Those properties then permit the construction of asymptotic confidence interval, and to perform hypothesis testing, especially for model selection. This aspect will be further developed in \cref{sec:model_selection}.
 
-\aciter{ref asymptotic properties}
 % \subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
 % \todo{y faire référence, pas de détails}
 % In the following, the log-likelihood will be denoted $\ell(\theta) = \log \mathcal{L}(\theta;y)$, and the derivative of the log-likelihood with respect to $\theta$ is the score vector $s(\theta) = \pfrac{\ell(\theta)}{\theta}$.
@@ -521,8 +512,7 @@ The MLE possesses nice asymptotic properties, such as asymptotic normality when 
 % \begin{equation}
 %   \mathcal{J}(\theta) = \Ex\left[-\nabla^2 \ell(\theta)\right]
 % \end{equation}
-
-  Frequentist approaches do not take into account any information we could have on the possible values taken on $\theta$, except for its parameter space $\Theta$. If information is available on $\theta$, introducing require a Bayesian framework.
+ So far, the only information assumed on $\theta$ is its parameter space $\Theta$. In the case where some belief on $\theta$ is present before the calibration, we can incorporate this information through the Bayesian framework.
 \subsection{Bayesian Inference}
 \label{sec:bayesian_inference_MAP}
 In Bayesian inference, the uncertainty present on $\theta$ is modelled by considering it as a random variable. Instead of having a precise value for $\theta$, albeit unknown, we assume that we have a \emph{prior distribution} on $\theta$, denoted $p_{\theta}$, that represents the initial state of belief upon the parameter, prior to any experiment and observations.The choice of this prior distribution will be discussed later.
@@ -557,24 +547,31 @@ p_{\theta \mid Y}(\theta \mid y) \propto \mathcal{L}(\theta;y)p_{\theta}(\theta)
 
 \subsubsection{Posterior inference}
 \label{sec:posterior_inference}
-This posterior distribution is central in Bayesian analysis, as it gathers all the information we have on the parameter, given the observed data. Given~\cref{eq:bayes_posterior}, evaluating the posterior density at a point requires the evaluation of the model evidence, that is an expensive integral. To bypass this evaluation, several techniques have been developed to get samples from a unnormalized arbitrary function. One of the most well-known method is based on the construction of a Markov-chain whose stationary state is the searched posterior. The classical MCMC algorithm is require the use of a proposal density
-A lot of refinement of this methods are available in the literature in order to better tackle the high-dimensionality of the parameter space, or to improve the mixing of the sampled MC chain. One refinement important to mention is Hamiltonian Monte-Carlo~\cite{hanson_markov_2001,betancourt_conceptual_2017}, that improves the performance of the chain by using the value of the gradient of the log-posterior distribution. Obtaining this gradient (although for a different purpose) is discussed in~\cref{sec:calibration_adjoint_optimization}.
+This posterior distribution is central in Bayesian analysis, as it gathers all the information we have on the parameter, given the observed data. Given~\cref{eq:bayes_posterior}, evaluating the posterior density at a point requires the evaluation of the model evidence, that is an expensive integral. To bypass this evaluation, several techniques have been developed to get samples from a unnormalized arbitrary function. One of the most well-known method is based on the construction of a Markov-chain whose stationary state is the searched posterior. Classical MCMC algorithms such as Metropolis-Hastings requires the use of a proposal density, and then to accept or reject the proposal based on the posterior distribution evaluated at the point.
+
+For time-dependent systems, Bayesian framework is particularly well-suited to treat observations sequentially as they come, as Bayesian updating is done via multiplication. Particle filters...
 \todo{évoquer mcmc sequentielle avec filtre à particules}
+
+
+A lot of refinement of these methods are available in the literature in order to better tackle the high-dimensionality of the parameter space, or to improve the mixing of the sampled MC chain. One important adaptation to mention is Hamiltonian Monte-Carlo~\cite{hanson_markov_2001,betancourt_conceptual_2017}, that improves the performance of the chain by using the value of the gradient of the log-posterior distribution. Obtaining this gradient (although for a different purpose) is discussed in~\cref{sec:calibration_adjoint_optimization}.
+
 
 
 \subsubsection{Bayesian Point estimates}
 \label{sec:bayes_point_estimates}
 \todo{smooth phrases}
-Instead of tracting the whole posterior distribution, one can choose and find a point $\theta \in \Theta$ that summarizes this distribution, and thus the chosen estimate is often an indicator of the central tendency of the posterior.
-\cite{lehmann_theory_2006}
+Instead of tracting the whole posterior distribution, one can choose and find a point $\theta \in \Theta$ that summarizes this distribution. Consequently, the chosen estimate is often an indicator of the central tendency of the posterior. In that sense, we wish to get a value that is quite close to all sampled values from the posterior. 
+
+
 Let us define a function $L$ that measures the distance between two parameter values: $L:\Theta\times \Theta$. For a candidate $\theta^{\prime}$, the measured risk with respect to a sample from the posterior $\theta_i \sim \theta \mid Y$ is $L(\theta^{\prime}, \theta_i)$.
 The \emph{Bayesian risk} for $\theta$ is then the expectation of this Bayesian loss functions $L$ under the posterior distribution: $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\mid y\right]$. A Bayesian point estimate is defined as a minimizer of the Bayesian risk:
 \begin{equation}
   \theta_{L} = \argmin_{\theta^{\prime} \in \Theta} \Ex_{\theta\mid Y}\left[L(\theta^{\prime}, \theta) \mid y\right]
 \end{equation}
+In~\cite{lehmann_theory_2006}, the authors detail the theory behind point estimation, and the different properties we can desire.
 Obviously, different loss functions will lead to different Bayesian point estimates, and we are going evoke two of them.
 \paragraph{Posterior mean}
-By defining the $L$ as the squared error $L(\theta^{\prime}, \theta) = (\theta^{\prime} - \theta)^2$, we can define the Mean Squared Error (MSE) as $\mathrm{MSE}: \theta^{\prime}\mapsto\Ex_{\theta\mid Y}\left[(\theta^{\prime} - \theta)^2\right]$. Finally, the value corresponding to the Minimum Mean Squared Error is
+By defining the $L$ as the squared error $L(\theta^{\prime}, \theta) = (\theta^{\prime} - \theta)^2$, we can define the Mean Squared Error (MSE) as $\mathrm{MSE}: \theta^{\prime}\mapsto\Ex_{\theta\mid Y}\left[(\theta^{\prime} - \theta)^2 \mid y\right]$. Finally, the value corresponding to the Minimum Mean Squared Error is
 \begin{equation}
   \label{eq:MMSE_mini}
   \estimtxt{\theta}{MMSE} = \argmin_{\theta^{\prime}\in\Theta}\Ex_{\theta\mid Y}\left[(\theta^{\prime} - \theta)^2 \mid  y\right]
@@ -587,7 +584,7 @@ Simple algebraic manipulations show that the minimizer is in fact the posterior 
 In order to compute $\estimtxt{\theta}{MMSE}$, it is easier to compute directly the mean of the posterior samples obtained via posterior inference, than to solve the minimization problem in~\cref{eq:MMSE_mini}.
 
 \paragraph{Posterior Mode: the MAP}
-Taking $L(\theta^{\prime},\theta) = -\delta_{\theta}(\theta^{\prime})$, the dirac delta function defined in~\cref{eq:def_dirac_delta}, one can show that the minimizer of $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):
+Taking $L(\theta^{\prime},\theta) = -\delta_{\theta}(\theta^{\prime})$, the dirac delta function defined in~\cref{eq:def_dirac_delta}, one can show that the minimizer of $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta) \mid y\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):
 \begin{align}
   \label{eq:def_MAP}
   \estimtxt{\theta}{MAP} &= \argmin_{\theta^{\prime} \in \Theta}\Ex_{\theta\mid Y}\left[\delta_{\theta}(\theta^{\prime})\mid y\right] = \argmin_{\theta^{\prime} \in \Theta} -p_{\theta\mid Y}(\theta^{\prime}\mid y) \\
@@ -610,13 +607,12 @@ Let us assume for instance that we have a Gaussian prior for $\theta$: $\theta \
   \estimtxt{\theta}{MAP} = \argmin_{\theta \in \Theta} \frac{1}{2}\| \mathcal{M}(\theta) - y\|^2_{\Sigma^{-1}} + \frac{1}{2}\|\theta - \theta_b\|^2_{B^{-1}}
 \end{equation}
 Adding a Gaussian prior for the parameter comes down to adding a $L^2$ regularization term to the optimization problem, also called Tikhonov regularization~\cite{tikhonov_solutions_1977}. This expression is very analoguous to the state estimation in the 3D-Var method in Data assimilation 
-Other choices of priors leads to other regularizations, such as the lasso regularization~\cite{tibshirani_regression_2011} that is a consequence for choosing $\theta$ that follows a priori a Laplace distribution of mean $0$.
+Other choices of priors lead to other regularizations, such as the lasso regularization~\cite{tibshirani_regression_2011} that is a consequence for choosing $\theta$ that follows a priori a Laplace distribution of mean $0$.
 
-\todo{reformuler}
-The choice of a prior distribution has an influence on the inference of the parameter and its point estimation. Where there is no knowledge on the parameter beforehand, one can try to choose a non-informative prior in order to try to mitigate its effect. One can for instance choose a ``flat'' prior over the parameter space, but this can lead to \emph{improper prior}, in the sense that they do not integrate to $1$. However, improper priors, though mathematically questionable, do not necessarily lead to improper posterior, allowing for the usual Bayesian analysis of the quantity.
+The choice of a prior distribution has an influence on the inference of the parameter and its point estimation. Where there is no knowledge on the parameter beforehand, one can try to choose a non-informative prior in order to try to mitigate its effect. One can for instance choose a ``flat'' prior over the parameter space, but this can lead to \emph{improper prior}, in the sense that they do not integrate to $1$. However, improper priors do not necessarily lead to improper posterior, allowing for the usual Bayesian analysis of the quantity.
 
-If $\Theta = \mathbb{R}^p$, an improper non-informative prior is $p_{\theta}(\theta) \propto 1$, as it should be invariant by translation. In this case, the MAP estimation is equivalent to the MLE, as the prior in~\cref{eq:minimisation_MAP_log} is constant with respect to $\theta^{\prime}$.
-When $\Theta = \mathbb{R}_+$, the prior distribution should be invariant by multiplication by a positive constant, so $p_{\theta}(\theta) \propto \frac{1}{\theta}\mathbbm{1}_{\theta > 0}$ (i.e.\ flat in the log scale), and that leads to a regularization term of the form $\log(\theta)$.
+If $\Theta = \mathbb{R}^p$, an improper non-informative prior is $p_{\theta}(\theta) \propto 1$. In this case, the MAP estimation is equivalent to the MLE, as the prior in~\cref{eq:minimisation_MAP_log} is constant with respect to $\theta^{\prime}$.
+When $\Theta = \mathbb{R}_+$, the prior distribution should be invariant by multiplication by a positive constant, so $p_{\theta}(\theta) \propto \frac{1}{\theta}\mathbbm{1}_{\theta > 0}$ (i.e.\ flat in the log scale), and that leads to a regularization term of the form $\log(\theta)$.\unsure{garder flat priors?}
 
 
 All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This cost function will be written $J$ in the following, to match the notation of data assimilation. As mentioned before, the MAP does not require the full knowledge of the posterior distribution $p_{\theta \mid Y}$, as ``only'' an optimization is required.
@@ -697,17 +693,16 @@ It is then natural to see if we can reduce the complexity of the model, without 
 We are first going to consider the case of nested models: models that share the same forward models, but whose parameter spaces are nested. Model selection in this case is a way to reduce the dimension of the model, by reducing the parameter space.
 
 Finally, tools introduced in this section bring up model comparison,
-calibrated models are optimal given an objective function, but we can show that values close to the  calibrated value $\hat{\theta}$ may also be in interest, as they may not be ``statistically different enough''.
+calibrated models are optimal given an objective function, but we can show that values close to the  calibrated value $\hat{\theta}$ may also be in interest, as the decrease of performance may not be statistically detectable.
 
 \subsection{Likelihood ratio test and relative likelihood}
 \label{sec:likelihood_ratio_test}
-
-If this specific calibrated model is efficient, it can be also quite complex, and it can be interesting to test if a ``simpler'' model would give similar performances, or at least show a decrease in performances not statistically significant.
-One of the well-known test is the Likelihood-ratio test, that test if two \emph{nested models} are equivalent:
+Generally speaking, more complex models have a better ability to represent the data, but all the parameters included in the model may not be relevant for the modelling. It can be interesting to test if a ``simpler'' model would give similar performances, or at least show a decrease in performances that is not statistically significant.
+One of the most well-known test is the Likelihood-ratio test, that test if two \emph{nested models} are equivalent:
 Let us consider two nested models: $\mathfrak{M}_1 = (\mathcal{M}_1, \Theta_1)$, $\mathfrak{M}_2= (\mathcal{M}_2,\Theta_2)$, such that $\mathcal{M}_1=\mathcal{M}_2=\mathcal{M}$ and $\Theta_2 \subsetneq \Theta_1$. In this case, $\mathfrak{M}_2$ represents the simpler model, with a reduced parameter space, while $\mathfrak{M}_1$ is the more general model. Recalling the notion of model dimension in~\cref{rmk:model_dimension},  $\mathfrak{M}_1$ has dimension $r$, and $\mathfrak{M}_2$ has dimension $d$ with $r>d$.
 As $\mathfrak{M}_1$ is more general, one can expect better performances.
 
-Under the null hypothesis, the two models are equivalent, that is the ``smaller'' parameter space is enough to represent the inverse problem: $\theta \in \Theta_2$. The alternative hypothesis is that $\theta \in \Theta_1$.
+Under the null hypothesis, the two models are equivalent, that is that the ``smaller'' parameter space is enough to represent the inverse problem: $\theta \in \Theta_2$. The alternative hypothesis is that $\theta \in \Theta_1$.
 The likelihood ratio is defined as the ratio of the largest values taken by the likelihood on their respective parameter space, value that is assumed to be attained as $\hat{\theta}_1$ and $\hat{\theta}_2$.
 \begin{equation}
   \label{eq:def_lik_ratio}
@@ -760,6 +755,7 @@ The values in this set generate models that are statistically equivalent to the 
 Due to the likelihood ratio test and the relative likelihood, we can see that even though $\estimtxt{\theta}{MLE}$ is the optimizer of the likelihood function, other values close to it may not be discarded, provided that the log-likelihood does not drop off too much.
 
 \subsection{Criteria for model comparison}
+\label{sec:criteria_AIC}
 The likelihood ratio test presented above is suited for nested models. We can also associate each model with a single numerical value, usually in the form of
 \begin{equation}
   \mathrm{Crit}(\mathfrak{M})=-2 \log \mathcal{L} (\estimtxt{\theta}{MLE}) + \text{Complexity penalization}
@@ -767,9 +763,9 @@ The likelihood ratio test presented above is suited for nested models. We can al
 where $\mathcal{L}$ is the likelihood function for the model $\mathfrak{M} = (\mathcal{M},\Theta)$, and $\mathcal{L}(\estimtxt{\theta}{MLE}) = \max \mathcal{L}$. The role of the complexity penalization is to avoid overfitting, and is often directly linked to the dimension of the parameter space $\Theta$.
 Two quite popular examples of criteria are the AIC (Akaike Information Criterion) and the BIC (Bayesian Information Criterion).
 
-To compare two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$, the magnitude of the difference $\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is compared to some thresholds~\cite{burnham_multimodel_2004}.
+To compare two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$, the magnitude of the difference $\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is compared to some thresholds as shown in~\cite{burnham_multimodel_2004}.
 The difference shows whether a model should be preferred, or if no substantial evidence exists for either model.
-These criteria, as well as the likelihood ratio test, are based on the evaluation of the likelihood at its maximal value. Another approach is to marginalize the likelihood with respect to the prior distribution of the calibration parameter, giving Bayesian model comparison
+These criteria, as well as the likelihood ratio test, are based on the evaluation of the likelihood at its maximal value. Another approach is to marginalize the likelihood with respect to the prior distribution of the calibration parameter, giving Bayesian model comparison.
 
 \subsection{Bayesian model comparison}
 Given a model $\mathfrak{M}$, the model evidence is the likelihood marginalized over the parameter space as introduced in~\cref{def:model_evidence}, and will be written $p_{Y\mid \mathfrak{M}}$. This evidence represents how likely have the data $y$ been generated using the statistical model $\mathfrak{M}$.
@@ -785,8 +781,9 @@ where
 \end{equation}
 
 % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
-Quite similarly as the criteria introduced before, the logarithm if the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favors $\mathfrak{M}_1$: for~\cite{kass_bayes_1995}, % if  $\log\mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)>2$, there is ``decisive'' evidence for $\mathfrak{M}_1$ against $\mathfrak{M}_2$, while lower values will indicate ``strong'', ``substantial'' and then ``not worth mentioning'' difference of evidence.
-
+Quite similarly as the criteria introduced before, the logarithm if the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favors $\mathfrak{M}_1$. Again, the logarithm of Bayes' factor is compared with specified threshold (\cite{kass_bayes_1995,burnham_multimodel_2004}).
+Given a model, a criterion is derived either by maximization (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
+In both cases, the preference toward one or another model boils to the difference on the logarithms of the densities.
 
 \section{Parametric model misspecification and Quasi Likelihood}
 \label{sec:model_misspecification}

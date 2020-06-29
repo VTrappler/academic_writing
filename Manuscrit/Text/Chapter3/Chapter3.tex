@@ -39,7 +39,6 @@ In the previous chapter, we raised the problem of misspecification of the numeri
 \end{figure}
 
 
-
 \section{Defining robustness}
 \subsection{Robustness or reliability ?}
 
@@ -57,12 +56,12 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \multicolumn{1}{l}{}         & \multicolumn{5}{c}{Robustness}                                                                                                \\ \cmidrule(l){2-6} 
 \multirow{5}{*}{\rotatebox{90}{Reliability}} & \multicolumn{2}{l}{\multirow{2}{*}{}}        & \multirow{2}{*}{no objective} & \multicolumn{2}{c}{objective}                  \\ \cmidrule(l){5-6} 
                              & \multicolumn{2}{l}{}                         &                               & \multicolumn{1}{c}{deterministic inputs}  & uncertain inputs      \\ \cmidrule(l){2-6} 
-                             & \multicolumn{2}{c}{Unconstrained}            & No problem                    & Optimal                & Robust                \\ % \cmidrule(l){2-6} 
-                             & \multirow{2}{*}{Constrained} & \multicolumn{1}{r}{deterministic constraints} & Admissible                    & Optimal and admissible & Robust and admissible \\
-                             &                              & \multicolumn{1}{r}{uncertain constraints}     & Reliable                      & Optimal and reliable   & Robust and reliable   \\ \cmidrule(l){2-6} 
+                             & \multicolumn{2}{c}{Unconstrained}            & No problem                    & Optimal                & \cellcolor{brewlight} Robust \\ % \cmidrule(l){2-6} 
+                             & \multirow{2}{*}{Constrained} & \multicolumn{1}{r}{deterministic constraints} & Admissible                    &Optimal and admissible & \cellcolor{brewlight} Robust and admissible \\
+                             &                              & \multicolumn{1}{r}{uncertain constraints}     & \cellcolor{brewlight} Reliable &\cellcolor{brewlight} Optimal and reliable   & \cellcolor{brewlight} Robust and reliable   \\ \cmidrule(l){2-6} 
 \end{tabular}%
 }
-\caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Reproduced from~\cite{lelievre_consideration_2016}}
+\caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Shaded cells correspond to problems comprising an uncertain part. Reproduced from~\cite{lelievre_consideration_2016}}
 \label{tab:lelievre}
 \end{table}
 \subsection{Classifying the uncertainties}
@@ -88,27 +87,29 @@ As established before, we have an objective function that takes two distinct inp
 \end{equation}
 where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as a realisation of a random variable $\UU$.
 Not taking into account this uncertainty may be an issue in the modelling, especially if the influence of this variable is non-negligible.
-Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimization} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is an value that is optimal for a given situation, but usually does not carry the optimality to other situations, or in layman's term according to~\cite{andreassian_all_2012}: being lured by fool's gold.
-In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in predictions, as those uncertainties become a prevalent source of errors and feed ``Hydrological monsters'' as~\cite{kuczera_there_2010} puts it.
+Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimization} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is choosing a value $\hat{\kk}$ that is optimal for the given situation (which is induced by $\uu$). This value does not carry the optimality to other situations, or in layman's term according to~\cite{andreassian_all_2012}: being lured by fool's gold.
+In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in the predictions as those uncertainties become prevalent sources of errors. In hydrology, uncertainties are the principal culprit of the existence of  ``Hydrological monsters''~\citep{kuczera_there_2010}, that are models that perform really badly.
 
 
 
-\subsection{Nuisance parameters}
+\section{Nuisance parameters}
 \label{sec:nuisance_parameters}
 The environmental parameters are sometimes called \emph{nuisance} parameters.
-
-\subsubsection{Profile and integrated Likelihood}
-From a frequentist approach, we define the joint likelihood $\mathcal{L}(\theta, u ;y) = p_{Y\mid \KK,\UU}(y \mid \kk, \uu)$. One common way to deal with the ``corrupted'' likelihood (in the sense that it depends on the uncertain variable) is to define the \emph{profile} likelihood:
+Dealing with nuisance parameters usually means to eliminate them from the estimation. We will first detail likelihood-based methods of eliminating and their extension to Bayesian framework. 
+\subsection{Profile and integrated Likelihood}
+From a frequentist approach, we define the joint likelihood $\mathcal{L}(\theta, u ;y) = p_{Y\mid \KK,\UU}(y \mid \kk, \uu)$. There are two common ways to get rid of the nuisance parameters: one by \emph{profiling}, one by \emph{marginalization}.
+Profiling implies to perform first a maximization of the likelihood with respect to the nuisance parameters:
 \begin{equation}
   \label{eq:eq:def_profile_lik}
   \mathcal{L}_{\mathrm{profile}}(\theta;y) = \max_{\uu \in \Uspace} \mathcal{L}(\theta,u;y)
 \end{equation}
-When doing parameter inference, it is straightforward to verify that
+In other words, considering the most favorable case of the likelihood given the nuisance parameters.
+Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihood and the profile MLE on $\Kspace$ for the profile likelihood, it is straightforward to verify that their component on $\Kspace$ coincide as
 \begin{equation}
   \max_{(\kk ,\uu) \in \Kspace\times \Uspace} \mathcal{L}(\theta,\uu;y) = \max_{\kk\in \Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
 \end{equation},
-
-Another alternative is to define the \emph{integrated} likelihood as
+This estimator is truly optimal in some sense, but does not take into account the prior distribution of $\UU$.
+Another alternative is to define the \emph{integrated} (or marginalized) likelihood as
 \begin{align}
   \mathcal{L}_{\mathrm{integrated}}(\theta;y) &= \int_{\Uspace} \mathcal{L}(\theta,\uu;y) p_{\UU}(\uu) \,\mathrm{d}\uu \\
                                               &=\int_{\Uspace} p_{Y|\theta,\UU}(y \mid \theta,u) p_{\UU}(\uu) \,\mathrm{d}\uu \\
@@ -116,7 +117,7 @@ Another alternative is to define the \emph{integrated} likelihood as
 \end{align}
 
 In~\cite{berger_integrated_1999}, the authors report on the difference between those two approaches.
-
+\cite{cheng_general_2008}
 
 \subsection{Joint posterior distribution}
 The likelihood of the data given $\kk$ and $\uu$ is
@@ -128,7 +129,7 @@ The joint posterior distribution can be written as:
   p_{\KK,\UU \mid Y}(\kk,\uu \mid y) &= \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu) \frac{1}{p_Y(y)} \\
   &\propto \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu)
 \end{align}
-Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly, so in order to suppress the dependencèy in $u$, we can marginalize and get the marginalized posterior $p_{\theta \mid Y}$:
+Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly, so in order to suppress the dependency in $u$, we can marginalize and get the marginalized posterior $p_{\theta \mid Y}$:
 \begin{align}
   p_{\KK \mid Y}(\kk \mid y) &= \int_{\Uspace} p_{\KK,\UU\mid Y}(\kk,\uu\mid y)\,\mathrm{d}u \label{eq:marg_MMAP}\\
                              &= \int_{\Uspace}p_{\KK \mid Y, \UU,}(\kk \mid y, \uu) p_{\UU\mid Y}(\uu \mid y)\,\mathrm{d}u
@@ -147,12 +148,22 @@ Unfortunately, neither the integration with respect to the nuisance parameter in
 
 \section{The cost function as a random variable}
 \label{sec:J_rv}
+We discussed so far the calibration problem with nuisance parameters in the formulation of the likelihood or the posterior distribution. We are now going to focus on a ``variational'' approach, using a predefined cost function
+\begin{equation}
+  J: \Kspace \times \Uspace \rightarrow \mathbb{R}^+
+\end{equation} 
+This function is usually proportional to the negative log-likelihood $p_{\KK \mid Y,\UU}(\kk\mid y,\uu) \propto e^{-J(\kk,\uu)}$,  $J(\kk,\uu) \propto -\log p_{Y \mid \KK,\UU}(y \mid \kk,\uu)- \log p_{\KK}(\kk)$,
 
+This function is measuring the misfit between the data and the numerical model, thus we aim at minimizing this function with respect to $\kk$, with uncertainty on the parameter $\uu \in \Uspace$
 
 \subsection{Saddle-point optimization}
 \label{sec:saddle_point}
+One common approach in optimization is to minimize the worst case the cost function, that is
+\begin{equation}
+  \min_{\kk\in\Kspace} \max_{\uu \in \Uspace} J(\kk,\uu)
+\end{equation}
 
-
+However, this approach possesses some flaws. First, the maximum on $\Uspace$ may not exist, 
 
 \subsection{Robustness based on the moments of an objective funciton}
 
@@ -161,22 +172,63 @@ Unfortunately, neither the integration with respect to the nuisance parameter in
 
 
 In the presence of uncertainties, choosing a parameter value $\theta$ can also be seen as making as making a choice under risk. Let $J:\Kspace \times \Uspace\rightarrow \mathbb{R}^+$ be an objective function, and assume that for all $\kk \in \Kspace$, $J(\kk, \cdot)$ is a measurable function. $J$ can be seen as the opposite of the \emph{utility} function, often encountered in game or econometrics.
-Because of the random nature of $\UU$, we can define a family of real random variables, indexed by $\kk \in \Kspace$: $\{J(\kk,\UU) \mid \kk \in \Kspace\}$. Quite intuitively, we want to minimize some kind of central tendency of those random variables, the most prominent one being the mean:
+Because of the random nature of $\UU$, we can define a family of real random variables $\{J(\kk,\UU) \mid \kk \in \Kspace\}$, indexed by $\kk \in \Kspace$. Quite intuitively, as we want to minimize some kind of typical value of a realization of these random variables, we can look to optimize a central tendency of those random variables, for instance the mean value:
 \begin{equation}
   \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
 \end{equation}
-In other term, $\mu(\theta)$ is the expected loss for the decision $\theta$, that we can seek to minimize, giving:
+In other terms, $\mu(\theta)$ is the expected loss for the decision $\theta$, that we can seek to minimize, giving:
 \begin{align}
   \estimtxt{\kk}{mean} = \argmin_{\kk\in\Kspace} \mu(\theta)&= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{Y \mid \KK,\UU}(y \mid \kk,\uu)p_{\KK}(\kk)\right)p_{\UU}(\uu)\,\mathrm{d}\uu \\
                      &= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{\KK \mid Y,\UU}(\kk \mid y,\uu)\right)p_{\UU}(\uu)\,\mathrm{d}\uu 
 \end{align}
+The expected loss $\mu(\theta)$ is sometimes called the conditional mean given $\theta$.
+Other indicator of central tendency can be considered for optimization, such as the mode or the median of the cost function. 
 
-
-under the assumption that $p_{\KK \mid Y,\UU}(\kk\mid y,\uu) \propto e^{-J(\kk,\uu)}$,  $J(\kk,\uu) \propto -\log p_{Y \mid \KK,\UU}(y \mid \kk,\uu)- \log p_{\KK}(\kk)$,
-
-\subsubsection{Multiobjective optimization}
+\subsubsection{Variance, Multiobjective optimization}
 \label{sec:multiobjective_optimization}
-In \cref{sec:exp_loss_minimization}, we used the mean as a measure of the central tendency that we want to minimize. Jointly with the central tendency,  information about of the dispersion of the random variable may also be relevant, in order to predict how much 
+In \cref{sec:exp_loss_minimization}, we used the mean as a measure of the central tendency that we want to minimize. Jointly with the central tendency,  information about of the dispersion of the random variable may also be relevant, in order to predict how much deviation should be expected around the mean.
+Let us define the variance of the cost function:
+\begin{equation}
+  \sigma^2(\kk) = \Var\left[J(\kk,\UU)\right]
+\end{equation}
+
+
+\Cref{fig:mean_std_wc} shows the conditional mean, conditional standard deviation, and the worst-case scenario ($\kk \mapsto \max_{\uu} J(\kk,\uu)$) for a given cost function $J$ defined as
+\begin{equation}
+  J(\kk,\uu) = \frac{remlpir}{formule}
+\end{equation}
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath mean_std_wc.pgf}
+  \caption{Illustration of conditional mean, conditional standard deviation, and worst-case as function of $\kk$. Those quantities have been rescaled to share the same range on the bottom plot.}
+  \label{fig:mean_std_wc} 
+\end{figure}
+
+
+
+Minimizing the variance alone is often irrelevant, as it could just point toward really high values of the cost function, but steady with respect to  $\kk$. Taking both objectives: low mean value and low variance together to the following multiobjective optimization problem:
+
+\begin{align}
+  \label{eq:multiobj_e_var}
+  \min_{\kk\in\Kspace} \left[\mu(\kk),\sigma^2(\kk)\right]^T
+\end{align}
+
+The multiobjective problem can be tackled in different ways: the literature is rich in methods to approach or even find the Pareto frontier. To compare $\kk_1$ and $\kk_2$, we can compare component wise the objective vectors $[\mu(\kk_i),\sigma^2(\kk_i)]$ for $i=1,2$. If $\mu(\kk_1) \leq \mu(\kk_2)$ and $\sigma^2(\kk_1) \leq \sigma^2(\kk_2)$, $\kk_2$ is said to be \emph{dominated} by $\kk_1$. The Pareto frontier is defined as the set of points in $\Kspace$ that cannot be dominated by any other points.
+On~\cref{fig:pareto} is illustrated the Pareto frontier for a multiobjective problem \cref{eq:multiobj_e_var}. The red point corresponding to $\kk_1$ is dominated by the green point $\kk_0$ on the frontier, but not by the green point of $\kk_2$.
+
+\begin{figure}[ht]
+  \label{fig:pareto} 
+  \centering
+  \input{\imgpath pareto_frontier.pgf}
+  \caption{Illustration of the Pareto frontier for the multiobjective problem of~\cref{eq:multiobj_e_var}. The shaded regions corresponds to the domain dominated by each points}
+\end{figure}
+
+Instead of trying to find the Pareto frontier, the multiobjective problem is often ``scalarized'' by adding the weighted objectives \cite{marler_weighted_2010}, provided that such an operation makes sense in regards to the units of the quantities. By considering the standard deviation instead of the variance, both objectives share the same units, and \cref{eq:multiobj_e_var} becomes
+\begin{equation}
+  \min_{\kk\in\Kspace} w_1\mu(\kk) + w_2\sigma(\kk)
+\end{equation}
+where $w_1$ and $w_2$ are positive and suitably chosen to reflect the preference toward one or another objective.
+
 \subsubsection{Higher moments in optimization}
 
 \paragraph{Skewness}
@@ -194,14 +246,11 @@ Adding the skewness in the optimization translates to a preference toward a risk
   \caption{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
 
-\paragraph{Kurtosis}
-
-
-
 \section{Relative-regret estimators family}
 \label{sec:rr_family}
 All the methods introduced above required first to eliminate in some sense the dependency on the environmental parameter, in order to transform the random variable $J(\kk, \UU)$ into an objective that depends solely on $\kk$, and to optimize this deterministic function.
-We propose now to reverse these steps.
+We propose now to reverse these steps, by first optimizing the cost function for each $\uu$ encountered, and from the set of minimizer obtained, derive an estimator.
+
 \subsection{Most Probable Estimate}
 \label{sec:MPE}
 \begin{definition}[Conditional minimum, minimizer]
@@ -214,10 +263,15 @@ We propose now to reverse these steps.
   \begin{equation}
     \kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk, \uu)
   \end{equation}
-  the \emph{conditional minimizer}
+ is defined as the \emph{conditional minimizer}
 \end{definition}
-\cite{trappler_robust_2020}
+As $\uu$ is thought to be a realization of a random variable $\UU$, we can consider the two random variables $\kk^*(\UU)$ and $J^*(\UU)$~\cite{trappler_robust_2020}.
+The random conditional minimum $J^*(\UU)$ is then a random variable describing the best performances for the calibration, if we could optimize the cost function for each realization of $\UU$. As we look for a single value $\hat{\kk}$, $J^*(\UU)$ can be seen as an unattainable target:
+\begin{equation}
+  \forall (\kk,\uu) \in \Kspace \times \Uspace, \quad J^*(\uu) \leq J(\kk, \uu)
+\end{equation}
 
+Similarly, $\kk^*(\UU)$ carries information on the problem. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
