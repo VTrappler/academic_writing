@@ -24,7 +24,7 @@
 % Rappel du précédent style, pour qu'il aille jusqu'à la dernière page (?? latex...)
 % \pagestyle{introStyle}
 % \TitleBtwLines
-\showthe\columnwidth
+% \showthe\columnwidth
 %% ---- C'est le vrai ch 1 en numérotation arabe
 % \subfileLocal{\setcounter{chapter}{0}}
 % \renewcommand{\thechapter}{\arabic{chapter}}%
@@ -41,17 +41,19 @@
 
 \section{Introduction}
 \label{sec:intro_chap2}
-In this chapter we will first lay the ground for developing the general ideas behind calibration, by introducing the notions of models and forward and inverse problems in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also a short review of notions of probability theory. Calibration will be defined in \cref{sec:parameter_inference} as the optimization of a certain objective function: Maximum likelihood estimation in a frequentist setting, or posterior maximization using Bayes' theorem. In practice, for large-scale applications, the optimization is performed using gradient-descent, and the computational cost of gradient computation can be overcome by adjoint method, as described in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going to discuss two aspects related to calibration, namely model selection in \cref{sec:model_selection} and the influence of nuisance parameters and model misspecification in calibration in \cref{sec:model_misspecification}.
+In this chapter we will first lay the ground for developing the general ideas behind calibration, by introducing the notions of models, and forward and inverse problems in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also a short review of notions of probability theory. Calibration will be defined in \cref{sec:parameter_inference} as the optimization of an objective function: Maximum likelihood estimation in a frequentist setting, or posterior maximization using Bayes' theorem. In practice, for large-scale applications, the optimization is performed using gradient-descent, and the computational cost of gradient computation can be overcome by adjoint method, as described in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going to discuss two aspects related to calibration, namely model selection in \cref{sec:model_selection} and the influence of nuisance parameters and model misspecification in calibration in \cref{sec:model_misspecification}.
 
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
-Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the physical phenomena and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are unresolved at the model's scale ($k-\epsilon$ turbulences model for instance), or additionaly unobserved at a large scale (friction of the ocean bed). A proper estimation of these parameter has to be performed in order to guarantee a meaningful output when evaluating the model.
+Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are unresolved at the model's scale (friction of the ocean bed, or $k-\epsilon$ turbulence models for instance). A proper estimation of these parameter has to be performed in order to guarantee a meaningful output when evaluating the model.
 
-Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. We will first review the problem from a probabilistic point of view, in order \tocheck{to define properly the objective function and use tools from optimal control theory}
+Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, ww will first review the problem from a probabilistic point of view, in order to define properly appropriate objective functions and introduce tools from optimal control theory to optimize them.
+
  \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
 In order to describe accurately a physical system, we have to define the notion of models, and will be following~\cite{tarantola_inverse_2005} approach to define inverse problems.
- A model represents the link between some parameters and some observable quantities. A simple example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space
+ A model represents the link between some parameters and some observable quantities. A simple example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space.
+
 
  \begin{definition}[Model]
    \label{def:model}
@@ -61,7 +63,8 @@ In order to describe accurately a physical system, we have to define the notion 
   \end{equation}
 The forward operator is the mathematical representation of the physical system, while the parameter space is chosen here to be a subset of a finite dimensional space, so usually $\Theta$ will be a subset of $\mathbb{R}^n$.
 \end{definition}
-As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$, we can define a kind of dimensionality of the model, based on the number of \emph{degrees of freedom} available for the parameters to vary freely.
+As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$, we can define a kind of dimensionality of the model, based on the number of \emph{degrees of freedom} available for the parameters.
+
 \begin{remark}
   \label{rmk:model_dimension}
   The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$. The dimension of a model $\mathfrak{M}$ is sometimes called the degrees of freedom of $\mathfrak{M}$.
@@ -85,16 +88,17 @@ Given a model $(\mathcal{M}, \Theta)$, the \emph{forward problem} consists in ap
 As said earlier, the forward operator can be a set of ODEs or PDEs, discretized or not. The forward problem is then the attempt to link the causes, i.e.\ the parameters, to the consequences, i.e.\ the output in the data space.
 
 \subsection{Inverse Problem}
-The inverse problem is the natural counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on the one hand on the result of the experiment or the observation of the physical process and on the other hand the knowledge of the forward operator.
-
-This is done by directly comparing the output of the forward operator, and trying to reduce the mismatch between the observed data, as illustrated~\cref{fig:inv_problem}.
+The inverse problem is the counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on the one hand on the result of the experiment or the observation of the physical process and on the other hand the knowledge of the forward operator, as illustrated \cref{fig:inv_problem_pple}.
 
 \begin{figure}[ht]
   \centering
-  \input{\imgpath inv_problem.pgf}
-  \caption{Forward and inverse problem illustration}
-  \label{fig:inv_problem}
+  \input{\imgpath inv_problem_basic.pgf}
+  \caption{Forward and Inverse problem diagram}
+  \label{fig:inv_problem_pple}
 \end{figure}
+
+This is done by directly comparing the output of the forward operator, and trying to reduce the mismatch between the observed data and the model prediction.
+
 
 
 However, a purely deterministic approach for the inverse problem is doomed to underperform: as most physical processes are not perfectly known, some uncertainties remain in the whole modelling process. Those uncertainties are ubiquitous: the observations available may be corrupted by a random noise coming from the measurement devices and the model may not represent perfectly the reality, thus introducing a systematic bias for instance. Taking into account those uncertainties is crucial to solve the inverse problem.
@@ -102,6 +106,9 @@ However, a purely deterministic approach for the inverse problem is doomed to un
 
 
 In that perspective we are going to introduce briefly the usual probabilistic framework, along with common notations that we will use throughout this manuscript. Those notions are well established in the scientific literature, and one can read~\cite{billingsley_probability_2008} for a more thorough description.
+
+
+
 
 \subsection{Notions of probability theory}
 \subsubsection{Probability measure, and random variables}
@@ -169,7 +176,7 @@ Similarly, for any measurable function $h$, the expectation taken with respect t
 
 
 
-Generally speaking, the sample space will be $S\subseteq \mathbb{R}^p$ for $p\geq 1$, so we are going to introduce useful tools and notations to caracterize these particular r.v.
+In most of this thesis, the sample space will be $S\subseteq \mathbb{R}^p$ for $p\geq 1$, so we are going to introduce useful tools and notations to caracterize these particular real random variables.
 \subsubsection{Real-valued random variables}
 We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to
 the sample space $S = \mathbb{R}$.
@@ -230,6 +237,7 @@ One can verify that if $F_X$ is derivable, then its derivative is the density of
   \begin{equation}
     p_X(x) = \frac{1}{2}\delta_{1}(x) + \frac{1}{4}\mathbbm{1}_{\{2\leq x < 4\}}(x) 
   \end{equation}
+  The pdf and cdf are shown \cref{fig:example_pdf_cdf}.
 \end{example}
 \begin{figure}[!h]
   \centering
@@ -309,6 +317,25 @@ and based on this definition, we can extend the notion of variance to vectors. T
 
 \end{definition}
 
+\subsubsection{Bayes' Theorem}
+\label{ssec:bayes_theorem}
+
+The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, and for random variables admitting a density in~\cref{def:joint_marginal_cond_densities}.
+
+\begin{theorem}[Bayes' theorem]
+  Let $A, B\in\mathcal{F}$. Bayes' theorem states that
+  \begin{align*}
+    \Prob[A\mid B]\cdot \Prob[B] = \Prob[B \mid A]\cdot\Prob[A] \\
+    \Prob[A \mid B] = \frac{\Prob[B \mid A]\cdot\Prob[A]}{\Prob[B]} \text{ if } \Prob[B] \neq 0
+  \end{align*}
+ In terms of densities, the formulation is sensibly the same.
+  Let $Y$ and $Z$ be two random variables. The conditional density of $Y$ given $Z$ can be expressed using the conditional density of $Z$ given $Y$.
+  \begin{equation}
+    p_{Y\mid Z}(y \mid z) = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{p_Z(z)} = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{\int p_{Z,Y}(z,y) \,\mathrm{d}y}  \propto p_{Z\mid Y}(z\mid y) p_Y(y)
+  \end{equation}
+\end{theorem}
+Bayes' theorem is central as it links in a simple way conditional densities. In the inverse problem framework, if $Y$ represents the state of information on the parameter space, while $Z$ represents the information on the data space, $Z\mid Y$ can be seen as the forward problem. Bayes' theorem allow us to ``swap'' the conditioning, and get information on $Y\mid Z$, that can be seen as the inverse problem.
+
 
 The influence of one (or a set of) random variable(s) over another can be measured with the conditional probabilities. Indeed, if the state of information on a random variable does not change when observing another one, the observed one carries no information on the other. This notion of dependence (and independence) is first defined on events and extended to random variables
 \begin{definition}[Independence]
@@ -317,7 +344,23 @@ The influence of one (or a set of) random variable(s) over another can be measur
   Speaking in terms of conditional probabilities, this can be written as $p_{Y|Z}(y,z) = p_{Y}(y)$.
   If $Y$ and $Z$ are independent, $\Cov[Y, Z] = 0$. The converse if false in general.
 \end{definition}
-One of the most well known distribution is the normal distribution (or Gaussian).
+
+We discussed so far the different quantities that characterize random variables. Let us consider now two random variables which share the same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists various way to compare those two random variables, usually by quantifying some measure of distance between their pdf when they exist. One of the most used comparison tool for random variables is the Kullback-Leibler divergence.
+
+\begin{definition}[KL--divergence and entropy]
+  The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
+  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall x$, $p_X(x) = 0 \implies p_{X^{\prime}}(x) =0$. The KL-divergence is defined as
+  \begin{align}
+    % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
+    \DKL{p_X}{p_{X^\prime}} &= \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x \\ &= \Ex_X\left[-\log p_{X^\prime}(X)\right] - \Ex_X\left[-\log p_X(X)\right] \\
+                                                                                                &= H\left[X^{\prime}, X\right] - H\left[X\right]
+  \end{align}
+  $H[X]$ is called the (differential entropy) of the random variable $X$, and $H[X^{\prime}, X]$ the cross-entropy of $X^{\prime}$ and $X$.
+  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ verifying the property above, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
+\end{definition}
+
+\subsubsection{Important examples of real random variables}
+One of the most well known distribution is the normal distribution, also called Gaussian distribution, that appears in various situations, but most notably in the central limit theorem.
 \begin{example}[The Normal Distribution]
   \label{ex:gaussian_distribution}
   One central example is the normal (or Gaussian) distribution. Let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}$.
@@ -342,6 +385,7 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
   \caption{Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)}
   \label{fig:example_normal}
 \end{figure}
+When adding independent squared samples of the normal distribution, the resulting random variable follows a $\chi^2$ distribution.
 \begin{example}[The $\chi^2$ distribution]
   \label{ex:chi2}
   Let $X_1, X_2,\dots,X_n$ be $n$ independent random variables, such that for $1\leq i \leq n$, $X_i \sim \mathcal{N}(0,1)$
@@ -362,54 +406,34 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
   \label{fig:chi2_examples}
 \end{figure}
 
-We discussed so far the different quantities associated that characterize random variables. Let us consider now two random variables which share the same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists various way to compare those two random variables, usually by quantifying some measure of distance between their pdf when they exist. One of the most used comparison tool for random variables is the Kullback-Leibler divergence.
-
-\begin{definition}[KL--divergence]
-  The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
-  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall x$, $p_X(x) = 0 \implies p_{X^{\prime}}(x) =0$. The KL-divergence is defined as
-  \begin{equation}
-    % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
-    \DKL{p_X}{p_{X^\prime}} = \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x = \Ex_X\left[\log p_X(X)\right] - \Ex_X\left[\log p_{X^\prime}(X)\right]
-  \end{equation}
-  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ verifying the property above, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
-\end{definition}
 
 
-\subsubsection{Bayes' Theorem}
-\label{ssec:bayes_theorem}
 
-The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, and for random variables admitting a density in~\cref{def:joint_marginal_cond_densities}.
-
-\begin{theorem}[Bayes' theorem]
-  Let $A, B\in\mathcal{F}$. Bayes' theorem states that
-  \begin{align*}
-    \Prob[A\mid B]\cdot \Prob[B] = \Prob[B \mid A]\cdot\Prob[A] \\
-    \Prob[A \mid B] = \frac{\Prob[B \mid A]\cdot\Prob[A]}{\Prob[B]} \text{ if } \Prob[B] \neq 0
-  \end{align*}
- In terms of densities, the formulation is sensibly the same.
-  Let $Y$ and $Z$ be two random variables. The conditional density of $Y$ given $Z$ can be expressed using the conditional density of $Z$ given $Y$.
-  \begin{equation}
-    p_{Y\mid Z}(y \mid z) = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{p_Z(z)} = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{\int p_{Z,Y}(z,y) \,\mathrm{d}y}  \propto p_{Z\mid Y}(z\mid y) p_Y(y)
-  \end{equation}
-\end{theorem}
-Bayes' theorem is central as it links in a simple way conditional densities. In the inverse problem framework, if $Y$ represents the state of information on the parameter space, while $Z$ represents the information on the data space, $Z\mid Y$ can be seen as the forward problem. Bayes' theorem allow us to ``swap'' the conditioning, and get information on $Y\mid Z$, that can be seen as the inverse problem.
 
 \section{Parameter inference}
 \label{sec:parameter_inference}
 \subsection{From the physical experiment to the model}
 \label{ssec:inv_problem}
-We can represent both the reality and the computer simulation as models, defined in~\cref{def:model}.
+We can represent both the reality and the computer simulation as models.
 The physical system (the reality) that is observed can be represented by a model $\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by a forward operator $\mathscr{M}$, and a parameter space $\Theta_{\mathrm{real}}$.
 Observing the physical system means to get access to $y\in \Yspace$ that is the image of an \emph{unknown} parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the forward operator, so $y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
 
-On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)$. \cite{kennedy_bayesian_2001,higdon_combining_2004}
+On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)$. This is illustrated~\cref{fig:inv_problem}.
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath inv_problem.pgf}
+  \caption{Forward and inverse problem using models as defined \cref{def:model}}
+  \label{fig:inv_problem}
+\end{figure}
+
 % \begin{equation}
 %     \mathscr{M}(x, \vartheta) = \mathcal{M}(x, \theta) + \delta(x,\theta)
 % \end{equation}
 % When evaluated on a fixed vector , we will omit the input, and define
 % 
 
-First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}$, so we can rewrite the link between the reality and the model at this value as
+First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}$, so we can rewrite the link between the reality and the model at this value as (\cite{kennedy_bayesian_2001,higdon_combining_2004})
 \begin{equation}
   \label{eq:vartheta_models}
     % \mathscr{M}(x_{\mathrm{grid}}, \vartheta) = 
@@ -421,7 +445,8 @@ First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}
   This error is unknown and encompasses different sources of uncertainties, such as measurement errors, or model bias (with respect to the reality). To deal with this unknown, we are going to model it as a sample of a random variable, leading us to treat the obtained data as a random sample as well.
 
   From the diverse assumptions we can make upon this sampled random variable, we can then treat the calibration procedure as a parameter estimation problem of a random variable.
-  In this thesis, we are looking for an extremum estimator, estimator defined as the optimizer of a given objective function.
+  The estimated parameter will be written $\hat{\kk}$, and the subscript will denote additional information on the estimator. 
+  In this thesis, we are mostly focused on extremum estimators. Those estimators are defined as the optimizer of a given objective function $J$, $\hat{\kk} = \argmin J$. In the next sections, we will see the probabilistic origins of a few classical objective function.
 \subsection{Frequentist inference, MLE}
 \label{sec:frequentist_inference_MLE}
 \subsubsection{Formulation of the MLE}
@@ -493,7 +518,7 @@ The true distribution of the observation is unknown, but samples $y_i$ are avail
 \end{equation}
 Thus, the MLE minimizes the empirical KL-divergence between the true distribution of the observations and the sampling distribution of the observation (that depends on $\theta$).
 
-The MLE possesses nice asymptotic properties, such as asymptotic normality when the number of observations grows large. Those properties then permit the construction of asymptotic confidence interval, and to perform hypothesis testing, especially for model selection. This aspect will be further developed in \cref{sec:model_selection}.
+The MLE possesses desirable asymptotic properties, such as asymptotic normality when the number of observations grows large. Those properties then permit the construction of asymptotic confidence interval, and to perform hypothesis testing, especially for model selection. This aspect will be further developed in \cref{sec:model_selection}.
 
 % \subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
 % \todo{y faire référence, pas de détails}
@@ -549,26 +574,21 @@ p_{\theta \mid Y}(\theta \mid y) \propto \mathcal{L}(\theta;y)p_{\theta}(\theta)
 \label{sec:posterior_inference}
 This posterior distribution is central in Bayesian analysis, as it gathers all the information we have on the parameter, given the observed data. Given~\cref{eq:bayes_posterior}, evaluating the posterior density at a point requires the evaluation of the model evidence, that is an expensive integral. To bypass this evaluation, several techniques have been developed to get samples from a unnormalized arbitrary function. One of the most well-known method is based on the construction of a Markov-chain whose stationary state is the searched posterior. Classical MCMC algorithms such as Metropolis-Hastings requires the use of a proposal density, and then to accept or reject the proposal based on the posterior distribution evaluated at the point.
 
-For time-dependent systems, Bayesian framework is particularly well-suited to treat observations sequentially as they come, as Bayesian updating is done via multiplication. Particle filters...
-\todo{évoquer mcmc sequentielle avec filtre à particules}
-
-
 A lot of refinement of these methods are available in the literature in order to better tackle the high-dimensionality of the parameter space, or to improve the mixing of the sampled MC chain. One important adaptation to mention is Hamiltonian Monte-Carlo~\cite{hanson_markov_2001,betancourt_conceptual_2017}, that improves the performance of the chain by using the value of the gradient of the log-posterior distribution. Obtaining this gradient (although for a different purpose) is discussed in~\cref{sec:calibration_adjoint_optimization}.
 
 
+For time-dependent systems, Bayesian framework is particularly well-suited to treat observations sequentially, especially because Bayesian updating is done via multiplication. Bayes' theorem is the basis of many data assimilation methods, such as Kalman filter or various particle filters, that are often used for state estimation.
 
 \subsubsection{Bayesian Point estimates}
 \label{sec:bayes_point_estimates}
-\todo{smooth phrases}
-Instead of tracting the whole posterior distribution, one can choose and find a point $\theta \in \Theta$ that summarizes this distribution. Consequently, the chosen estimate is often an indicator of the central tendency of the posterior. In that sense, we wish to get a value that is quite close to all sampled values from the posterior. 
+The whole posterior distribution aggregates a lot of information on the problem. However, as mentioned above, a certain work has to be done in order to get independent samples. Instead, one can try to find a point $\theta \in \Theta$ that summarizes as best this distribution. Consequently, the chosen estimate is often an indicator of the central tendency. In that sense, we wish to get a value that is quite close to all sampled values from the posterior~\cite{lehmann_theory_2006}.
 
-
-Let us define a function $L$ that measures the distance between two parameter values: $L:\Theta\times \Theta$. For a candidate $\theta^{\prime}$, the measured risk with respect to a sample from the posterior $\theta_i \sim \theta \mid Y$ is $L(\theta^{\prime}, \theta_i)$.
-The \emph{Bayesian risk} for $\theta$ is then the expectation of this Bayesian loss functions $L$ under the posterior distribution: $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\mid y\right]$. A Bayesian point estimate is defined as a minimizer of the Bayesian risk:
+Let us define a function $L$ that measures a distance in the parameter space: $L:\Theta\times \Theta$. For a candidate $\theta^{\prime}$, the measured risk with respect to a sample from the posterior $\theta_{\mathrm{sample}} \sim \theta \mid Y$ is $L(\theta^{\prime}, \theta_{\mathrm{sample}})$.
+The \emph{Bayesian risk} for $\theta^{\prime}$ is then the expectation of this Bayesian loss functions $L$ under the posterior distribution: $\Ex_{\theta\mid Y}\left[L(\theta^{\prime},\theta)\mid y\right]$. A Bayesian point estimate is defined as a minimizer of the Bayesian risk:
 \begin{equation}
-  \theta_{L} = \argmin_{\theta^{\prime} \in \Theta} \Ex_{\theta\mid Y}\left[L(\theta^{\prime}, \theta) \mid y\right]
+  \hat{\theta}_{L} = \argmin_{\theta^{\prime} \in \Theta} \Ex_{\theta\mid Y}\left[L(\theta^{\prime}, \theta) \mid y\right]
 \end{equation}
-In~\cite{lehmann_theory_2006}, the authors detail the theory behind point estimation, and the different properties we can desire.
+
 Obviously, different loss functions will lead to different Bayesian point estimates, and we are going evoke two of them.
 \paragraph{Posterior mean}
 By defining the $L$ as the squared error $L(\theta^{\prime}, \theta) = (\theta^{\prime} - \theta)^2$, we can define the Mean Squared Error (MSE) as $\mathrm{MSE}: \theta^{\prime}\mapsto\Ex_{\theta\mid Y}\left[(\theta^{\prime} - \theta)^2 \mid y\right]$. Finally, the value corresponding to the Minimum Mean Squared Error is
@@ -595,28 +615,28 @@ Taking $L(\theta^{\prime},\theta) = -\delta_{\theta}(\theta^{\prime})$, the dira
 One interesting fact about the MAP, is that its evaluation does not require the full knowledge of the posterior distribution, nor samples to evaluate the integral of~\cref{eq:def_MMSE}. We can resort to classical optimization techniques for this evaluation. Similarly to the likelihood, taking the negative logarithm leads to the following minimization problem.
 \begin{equation}
   \label{eq:minimisation_MAP_log}
-  \estimtxt{\theta}{MAP} = \argmin_{\theta^{\prime}\in \Theta} -\ell(\theta^{\prime};y) - \log p_{\theta}(\theta^{\prime})
+  \estimtxt{\theta}{MAP} = \argmin_{\theta^{\prime}\in \Theta} -\log \mathcal{L}(\theta^{\prime};y) - \log p_{\theta}(\theta^{\prime})
 \end{equation}
 
 \subsubsection{Choice of a prior distribution}
 \label{sec:choice_prior}
 As seen in the application of Bayes' theorem in~\cref{eq:bayes_posterior}, the prior has a preponderant role in the formulation of the posterior distribution. Indeed, this prior distribution represents the current state of knowledge on the value of the parameter, before any experiment. This comes usually from an expert opinion, or some reasonable assumptions about the nature of $\theta$.
 
-Let us assume for instance that we have a Gaussian prior for $\theta$: $\theta \sim \mathcal{N}(\theta_{b},B)$ where $B$ is called the background covariance error matrix and $\theta_b$ is called the \emph{background value} that act as a plausible reference value. Assuming a Gaussian form for the errors as well with covariance matrix $\Sigma$, the MAP can be written as
+Let us assume for instance that we have a Gaussian prior for $\theta$: $\theta \sim \mathcal{N}(\theta_{b},B)$ where $B$ is called the background covariance error matrix and $\theta_b$ is called the \emph{background value} that acts as a plausible reference value. Assuming a Gaussian form for the errors as well with covariance matrix $\Sigma$, the MAP can be written as
 \begin{equation}
   \estimtxt{\theta}{MAP} = \argmin_{\theta \in \Theta} \frac{1}{2}\| \mathcal{M}(\theta) - y\|^2_{\Sigma^{-1}} + \frac{1}{2}\|\theta - \theta_b\|^2_{B^{-1}}
 \end{equation}
 Adding a Gaussian prior for the parameter comes down to adding a $L^2$ regularization term to the optimization problem, also called Tikhonov regularization~\cite{tikhonov_solutions_1977}. This expression is very analoguous to the state estimation in the 3D-Var method in Data assimilation 
 Other choices of priors lead to other regularizations, such as the lasso regularization~\cite{tibshirani_regression_2011} that is a consequence for choosing $\theta$ that follows a priori a Laplace distribution of mean $0$.
 
-The choice of a prior distribution has an influence on the inference of the parameter and its point estimation. Where there is no knowledge on the parameter beforehand, one can try to choose a non-informative prior in order to try to mitigate its effect. One can for instance choose a ``flat'' prior over the parameter space, but this can lead to \emph{improper prior}, in the sense that they do not integrate to $1$. However, improper priors do not necessarily lead to improper posterior, allowing for the usual Bayesian analysis of the quantity.
+The choice of a prior distribution has an influence on the inference of the parameter and its point estimation. Where there is no knowledge on the parameter beforehand, one can try to choose a non-informative prior in order to try to mitigate its effect. One can for instance choose a ``flat'' prior over the parameter space, but this can lead to \emph{improper prior}, in the sense that they do not integrate to $1$. However, improper priors do not necessarily lead to improper posterior, allowing for the usual Bayesian analysis of the quantity. For instance, if $\Theta=\mathbb{R}^p$, the prior $p_{\theta}(\theta) \propto 1$ is improper, but the MAP estimation is equivalent to the MLE.
 
-If $\Theta = \mathbb{R}^p$, an improper non-informative prior is $p_{\theta}(\theta) \propto 1$. In this case, the MAP estimation is equivalent to the MLE, as the prior in~\cref{eq:minimisation_MAP_log} is constant with respect to $\theta^{\prime}$.
-When $\Theta = \mathbb{R}_+$, the prior distribution should be invariant by multiplication by a positive constant, so $p_{\theta}(\theta) \propto \frac{1}{\theta}\mathbbm{1}_{\theta > 0}$ (i.e.\ flat in the log scale), and that leads to a regularization term of the form $\log(\theta)$.\unsure{garder flat priors?}
+% If $\Theta = \mathbb{R}^p$, an improper non-informative prior is . In this case, the MAP estimation is equivalent to the MLE, as the prior in~\cref{eq:minimisation_MAP_log} is constant with respect to $\theta^{\prime}$.
+% When $\Theta = \mathbb{R}_+$, the prior distribution should be invariant by multiplication by a positive constant, so $p_{\theta}(\theta) \propto \frac{1}{\theta}\mathbbm{1}_{\theta > 0}$ (i.e.\ flat in the log scale), and that leads to a regularization term of the form $\log(\theta)$.\unsure{garder flat priors?}
+% As mentioned before, the MAP does not require the full knowledge of the posterior distribution $p_{\theta \mid Y}$, as ``only'' an optimization is required.
 
 
-All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This cost function will be written $J$ in the following, to match the notation of data assimilation. As mentioned before, the MAP does not require the full knowledge of the posterior distribution $p_{\theta \mid Y}$, as ``only'' an optimization is required.
-
+All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This cost function will be written $J$ in the following, to match the notation of data assimilation. 
 In this context of calibration, we can then summarize the estimation as a minimization problem, where $J$ represents some kind of distance between $\mathcal{M}(\theta)$ and the observations.
 \begin{equation}
   \estimtxt{\theta}{} = \argmin_{\theta\in \Theta} J(\theta)
@@ -652,13 +672,14 @@ where the constraint on $\mathcal{F}$ signifies that the model is admissible, i.
     \nabla_\theta \mathcal{F} &= \pfrac{\mathcal{F}}{y} \pfrac{y}{\theta} + \pfrac{\mathcal{F}}{\theta}
   \end{aligned} \label{eq:aze}
 \end{equation}
-In those equations, the partial derivatives with respect to $\theta$ are quite easily attainable, while the real challenge is to obtain the derivative with respect to the state variable.
+In those equations, the partial derivatives with respect to $\theta$ are quite easily obtainable, while the real challenge is to obtain the derivative with respect to the state variable: $\pfrac{}{y}$.
 
-Introducing the Lagrange multiplier  $\lambda \in \Yspace$, we can write the Lagrangian $\mathscr{L}$
+
+To treat the constrained optimization in~\cref{eq:def_J_adjoint}, let us introduce the Lagrange multiplier $\lambda \in \Yspace$, so that we can write the Lagrangian $\mathscr{L}$
 \begin{equation}
   \mathscr{L}(\theta, y, \lambda) = J(y,\theta) - \innerprod{\lambda}{\mathcal{F}(y, \theta)}
 \end{equation}
-The equivalent unconstrained minimization problem~\cref{eq:def_J_adjoint} is then
+ is then
 \begin{equation}
   \min_{\theta,y,\lambda} \mathscr{L}(\theta,y,\lambda)
 \end{equation}
@@ -680,7 +701,7 @@ Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F
                                = \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
 \end{equation}
 
-As stated earlier, the adjoint method allows for computing the gradient with respect to the control variable. The challenge lies in solving the adjoint equation. Albeit tedious, one can derive those equations by writing the tangent linear model of the original model, and implement a dedicated solver for the adjoint variables. A more common and way simpler approach is to derive the adjoint equations directly from the computer code implemented to solve the model, especially by using Automatic differentiation tools, such as \textsc{TAPENADE}~\cite{hascoet_tapenade_2013}.
+So, to get $\nabla_\theta J$, as the partial derivatives with respect to the control variable are relatively easy to obtain, the challenge lies in solving the adjoint equation. Albeit tedious, one can derive those equations by writing the tangent linear model of the original model, and implement a dedicated solver for the adjoint variables. A more common and way simpler approach is to derive the adjoint equations directly from the computer code implemented to solve the model, by using Automatic differentiation tools, such as \textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs directly translate the source code into a programs that solves the original model equations and the adjoint equations, and outputs the gradient along with the cost function.
 
 
 \section{Model selection}
@@ -692,8 +713,7 @@ It is then natural to see if we can reduce the complexity of the model, without 
 
 We are first going to consider the case of nested models: models that share the same forward models, but whose parameter spaces are nested. Model selection in this case is a way to reduce the dimension of the model, by reducing the parameter space.
 
-Finally, tools introduced in this section bring up model comparison,
-calibrated models are optimal given an objective function, but we can show that values close to the  calibrated value $\hat{\theta}$ may also be in interest, as the decrease of performance may not be statistically detectable.
+Finally, tools introduced in this section bring up model comparison. A calibrated model $\{\mathcal{M},\{\hat{\theta}\}\}$ is optimal given an objective function, but we can show that values close to the calibrated value $\hat{\theta}$ may also be in interest, as the decrease of performance may not be statistically detectable, giving a model $\{\mathcal{M}, \{\hat{\theta} + \varepsilon\}\}$ acceptable to describe the data.
 
 \subsection{Likelihood ratio test and relative likelihood}
 \label{sec:likelihood_ratio_test}
@@ -783,38 +803,51 @@ where
 % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
 Quite similarly as the criteria introduced before, the logarithm if the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favors $\mathfrak{M}_1$. Again, the logarithm of Bayes' factor is compared with specified threshold (\cite{kass_bayes_1995,burnham_multimodel_2004}).
 Given a model, a criterion is derived either by maximization (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
-In both cases, the preference toward one or another model boils to the difference on the logarithms of the densities.
+In both cases, the preference toward one or another model is directly linked to the difference on the logarithms of the densities.
 
-\section{Parametric model misspecification and Quasi Likelihood}
+\section{Parametric model misspecification}
 \label{sec:model_misspecification}
 We introduced earlier the mathematical model $(\mathcal{M},\Theta)$, and based our analysis on the fact that the ``target model'', i.e.\ the reality is $(\mathscr{M},\Theta_{\mathrm{real}} = \Theta)$, so the parameter spaces are the same.
 In practice, the parameter space $\Theta$ does not contain necessarily all the parameters needed to run the forward model, but represents the space of the parameters of interest, or calibration parameters. In addition to them, some other parameters are at play, that we are going to call the \emph{environmental parameters}, or \emph{uncertain parameters} written $u\in \Uspace$. These parameters come from instance from the external forcings. 
 
-Bayesian framework and more specifically Bayesian update of the prior by the likehihood puts the emphasis on the update of the information on the \emph{parameter of interest}. However the environmental parameters have an inherent variability. In that sense, it may not be worth spending time and resources to infer these parameter values, as they are bound to change. Moreover, we can only get information on the environmental conditions used to generate the observations.
-We aim at letting this parameter stay free, and at finding a good value of the calibration parameter $\theta$, without doing inference on $\uu$.
+Bayesian framework and more specifically Bayesian update of the prior by the likehihood puts the emphasis on the update of the information on the \emph{parameter of interest}. However the environmental parameters are assumed to have an inherent variability. In that sense, it may not be worth spending time and resources to infer these parameter values, as they are bound to change.
+Moreover, we can only get information on the environmental conditions used to generate the observations.
 
-We have then a family of models, indexed by $u$: $\{(\mathcal{M}(\cdot,u) , \Theta);\, \uu \in \Uspace\}$ that have to be calibrated with respect to some observations $y$, that is the model $(\mathscr{M}, \Theta_{\mathrm{real}})$ ``evaluated'' at a value $\vartheta \notin \Theta$.
+% We aim at letting this parameter stay free, and at finding a good value of the calibration parameter $\theta$, without doing inference on $\uu$.
 
-Every choice of $\uu$ will lead to a specific inverse problem, misspecified in the sense that $\vartheta \notin \Theta$, and that $u$ does not intervene in the model $(\mathscr{M},\Theta_{\mathrm{real}})$.
-When looking at an extremum estimator (an estimator that minimizes an objective function $J:\Theta \times \Uspace$), each estimator will depend on $u$: $\estimtxt{\theta}{}(\uu) = \argmin_{\theta \in \Theta} J(\theta,\uu)$.
+In terms of models, each choice of $\uu \in \Uspace$ gives a different model $\mathfrak{M}(u) = \{\mathcal{M}(\cdot, u),\,\Theta\}$. Let us assume that we can model the uncertain parameters as a random variable $\UU$.
+Let us consider that we chose a specific $\uu_0 \in \Uspace$, and that we are given some observation $y=\mathscr{M}(\vartheta)$. We can formulate an inverse problem, and an objective function $J:\kk \mapsto J(\kk,\uu_0)$, that we wish to minimize with respect to $\kk$.
+Some estimators still carry nice properties. The MLE for instance, defined~\cref{sec:frequentist_inference_MLE} can still be written as the minimizer of the empirical KL--divergence. We assume that we can write the sampling distribution as $p_{Y \mid \KK, \UU}$, and
+\begin{equation}
+  \estimtxt{\theta}{MLE}(\uu_0)=  \argmin_{\kk \in \Kspace}\DKL[empirical]{p_Y}{p_{Y \mid \theta, \UU}(\cdot \mid \theta, \UU=\uu_0)}
+\end{equation}
+and can be seen as the ``best'' value given $\UU=\uu_0$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
+So when the model is misspecified, minimizing a cost function still makes sense.
 
-In the case of misspecified models, some estimators carry nice properties: similarly to the characterization of the MLE in~\cref{sec:frequentist_inference_MLE}, for each $u$, $\estimtxt{\theta}{MLE}(u)$ minimizes the empirical KL-divergence between the true distribution of the observations and the misspecified sampling model, and can be seen as the ``best'' value given $u$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
 
+However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}(\uu_0) = \argmin_{\theta \in \Theta} J(\theta,\uu_0)$, and there is no guarantee that $\estimtxt{\theta}{}(\uu_0)$ will minimize $J(\cdot, \uu_1)$ for $\uu_0 \neq \uu_1$, as illustrated~\cref{fig:minimizer_misspecification}.
 
-In the following, we assume that $\uu$ is sampled from a random variable $\UU$, with density $p_U$, and that $p_{\theta,\UU}(\theta,\uu) = p_{\theta}(\theta) p_{\UU}(\uu)$, that is independence through the prior distributions.
-All the equations written above still hold, and can be derived by doing the substitution $\theta \gets (\theta,u)$
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath minimizer_misspecification.pgf}
+  \caption{Effect of the misspecification on the minimizer.}
+  \label{fig:minimizer_misspecification}
+\end{figure}
+
+ $\uu_0$ and $\uu_1$ are close to each other, but $\hat{\kk}(\uu_0)$ and $\hat{\kk}(\uu_1)$ are not. However, as the cost function shows similar values at those points, choosing either one would lead to a satisfactory cost given $\UU = \uu_0$ or $=\uu_1$. A preference appears for $\hat{\theta}(\uu_1)$ if $\UU = \uu_2$ is considered as well.
+ This random misspecification leads to some issues in the calibration of the model, and it asks for a notion of robustness with respect to the environmental parameters.
 
 \section{Partial conclusion}
 \label{sec:chap2_partial}
 
-In this chapter, starting from a probabilistic point of view, we established the usual tools encountered in model calibration. Issues may rise when considering a parametric misspecification of the model when some environmental variables are added \tocheck{to the mix}. Each realization of this underlying random variable will yield a different estimation. Optimizing over both the calibration parameter and the environmental parameter.
+In this chapter, starting from a probabilistic point of view, we established the usual tools encountered in model calibration: the misfit between the data and the numerical model is measured by a cost function $J$, that can be minimized using for instance gradient descent. From this optimization, we can define a ``acceptable'' region for the estimate. In other words, values in this set yield an misfit that is not different enough to be completely discarded.
+
+Adding a environmental variable as a random nuisance parameter introduces a parametric misspecification of the model: each realization of this underlying random variable will yield a different estimation. In \cref{chap:robust_estimators}, we will discuss the notion of robustness under this random misspecification, and introduce a family of robust estimators, inspired by model selection. 
 
 
-% Robustness under parametric model misspecification
+% Robustness under parametric model 
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s
 
 %% BIB
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -32,12 +32,14 @@ params = {# 'backend': 'pgf',
           'axes.titlesize': 11,
           'image.cmap': u'viridis'}  # extend as needed
 
-
+plt.rc('text.latex', preamble=(r'\usepackage{amsmath} \usepackage{amssymb}'))
 # mpl.use('pgf')
 plt.style.use('seaborn')
 plt.rc('font', **{'family': 'serif',
                   'serif': ['Computer Modern Roman']})
 plt.rcParams.update(params)
+
 plt.rc('text', usetex=True)
 col_half = get_figsize()
 col_full = get_figsize(wf=1.0)
+col_3quarter = get_figsize(wf=.75)

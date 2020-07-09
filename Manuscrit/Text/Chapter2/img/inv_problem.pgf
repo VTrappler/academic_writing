@@ -12,9 +12,7 @@
 \node (forwardeval) at (5, 0) [draw]{$\mathcal{M}(\theta)$};
 \node (nummodel) at (0.5, 0) [draw, rectangle, minimum height=70, minimum width=70, label=below:Numerical Model] {};
 \draw[->] (nummodel) to (forwardeval);
-%   \draw node[rectangle, fill=blue!10, right of=x, text width=15ex] (y) {Mathematical model};
-%  \draw  node[rectangle, fill=blue!10, right of = y, text width=15ex] (z) {Computer code};
-\draw[postaction = decorate] (nummodel) to node[midway, above, text width=15ex](forward) {Forward problem} (forwardeval);
+\draw[->] (nummodel) to node[midway, above, text width=15ex](forward) {Forward problem} (forwardeval);
 \node  (thetareal) at (11, 0) [circle, fill=brewdark, label=$\Theta_{\mathrm{real}}$, minimum size=30] {$\,\,\, \cdot \vartheta$} ;
 \node (modelscr) at (10,0) {$\mathscr{M}$};
 \node (reality) at (10.5, 0) [draw, rectangle, minimum height=70, minimum width=70, label=below:Physical Model] {};

@@ -99,7 +99,7 @@ plt.savefig('./img/gaussian_distribution_examples.pgf')
 plt.close()
 # ----------------------------------------------------------------------
 # Pdf of chi2
-plt.figure(figsize=col_half)
+plt.figure(figsize=col_3quarter)
 x = np.linspace(0, 10, 200)
 plt.ylim([0, .75])
 plt.xlim([0, 8.5])
@@ -108,14 +108,16 @@ plt.plot(x, scipy.stats.chi2.pdf(x, 2), label=r'$\nu=2$')
 plt.plot(x, scipy.stats.chi2.pdf(x, 4), label=r'$\nu=4$')
 plt.plot(x, scipy.stats.chi2.pdf(x, 6), label=r'$\nu=6$')
 plt.xlabel(r'$x$')
+plt.ylabel(r'$p_X$')
 plt.legend()
-plt.title(r'Pdf of $\chi^2_{\nu}$ r.v.')
+plt.title(r'Pdf of $X \sim $\chi^2_{\nu}$, depending on $\nu$')
 # plt.show()
+plt.tight_layout()
 plt.savefig('./img/chi2_distribution_examples.pgf')
 plt.close()
 
 
-plt.figure(figsize=col_half)
+plt.figure(figsize=col_3quarter)
 x = np.linspace(4, 7, 1000)
 lik = scipy.stats.norm.pdf(x, 5, 0.2) + scipy.stats.norm.pdf(x, 5.15, .1)
 maxLik = lik.max()
@@ -129,7 +131,7 @@ plt.legend()
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$R(\theta)$')
 plt.title(r'Relative Likelihood and likelihood interval')
-# plt.tight_layout()
+plt.tight_layout()
 # plt.show()
 plt.savefig('./img/relative_likelihood.pgf')
 plt.close()
@@ -177,12 +179,76 @@ plt.xlabel(r'$\theta_1$')
 plt.ylabel(r'$\theta_2$')
 plt.title(r'Likelihood')
 plt.tight_layout()
-plt.show()
+plt.close()
 
 plt.subplot(2, 1, 1)
 plt.contourf(np.linspace(0.5, 1, 400), np.linspace(-2, 2, 400), likgrid)
 plt.subplot(2, 1, 2)
 plt.plot(np.linspace(0.5, 1, 400), likgrid.mean(0))
 plt.plot(np.linspace(0.5, 1, 400), likgrid.max(0))
-plt.show()
+plt.close()
+
+
+
+
+
+colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+@np.vectorize
+def branin_hoo(x, y):
+    x1 = 3 * x * 5 - 5
+    x2 = 3 * y * 5
+    damp = 1.0
+    quad = (x2 - (5.1 / (4 * np.pi**2)) * x1**2 + (5 / np.pi) * x1 - 6)**2
+    cosi = (10 - (10 / np.pi * 8)) * np.cos(x1) - 44.81
+    return (quad + cosi) / (51.95 * damp) + 2.0
+
+k = np.linspace(0, 1, 200)
+u = np.linspace(0, 1, 200)
+kmg, umg = np.meshgrid(k, u)
+bh = branin_hoo(kmg, umg)
+i1 = 40
+i2 = 50
+i3 = 180
+u1 = u[i1]
+u2 = u[i2]
+u3 = u[i3]
+icolor_st = 2
+plt.figure(figsize=1 * col_full)
+plt.subplot(1, 2, 1)
+plt.contourf(k, u, bh)
+plt.axhline(u1, color=colors[icolor_st])
+plt.axhline(u2, color=colors[icolor_st + 1])
+plt.axhline(u3, color=colors[icolor_st + 2])
+
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+plt.yticks([u1, u2, u3], [r'$u_0$', r'$u_1$', r'$u_2$'])
+plt.xticks([])
+plt.title(r'Contour of $J(\theta,u)$')
+ax = plt.subplot(1, 2, 2)
+axx, = ax.plot(k, bh[i1], label=r'$J(\theta, u_0)$', color=colors[icolor_st])
+plt.axvline(k[bh[i1].argmin()], # label=r'$\hat{\theta}(u_0)$,'
+            color=colors[icolor_st],
+            linestyle=':')
+axx, = ax.plot(k, bh[i2], label=r'$J(\theta, u_1)$', color=colors[icolor_st + 1])
+plt.axvline(k[bh[i2].argmin()], # label=r'$\hat{\theta}(u_1)$',
+            color=colors[icolor_st + 1],
+            linestyle=':')
+
+axx, = ax.plot(k, bh[i3], label=r'$J(\theta, u_2)$', color=colors[icolor_st + 2])
+plt.axvline(k[bh[i3].argmin()], # label=r'$\hat{\theta}(u_2)$',
+            color=colors[icolor_st + 2],
+            linestyle=':')
+
+
+plt.xticks([k[bh[i1].argmin()], k[bh[i2].argmin()], k[bh[i3].argmin()]], [r'$\hat{\theta}(u_0)$', r'$\hat{\theta}(u_1)$', r'$\hat{\theta}(u_2)$'])
+
+ax.set_xlabel(r'$\theta$')
+ax.set_ylabel(r'$J(\theta, u)$')
+plt.legend()
+plt.title(r'$J(\theta, u)$ for fixed $u$')
+plt.tight_layout()
+plt.savefig('./img/minimizer_misspecification.pgf')
+plt.close()
 # EOF ----------------------------------------------------------------------

@@ -9,7 +9,7 @@ import scipy.stats
 exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
 # # -> Manuscrit 415.41025
 # # -> Notes 418.25368
-
+colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
 # def get_figsize(columnwidth=415.41025, wf=0.5, hf=(5.**0.5 - 1.0) / 2.0):
 #     """Parameters:
@@ -43,24 +43,66 @@ exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
 # col_full = get_figsize(wf=1.0)
 
 
-## PDF and CDF of rv X
+## Banana
 plt.figure(figsize=col_full)
+np.random.seed(3394)
+y = scipy.stats.norm.rvs(size=10, loc=1, scale=2)
+
 @np.vectorize
-def lik(k, u):
-    return np.exp(-(k-(u-k)**2)**2/ 2) / np.sqrt(2 * np.pi)
-kk, uu = np.linspace(-2, 2, 500), np.linspace(-2, 2, 400)
+def lik(k, u, sig=2):
+    return np.prod(np.exp(-(k + u**2 - y)**2 / (2 * sig**2)) / (np.sqrt(2 * np.pi) * sig))
+
+
+def prior(k, u):
+    return scipy.stats.norm.pdf(k, loc=0, scale=1)# * scipy.stats.norm.pdf(u, loc=0, scale=1)
+
+
+kk, uu = np.linspace(-5, 5, 500), np.linspace(-2, 2, 400)
 kmg, umg = np.meshgrid(kk, uu)
+postkmg = lik(kmg, umg) * prior(kmg, umg)
 likmg = lik(kmg, umg)
-plt.subplot(2, 1, 1)
-plt.contourf(lik(kmg, umg))
+plt.subplot(1, 2, 1)
+plt.contourf(kk, uu, likmg)
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
 plt.title(r'Likelihood: $p_{Y \mid \theta, U}$')
-plt.subplot(2, 1, 2)
-plt.plot(likmg.mean(0), label=r'Integrated Likelihood')
-plt.plot(likmg.max(1), label=r'Profile Likelihood')
+ax = plt.subplot(1, 2, 2)
+ax.plot(kk, (likmg.mean(0)), label=r'$\mathcal{L}_{\mathrm{integrated}}$')
+ax.plot(kk, (likmg.max(0)), label=r'$\mathcal{L}_{\mathrm{profile}}$')
+ax.set_xlabel(r'$\theta$')
+ax.set_xlim([-5, 5])
+ax.set_title(r'Profile and Integrated likelihood')
+# ax.yaxis.set_major_formatter(plt.LogFormatter(10, labelOnlyBase=False))
+ax.ticklabel_format(axis='y', style='sci', useMathText=False)
+# plt.plot(postkmg.mean(0), label=r'Integrated Posterior')
+# plt.plot(postkmg.max(0), label=r'Profile Posterior')
 plt.legend()
-plt.show()
+plt.tight_layout()
+plt.savefig('./img/profile_integrated_lik.pgf')
 plt.close()
 
+plt.figure(figsize= col_full)
+# plt.subplot(1, 2, 1)
+# plt.plot(kk, likmg.mean(0), label=r'$\mathcal{L}_{\mathrm{integrated}}(\theta;y)$')
+# plt.plot(kk, np.exp(np.log(likmg).mean(0)), label=r'$\exp(-\mu(\theta))$')
+# plt.axvline(kk[likmg.mean(0).argmax()], label=r'$\theta_{\mathrm{intLik}}$', color=colors[0], linestyle=':')
+# plt.axvline(kk[np.log(likmg).mean(0).argmax()], label=r'$\theta_{\mathrm{E}}$', color=colors[1], linestyle=':')
+# plt.legend()
+# plt.xlabel(r'$\theta$')
+# plt.ylabel(r'Likelihood')
+# plt.subplot(1, 2, 2)
+plt.plot(kk, -np.log(likmg.mean(0)), label=r'$-\log \mathcal{L}_{\mathrm{integrated}}(\theta;y)$')
+plt.plot(kk, -np.log(likmg).mean(0), label=r'$\mu(\theta) = \mathrm{E}_U[J(\theta), U]$')
+plt.axvline(kk[likmg.mean(0).argmax()], label=r'$\theta_{\mathrm{intLik}}$', color=colors[0],
+            linestyle=':')
+plt.axvline(kk[np.log(likmg).mean(0).argmax()], label=r'$\theta_{\mathrm{mean}}$', color=colors[1],
+            linestyle=':')
+plt.legend()
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$J$')
+plt.tight_layout()
+plt.savefig('./img/integrated_lik_average_costfunction.pgf')
+plt.close()
 
 
 # Pareto front ---------------------------------------------------------
@@ -138,8 +180,6 @@ plt.savefig('./img/skewness_examples.pgf')
 plt.close()
 
 
-## Example with branin
-colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
 @np.vectorize
 def branin_hoo(y, x):
@@ -151,9 +191,41 @@ def branin_hoo(y, x):
     return (quad + cosi) / (51.95 * damp) + 2.0
 
 k = np.linspace(0, 1, 200)
-u = np.linspace(0, 1, 200)
+u = np.linspace(0, 1, 300)
 kmg, umg = np.meshgrid(k, u)
 bh = branin_hoo(kmg, umg)
+regret = bh - bh.min(0)[np.newaxis, :]
+plt.figure(figsize=1 * col_full)
+plt.subplot(1, 2, 1)
+plt.contourf(k, u, bh)
+plt.scatter(k[bh.argmax(1)], u, marker='+', color='white')
+plt.scatter(k[bh.argmin(1)], u, marker='+', color='red')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+ax = plt.subplot(1, 2, 2)
+ax.set_yticks([])
+plt.plot(k, bh.max(0), label=r'$\max_{u} J(\theta,u)$', color=colors[0])
+plt.plot(k, regret.max(0), label=r'$\max_{u} r(\theta,u)$', color=colors[1])
+plt.plot(k, bh.min(0), label=r'$\min_{u} J(\theta, u)$', color=colors[2])
+plt.legend()
+
+plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[0],
+            linestyle=':')
+
+plt.axvline(k[regret.max(0).argmin()], label=r'$\theta_{\mathrm{rWC}}$', color=colors[1],
+            linestyle=':')
+
+ax.set_xlabel(r'$\theta$')
+ax.set_ylabel(r'Robust quantity')
+ax2 = ax.twinx()
+plt.title(u'')
+plt.tight_layout()
+plt.savefig('./img/decision_under_uncertainty.pgf')
+
+# ----------------------------------------------------------------------
+## Example with branin: mean, worst case, sd
 plt.figure(figsize=1 * col_full)
 plt.subplot(1, 2, 1)
 plt.contourf(k, u, bh)
@@ -170,11 +242,11 @@ axx, = ax2.plot(k, bh.std(0), label=r'$\sigma(\theta)$', color=colors[1])
 plt.axvline(k[bh.std(0).argmin()], label=r'$\theta_{\mathrm{var}}$', color=colors[1],
             linestyle=':')
 
-ax3 = ax.twinx()
-ax3.set_yticks([])
-axx, = plt.plot(k, bh.max(0), label=r'$\max_{u} J(\theta,u)$', color=colors[2])
-plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[2],
-            linestyle=':')
+# ax3 = ax.twinx()
+# ax3.set_yticks([])
+# axx, = plt.plot(k, bh.max(0), label=r'$\max_{u} J(\theta,u)$', color=colors[2])
+# plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[2],
+#             linestyle=':')
 ax.set_xlabel(r'$\theta$')
 ax.set_ylabel(r'Robust quantity')
 plt.legend()
@@ -182,5 +254,47 @@ plt.title(u'')
 plt.tight_layout()
 plt.savefig('./img/mean_std_wc.pgf')
 plt.close()
-# EOF ----------------------------------------------------------------------
 
+
+# Distribution of minimizers ------------------------------------------------------------
+
+def minimizer_sample(func, Nsamples=300,
+                     bounds_cal = [0, 1],
+                     bounds_unc = [0, 1],
+                     nrestart=4):
+    mini = np.empty(Nsamples)
+    uncc = np.empty(Nsamples)
+    for i in range(Nsamples):
+        unc = scipy.stats.uniform.rvs() * (bounds_unc[1] - bounds_unc[0]) + bounds_unc[0]
+        uncc[i] = unc
+        best = np.inf
+        for j in range(nrestart):
+            # x0 = scipy.stats.uniform.rvs() * (bounds_cal[1] - bounds_cal[0]) + bounds_cal[0]
+            x0 = .8
+            res_optim = scipy.optimize.minimize(func, args=(unc,), x0=x0,
+                                                bounds=np.atleast_2d(bounds_unc))
+            if res_optim.fun < best:
+                mini[i] = res_optim.x
+    return mini, uncc
+
+import pandas as pd
+import seaborn as sns
+theta_star, u_sampled = minimizer_sample(lambda x, y: branin_hoo(x, y), Nsamples=2000, nrestart=1)
+plt.figure(figsize=1 * col_full)
+
+plt.subplot(1, 2, 1)
+plt.contourf(k, u, bh)
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+plt.scatter(theta_star, u_sampled, marker='.', color='white')
+plt.subplot(1, 2, 2)
+df = pd.DataFrame(np.asarray((theta_star, u_sampled)).T)
+df.columns = [r'$\theta^*$', r'$u$']
+sns.pairplot(data=df)
+plt.show()
+plt.savefig('./img/theta_star_samples.pgf')
+plt.close()
+
+
+
+# EOF ----------------------------------------------------------------------

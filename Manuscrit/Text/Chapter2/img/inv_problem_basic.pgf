@@ -1,0 +1,12 @@
+\usetikzlibrary{calc, arrows, decorations.markings}
+
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 35ex, text centered
+  ]
+
+\node (nummodel) at (0, 0) [rectangle, fill=brewdark] {Numerical Model};
+\node (obs) at (6, 0) [rectangle, fill=brewdark] {Observations};
+\draw[->,out=20, in=160] (nummodel.north) to node [midway, above] {Forward Problem} (obs.north) ;
+\draw[->, out=-160, in=-20] (obs.south) to  node [midway, below] {Inverse Problem} (nummodel.south);
+\end{tikzpicture}

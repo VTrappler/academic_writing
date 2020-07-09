@@ -8,8 +8,8 @@ from matplotlib.legend_handler import HandlerLineCollection, HandlerTuple
 import numpy as np
 import scipy.stats
 import scipy.special
-import RO.bo_plot as bplt
-import RO.bo_wrapper as bow
+# import RO.bo_plot as bplt
+# import RO.bo_wrapper as bow
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
 

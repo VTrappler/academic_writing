@@ -23,6 +23,7 @@
 % \subfileLocal{\setcounter{chapter}{1}}
 \chapter{Robust estimators in the presence of uncertainties} 
 \label{chap:robust_estimators}
+
 \minitoc
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
@@ -64,6 +65,7 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Shaded cells correspond to problems comprising an uncertain part. Reproduced from~\cite{lelievre_consideration_2016}}
 \label{tab:lelievre}
 \end{table}
+
 \subsection{Classifying the uncertainties}
 In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
 
@@ -72,24 +74,28 @@ In that context, the very notion of uncertainty can be roughly split in two, as 
 \item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
 \item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
 \end{itemize}
-According to this division,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to the objective function defined in~\cref{eq:def_J}.
-The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction is not as sharp as it may seem, as~\cite{kiureghian_aleatory_2009} conclude that the choice of the distinction is up to the modeller.
+According to this distinction,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to an objective function.
+The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction is a bit rough, as~\cite{kiureghian_aleatory_2009} point out that the deciding the type of uncertainties is up to the modeller.
 
 
 
 \subsection{Robustness under parameteric misspecification}
-In this thesis we are interested in a slightly different notion of robustness, that we can qualify as \emph{robustness under parametric model misspecification}:
 
-As established before, we have an objective function that takes two distinct inputs:
-\begin{equation}
-  \label{eq:def_J}
-  \kk, \uu \longmapsto J(\kk,\uu)
-\end{equation}
-where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter. This uncertain parameter is modelled as a realisation of a random variable $\UU$.
-Not taking into account this uncertainty may be an issue in the modelling, especially if the influence of this variable is non-negligible.
-Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimization} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is choosing a value $\hat{\kk}$ that is optimal for the given situation (which is induced by $\uu$). This value does not carry the optimality to other situations, or in layman's term according to~\cite{andreassian_all_2012}: being lured by fool's gold.
-In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in the predictions as those uncertainties become prevalent sources of errors. In hydrology, uncertainties are the principal culprit of the existence of  ``Hydrological monsters''~\citep{kuczera_there_2010}, that are models that perform really badly.
+Given a family of models $\left\{\left(\mathcal{M}(\cdot, \uu), \Theta\right), \uu\in\Uspace\right\}$, we can derive a problem of parameter estimation for each $\uu$. As detailed in~\cref{chap:inverse_problem}, we can look for the MLE or the MAP, and formulate the likelihood and the posterior distribution accordingly.
 
+% More generally, we can assume the existence of an objective function $J$ that takes two distinct inputs where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter.
+% \begin{equation}
+%   \label{eq:def_J}
+%   \kk, \uu \longmapsto J(\kk,\uu)
+% \end{equation}
+% This uncertain parameter is modelled by a random variable $\UU$.
+
+
+Not taking into account the uncertainty on $\uu$ may be an issue in the modelling, especially if the influence of this variable is non-negligible.
+Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimization} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is choosing a value $\hat{\kk}$ that is optimal for the given situation (which is induced by $\uu$). This value does not carry the optimality to other situations, or in layman's term according to~\cite{andreassian_all_2012}, being lured by ``fool's gold''.
+In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in the predictions as those uncertainties become prevalent sources of errors. In hydrology, uncertainties are the principal culprit of the existence of  ``Hydrological monsters''~\citep{kuczera_there_2010}, that are calibrated models that perform really badly.
+
+There are various ways to treat those environmental parameters. We are first going to see how to get rid of this dependence from a frequentist (likelihood-based) and Bayesian point of view.
 
 
 \section{Nuisance parameters}
@@ -108,18 +114,27 @@ Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihoo
 \begin{equation}
   \max_{(\kk ,\uu) \in \Kspace\times \Uspace} \mathcal{L}(\theta,\uu;y) = \max_{\kk\in \Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
 \end{equation},
-This estimator is truly optimal in some sense, but does not take into account the prior distribution of $\UU$.
+
+The resulting estimator is truly optimal in some sense, but does not take into account the uncertainty upon $\uu$.
+
 Another alternative is to define the \emph{integrated} (or marginalized) likelihood as
 \begin{align}
-  \mathcal{L}_{\mathrm{integrated}}(\theta;y) &= \int_{\Uspace} \mathcal{L}(\theta,\uu;y) p_{\UU}(\uu) \,\mathrm{d}\uu \\
+  \mathcal{L}_{\mathrm{integrated}}(\theta;y) &= \int_{\Uspace} \mathcal{L}(\theta,\uu;y) p_{\UU}(\uu) \,\mathrm{d}\uu \label{eq:def_int_lik}\\
                                               &=\int_{\Uspace} p_{Y|\theta,\UU}(y \mid \theta,u) p_{\UU}(\uu) \,\mathrm{d}\uu \\
                                               &=\int_{\Uspace} p_{Y,\UU|\theta}(y,u \mid \theta)\,\mathrm{d}\uu \\
+  &= p_{Y \mid \kk}(y \mid \kk)
 \end{align}
 
-In~\cite{berger_integrated_1999}, the authors report on the difference between those two approaches.
-\cite{cheng_general_2008}
+In~\cite{berger_integrated_1999}, the authors report on the difference between those two approaches. The main takeaway is that profiling erases the uncertainty on $\uu$.
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath profile_integrated_lik.pgf}
+  \caption{\label{fig:profile_integrated_lik} Profile and integrated likelihood for an uniform nuisance parameter}
+\end{figure}
+
 
 \subsection{Joint posterior distribution}
+Again, by introducing a prior distribution on $\kk$: $p_{\kk}$, we can derive the posterior distribution. We assume that $\UU$ and $\kk$ are independent: $p_{\KK, \UU} = p_{\KK}p_{\UU}$.
 The likelihood of the data given $\kk$ and $\uu$ is
 \begin{equation}
   \mathcal{L}(\kk,\uu;y) = p_{Y \mid \KK, \UU}(y\mid \kk,\uu)
@@ -142,47 +157,111 @@ We can then define the marginalized maximum as posteriori (MMAP)~\cite{doucet_ma
 \end{equation}
 or, by taking the negative logarithm to get a minimization problem:
 \begin{equation}
-\estimtxt{\kk}{MMAP}    = \argmin_{\kk\in\Kspace} -\log \left(\int_{\Uspace} p_{\KK\mid Y,\UU}(\kk\mid y, u) p_{\UU}(\uu)\,\mathrm{d}\uu \right)
+\estimtxt{\kk}{MMAP} = \argmin_{\kk\in\Kspace} -\log \left(\int_{\Uspace} p_{\KK\mid Y,\UU}(\kk\mid y, u) p_{\UU \mid Y}(\uu \mid Y)\,\mathrm{d}\uu \right)
 \end{equation}
-Unfortunately, neither the integration with respect to the nuisance parameter in~\eqref{eq:marg_MMAP} nor the subsequent optimization is analytically easy. \cite{doucet_marginal_2002} proposes a MCMC method in order to estimate iteratively the MMAP, through sampling of the joint posterior
+Unfortunately, neither the integration with respect to the nuisance parameter in~\eqref{eq:marg_MMAP} nor the subsequent optimization is analytically easy. \cite{doucet_marginal_2002} proposes a MCMC method in order to estimate iteratively the MMAP, through sampling of the joint posterior.
 
 \section{The cost function as a random variable}
 \label{sec:J_rv}
-We discussed so far the calibration problem with nuisance parameters in the formulation of the likelihood or the posterior distribution. We are now going to focus on a ``variational'' approach, using a predefined cost function
+We discussed so far the calibration problem with nuisance parameters in the formulation of the likelihood or the posterior distribution. We are now going to focus on a ``variational'' approach, using a cost function
 \begin{equation}
   J: \Kspace \times \Uspace \rightarrow \mathbb{R}^+
 \end{equation} 
-This function is usually proportional to the negative log-likelihood $p_{\KK \mid Y,\UU}(\kk\mid y,\uu) \propto e^{-J(\kk,\uu)}$,  $J(\kk,\uu) \propto -\log p_{Y \mid \KK,\UU}(y \mid \kk,\uu)- \log p_{\KK}(\kk)$,
+This function in a context of calibration is measuring the misfit between the data $y$, and the forward operator. However, the methods introduced in the following are not specific to this context, and $J$ can represent other undesirable properties, such as instability or drag in airfoil design optimization for instance. This work is largely based on~\cite{trappler_robust_2020}, which was submitted for review in February 2020.
 
-This function is measuring the misfit between the data and the numerical model, thus we aim at minimizing this function with respect to $\kk$, with uncertainty on the parameter $\uu \in \Uspace$
 
-\subsection{Saddle-point optimization}
+All in all, $J(\kk, \uu)$ represent the cost of taking the decision $\kk\in\Kspace$ when the environmental variable is equal to $\uu$.
+We are going to make several assumptions on this function:
+\begin{itemize}
+\item $\Kspace$ is convex and bounded 
+\item For all $\kk \in \Kspace$ and $\uu \in \Uspace$, $J(\kk, \uu)>0$
+\item For all $\kk \in \Kspace$, $J(\kk, \cdot)$ is measurable
+\item For all $\kk \in \Kspace$, $J(\kk, \UU) \in L^p(\Prob_{\UU})$ and $p \geq 2$. So for each $\kk$, we mean and variance exist and are finite.
+\end{itemize}
+
+Most of existing methods require first to remove the dependency on the uncertain variable, by defining a \emph{robust} (and deterministic) counterpart of the minimization problem under uncertainty, that we can solve using classical methods of optimization.
+
+\subsection{Decision under uncertainty}
+We will first detail some estimators that can arguably be said robust, even though the random nature of $\UU$ is not taken into account. This uncertainty is modelled through Laplace's uncertainty principle, stating that no information whatsoever is available on $\uu$, or the distribution of $\UU$.
+
+
+\subsubsection{Global optimization}
+A global optimization criterion, as its name suggests, advocates for minimizing the cost function over the whole space $\Kspace \times \Uspace$. 
+\begin{equation}
+  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu)
+\end{equation}
+ This strategy is optimistic in the sense that we minimize over only the most favourable cases.
+\begin{equation}
+  \label{eq:kkglobal}
+  \estimtxt{\kk}{global} = \argmin_{\kk \in \Kspace} \min_{\uu \in \Uspace} J(\kk, \uu)
+\end{equation}
+
+\subsubsection{Worst-case optimization}
 \label{sec:saddle_point}
-One common approach in optimization is to minimize the worst case the cost function, that is
+As global optimization is inhenrently optimistic, we can easily derive a criterion which is pessimistic, in the sense that we want to minimize over the least favourable cases. We are then looking for the saddle points of the cost function:
 \begin{equation}
   \min_{\kk\in\Kspace} \max_{\uu \in \Uspace} J(\kk,\uu)
 \end{equation}
+This is sometimes called Wald's Minimax criterion~\cite{wald_statistical_1945}.
+The associated estimator is 
+\begin{equation}
+  \label{eq:kkwc}
+  \estimtxt{\kk}{WC} =  \argmin_{\kk \in \Kspace} \max_{\uu \in \Uspace} J(\kk, \uu)
+\end{equation}
+However, this approach possesses some flaws. First, the maximum on $\Uspace$ may not exist, especially if $\Uspace$ is unbounded: we could make the model perform as badly as possible by taking extreme values of $\uu$. Additionally, if it exists, the resulting estimator is most likely very conservative as only the worse cases are considered.
 
-However, this approach possesses some flaws. First, the maximum on $\Uspace$ may not exist, 
+\subsubsection{Regret maximin}
+\label{ssec:regret_savage}
+One other approach~\cite{savage_theory_1951}, called Savage's maximin regret is to compare the current loss to the best performance given the uncertain variable $\uu$:
+\begin{equation}
+  r(\kk, \uu) = J(\kk, \uu) - \min_{\kk \in \Kspace} J(\kk, \uu)
+\end{equation}
+\begin{equation}
+  \min_{\kk \in \Kspace} \max_{\uu \in \Uspace} r(\kk,\uu)
+\end{equation}
+and
+\begin{equation}
+  \estimtxt{\kk}{rWC} = \argmin_{\kk\in\Kspace} \max_{\uu \in \Uspace} r(\kk, \uu)
+\end{equation}
 
-\subsection{Robustness based on the moments of an objective funciton}
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath decision_under_uncertainty.pgf}
+  \caption{\label{fig:decision_under_uncertainty} Illustration of global optimization, worst-case, and regret worst-case}
+\end{figure}
+
+
+\subsection{Robustness based on the moments of an objective function}
+In the presence of uncertainties, choosing a parameter value $\kk$ can also be seen as making as making a choice under risk. Let $J:\Kspace \times \Uspace\rightarrow \mathbb{R}^+$ be an objective function, and assume that for all $\kk \in \Kspace$, $J(\kk, \cdot)$ is a measurable function.
+$J$ can be seen as the opposite of the \emph{utility} function, often encountered in game theory or econometrics.
+Because of the random nature of $\UU$, we can define a family of real random variables $\{J(\kk,\UU) \mid \kk \in \Kspace\}$, indexed by $\kk \in \Kspace$. \cite{beyer_robust_2007} proposes an \emph{aggregation approach}, using integral criteria. This integration is usually done with respect to $\UU$.. Moreover, considering to integrate the powers of the cost function allow to account for dispersion through the moments of the random variable $J(\kk, \UU)$, as we are going to see in the following.
 
 \subsubsection{Expected loss minimization}
 \label{sec:exp_loss_minimization}
 
-
-In the presence of uncertainties, choosing a parameter value $\theta$ can also be seen as making as making a choice under risk. Let $J:\Kspace \times \Uspace\rightarrow \mathbb{R}^+$ be an objective function, and assume that for all $\kk \in \Kspace$, $J(\kk, \cdot)$ is a measurable function. $J$ can be seen as the opposite of the \emph{utility} function, often encountered in game or econometrics.
-Because of the random nature of $\UU$, we can define a family of real random variables $\{J(\kk,\UU) \mid \kk \in \Kspace\}$, indexed by $\kk \in \Kspace$. Quite intuitively, as we want to minimize some kind of typical value of a realization of these random variables, we can look to optimize a central tendency of those random variables, for instance the mean value:
+Quite intuitively, as we want to minimize some kind of typical value of a realization of these random variables, we can look to optimize a central tendency of those random variables. The mean value being an obvious candidate, we define the expected loss as
 \begin{equation}
   \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
 \end{equation}
-In other terms, $\mu(\theta)$ is the expected loss for the decision $\theta$, that we can seek to minimize, giving:
+The expected loss $\mu(\kk)$ is sometimes called the conditional mean given $\kk$. Taking the average of the loss function is
+
+The conditional mean is minimized,  giving $\estimtxt{\kk}{mean}$. Assuming that $J(\kk, \uu) \propto - \log \mathcal{L}(\kk,\uu;y)$, we have
 \begin{align}
-  \estimtxt{\kk}{mean} = \argmin_{\kk\in\Kspace} \mu(\theta)&= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{Y \mid \KK,\UU}(y \mid \kk,\uu)p_{\KK}(\kk)\right)p_{\UU}(\uu)\,\mathrm{d}\uu \\
-                     &= \argmin_{\kk\in\Kspace}-\int_\Uspace\log\left(p_{\KK \mid Y,\UU}(\kk \mid y,\uu)\right)p_{\UU}(\uu)\,\mathrm{d}\uu 
+  \estimtxt{\kk}{mean} = \argmin_{\kk\in\Kspace} \mu(\theta)&= \argmin_{\kk\in\Kspace}\int_\Uspace J(\kk,\uu) p_{\UU}(\uu)\,\mathrm{d}\uu \\
+                                                            &= \argmin_{\kk\in\Kspace} - \int_\Uspace \log \mathcal{L}(\kk,\uu;y) p_{\UU}(\uu)\,\mathrm{d}\uu \\
+                                                            &= \argmin_{\kk\in\Kspace} - \int_\Uspace\log\left(p_{Y \mid \KK,\UU}(y \mid \kk,\uu)\right)p_{\UU}(\uu)\,\mathrm{d}\uu 
 \end{align}
-The expected loss $\mu(\theta)$ is sometimes called the conditional mean given $\theta$.
+
+Taking the average of a loss function is the basis of \emph{stochastic programming}. This problem is usually tackled by using 
+
 Other indicator of central tendency can be considered for optimization, such as the mode or the median of the cost function. 
+This expression shares some similarities with the integrated likelihood introduced \cref{eq:def_int_lik}. However, quite unsurprisingly, the $\estimtxt{\kk}{mean}$ and $\estimtxt{\kk}{intLik}$ are not in general equal, as shown \cref{fig:difference_arithmetic_geometric_mean}.
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath integrated_lik_average_costfunction.pgf}
+  \caption{\label{fig:difference_arithmetic_geometric_mean} }
+\end{figure}
+
 
 \subsubsection{Variance, Multiobjective optimization}
 \label{sec:multiobjective_optimization}
@@ -203,8 +282,6 @@ Let us define the variance of the cost function:
   \caption{Illustration of conditional mean, conditional standard deviation, and worst-case as function of $\kk$. Those quantities have been rescaled to share the same range on the bottom plot.}
   \label{fig:mean_std_wc} 
 \end{figure}
-
-
 
 Minimizing the variance alone is often irrelevant, as it could just point toward really high values of the cost function, but steady with respect to  $\kk$. Taking both objectives: low mean value and low variance together to the following multiobjective optimization problem:
 
@@ -238,24 +315,33 @@ The skewness coefficient measures the asymmetry in the distribution:
 \end{equation}
 where $\mu = \Ex[X]$ and $\sigma = \sqrt{\Var[X]}$.
 
-Adding the skewness in the optimization translates to a preference toward a risk-averse or a risk-seeking approach. Indeed, as the main goal is the optimization of a cost function, so deviation of the value of the random variable toward lower values is more desirable than deviation toward larger values.
+Adding the skewness in the optimization translates to a preference toward a risk-averse or a risk-seeking approach. Indeed, as the main goal is the optimization of a cost function, deviations of the value of the random variable toward lower values is more desirable than deviations toward larger values.
+
+This is illustrated \cref{fig:skewness_example}: all three of the random variables whose pdf and cdf are displayed have the same mean and variance. A real random variable having a skewness of zero means that the random value is symmetrical around its mean: $\Prob[X - \Ex[X] < \eta] = \Prob[X - \Ex[X] > - \eta]$.
+
+\tocheck{If the skewness coefficient is negative, the distribution presents a heavier left tail than right. In other words, a sample taken from this distribution has a higher probability of being located below the mean.}
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath skewness_examples.pgf}
   \caption{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
+\aciter{Horsetail matching}
+
 
 \section{Relative-regret estimators family}
 \label{sec:rr_family}
-All the methods introduced above required first to eliminate in some sense the dependency on the environmental parameter, in order to transform the random variable $J(\kk, \UU)$ into an objective that depends solely on $\kk$, and to optimize this deterministic function.
-We propose now to reverse these steps, by first optimizing the cost function for each $\uu$ encountered, and from the set of minimizer obtained, derive an estimator.
+All the methods introduced above required first to eliminate in some sense the dependency on the environmental parameter, in order to transform the random variable $J(\kk, \UU)$ into an objective that depends solely on $\kk$, and to optimize this deterministic counterpart.
+For a given $\kk\in\Kspace$, this elimination is done by aggregating all the possible outcomes $J(\kk, \UU)$.
 
-\subsection{Most Probable Estimate}
+
+We propose now to reverse these steps, by first optimizing the cost function for each $\uu$ encountered, and from the set of minimizer obtained, derive an estimator. The rationale behind this idea is that every situation induced by the realisation $\uu$ is to be taken separately, quite similarly as Savage's regret introduced \cref{ssec:regret_savage}.
+
+\subsection{Conditional minimimum and minimizer}
 \label{sec:MPE}
 \begin{definition}[Conditional minimum, minimizer]
   Let $J: \Kspace \times \Uspace$ be a cost function, and let us assume that for each $\uu \in \Uspace$, $\min_{\kk \in \Kspace} J(\kk,\uu)$ exists and is attained at a unique point.
-  We denote as
+  We denote
   \begin{equation}
     J^*(\uu) = \min_{\kk \in \Kspace} J(\kk,\uu)
   \end{equation}
@@ -265,13 +351,49 @@ We propose now to reverse these steps, by first optimizing the cost function for
   \end{equation}
  is defined as the \emph{conditional minimizer}
 \end{definition}
-As $\uu$ is thought to be a realization of a random variable $\UU$, we can consider the two random variables $\kk^*(\UU)$ and $J^*(\UU)$~\cite{trappler_robust_2020}.
+As $\uu$ is thought to be a realization of a random variable $\UU$, we can consider the two random variables $\kk^*(\UU)$ and $J^*(\UU)$.
 The random conditional minimum $J^*(\UU)$ is then a random variable describing the best performances for the calibration, if we could optimize the cost function for each realization of $\UU$. As we look for a single value $\hat{\kk}$, $J^*(\UU)$ can be seen as an unattainable target:
 \begin{equation}
   \forall (\kk,\uu) \in \Kspace \times \Uspace, \quad J^*(\uu) \leq J(\kk, \uu)
 \end{equation}
 
-Similarly, $\kk^*(\UU)$ carries information on the problem. 
+
+\subsection{The random variable of the minimizer}
+\label{sec:kstar_rv}
+
+If $J$ behaves nicely enough, the mapping
+\begin{equation}
+  \begin{array}{rcl}
+    \kk^*: \Uspace &\longrightarrow& \Kspace \\
+    \uu &\longmapsto& \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
+  \end{array}
+\end{equation}
+
+is well defined for all $\uu \in \Uspace$, and we assume that it is measurable. We can study the image random variable through this mapping, that we will denote $\KK^* = \kk^*(\UU)$.
+We assume that $\UU$ is a continuous random variable, with a compact support.
+
+
+This random variable is directly linked with the ``identifiability'' of the problem at hand.
+If this random variable is dispersed over $\Kspace$, that means that the minimizer is highly dependent on the realization  $\uu$ of $\UU$. Two extreme cases are$ p_{\KK^*}(\kk) = \delta_{\kk_0}(\kk)$ and $ p_{\KK^*}(\kk) = \mathrm{Vol}(\Kspace)^{-1}$
+
+In the first case, $\kk_0 = \argmin_{\kk} J(\kk, \UU)$ almost surely hence the minimizer is not dependent on the value taken by the environmental parameter. The minimum value $J^*$ might be dependent though.
+
+On the other hand, if $\KK^*$ is uniformly distributed on $\Kspace$, no value shows a better affinity of being a minimizer than the other.
+The entropy of the distribution of the minimizers is a good indication of the information we have upon the possible locations of the minimizers. Some global optimization procedures use this entropy as an objective~\cite{villemonteix_informational_2006}.
+
+
+
+
+
+
+
+
+
+Measure information difference between $\delta_{\kk^*(u)}(\kk)$ and $\kk$
+\begin{align}
+  \DKL{\delta_{\kk^*(\uu)}}{p_{\KK \mid Y,\UU}} &= \int_{\kk \in \Kspace} \delta_{\kk^*(\uu)}(\kk)\log\left(\frac{p_{\KK \mid Y, \UU}(\kk \mid Y, \UU=\uu, \KK=\kk^*(\uu))}{p_{\KK \mid Y, \UU}(\kk \mid Y, \UU=\uu)} \right) \, \mathrm{d}\kk \\
+                                                &=
+\end{align}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
