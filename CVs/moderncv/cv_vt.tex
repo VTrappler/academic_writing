@@ -1,0 +1,219 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% "ModernCV" CV and Cover Letter
+% LaTeX Template
+% Version 1.3 (29/10/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Xavier Danaux (xdanaux@gmail.com) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Important note:
+% This template requires the moderncv.cls and .sty files to be in the same 
+% directory as this .tex file. These files provide the resume style and themes 
+% used for structuring the document.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt,a4paper,sans]{moderncv} % Font sizes: 10, 11, or 12; paper sizes: a4paper, letterpaper, a5paper, legalpaper, executivepaper or landscape; font families: sans or roman
+% \defbibenvironment{bibliography}
+%   {\list
+%      {\printtext[labelnumberwidth]{% label format from numeric.bbx
+%         \printfield{prefixnumber}%
+%         \printfield{labelnumber}}}
+%      {\setlength{\topsep}{0pt}% layout parameters from moderncvstyleclassic.sty
+%       \setlength{\labelwidth}{\hintscolumnwidth}%
+%       \setlength{\labelsep}{\separatorcolumnwidth}%
+%       \leftmargin\labelwidth%
+%       \advance\leftmargin\labelsep}%
+%       \sloppy\clubpenalty4000\widowpenalty4000}
+%   {\endlist}
+%   {\item}
+
+% \addbibresource{/home/victor/acadwriting/bibzotero.bib}
+\bibliography{/home/victor/acadwriting/bibzotero}
+
+\moderncvstyle{casual} % CV theme - options include: 'casual' (default), 'classic', 'oldstyle' and 'banking'
+\moderncvcolor{grey} % CV color - options include: 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+
+% \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage[utf8]{inputenc}
+\usepackage[scale=0.8]{geometry} % Reduce document margins
+% \setlength{\hintscolumnwidth}{3cm} % Uncomment to change the width of the dates column
+% \setlength{\makecvtitlenamewidth}{7cm} % For the 'classic' style, uncomment to adjust the width of the space allocated to your name
+
+%----------------------------------------------------------------------------------------
+%	NAME AND CONTACT INFORMATION SECTION
+%----------------------------------------------------------------------------------------
+
+\firstname{Victor} % Your first name
+\familyname{Trappler} % Your last name
+
+% All information in this block is optional, comment out any lines you don't need
+\title{PhD Student in the AIRSEA team} % \newline Robust estimation of parameter}
+\address{7 rue Louis Le Cardonnel}{38100 Grenoble, France}
+\mobile{(+33) 6 45 75 14 68}
+\email{victor.trappler@univ-grenoble-alpes.fr}
+\homepage{team.inria.fr/airsea/en/victor-trappler/}
+% The first argument is the url for the clickable link, the second argument is the url displayed in the template - this allows special characters to be displayed such as the tilde in this example
+% \quote{PhD student in the AIRSEA team in Grenoble, working on the robust calibration of computer code. }
+% \photo[70pt][0.4pt]{pictures/picture} % The first bracket is the picture height, the second is the thickness of the frame around the picture (0pt for no frame)
+%\quote{"A witty and playful quotation" - John Smith}
+
+%----------------------------------------------------------------------------------------
+\extrainfo{\homepagesymbol\httplink{vtrappler.github.io}}
+\begin{document}
+
+% %----------------------------------------------------------------------------------------
+% %	COVER LETTER
+% %----------------------------------------------------------------------------------------
+
+% % To remove the cover letter, comment out this entire block
+
+% \clearpage
+
+% \recipient{HR Department}{Corporation\\123 Pleasant Lane\\12345 City, State} % Letter recipient
+% \date{\today} % Letter date
+% \opening{Dear Sir or Madam,} % Opening greeting
+% \closing{Sincerely yours,} % Closing phrase
+% \enclosure[Attached]{curriculum vit\ae{}} % List of enclosed documents
+
+% \makelettertitle % Print letter title
+
+% \lipsum[1-2] % Dummy text
+% \lipsum[4] % Dummy text
+
+% \makeletterclosing % Print letter signature
+
+% \newpage
+
+%----------------------------------------------------------------------------------------
+%	CURRICULUM VITAE
+%----------------------------------------------------------------------------------------
+\makecvtitle% Print the CV title
+
+\section{Research interests}
+I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (Inria), under the supervision of Arthur Vidard, Élise Arnaud, and Laurent Debreu.\@ My research interests revolve mainly around \textbf{Uncertainty Quantification}, and \textbf{Inverse Problems}. More specifically, I am interested in Robust Optimization and Optimization under Uncertainties (OUU), in the context of the \textbf{estimation of parameters under uncertainties}.
+%----------------------------------------------------------------------------------------
+%	EDUCATION SECTION
+%----------------------------------------------------------------------------------------
+\section{Education}
+
+\cventry{2017--Current}{PhD Student}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties \\ \textit{Abstract}: Classical methods of parameter estimation usually imply the minimisation of an objective function, that overlooks the role of uncertain parameters. Strategies taking into account these uncertainties need to be defined \\
+\textit{Keywords}: Parameter Estimation; Optimisation under Uncertainties; Data Assimilation \\
+  \textit{Advisors}: A. Vidard, É. Arnaud, L. Debreu}
+\cventry{2015--2017}{MSc Mathematical Modelling and Computation}{Danmarks Tekniske Universitet}{Kgs. Lyngby}{Denmark}{\textit{Focus points}: Applied mathematics analysis, Dynamical Systems, Scientific Computing, Statistical
+modelling}  % Arguments not required can be left empty
+\cventry{2013--2017}{Engineering Degree}{École Centrale Lyon}{Écully}{Interests and courses oriented toward applied mathematics}{}{}
+
+
+%----------------------------------------------------------------------------------------
+%	WORK EXPERIENCE SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Experience}
+\subsection{Internships/Master thesis}
+\cventry{2017}{Master Thesis}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties: Robust estimation of bottom friction\\ \textit{Advisors}: Uffe Høgsbro Thygesen (DTU), Élise Arnaud, Arthur Vidard, Laurent Debreu (Inria)}
+
+%------------------------------------------------
+
+\cventry{2015}{Intern}{EDF R\&D}{Chatou}{France}{Developement of MATLAB tools for hydrodynamical model TELEMAC3D, with the purpose of estimating the residence time}
+
+%------------------------------------------------
+
+\subsection{Teaching experience}
+
+\cventry{2017--2019}{Teaching assistant}{Grenoble-Alpes University}{}{}{Lectures in calculus, algebra, and computer lab sessions in statistics for undergraduates students. Teaching time adding up to 138h:
+  \begin{itemize}
+  \item L2 STA301: 90h of lab work on statistics using the R language
+  \item L1 MIASHS: 20h of exercise sessions on calculus
+  \item L1 MAT104: 28h of lectures and exercise sessions on geometry and algebra
+  \end{itemize}
+  }
+ \cventry{2017--20120}{Research and Teaching Label}{Grenoble-Alpes University}{}{}{Specific doctoral training for students wanting to pursue an academic career, mostly on specific teaching methods and reflexions on higher education}
+
+ \clearpage
+
+ \section{Publications and preprints}
+ \nocite{trappler_robust_2020}
+ \bibliographystyle{unsrt}
+ \bibliography{/home/victor/acadwriting/bibzotero.bib}
+ % \printbibliography[title={Publications}]
+
+\section{Presentations and poster presentations}
+\cvitem{2020 (Expected)}{Oral presentation at the annual GdR MASCOTNUM PhD meeting (postponed from march 2020), Grenoble, France}
+\cvitem{2019}{Oral Presentation at the Applied Inverse Problems Conference, in the mini-symposium ``Dimension reduction in inverse problems'', Grenoble, France}
+\cvitem{2018}{Oral Presentation at the National Colloquium for Data Assimilation, Rennes, France}
+\cvitem{2018}{Poster at the Workshop on Sensitivity Analysis and Data Assimilation in
+  Meteorology and Oceanography, Aveiro, Portugal}
+
+%----------------------------------------------------------------------------------------
+%	COMPUTER SKILLS SECTION
+%----------------------------------------------------------------------------------------
+
+\section{Relevant skills}
+%\cventry{CS skills}{}{}{}{}{}
+%\begin{itemize}
+%\item python: numpy, scipy, scikitlearn and wrote custom packages
+%\item \textsc{R}
+%\end{itemize}
+%\cvitem{Computing}{Python, \textsc{R}, \LaTeX, bash}
+\cvlanguage{Languages}{French (Fluent)}{Mothertongue}
+\cvlanguage{}{English (Fluent)}{TOEFL IBT score: 105/120 (2015)}
+\cvlanguage{}{German (Intermediate)}{Adapted for casual conversations}
+\cvlanguage{}{}{}
+\cvlanguage{Computing}{Python 2.7, 3.5+}{Advanced, numpy, scipy, scikitlearn, wrote custom packages}
+\cvlanguage{}{\textsc{R}}{Intermediate}
+\cvlanguage{}{Matlab}{Intermediate}
+\cvlanguage{}{\textsc{FORTRAN}}{Basic}
+\cvlanguage{}{\textsc{C++}}{Basic}
+\cvlanguage{}{}{}
+
+\cvlanguage{Utilitaries}{\LaTeX}{}
+\cvlanguage{}{bash}{}
+\cvlanguage{}{git}{}
+
+\section{Miscellaneous}
+\cventry{2020}{Representative of non-permanent employees}{LJK, Grenoble}{}{}{Elected as a representative of the non-permanent employees (PhD, interns, postdocs fellows, engineers) of the Jean Kuntzmann Laboratory. Participation at the lab council}
+
+%----------------------------------------------------------------------------------------
+%	COMMUNICATION SKILLS SECTION
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	LANGUAGES SECTION
+%----------------------------------------------------------------------------------------
+
+% \section{Languages}
+
+% \cvlanguage{Danish, Portuguese}{Beginner}{Basic words and sentences}
+
+%----------------------------------------------------------------------------------------
+%	INTERESTS SECTION
+%----------------------------------------------------------------------------------------
+
+% \section{Interests}
+
+% \renewcommand{\listitemsymbol}{-~} % Changes the symbol used for lists
+
+% \cvlistdoubleitem{Piano}{Chess}
+% \cvlistdoubleitem{Cooking}{Dancing}
+% \cvlistitem{Running}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
