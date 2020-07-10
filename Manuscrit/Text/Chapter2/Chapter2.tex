@@ -19,8 +19,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-% \dominitoc
-% \faketableofcontents
+\dominitoc
+\faketableofcontents
 % Rappel du précédent style, pour qu'il aille jusqu'à la dernière page (?? latex...)
 % \pagestyle{introStyle}
 % \TitleBtwLines
@@ -33,7 +33,7 @@
 \mtcsetdepth{minitoc}{4} 
 
 \minitoc
-\listoftodos
+% \listoftodos
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,9 +45,9 @@ In this chapter we will first lay the ground for developing the general ideas be
 
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
-Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are unresolved at the model's scale (friction of the ocean bed, or $k-\epsilon$ turbulence models for instance). A proper estimation of these parameter has to be performed in order to guarantee a meaningful output when evaluating the model.
+Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are unresolved at the model's scale (friction of the ocean bed, or $k-\epsilon$ turbulence models for instance). A proper estimation of these parameters has to be performed in order to guarantee a meaningful output when evaluating the model.
 
-Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, ww will first review the problem from a probabilistic point of view, in order to define properly appropriate objective functions and introduce tools from optimal control theory to optimize them.
+Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, we will first review the problem from a probabilistic point of view, in order to define properly some appropriate objective functions and introduce tools from optimal control theory to optimize them.
 
  \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
@@ -65,16 +65,19 @@ The forward operator is the mathematical representation of the physical system, 
 \end{definition}
 As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$, we can define a kind of dimensionality of the model, based on the number of \emph{degrees of freedom} available for the parameters.
 
+
 \begin{remark}
   \label{rmk:model_dimension}
   The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$. The dimension of a model $\mathfrak{M}$ is sometimes called the degrees of freedom of $\mathfrak{M}$.
   \end{remark}
-  
+
+
+
 \begin{example}
   A model with parameter space $\Theta = \mathbb{R}^2\times \interval{0}{1}$ has dimension $3$, while $\Theta = \mathbb{R}^2 \times \{1\}$ has dimension $2$.
 \end{example}
  Now that we have introduced the forward operator and the parameter space, we will focus on the output of the model.
-The data space consists in all the physically acceptable results of the physical experiment. This set is noted $\Yspace$.
+The data space $\Yspace$ consists in all the physically acceptable results of the physical experiment.
 Then, the forward operator $\mathcal{M}$ maps the parameter space $\Theta \subset \mathbb{R}^{d}$ to the data space $\Yspace$, as one can expect that all models provide physically acceptable outputs.
 
 \subsection{Forward problem}
@@ -88,7 +91,7 @@ Given a model $(\mathcal{M}, \Theta)$, the \emph{forward problem} consists in ap
 As said earlier, the forward operator can be a set of ODEs or PDEs, discretized or not. The forward problem is then the attempt to link the causes, i.e.\ the parameters, to the consequences, i.e.\ the output in the data space.
 
 \subsection{Inverse Problem}
-The inverse problem is the counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on the one hand on the result of the experiment or the observation of the physical process and on the other hand the knowledge of the forward operator, as illustrated \cref{fig:inv_problem_pple}.
+The inverse problem is the counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on: the result of the experiment or the observation of the physical process and on the knowledge of the forward operator, as illustrated \cref{fig:inv_problem_pple}.
 
 \begin{figure}[ht]
   \centering
@@ -132,7 +135,7 @@ Observing an event $B \in \mathcal{F}$ can bring information upon another event 
 \end{definition}
 Formally, an event can be seen as an outcome of some uncertain experiment, and its probability is ``how likely'' this event will happen.
 
-Let us now introduce a measurable state (or sample) space $S$, that is the set of all possible events (upon which we can assign a probability of happening).
+Let us now introduce a measurable state (or sample) space $S$, that is the set of all possible events (upon which we can assign a probability).
 \begin{definition}[Random Variable, Expectation]
   \label{def:random_variable}
   A random variable (abbreviated as r.v.) $X$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an upper case letter. A realisation or observation $x$ of the r.v. $X$ is the actual image of $\omega\in\Omega$ under $X$: $x = X(\omega)$. If $S$ is countable, the random variable is said to be \emph{discrete}. When $S\subseteq \mathbb{R}^p$ for $p\geq 1$, $X$ is sometimes called a random vector
@@ -260,8 +263,7 @@ One can verify that if $F_X$ is derivable, then its derivative is the density of
   \end{equation}
 \end{definition}
 
-
-Extending those definitions from real-valued random variables to real-valued random vectors is pretty straightforward
+These definition above hold for real-valued random variables, so 1D r.v., but can be extended for random vectors.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \subsubsection{Real-valued random vectors}
@@ -299,8 +301,7 @@ and based on this definition, we can extend the notion of variance to vectors. T
 
 
   We can now define the \emph{marginal densities}
-  For notation clarity, we are going to set $X = [Y,Z]$
-
+  For notation clarity, we are going to set $X = [Y,Z]$: the marginal densities of $Y$ and $Z$ are
   \begin{equation}
     \label{eq:marginals_def}
     p_{Y}(y) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}z \quad \text{ and } \quad p_{Z}(z) = \int_{\mathbb{R}}p_{Y,Z}(y,z) \,\mathrm{d}y
@@ -349,35 +350,34 @@ We discussed so far the different quantities that characterize random variables.
 
 \begin{definition}[KL--divergence and entropy]
   The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
-  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall x$, $p_X(x) = 0 \implies p_{X^{\prime}}(x) =0$. The KL-divergence is defined as
+  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall A$, $\int_A p_X(x)\,\mathrm{d}x = 0 \implies \int_A p_{X^{\prime}}(x)\,\mathrm{d}x =0$. The KL-divergence is defined as
   \begin{align}
     % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
     \DKL{p_X}{p_{X^\prime}} &= \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x \\ &= \Ex_X\left[-\log p_{X^\prime}(X)\right] - \Ex_X\left[-\log p_X(X)\right] \\
                                                                                                 &= H\left[X^{\prime}, X\right] - H\left[X\right]
   \end{align}
   $H[X]$ is called the (differential entropy) of the random variable $X$, and $H[X^{\prime}, X]$ the cross-entropy of $X^{\prime}$ and $X$.
-  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ verifying the property above, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
+  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ such that the KL-divergence exists, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
 \end{definition}
 
 \subsubsection{Important examples of real random variables}
 One of the most well known distribution is the normal distribution, also called Gaussian distribution, that appears in various situations, but most notably in the central limit theorem.
 \begin{example}[The Normal Distribution]
   \label{ex:gaussian_distribution}
-  One central example is the normal (or Gaussian) distribution. Let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}$.
-  $X$ follows the normal distribution of mean $\mu \in \mathbb{R}$ and variance $\sigma^2>0$ when
+  Let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}$.
+  If $X$ follow the normal distribution of mean $\mu \in \mathbb{R}$ and variance $\sigma^2>0$, we write $X \sim \mathcal{N}(\mu,\sigma^2)$, and its pdf is
   \begin{equation}
     p_X(x) = \phi(x) = \frac{1}{\sqrt{2\pi}\sigma}\exp\left(-\frac{1}{2}\frac{(x-\mu)^2}{\sigma^2}\right)
   \end{equation}
-and we write $X \sim \mathcal{N}(\mu,\sigma^2)$.
-For the multidimensional case, so when $X$ is a r.v.\ from $\Omega$ to $\mathbb{R}^p$,
-$X$ follows a normal distribution of mean $\mu \in \mathbb{R}^p$ and covariance matrix $\Sigma \in \mathbb{R}^{p\times p}$, where $\Sigma$ is semi-definite positive.
+
+For the multidimensional case, let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}^p$, that follows a normal distribution of mean $\mu \in \mathbb{R}^p$ and covariance matrix $\Sigma \in \mathbb{R}^{p\times p}$, where $\Sigma$ is semi-definite positive.
 In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector $X$ can be written as
 \begin{equation}
     p_X(x) = (2\pi)^{-\frac{p}{2}}\lvert\Sigma\rvert^{-1}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
   \end{equation}
   where $|\Sigma|$ is the determinant of the matrix $\Sigma$, and $(\cdot)^T$ is the transposition operator.
   As the covariance matrix appears through its inverse, another encountered parametrization is to use the precision matrix $\Sigma^{-1}$.
-  Examples of pdf of Gaussian normal distribution are displayed~\cref{fig:example_normal}.
+  Examples of pdf of Gaussian normal distributions are displayed~\cref{fig:example_normal}.
 \end{example}
 \begin{figure}[!h]
   \centering
@@ -388,15 +388,16 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
 When adding independent squared samples of the normal distribution, the resulting random variable follows a $\chi^2$ distribution.
 \begin{example}[The $\chi^2$ distribution]
   \label{ex:chi2}
-  Let $X_1, X_2,\dots,X_n$ be $n$ independent random variables, such that for $1\leq i \leq n$, $X_i \sim \mathcal{N}(0,1)$
+  Let $X_1, X_2,\dots,X_{\nu}$ be $\nu$ independent random variables, such that for $1\leq i \leq \nu$, $X_i \sim \mathcal{N}(0,1)$
   We define the random variable $X$ as
   \begin{equation}
-    X = \sum_{i=1}^n X_i^2
+    X = \sum_{i=1}^\nu X_i^2
   \end{equation}
-  By definition, the random variable $X$ follows a $\chi^2$ distribution with $n$ degrees of freedom: $X\sim \chi^2_n$. The quantile of order $\beta$ is written $\chi^2_n(\beta)$ and verifies
+  By definition, the random variable $X$ follows a $\chi^2$ distribution with $\nu$ degrees of freedom: $X\sim \chi^2_{\nu}$. The quantile of order $\beta$ is written $\chi^2_{\nu}(\beta)$ and verifies
   \begin{equation}
-    \Prob[X \leq \chi^2_n(\beta)] = \beta 
+    \Prob[X \leq \chi^2_{\nu}(\beta)] = \beta 
   \end{equation}
+  The pdf of such a r.v. are displayed~\cref{fig:chi2_examples}, for different degrees of freedom.
 \end{example}
 
 \begin{figure}[ht]
@@ -407,7 +408,7 @@ When adding independent squared samples of the normal distribution, the resultin
 \end{figure}
 
 
-
+\clearpage
 
 
 \section{Parameter inference}
@@ -418,7 +419,7 @@ We can represent both the reality and the computer simulation as models.
 The physical system (the reality) that is observed can be represented by a model $\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by a forward operator $\mathscr{M}$, and a parameter space $\Theta_{\mathrm{real}}$.
 Observing the physical system means to get access to $y\in \Yspace$ that is the image of an \emph{unknown} parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the forward operator, so $y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
 
-On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)$. This is illustrated~\cref{fig:inv_problem}.
+On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)=y$. This is illustrated~\cref{fig:inv_problem}.
 
 \begin{figure}[ht]
   \centering
@@ -446,11 +447,11 @@ First, let us assume that $\vartheta \in \Theta \subseteq \Theta_{\mathrm{real}}
 
   From the diverse assumptions we can make upon this sampled random variable, we can then treat the calibration procedure as a parameter estimation problem of a random variable.
   The estimated parameter will be written $\hat{\kk}$, and the subscript will denote additional information on the estimator. 
-  In this thesis, we are mostly focused on extremum estimators. Those estimators are defined as the optimizer of a given objective function $J$, $\hat{\kk} = \argmin J$. In the next sections, we will see the probabilistic origins of a few classical objective function.
+  In this thesis, we focus on extremum estimators. Those estimators are defined as the optimizer of a given objective function $J$, $\hat{\kk} = \argmin J$. In the next sections, we will see the probabilistic origins of a few classical objective function.
 \subsection{Frequentist inference, MLE}
 \label{sec:frequentist_inference_MLE}
 \subsubsection{Formulation of the MLE}
-As mentioned before, we can model the observations as a random variable, say $Y$, and assume that those were generated using a parametric family of distributions, whose densities are
+As mentioned before, we can model the observations as a random variable, say $Y$ (uppercase to highlight its random nature), and assume that this r.v. belong to a family of parametric distribution, whose densities are
 \begin{equation}
   \label{eq:family_pdf}
   \left\{y\mapsto p_{Y}(y; \theta) ; \theta\in\Theta \right\}
@@ -461,6 +462,8 @@ The choice has been made to keep explicit the dependency on $\theta$. For instan
   Y  \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
 \end{equation}
 whose one sample is $y=\mathscr{M}(\vartheta)$.
+
+
 Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions mapping the sample space $\Yspace$ to $\mathbb{R}$, we may look at it instead as a function of $\theta$, as the observations $y\in\Yspace$ do not vary. We can then define the likelihood function and its associated extremum estimator.
 \begin{definition}[Likelihood function, MLE]
   \label{def:mle}
@@ -483,7 +486,7 @@ Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions ma
   \end{equation}
 
 \end{definition}
-  Equivalently, for practical and numerical reasons, the maximization of the likelihood is replaced by the minimization the negative log-likelihood:
+  For practical and numerical reasons, the maximization of the likelihood is often replaced by the minimization the negative log-likelihood:
   \begin{equation}
     \label{eq:MLE_iid}
     \estimtxt{\theta}{MLE} = \argmin_{\theta \in \Theta} -\log \mathcal{L}(\theta;y)= \argmin_{\theta \in \Theta} -\sum_{i=1}^p\log p_{Y_i\mid \theta}(y_i \mid \theta) 
@@ -503,11 +506,12 @@ As the optimization is performed on $\theta$, we can remove the constant terms o
   Frequentist inference and Maximum Likelihood estimation boils down to Generalized non-linear least-square regression, that minimizes the squared Mahalabonis distance between $\mathcal{M}({\theta})$ and $y$. This is only true as we assumed a Gaussian form of the errors in~\cref{eq:lik_gaussian}. Other choices of the sampling distribution~\cref{eq:lik_gaussian} will result in different objective functions. To reduce the sensitivity on outliers, some authors such as~\cite{rao_robust_2015} introduce Student or Laplace distributed errors, or specifically designed norm such as the Huber norm~\cite{huber_robust_2011}.
 
   If the covariance matrix is diagonal, the residual errors are then uncorrelated, thus indepedent due to their Gaussian nature as defined in~\cref{eq:lik_gaussian}. The likelihood can be rewritten as the product of densities evaluated at the different samples $y_i$, obtained from their true distribution $Y$.
-  A direct link can be written between the KL--divergence and the MLE. Let us write the KL--divergence between the true density $p_Y$ and the parametric sampling distribution $p_Y(\cdot;\theta)$:
+  A direct link can be written between the KL--divergence and the MLE:
+  The KL--divergence between the true density $p_Y$ and the parametric sampling distribution $p_Y(\cdot;\theta)$ is
   \begin{equation}
   \DKL{p_Y}{p_Y(\cdot;\theta)} = \Ex_Y\left[\log p_Y(Y)\right]-\Ex_Y\left[\log p_Y(Y;\theta)\right]  
 \end{equation}
-As the first term does not depend on $\theta$, minimizing the KL--divergence is equivalent to minimizing the second part of the equation, so
+As the first term does not depend on $\theta$, minimizing this expression is equivalent to minimizing the second part of the equation, so
 \begin{align}
  \argmin_{\theta \in\Theta} \DKL{p_Y}{p_Y\left(\cdot;\theta \right)} = \argmin_{\theta \in \Theta} -\Ex_{Y}\left[\log p_{Y}(Y ; \theta)\right]
 \end{align}
@@ -518,7 +522,7 @@ The true distribution of the observation is unknown, but samples $y_i$ are avail
 \end{equation}
 Thus, the MLE minimizes the empirical KL-divergence between the true distribution of the observations and the sampling distribution of the observation (that depends on $\theta$).
 
-The MLE possesses desirable asymptotic properties, such as asymptotic normality when the number of observations grows large. Those properties then permit the construction of asymptotic confidence interval, and to perform hypothesis testing, especially for model selection. This aspect will be further developed in \cref{sec:model_selection}.
+The MLE possesses desirable asymptotic properties, such as asymptotic normality when the number of observations grows large~\cite{reid_aspects_2013}. Those properties permit the construction of asymptotic confidence interval, and to perform hypothesis testing, especially for model selection. This aspect will be further developed in \cref{sec:model_selection}.
 
 % \subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
 % \todo{y faire référence, pas de détails}
@@ -862,5 +866,5 @@ Adding a environmental variable as a random nuisance parameter introduces a para
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../../Main_ManuscritThese"
+%%% TeX-master: t %"../../Main_ManuscritThese"
 %%% End:

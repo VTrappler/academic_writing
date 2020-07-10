@@ -40,7 +40,7 @@
 %   {\item}
 
 % \addbibresource{/home/victor/acadwriting/bibzotero.bib}
-\bibliography{/home/victor/acadwriting/bibzotero}
+% \bibliography{/home/victor/acadwriting/bibzotero}
 
 \moderncvstyle{casual} % CV theme - options include: 'casual' (default), 'classic', 'oldstyle' and 'banking'
 \moderncvcolor{grey} % CV color - options include: 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
@@ -48,6 +48,8 @@
 % \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage[utf8]{inputenc}
 \usepackage[scale=0.8]{geometry} % Reduce document margins
+% \usepackage{biblatex}
+% \renewcommand{\bibname}{Preprint and Publications}
 % \setlength{\hintscolumnwidth}{3cm} % Uncomment to change the width of the dates column
 % \setlength{\makecvtitlenamewidth}{7cm} % For the 'classic' style, uncomment to adjust the width of the space allocated to your name
 
@@ -111,8 +113,7 @@ I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (In
 \cventry{2017--Current}{PhD Student}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties \\ \textit{Abstract}: Classical methods of parameter estimation usually imply the minimisation of an objective function, that overlooks the role of uncertain parameters. Strategies taking into account these uncertainties need to be defined \\
 \textit{Keywords}: Parameter Estimation; Optimisation under Uncertainties; Data Assimilation \\
   \textit{Advisors}: A. Vidard, É. Arnaud, L. Debreu}
-\cventry{2015--2017}{MSc Mathematical Modelling and Computation}{Danmarks Tekniske Universitet}{Kgs. Lyngby}{Denmark}{\textit{Focus points}: Applied mathematics analysis, Dynamical Systems, Scientific Computing, Statistical
-modelling}  % Arguments not required can be left empty
+\cventry{2015--2017}{MSc Mathematical Modelling and Computation}{Danmarks Tekniske Universitet}{Kgs. Lyngby}{Denmark}{\textit{Focus points}: Applied mathematical analysis, Dynamical Systems, Scientific Computing, Statistical modelling, Stochastic simulations}  % Arguments not required can be left empty
 \cventry{2013--2017}{Engineering Degree}{École Centrale Lyon}{Écully}{Interests and courses oriented toward applied mathematics}{}{}
 
 
@@ -132,20 +133,19 @@ modelling}  % Arguments not required can be left empty
 
 \subsection{Teaching experience}
 
-\cventry{2017--2019}{Teaching assistant}{Grenoble-Alpes University}{}{}{Lectures in calculus, algebra, and computer lab sessions in statistics for undergraduates students. Teaching time adding up to 138h:
+\cventry{2017--2019}{Teaching assistant}{Grenoble-Alpes University}{}{}{Lectures in calculus, algebra, and computer lab sessions in statistics for undergraduates students. Teaching time adding up to \emph{138h}:
   \begin{itemize}
   \item L2 STA301: 90h of lab work on statistics using the R language
   \item L1 MIASHS: 20h of exercise sessions on calculus
   \item L1 MAT104: 28h of lectures and exercise sessions on geometry and algebra
   \end{itemize}
   }
- \cventry{2017--20120}{Research and Teaching Label}{Grenoble-Alpes University}{}{}{Specific doctoral training for students wanting to pursue an academic career, mostly on specific teaching methods and reflexions on higher education}
+ \cventry{2017--2020}{Research and Teaching Label}{Grenoble-Alpes University}{}{}{Specific doctoral training for students wanting to pursue an academic career, mostly on specific teaching methods and reflexions on higher education}
 
- \clearpage
 
- \section{Publications and preprints}
+ % \section{Publications and preprints}
  \nocite{trappler_robust_2020}
- \bibliographystyle{unsrt}
+ \bibliographystyle{plainyr}
  \bibliography{/home/victor/acadwriting/bibzotero.bib}
  % \printbibliography[title={Publications}]
 
@@ -167,23 +167,21 @@ modelling}  % Arguments not required can be left empty
 %\item \textsc{R}
 %\end{itemize}
 %\cvitem{Computing}{Python, \textsc{R}, \LaTeX, bash}
-\cvlanguage{Languages}{French (Fluent)}{Mothertongue}
+\cvlanguage{Languages}{French (Fluent)}{Native}
 \cvlanguage{}{English (Fluent)}{TOEFL IBT score: 105/120 (2015)}
 \cvlanguage{}{German (Intermediate)}{Adapted for casual conversations}
-\cvlanguage{}{}{}
-\cvlanguage{Computing}{Python 2.7, 3.5+}{Advanced, numpy, scipy, scikitlearn, wrote custom packages}
+\cvlanguage{Sci. Comp.}{Python 2.7, 3.5+}{Advanced: numpy, scipy, scikitlearn \& custom packages}
 \cvlanguage{}{\textsc{R}}{Intermediate}
 \cvlanguage{}{Matlab}{Intermediate}
 \cvlanguage{}{\textsc{FORTRAN}}{Basic}
 \cvlanguage{}{\textsc{C++}}{Basic}
-\cvlanguage{}{}{}
-
 \cvlanguage{Utilitaries}{\LaTeX}{}
 \cvlanguage{}{bash}{}
 \cvlanguage{}{git}{}
 
 \section{Miscellaneous}
 \cventry{2020}{Representative of non-permanent employees}{LJK, Grenoble}{}{}{Elected as a representative of the non-permanent employees (PhD, interns, postdocs fellows, engineers) of the Jean Kuntzmann Laboratory. Participation at the lab council}
+
 
 %----------------------------------------------------------------------------------------
 %	COMMUNICATION SKILLS SECTION

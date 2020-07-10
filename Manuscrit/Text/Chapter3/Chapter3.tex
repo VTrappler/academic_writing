@@ -18,17 +18,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-% \dominitoc
-% \faketableofcontents
+\dominitoc
+\faketableofcontents
 % \subfileLocal{\setcounter{chapter}{1}}
 \chapter{Robust estimators in the presence of uncertainties} 
 \label{chap:robust_estimators}
 
 \minitoc
-\newpage
+% \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In the previous chapter, we raised the problem of misspecification of the numerical model with respect to the reality. Moreover, this misspecification is random by nature, and we wish that the calibrated model shows relatively good performances when the environmental variables varies.
+
+\section{Defining robustness}
+\label{sec:def_robustness}
+\subsection{Classifying the uncertainties}
+In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
+
+In that context, the very notion of uncertainty can be roughly split in two, as described in~\cite{walker_defining_2003}:
+\begin{itemize}
+\item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
+\item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
+\end{itemize}
+According to this distinction,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to an objective function.
+The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction illustrated \cref{fig:source_uncertainties} is a bit rough, as~\cite{kiureghian_aleatory_2009} point out that deciding the type of uncertainties is up to the modeller, who decide on which parameters inference is worth doing.
+
 \begin{figure}[ht]
   \begin{center}
   \resizebox{\linewidth}{!}
@@ -36,11 +50,9 @@ In the previous chapter, we raised the problem of misspecification of the numeri
       \input{/home/victor/acadwriting/Manuscrit/Text/Chapter3/img/modelling_uncertainties}
     }
     \end{center}
-  \caption{\label{fig:label} }
+  \caption{\label{fig:sources_uncertainties} Sources of uncertainties and errors in the modelling. The natural variability of the physical system can be seen as aleatoric uncertainties, and the errors on the parameters as epistemic uncertainties}
 \end{figure}
 
-
-\section{Defining robustness}
 \subsection{Robustness or reliability ?}
 
 
@@ -65,17 +77,6 @@ Moreover, robustness is often linked and sometimes confused to the semantically 
 \caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Shaded cells correspond to problems comprising an uncertain part. Reproduced from~\cite{lelievre_consideration_2016}}
 \label{tab:lelievre}
 \end{table}
-
-\subsection{Classifying the uncertainties}
-In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
-
-In that context, the very notion of uncertainty can be roughly split in two, as described in~\cite{walker_defining_2003}:
-\begin{itemize}
-\item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
-\item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
-\end{itemize}
-According to this distinction,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to an objective function.
-The uncertain variable on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This distinction is a bit rough, as~\cite{kiureghian_aleatory_2009} point out that the deciding the type of uncertainties is up to the modeller.
 
 
 
@@ -109,13 +110,17 @@ Profiling implies to perform first a maximization of the likelihood with respect
   \label{eq:eq:def_profile_lik}
   \mathcal{L}_{\mathrm{profile}}(\theta;y) = \max_{\uu \in \Uspace} \mathcal{L}(\theta,u;y)
 \end{equation}
+and
+\begin{equation}
+  \estimtxt{\kk}{prMLE} = \argmax_{\kk\in\Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
+\end{equation}
 In other words, considering the most favorable case of the likelihood given the nuisance parameters.
-Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihood and the profile MLE on $\Kspace$ for the profile likelihood, it is straightforward to verify that their component on $\Kspace$ coincide as
+Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihood and the profile MLE on $\Kspace$ for the profile likelihood, it is straightforward to verify that their components on $\Kspace$ coincide as
 \begin{equation}
   \max_{(\kk ,\uu) \in \Kspace\times \Uspace} \mathcal{L}(\theta,\uu;y) = \max_{\kk\in \Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
-\end{equation},
+\end{equation}
 
-The resulting estimator is truly optimal in some sense, but does not take into account the uncertainty upon $\uu$.
+The resulting estimator does not take into account the uncertainty upon $\uu$, and can perform quite badly when the likelihood presents sharp ridges~\cite{berger_integrated_1999}.
 
 Another alternative is to define the \emph{integrated} (or marginalized) likelihood as
 \begin{align}
@@ -124,14 +129,21 @@ Another alternative is to define the \emph{integrated} (or marginalized) likelih
                                               &=\int_{\Uspace} p_{Y,\UU|\theta}(y,u \mid \theta)\,\mathrm{d}\uu \\
   &= p_{Y \mid \kk}(y \mid \kk)
 \end{align}
-
-In~\cite{berger_integrated_1999}, the authors report on the difference between those two approaches. The main takeaway is that profiling erases the uncertainty on $\uu$.
+and by maximizing this function,
+\begin{equation}
+  \estimtxt{\kk}{intMLE} = \argmax_{\kk\in\Kspace}   \mathcal{L}_{\mathrm{integrated}}(\theta;y)
+\end{equation}
+The profile and integrated likelihood have been computed for the following likelihood:
+\begin{align}
+  Y \mid \KK, \UU &\sim \mathcal{N}(\kk + \uu^2, 2^2)
+\end{align}
+and the observations $y = [y_1,\cdots, y_{10}]$ have been observed using $\theta+\uu^2=1$. We set $\Kspace = [-5,5]$ and $\Uspace = [-2, 2]$. The likelihood evaluated on $\Kspace \times \Uspace$ is displayed~\cref{fig:profile_integrated_lik}, with the integrated and profile likelihood.
 \begin{figure}[ht]
   \centering
   \input{\imgpath profile_integrated_lik.pgf}
   \caption{\label{fig:profile_integrated_lik} Profile and integrated likelihood for an uniform nuisance parameter}
 \end{figure}
-
+We can see that there is not unicity of the maximizer of the profile likelihood: $\mathcal{L}_{\mathrm{profile}}(\kk;y)$ is constant for $\kk \in [-3, 1]$. For the integrated likelihood, there is a unique maximum, attained for $\estimtxt{\kk}{intMLE} \approx 0.8$.
 
 \subsection{Joint posterior distribution}
 Again, by introducing a prior distribution on $\kk$: $p_{\kk}$, we can derive the posterior distribution. We assume that $\UU$ and $\kk$ are independent: $p_{\KK, \UU} = p_{\KK}p_{\UU}$.
@@ -157,7 +169,7 @@ We can then define the marginalized maximum as posteriori (MMAP)~\cite{doucet_ma
 \end{equation}
 or, by taking the negative logarithm to get a minimization problem:
 \begin{equation}
-\estimtxt{\kk}{MMAP} = \argmin_{\kk\in\Kspace} -\log \left(\int_{\Uspace} p_{\KK\mid Y,\UU}(\kk\mid y, u) p_{\UU \mid Y}(\uu \mid Y)\,\mathrm{d}\uu \right)
+\estimtxt{\kk}{MMAP} = \argmin_{\kk\in\Kspace} -\log \left(\int_{\Uspace} p_{\KK\mid Y,\UU}(\kk\mid y, u) p_{\UU \mid Y}(\uu \mid y)\,\mathrm{d}\uu \right)
 \end{equation}
 Unfortunately, neither the integration with respect to the nuisance parameter in~\eqref{eq:marg_MMAP} nor the subsequent optimization is analytically easy. \cite{doucet_marginal_2002} proposes a MCMC method in order to estimate iteratively the MMAP, through sampling of the joint posterior.
 
@@ -176,13 +188,13 @@ We are going to make several assumptions on this function:
 \item $\Kspace$ is convex and bounded 
 \item For all $\kk \in \Kspace$ and $\uu \in \Uspace$, $J(\kk, \uu)>0$
 \item For all $\kk \in \Kspace$, $J(\kk, \cdot)$ is measurable
-\item For all $\kk \in \Kspace$, $J(\kk, \UU) \in L^p(\Prob_{\UU})$ and $p \geq 2$. So for each $\kk$, we mean and variance exist and are finite.
+\item For all $\kk \in \Kspace$, $J(\kk, \UU) \in L^p(\Prob_{\UU})$ and $p \geq 2$. So for each $\kk$, mean and variance exist and are finite.
 \end{itemize}
 
 Most of existing methods require first to remove the dependency on the uncertain variable, by defining a \emph{robust} (and deterministic) counterpart of the minimization problem under uncertainty, that we can solve using classical methods of optimization.
 
 \subsection{Decision under uncertainty}
-We will first detail some estimators that can arguably be said robust, even though the random nature of $\UU$ is not taken into account. This uncertainty is modelled through Laplace's uncertainty principle, stating that no information whatsoever is available on $\uu$, or the distribution of $\UU$.
+We will first detail some estimators that can arguably be said robust, even though the random nature of $\UU$ is not taken into account. This uncertainty is modelled through the principle of indifference, stating that no information whatsoever is available on $\uu$, or the distribution of $\UU$.
 
 
 \subsubsection{Global optimization}
@@ -234,7 +246,9 @@ and
 \subsection{Robustness based on the moments of an objective function}
 In the presence of uncertainties, choosing a parameter value $\kk$ can also be seen as making as making a choice under risk. Let $J:\Kspace \times \Uspace\rightarrow \mathbb{R}^+$ be an objective function, and assume that for all $\kk \in \Kspace$, $J(\kk, \cdot)$ is a measurable function.
 $J$ can be seen as the opposite of the \emph{utility} function, often encountered in game theory or econometrics.
-Because of the random nature of $\UU$, we can define a family of real random variables $\{J(\kk,\UU) \mid \kk \in \Kspace\}$, indexed by $\kk \in \Kspace$. \cite{beyer_robust_2007} proposes an \emph{aggregation approach}, using integral criteria. This integration is usually done with respect to $\UU$.. Moreover, considering to integrate the powers of the cost function allow to account for dispersion through the moments of the random variable $J(\kk, \UU)$, as we are going to see in the following.
+Because of the random nature of $\UU$, we can define a family of real random variables $\{J(\kk,\UU) \mid \kk \in \Kspace\}$, indexed by $\kk \in \Kspace$. \cite{beyer_robust_2007} proposes an \emph{aggregation approach}, using integral criteria. This integration is usually done with respect to $\UU$.
+
+Moreover, considering to integrate the powers of the cost function allow to account for dispersion through the moments of the random variable $J(\kk, \UU)$, as we are going to see in the following.
 
 \subsubsection{Expected loss minimization}
 \label{sec:exp_loss_minimization}
@@ -243,7 +257,7 @@ Quite intuitively, as we want to minimize some kind of typical value of a realiz
 \begin{equation}
   \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
 \end{equation}
-The expected loss $\mu(\kk)$ is sometimes called the conditional mean given $\kk$. Taking the average of the loss function is
+The expected loss $\mu(\kk)$ is sometimes called the conditional mean given $\kk$. Taking the average of the loss function is very common in many problems of classification and regression~\cite{bishop_pattern_2006}
 
 The conditional mean is minimized,  giving $\estimtxt{\kk}{mean}$. Assuming that $J(\kk, \uu) \propto - \log \mathcal{L}(\kk,\uu;y)$, we have
 \begin{align}
@@ -255,7 +269,7 @@ The conditional mean is minimized,  giving $\estimtxt{\kk}{mean}$. Assuming that
 Taking the average of a loss function is the basis of \emph{stochastic programming}. This problem is usually tackled by using 
 
 Other indicator of central tendency can be considered for optimization, such as the mode or the median of the cost function. 
-This expression shares some similarities with the integrated likelihood introduced \cref{eq:def_int_lik}. However, quite unsurprisingly, the $\estimtxt{\kk}{mean}$ and $\estimtxt{\kk}{intLik}$ are not in general equal, as shown \cref{fig:difference_arithmetic_geometric_mean}.
+This expression shares some similarities with the integrated likelihood introduced \cref{eq:def_int_lik}. However, quite unsurprisingly, the $\estimtxt{\kk}{mean}$ and $\estimtxt{\kk}{intMLE}$ are not equal in general, as shown \cref{fig:difference_arithmetic_geometric_mean}.
 \begin{figure}[ht]
   \centering
   \input{\imgpath integrated_lik_average_costfunction.pgf}
@@ -272,15 +286,15 @@ Let us define the variance of the cost function:
 \end{equation}
 
 
-\Cref{fig:mean_std_wc} shows the conditional mean, conditional standard deviation, and the worst-case scenario ($\kk \mapsto \max_{\uu} J(\kk,\uu)$) for a given cost function $J$ defined as
+\Cref{fig:mean_std} shows the conditional mean and conditional standard deviation for a given cost function $J$ defined as
 \begin{equation}
   J(\kk,\uu) = \frac{remlpir}{formule}
 \end{equation}
 \begin{figure}[ht]
   \centering
   \input{\imgpath mean_std_wc.pgf}
-  \caption{Illustration of conditional mean, conditional standard deviation, and worst-case as function of $\kk$. Those quantities have been rescaled to share the same range on the bottom plot.}
-  \label{fig:mean_std_wc} 
+  \caption{Illustration of conditional mean and conditional standard deviation, as a function of $\kk$. Those quantities have been rescaled to share the same range on the bottom plot.}
+  \label{fig:mean_std} 
 \end{figure}
 
 Minimizing the variance alone is often irrelevant, as it could just point toward really high values of the cost function, but steady with respect to  $\kk$. Taking both objectives: low mean value and low variance together to the following multiobjective optimization problem:
@@ -317,16 +331,15 @@ where $\mu = \Ex[X]$ and $\sigma = \sqrt{\Var[X]}$.
 
 Adding the skewness in the optimization translates to a preference toward a risk-averse or a risk-seeking approach. Indeed, as the main goal is the optimization of a cost function, deviations of the value of the random variable toward lower values is more desirable than deviations toward larger values.
 
-This is illustrated \cref{fig:skewness_example}: all three of the random variables whose pdf and cdf are displayed have the same mean and variance. A real random variable having a skewness of zero means that the random value is symmetrical around its mean: $\Prob[X - \Ex[X] < \eta] = \Prob[X - \Ex[X] > - \eta]$.
-
-\tocheck{If the skewness coefficient is negative, the distribution presents a heavier left tail than right. In other words, a sample taken from this distribution has a higher probability of being located below the mean.}
+This is illustrated \cref{fig:skewness_example}: all three of the random variables whose pdf and cdf are displayed have the same mean and variance.
+If the skewness coefficient is negative, the distribution presents a heavier left tail than right. In other words, a sample taken from this distribution has a higher probability of being a ``good surprise''. On the other hand, if a big deviation occurs for a sample from a right-skewed distribution, it is more probable to be a large deviation toward large values of the sample space, hence the term ``bad surprise''.
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath skewness_examples.pgf}
   \caption{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
-\aciter{Horsetail matching}
+\aciter{Horsetail matching?}
 
 
 \section{Relative-regret estimators family}
@@ -410,5 +423,5 @@ Measure information difference between $\delta_{\kk^*(u)}(\kk)$ and $\kk$
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "../../Main_ManuscritThese"
+%%% TeX-master: t %"../../Main_ManuscritThese"
 %%% End:
