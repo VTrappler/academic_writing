@@ -1,0 +1,30 @@
+ \usetikzlibrary{calc, arrows, decorations.markings}
+
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 30ex, text centered
+  ]
+;\fill[gray!10] (-1.3,-.7) -- (1.2,-.7) -- (1.2,2.5) -- (-1.3,2.5);
+
+ \draw  node[rectangle, fill=brewdark] (x) {$J(\theta, U)$} ;
+  \draw node[rectangle, fill=brewdark, right of=x] (y) {$\tilde{J}(\theta)$};
+ \draw  node[rectangle, fill=brewdark, right of = y] (z) {$\hat{\theta}$};
+  \draw[postaction = decorate, very thick] (x) to node[midway, below, text width=20ex](az) {"Robustification"} (y)  ;
+  \draw[postaction = decorate, very thick] (y) to node[midway, below, text width=20ex] {Minimization}(z);
+% \draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Error on the parameters};
+\draw node[text width = 20ex] (nature) at (0ex, 10ex) {$U$};
+\draw[->] (nature) to (x);
+
+
+\fill[gray!10] (-1.3,-2.7) -- (6.4,-2.7) -- (6.4,-1) -- (-1.3,-1);
+
+ \draw  node[rectangle, fill=brewdark] (x2) at (0, -2) {$J(\theta, U)$} ;
+  \draw node[rectangle, fill=brewdark, right of=x2] (y2) {$J^*(U)$};
+ \draw  node[rectangle, fill=brewdark, right of=y2] (z2) {$\hat{\theta}$};
+  \draw[postaction = decorate, very thick] (x2) to node[midway, below, text width=20ex](az2) {Minimization} (y2)  ;
+  \draw[postaction = decorate, very thick] (y2) to node[midway, below, text width=20ex] {"Robustification"}(z2);
+% \draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Error on the parameters};
+\draw node[text width = 20ex] (nature) at (0ex, 10ex) {$U$};
+% \draw[->] (tune) to  (55ex,-7ex);
+% \draw[->] (tune) to  (25ex,-7ex);
+\end{tikzpicture}

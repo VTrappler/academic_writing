@@ -81,6 +81,26 @@ plt.tight_layout()
 plt.savefig('./img/profile_integrated_lik.pgf')
 plt.close()
 
+
+k, u = np.linspace(-5, 5, 500), np.linspace(-2, 2, 400)
+kmg, umg = np.meshgrid(k, u)
+postkmg = lik(kmg, umg) * prior(kmg, umg)
+likmg = lik(kmg, umg)
+plt.subplot(2, 2, 1)
+plt.contourf(k, u, likmg)
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+plt.title(r'Likelihood: $p_{Y \mid \theta, U}$')
+ax = plt.subplot(2, 2, 2)
+plt.contourf(k, u, postkmg)
+plt.subplot(2, 2, 3)
+plt.plot(k, likmg.mean(0))
+plt.subplot(2, 2, 4)
+plt.plot(k, postkmg.mean(0))
+# plt.show()
+
+
+
 plt.figure(figsize= col_full)
 # plt.subplot(1, 2, 1)
 # plt.plot(kk, likmg.mean(0), label=r'$\mathcal{L}_{\mathrm{integrated}}(\theta;y)$')
@@ -92,8 +112,8 @@ plt.figure(figsize= col_full)
 # plt.ylabel(r'Likelihood')
 # plt.subplot(1, 2, 2)
 plt.plot(kk, -np.log(likmg.mean(0)), label=r'$-\log \mathcal{L}_{\mathrm{integrated}}(\theta;y)$')
-plt.plot(kk, -np.log(likmg).mean(0), label=r'$\mu(\theta) = \mathrm{E}_U[J(\theta), U]$')
-plt.axvline(kk[likmg.mean(0).argmax()], label=r'$\theta_{\mathrm{intLik}}$', color=colors[0],
+plt.plot(kk, -np.log(likmg).mean(0), label=r'$\mu(\theta) = \mathrm{E}_U[J(\theta, U)]$')
+plt.axvline(kk[likmg.mean(0).argmax()], label=r'$\theta_{\mathrm{intMLE}}$', color=colors[0],
             linestyle=':')
 plt.axvline(kk[np.log(likmg).mean(0).argmax()], label=r'$\theta_{\mathrm{mean}}$', color=colors[1],
             linestyle=':')
@@ -115,17 +135,17 @@ plt.plot(x, fun_pareto(x), label=r'Pareto frontier')
 plt.xlabel(r'$\mu(\theta)$')
 plt.xticks([])
 plt.yticks([])
-plt.ylabel(r'$\sigma^2(\theta)$')
-plt.plot(0.4, fun_pareto(0.4), 'o', color='green', label=r'$(\mu(\theta_0), \sigma^2(\theta_0))$')
+plt.ylabel(r'$\sigma(\theta)$')
+plt.plot(0.4, fun_pareto(0.4), 'o', color='green', label=r'$(\mu(\theta_0), \sigma(\theta_0))$')
 ax.add_artist(patches.Rectangle((0.4, fun_pareto(0.4)), 1, 2, color='black', alpha=0.1))
-plt.plot(0.5, 1, 'o', label = r'$(\mu(\theta_1), \sigma^2(\theta_1))$', color='red')
+plt.plot(0.5, 1, 'o', label = r'$(\mu(\theta_1), \sigma(\theta_1))$', color='red')
 xx = 0.1
-plt.plot(xx, fun_pareto(xx), 'o', color='green', label=r'$(\mu(\theta_2), \sigma^2(\theta_2))$')
+plt.plot(xx, fun_pareto(xx), 'o', color='green', label=r'$(\mu(\theta_2), \sigma(\theta_2))$')
 ax.add_artist(patches.Rectangle((xx, fun_pareto(xx)), 1, 2, color='black', alpha=0.1))
 plt.annotate(r'$\theta_0$', xy=(0.4, fun_pareto(0.4)), xytext=(0.42, fun_pareto(0.4)))
 plt.annotate(r'$\theta_2$', xy=(xx, fun_pareto(xx)), xytext=(xx+0.02,fun_pareto(xx)))
 plt.annotate(r'$\theta_1$', xy=(0.5, 1), xytext=(0.52, 1))
-plt.title(u'Pareto frontier for \n the multiobjective problem $[\mu, \sigma^2]$')
+plt.title(u'Pareto frontier for \n the multiobjective problem $[\mu, \sigma]$')
 plt.legend()
 plt.tight_layout()
 plt.savefig('./img/pareto_frontier.pgf')
@@ -182,7 +202,7 @@ plt.close()
 
 
 @np.vectorize
-def branin_hoo(y, x):
+def branin_hoo(x, y):
     x1 = 3 * x * 5 - 5
     x2 = 3 * y * 5
     damp = 1.0
@@ -190,21 +210,33 @@ def branin_hoo(y, x):
     cosi = (10 - (10 / np.pi * 8)) * np.cos(x1) - 44.81
     return (quad + cosi) / (51.95 * damp) + 2.0
 
-k = np.linspace(0, 1, 200)
-u = np.linspace(0, 1, 300)
+
+@np.vectorize
+def new_fun(x, y):
+    return (1 + y * (x + 0.1)**2) * (1 + (x - y)**2)
+    # return (x - np.sin(2 * np.pi * y) + 0.5)**2 - x
+
+k = np.linspace(0, 1, 500)
+u = np.linspace(0, 1, 500)
 kmg, umg = np.meshgrid(k, u)
-bh = branin_hoo(kmg, umg)
-regret = bh - bh.min(0)[np.newaxis, :]
-plt.figure(figsize=1 * col_full)
+# bh = branin_hoo(kmg, umg)
+# bh = -np.log(likmg)
+bh = new_fun(kmg, umg)
+regret = bh - bh.min(1)[:, np.newaxis]
+plt.figure(figsize=col_full)
 plt.subplot(1, 2, 1)
 plt.contourf(k, u, bh)
-plt.scatter(k[bh.argmax(1)], u, marker='+', color='white')
-plt.scatter(k[bh.argmin(1)], u, marker='+', color='red')
+plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
+plt.scatter(k[bh.argmin(0)], u, marker='.', color='red', label=r'$\min_k J$')
 plt.xlim([0, 1])
 plt.ylim([0, 1])
+plt.legend()
+plt.title(r'Cost function')
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
 ax = plt.subplot(1, 2, 2)
+# plt.contourf(k, u, regret)
+# plt.scatter(k[regret.argmax(1)], u, marker='.', color='green', label=r'$\max_u r$')
 ax.set_yticks([])
 plt.plot(k, bh.max(0), label=r'$\max_{u} J(\theta,u)$', color=colors[0])
 plt.plot(k, regret.max(0), label=r'$\max_{u} r(\theta,u)$', color=colors[1])
@@ -216,12 +248,15 @@ plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors
 
 plt.axvline(k[regret.max(0).argmin()], label=r'$\theta_{\mathrm{rWC}}$', color=colors[1],
             linestyle=':')
-
+plt.axvline(k[bh.min(0).argmin()], label=r'$\theta_{\mathrm{global}}$', color=colors[2],
+            linestyle=':')
+ax.set_xlim([-.1, 1.1])
 ax.set_xlabel(r'$\theta$')
-ax.set_ylabel(r'Robust quantity')
-ax2 = ax.twinx()
-plt.title(u'')
+ax.set_ylabel(r'Criteria')
+# ax2 = ax.twinx()
+plt.title(u'Robust criteria')
 plt.tight_layout()
+# plt.show()
 plt.savefig('./img/decision_under_uncertainty.pgf')
 
 # ----------------------------------------------------------------------
@@ -238,6 +273,9 @@ plt.axvline(k[bh.mean(0).argmin()], label=r'$\theta_{\mathrm{mean}}$', color=col
             linestyle=':')
 ax2 = ax.twinx()
 ax2.set_yticks([])
+ax2.plot(np.nan, np.nan, label=r'$\mu(\theta)$', color=colors[0])
+ax2.plot(np.nan, np.nan, label=r'$\theta_{\mathrm{mean}}$', color=colors[0],
+         linestyle=':')
 axx, = ax2.plot(k, bh.std(0), label=r'$\sigma(\theta)$', color=colors[1])
 plt.axvline(k[bh.std(0).argmin()], label=r'$\theta_{\mathrm{var}}$', color=colors[1],
             linestyle=':')
@@ -248,12 +286,54 @@ plt.axvline(k[bh.std(0).argmin()], label=r'$\theta_{\mathrm{var}}$', color=color
 # plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[2],
 #             linestyle=':')
 ax.set_xlabel(r'$\theta$')
-ax.set_ylabel(r'Robust quantity')
-plt.legend()
+ax.set_title(r'Mean and standard deviation')
+plt.legend(loc=2)
 plt.title(u'')
 plt.tight_layout()
 plt.savefig('./img/mean_std_wc.pgf')
 plt.close()
+
+
+
+#  ------------------------------------------------------------
+plt.figure(figsize = col_full)
+idx = [150, 300, 460]
+threshold = 0.05
+
+for i in range(3):
+    plt.plot(k, bh[:, idx[i]], label=r'$J(\cdot, u_{})$'.format(i + 1), color=colors[i])
+    a = np.where(bh[:, idx[i]] - bh[:, idx[i]].min() < threshold, True, False)
+    print(sum(a))
+    plt.plot(k[a], np.ones_like(k)[a] * (bh[:, idx[i]].min() + threshold), colors[i], linestyle=':')
+    plt.plot(k[a], (0.75 - i / 10.0) * np.ones_like(k)[a], colors[i])
+    plt.annotate(r'$\mathcal{{I}}_{{\beta}}(u_{})$'.format(i + 1),
+                 (0.02 + k[a][-1], 0.75 - 0.1 * i))
+plt.legend()
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$J$')
+plt.tight_layout()
+plt.savefig('./img/lik_interval_threshold.pgf')
+plt.close()
+
+# ----------------------------------------------------------------------
+plt.figure(figsize = col_full)
+idx = [150, 300, 460]
+threshold = 0.05
+
+plt.contourf(k, u, bh)
+plt.legend()
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$J$')
+plt.scatter(k[bh.argmin(0)], u, marker='.', color='red', label=r'$\min_k J$')
+plt.contour(k, u, (bh - bh.min(0)).T < threshold, levels=[0.5])
+plt.contour(k, u, (bh/bh.min(0)).T < 1.01, levels=[0.5])
+plt.tight_layout()
+plt.show()
+# plt.savefig('./img/lik_interval_threshold.pgf')
+plt.close()
+
+
+
 
 
 # Distribution of minimizers ------------------------------------------------------------
@@ -291,7 +371,7 @@ plt.subplot(1, 2, 2)
 df = pd.DataFrame(np.asarray((theta_star, u_sampled)).T)
 df.columns = [r'$\theta^*$', r'$u$']
 sns.pairplot(data=df)
-plt.show()
+# plt.show()
 plt.savefig('./img/theta_star_samples.pgf')
 plt.close()
 

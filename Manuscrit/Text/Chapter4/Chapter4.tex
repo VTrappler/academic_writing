@@ -3,7 +3,8 @@
 \subfileGlobal{
 \renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
 }
-\newcommand{\IMSE}{\mathop{IMSE}}
+\newcommand{\IMSE}{\mathop{\mathrm{IMSE}}}
+\newcommand{\GP}{\mathop{\mathrm{GP}}}
 
 % For cross referencing
 \subfileLocal{
@@ -20,7 +21,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
+% \dominitoc
+% \faketableofcontents
 % \subfileLocal{\setcounter{chapter}{2}}
 \chapter{Adaptative design enrichment for calibration using Gaussian Processes}
 \label{chap:adaptative_design_gp}
@@ -34,9 +36,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 				SECTION 0 : Introduction	   %%%
 
+Numerical models are usually very expensive to run in terms of computer resources. Indeed, for most realistic physical simulations, the programs have to solve systems of PDEs over large grids. Even though the computations are optimized and parallelized to run on high performance computers, methods that require a large number of runs of the model for exhaustivity should be avoided. In this chapter, we will focus on \emph{surrogate models}.
+
+\section{The computational bottleneck}
+
+\subsection{The curse of dimensionality}
+
+\subsubsection{Sensitivity analysis}
+
+\subsubsection{Dimension Reduction}
+
+\subsection{Surrogate models}
+
 
 
 \section{Gaussian process regression}
+In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and supposedly expensive to evaluate, but it has already been evaluated on a set of points $x_i$
+\cite{rasmussen_gaussian_2006}
 \subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
 \begin{align}
@@ -45,19 +61,43 @@ Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}
        & x & \longmapsto & f(x)
   \end{array}
 \end{align}
-This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} \subset \mathbb{X}^n$. 
-We wish to have a probabilistic modelling of this function
-We introduce random processes as way to have a prior distribution on function
-This uncertainty on $f$ is modelled as a random process:
-\begin{equation}
+
+This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} = \left\{ (x_i, f(x_i) \right)\}_{1\leq i\leq n}$, called the \emph{initial design} For notational simplicity, we write $x\in \mathcal{X}$ if $(x, f(x)) \in \mathcal{X}$.
+As this function is unknown, there is (epistemic) uncertainty on the values outside of the initial design. This uncertainty can be reduced by directly evaluating the function.
+This uncertainty is modelled by random processes as defined in the following
+
+\begin{definition}[Random process]
+  Let $(\Omega, \mathcal{F}, \Prob)$ be a probability space, and $\Xspace\subset \mathbb{R}^p$.
+  A random process $Z$ is a collection of random variables indexed on $\Xspace$, so for each $x \in \Xspace$, $Z(x)$ is a random variable:
+ \begin{equation}
   \begin{array}{rcl}
-    Z: \mathbb{X} \times \Omega& \longrightarrow & \mathbb{R} \\
-    (x,\omega) & \longmapsto & Z(x,\omega)
+    Z: \mathbb{X} & \longrightarrow & \left(\Omega \rightarrow \mathbb{R} \right)\\
+    x& \longmapsto & Z(x)
   \end{array}
 \end{equation}
-The $\omega$ variable will be omitted next.
+A sample from this random process, that is $Z(\cdot)(\omega)$ for $\omega \in \Omega$ will be shortened as $Z(\cdot, \omega)$ for notational purpose, and is called a \emph{sample trajectory}, or a \emph{sample path}.
+\end{definition}
+From a Bayesian point of view, we can imagine constructing a random process $Z$ as a prior on the function $f$, or in other words, considering $f$ as a particular sample path of $Z$. Evaluating the function, thus \tocheck{augmenting} the design means to gather information on the random process, and we can update our belief on $f$.
+
+
+\begin{definition}[Gaussian process]
+  Let $Z$ be a random process on $\Xspace$, i.e. a collection of random variables indexed by $\Xspace$. It is defined as a Gaussian process if any finite number of those random variables have a multivariate joint Gaussian distribution.
+  In that case, $Z$ is uniquely defined by its mean function $m_Z$ and its covariance function $C_Z$:
+  \begin{align}
+    m_Z(x) &= \Ex\left[Z(x)\right] \\
+    C_Z(x, x^{\prime}) &= \Cov[Z(x), Z(x^{\prime})]
+  \end{align}
+  and we write $Z \sim \GP(m_Z, C_Z)$
+\end{definition}
+
+By imposing constraints on a random process, we can use it to create a surrogate for the function $f$. A surrogate estimated based on the random process $Z$ will be denoted $\hat{Z}$ and
+\begin{equation}
+  \hat{Z}: \Xspace \rightarrow \mathbb{R}
+\end{equation}
+
 \subsection{Linear Estimation}
 \label{sec:linear_estimation}
+Given a random process $Z$ as a prior on $f$, we want to construct a surrogate $\hat{Z}$, using the intial design $\mathcal{X} = \{(x_i, f(x_i)\}_{1 \leq i \leq n}$. This surrogate will be constructed as a linear estimation:
 A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}$ can be written as
 \begin{equation}
   \label{eq:lin_est}
@@ -69,12 +109,12 @@ A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}
       f(x_1) \\ \vdots \\ f(x_n)
     \end{bmatrix} = \mathbf{W}^Tf(\mathcal{X}) = \sum_{i=1}^n w_i(x) f(x_i)
 \end{equation}
-Using those kriging weights $\mathbf{W}$, a few additional conditions must be added, in order to obtain the Best Linear Unbiased Estimator:
+Using those \emph{kriging weights} $\mathbf{W}$, a few additional conditions must be added, in order to obtain the Best Linear Unbiased Estimator:
 \begin{itemize}
 \item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
 \item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
 \end{itemize}
-Translating using~\cref{eq:lin_est}:
+The non-biasedness condition using~\cref{eq:lin_est} can be rewritten
 \begin{equation}
   \Ex[\hat{Z}(x) - Z(x)]=0 \iff m\left(\sum_{i=1}^n w_i(x)-1\right) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
 \end{equation}
@@ -146,26 +186,48 @@ and
     f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n)
   \end{bmatrix}
 \end{equation}
+One main interesting point of GP regression, is that more than the surrogate $\hat{Z} = m_Z$, we have a measure of the uncertainty on the estimation:
+\begin{equation}
+  Z(x) \sim \mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right) \quad \text{ with } \sigma^2_Z(x) = C_Z(x, x)
+\end{equation}
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath example_GP.pgf}
+  \caption{\label{fig:example_GP} Example of a Gaussian Process}
+\end{figure}
+
+
 \subsection{Covariance functions}
+\label{sec:cov_fun}
+In the previous section, we described the equaitons to solve to get the surrogate $\hat{Z}$ of $f$ based on GP.
+The coefficients of the linear estimation are based on the covariance function $C_Z$.
+A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$ 
+
+A few common stationary covariance functions are introduced~\cref{tab:common_cov_fc}.
+
+  \begin{table}[ht]
+    \centering
+    \begin{tabular}{lrc}
+      \toprule
+      Name & $C_Z(h)$ & Regularity of sample paths\\ \midrule
+      Gaussian & $\exp\left(- \frac{h^2}{2 l^2}\right)$ & $C^{\infty}$\\
+      Exponential &$\exp\left(- \frac{\lvert h \rvert}{l}\right)$ & $C^0$  \\
+      Matérn 3/2 & $\left(1 + \sqrt{3}\frac{h}{l}\right)\exp\left(-\sqrt{3}\frac{h}{l}\right)$ & $C^1$\\
+      Matérn 5/2 & $\left(1+ \sqrt{5}\frac{h}{l} + \frac{5}{3}\frac{h^2}{l^2}\right) \exp\left(-\sqrt{5}\frac{h}{l}\right)$ & $C^2$\\ \bottomrule
+    \end{tabular}
+    \caption{\label{tab:common_cov_fc} Common covariance functions}
+  \end{table}
+
+  One main difference between those covariance functions is the regularity of the sample paths. The choice of one or another can then be motivated by the assumptions on the original function.
+
+  
 \begin{figure}[ht]
   \centering
   \input{\imgpath covariance_functions.pgf}
-  \caption{\label{fig:label} }
+  \caption{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show sample paths for those different covariance functions.}
 \end{figure}
 
-\todo{to write}
-\label{sec:cov_fun}
-\begin{itemize}
-\item Desired properties
-  \begin{itemize}
-  \item isotropy (?)
-  \item stationarity
-  \item semi-definite positiveness
-  \end{itemize}
-\item parametric models of covariance
-\item examples
-\item usual hyperparameters estimation
-\end{itemize}
 
 \section{Stepwise Enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
@@ -506,7 +568,7 @@ Let assume that we derived a criterion $\kappa$. And let $f(x) = \frac{\kappa(x)
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}
-	\bibliography{../../bibzotero}
+	\bibliography{/home/victor/acadwriting/bibzotero}
 }
 \end{document}
 

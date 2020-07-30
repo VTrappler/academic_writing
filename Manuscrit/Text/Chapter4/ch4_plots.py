@@ -11,7 +11,7 @@ import scipy.special
 # import RO.bo_plot as bplt
 # import RO.bo_wrapper as bow
 from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import Matern
+from sklearn.gaussian_process.kernels import Matern, RBF
 
 import pyDOE
 
@@ -57,6 +57,7 @@ def Matern_fun(h, nu, rho=1):
 def gaussian_fun(h, rho=1):
     return np.exp(- h**2 / (2 * rho**2))
 
+
 function_gp = lambda X: X * np.sin(X)
 
 
@@ -73,28 +74,42 @@ response = function_gp(initial_design)
 gp = GaussianProcessRegressor(kernel=Matern(1.0 / 5.0),
                               n_restarts_optimizer=50)
 gp.fit(initial_design, response)
+
+plt.figure(figsize=col_full)
 true, reg, sh1, sh2, sh3 = plot_gp(gp, X_, true_function=function_gp, show=False, label=r'True function $f$')
-plt.legend([true, reg, (sh1, sh2, sh3)], handler_map={tuple: HandlerTuple(ndivide=None)})
+# plt.plot(np.nan, 'ob', label=r'Training points $f(x_i)$')
+# plt.plot(np.nan, label=r'GP regression', color='k', lw=1)
+# plt.plot(np.nan, 'r--', label=r'True function $f$')
+# plt.legend([true, reg, (sh1, sh2, sh3)], handler_map={tuple: HandlerTuple(ndivide=None)})
+plt.legend()
 plt.xlabel(r'$x$')
 plt.xlim(bounds)
-plt.show()
+plt.savefig('./img/example_GP.pgf')
+plt.close()
 
-
-
-plt.figure(figsize = col_full)
-plt.subplot(1, 2, 1)
-plt.plot(xp, Matern_fun(xp, 0.5), label=r'Exponential kernel')
+xp = np.linspace(0, 4, 200)
+plt.figure(figsize=(col_full[0], col_full[1] * 1.2))
+plt.subplot(4, 2, (1, 7))
+plt.plot(xp, Matern_fun(xp, 0.5), label=r'Exponential')
 plt.plot(xp, Matern_fun(xp, 3.0 / 2.0), label=r'Mat\'ern $3/2$')
 plt.plot(xp, Matern_fun(xp, 5.0 / 2.0), label=r'Mat\'ern $5/2$')
 plt.plot(xp, gaussian_fun(xp), label=r'Gaussian')
 plt.legend()
 plt.xlabel(r'$h$')
-plt.ylabel(r'$Cov(x, x+h)$')
-plt.title(u'Common covariance function for GP regression')
+plt.ylabel(r'$C_Z(h)$')
+plt.title(u'Common covariance functions')
+
+nsamples=10
+kernels = [Matern(1.0, nu=0.5), Matern(1.0, nu=1.5), Matern(1.0, nu=3.5), RBF(1.0)]
+lab = [r'Exponential', r'Mat\'ern 3/2', r'Mat\'ern 5/2', r'Gaussian']
+for i, ker in enumerate(kernels):
+    plt.subplot(4, 2, (i + 1) * 2)
+    gp = GaussianProcessRegressor(kernel=ker)
+    plt.plot(gp.sample_y(xp[:, np.newaxis], nsamples).squeeze(), linewidth=1)
+    plt.title(lab[i])
+    plt.xticks([])
+    plt.yticks([])
+
 plt.tight_layout()
-
-plt.subplot(1, 2, 2)
-
-
 plt.savefig('./img/covariance_functions.pgf')
 plt.close()

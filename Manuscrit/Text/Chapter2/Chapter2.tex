@@ -19,8 +19,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\dominitoc
-\faketableofcontents
+% \dominitoc
+% \faketableofcontents
 % Rappel du précédent style, pour qu'il aille jusqu'à la dernière page (?? latex...)
 % \pagestyle{introStyle}
 % \TitleBtwLines
@@ -350,7 +350,7 @@ We discussed so far the different quantities that characterize random variables.
 
 \begin{definition}[KL--divergence and entropy]
   The Kullback-Leibler divergence, introduced in~\cite{kullback_information_1951} is a measure of dissimilarity between two distributions, based on information-theoretic considerations.
-  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall A$, $\int_A p_X(x)\,\mathrm{d}x = 0 \implies \int_A p_{X^{\prime}}(x)\,\mathrm{d}x =0$. The KL-divergence is defined as
+  Let $X$, $X'$ be r.v.\ with the same sample space $S$, and $p_X$ and $p_{X^{\prime}}$ their densities, such that $\forall A\in\mathcal{F}$, $\int_A p_X(x)\,\mathrm{d}x = 0 \implies \int_A p_{X^{\prime}}(x)\,\mathrm{d}x =0$. The KL-divergence is defined as
   \begin{align}
     % \DKL{p_X}{p_Y} = \int_{\Omega} p_X(X(\omega)) \log \frac{p_X(X(\omega)}{p_Y(X(\omega)} \,\mathrm{d}\Prob_X(\omega)
     \DKL{p_X}{p_{X^\prime}} &= \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x \\ &= \Ex_X\left[-\log p_{X^\prime}(X)\right] - \Ex_X\left[-\log p_X(X)\right] \\
@@ -742,14 +742,14 @@ Under the null hypothesis, $-2 \log \Lambda$, (sometimes called the deviance) fo
   \label{eq:deviance_asymptotics}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
 \end{equation}
-By denoting $\chi^2_{r-d}(1-\alpha)$ the quantile of order $1-\alpha$ of the $\chi^2$ distribution with $r-d$ degrees of freedom, the asymptotic rejection region of level $\alpha$ is:
+By denoting $\chi^2_{r-d}(1-\nu)$ the quantile of order $1-\nu$ of the $\chi^2$ distribution with $r-d$ degrees of freedom, the asymptotic rejection region of level $\nu$ is:
 \begin{align}
-  \mathrm{RejReg}_{\alpha} &= \left\{y \mid -2 \log \Lambda(y) > \chi^2_{r-d}(1-\alpha) \right\} \label{eq:LRT_rej_reg}
+  \mathrm{RejReg}_{\nu} &= \left\{y \mid -2 \log \Lambda(y) > \chi^2_{r-d}(1-\nu) \right\} \label{eq:LRT_rej_reg}
 \end{align}
 Or by reformulating using the log-likelihoods and objective functions $l(\theta;y) = \log \mathcal{L}(\theta;y) = - J(\theta)$
 \begin{align}
-  \mathrm{RejReg}_{\alpha} &= \left\{ y \mid (\sup_{\theta\in\Theta_1} l(\theta;y) - \sup_{\theta\in\Theta_2} l(\theta;y)) > \frac12 \chi^2_{r-d}(1-\alpha) \right\} \\
-                             &= \left\{ y \mid J(\hat{\theta}_2) - J(\hat{\theta}_1) >  \frac12 \chi^2_{r-d}(1-\alpha) \right\}
+  \mathrm{RejReg}_{\nu} &= \left\{ y \mid (\sup_{\theta\in\Theta_1} l(\theta;y) - \sup_{\theta\in\Theta_2} l(\theta;y)) > \frac12 \chi^2_{r-d}(1-\nu) \right\} \\
+                             &= \left\{ y \mid J(\hat{\theta}_2) - J(\hat{\theta}_1) >  \frac12 \chi^2_{r-d}(1-\nu) \right\}
 \end{align}
 As a basis for comparison, when $\Theta \subset \mathbb{R}$, $r-d=1$ and $\chi^2_1(1-0.05) =3.84$. When the data falls into the rejection region ($J(\hat{\theta}_2)$ significantly larger than $J(\hat{\theta}_1)$, the null hypothesis is rejected, and the model are significantly different. 
 \label{sec:relative_likelihood}
@@ -760,14 +760,15 @@ The rejection region defined above allows also to define some confidence interva
 This function allows for comparing the plausibility of the value $\theta$, compared to the MLE.
 The likelihood interval of level $p\in ]0,1]$ is defined as
 \begin{equation}
+  \label{eq:def_lik_interval}
   \mathcal{I}_{\mathrm{Lik}}(p) = \left\{\theta \mid R(\theta)=\frac{\mathcal{L}(\theta;y)}{\mathcal{L}(\estimtxt{\theta}{MLE};y)} \geq p\right\}
 \end{equation}
 $p$ can be arbitrarily set to arbitrary threshold, but it can also be chosen specifically in order to avoid the rejection region of a likelihood ratio test with certain confidence. When comparing the models $(\mathcal{M}, \{\theta\})$ and $(\mathcal{M},\Theta)$, $R(\theta)$ is their likelihood ratio, the complement of the rejection region of~\cref{eq:LRT_rej_reg} written as a likelihood interval becomes
 \begin{equation}
   \label{eq:rel_lik_threshold}
-  \mathcal{I}_{\mathrm{Lik}}\left(\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\alpha)\right)\right) = \left\{\theta \mid R(\theta) \geq \exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\alpha)\right) \right\}
+  \mathcal{I}_{\mathrm{Lik}}\left(\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\nu)\right)\right) = \left\{\theta \mid R(\theta) \geq \exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\nu)\right) \right\}
 \end{equation}
-The values in this set generate models that are statistically equivalent to the model comprising the MLE as its calibrated parameter. Again, for $1$ dimensional models, and the confidence level of $.05$, the threshold of \cref{eq:rel_lik_threshold} is $\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\alpha)\right) = \exp\left(-\frac{1}{2}\chi^2_{1}(.95)\right) \approx 0.15$, and at a level $.10$, $\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
+The values in this set generate models that are statistically equivalent to the model comprising the MLE as its calibrated parameter. Again, for $1$ dimensional models, and the confidence level of $.05$, the threshold of \cref{eq:rel_lik_threshold} is $\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\nu)\right) = \exp\left(-\frac{1}{2}\chi^2_{1}(.95)\right) \approx 0.15$, and at a level $.10$, $\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
 
 \begin{figure}[ht]
   \centering
@@ -826,8 +827,7 @@ Some estimators still carry nice properties. The MLE for instance, defined~\cref
   \estimtxt{\theta}{MLE}(\uu_0)=  \argmin_{\kk \in \Kspace}\DKL[empirical]{p_Y}{p_{Y \mid \theta, \UU}(\cdot \mid \theta, \UU=\uu_0)}
 \end{equation}
 and can be seen as the ``best'' value given $\UU=\uu_0$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
-So when the model is misspecified, minimizing a cost function still makes sense.
-
+So when the model is misspecified, minimizing the same cost function still makes sense.
 
 However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}(\uu_0) = \argmin_{\theta \in \Theta} J(\theta,\uu_0)$, and there is no guarantee that $\estimtxt{\theta}{}(\uu_0)$ will minimize $J(\cdot, \uu_1)$ for $\uu_0 \neq \uu_1$, as illustrated~\cref{fig:minimizer_misspecification}.
 
@@ -838,7 +838,11 @@ However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}
   \label{fig:minimizer_misspecification}
 \end{figure}
 
- $\uu_0$ and $\uu_1$ are close to each other, but $\hat{\kk}(\uu_0)$ and $\hat{\kk}(\uu_1)$ are not. However, as the cost function shows similar values at those points, choosing either one would lead to a satisfactory cost given $\UU = \uu_0$ or $=\uu_1$. A preference appears for $\hat{\theta}(\uu_1)$ if $\UU = \uu_2$ is considered as well.
+$\uu_0$ and $\uu_1$ are close to each other, but $\hat{\kk}(\uu_0)$ and $\hat{\kk}(\uu_1)$ are not. However, as the cost function shows similar values at those points, choosing either one would lead to a satisfactory cost given $\UU = \uu_0$ or $\UU=\uu_1$. If $\UU = \uu_2$ is considered as well, the modeller may have a preference and choose $\estimtxt{\kk}{}(\uu_1)$ as the final estimator.
+
+In terms of model selection, the asymptotic distribution of the likelihood ratio statistic defined~\cref{sec:likelihood_ratio_test} is also slightly different. Instead of following a $\chi^2_{r}$ distribution, where $r$ is the number of dimensions for the test, $-2\log \Lambda$ will asymptotically have the same distribution as a weighted sum of $r$ random variables which have a $\chi^2_1$ distribution and whose weights are the eigenvalues of a matrix involving the Jacobian and the Hessian of the log-likelihood~\cite{kent_robust_1982} \aciter{en annexes?}.
+
+
  This random misspecification leads to some issues in the calibration of the model, and it asks for a notion of robustness with respect to the environmental parameters.
 
 \section{Partial conclusion}
@@ -866,5 +870,5 @@ Adding a environmental variable as a random nuisance parameter introduces a para
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: t %"../../Main_ManuscritThese"
+%%% TeX-master: "../../Main_ManuscritThese"
 %%% End:
