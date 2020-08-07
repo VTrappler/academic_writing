@@ -15,9 +15,9 @@
 %%
 %% Matplotlib used the following preamble
 %%   \usepackage{fontspec}
-%%   \setmainfont{DejaVuSans.ttf}[Path=/home/victor/miniconda3/lib/python3.7/site-packages/matplotlib/mpl-data/fonts/ttf/]
+%%   \setmainfont{DejaVuSans.ttf}[Path=/usr/local/lib/python3.5/dist-packages/matplotlib/mpl-data/fonts/ttf/]
 %%   \setsansfont{LiberationSans-Regular.ttf}[Path=/usr/share/fonts/truetype/liberation/]
-%%   \setmonofont{DejaVuSansMono.ttf}[Path=/home/victor/miniconda3/lib/python3.7/site-packages/matplotlib/mpl-data/fonts/ttf/]
+%%   \setmonofont{DejaVuSansMono.ttf}[Path=/usr/local/lib/python3.5/dist-packages/matplotlib/mpl-data/fonts/ttf/]
 %%
 \begingroup%
 \makeatletter%

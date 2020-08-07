@@ -1,4 +1,4 @@
-\documentclass[../../Main.tex]{subfiles}
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
 
 \subfileGlobal{
 \renewcommand{\RootDir}[1]{./Text/Annexes/#1}
@@ -36,18 +36,50 @@
 \specialchapter{Appendix}
 \pagestyle{appendixStyle}
 
+\section{Likelihood ratio test for misspecified nested models}
+\cite{white_maximum_1982}
+The observations $Y$ are following the law with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
+We have a family of distributions $\{p_{Y\mid \KK}\}$.
+  The quasi log-likelihood is
+  \begin{equation}
+    \mathcal{L}(\kk; y) = \frac{1}{n}\sum_{i=1}^{n} \log p_{Y \mid \KK}(y;\kk)
+  \end{equation}
 
+  \begin{align}
+    A_n(\kk) = \frac{1}{n} \sum_{i=0}^n \frac{\partial^2 \log p_{Y \mid \KK}(y\mid\kk)}{\partial \kk_i \partial \kk_j} \\
+    B_n(\kk) = \frac{1}{n} \sum_{i=0}^n \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_i} \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_j}
+  \end{align}
+
+  \begin{align}
+    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] _\\
+    B(\kk) &= \Ex\left[\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}^T\right]
+  \end{align}
+
+  If the model is well-specified, in other words if there exists $\kk_0$ such that $p_Y = p_{Y\mid \KK}(\cdot \mid\kk_0)$, $A(\kk) = -B(\kk)$:
+  \begin{align}
+    \frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2} &= \pfrac{}{\kk}\left(\frac{1}{p}\pfrac{p}{\kk}\right) \\
+    &= \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \frac{1}{p^2}\left(\pfrac{p}{\kk}\right)^2 = \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \left(\pfrac{\log p}{\kk}\right)^2
+  \end{align}
+  Taking the expectation, we have
+  \begin{align}
+    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] \\
+           &= -\Ex\left[\left(\pfrac{\log p}{\kk}\right)^2\right] + \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right]
+  \end{align}
+  and the last term is
+  \begin{align}
+     \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right] = \int_{\Yspace} \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} p_{Y}(y) \,\mathrm{d}y
+  \end{align}
+  If the inverse exist,
+  then
+  \begin{align}
+    C_n(\kk) &= A_n(\kk)^{-1} B_n(\kk) A_n(\kk) \\
+    C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk) \\
+  \end{align}
 
 \minitoc
 \pagestyle{appendixStyle}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\newpage
-\input{\RootDir{Volume_indexes.tex}}
-
-\newpage
-\input{\RootDir{Linreg_generalization.tex}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,9 +88,15 @@
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}
-	\bibliography{../../Bibliography}
+	\bibliography{/home/victor/acadwriting/bibzotero}
+
 }
 
 \endgroup
 
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

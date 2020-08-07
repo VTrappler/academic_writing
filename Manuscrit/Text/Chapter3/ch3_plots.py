@@ -377,4 +377,64 @@ plt.close()
 
 
 
+
+from matplotlib import cm
+
+@np.vectorize
+def new_fun(x, y):
+    return 1 + (100 * (1 + 2 * y)**2) + 1000 * (2 * (x - 0.2) - y)**2
+    # return (x - np.sin(2 * np.pi * y) + 0.5)**2 - x
+
+k = np.linspace(0, 1, 800)
+u = np.linspace(0, 1, 500)
+kmg, umg = np.meshgrid(k, u)
+# bh = branin_hoo(kmg, umg)
+# bh = -np.log(likmg)
+bh = new_fun(kmg, umg)
+Delta = bh - bh.min(1)[:, np.newaxis] < 25
+# regret = bh - bh.min(0)[:, np.newaxis]
+plt.figure(figsize=col_full)
+# plt.subplot(1, 2, 1)
+plt.contourf(k, u, bh)
+# plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
+plt.scatter(k[bh.argmin(1)], u, marker='.', color='red', label=r'$\min_k J$')
+plt.contour(k, u, Delta, levels=[0, 0.5, 1])
+# plt.contour(k, u, bh - 1.2 * bh.min(1)[:, np.newaxis] < 0, levels=[0, 0.5, 1], cma=plt.get_cmap('RdPu'))
+indU, indK = 200,360
+plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU])
+plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]])
+
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.tight_layout()
+plt.show()
+
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.legend()
+plt.title(r'Cost function')
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+ax = plt.subplot(1, 2, 2)
+# plt.contourf(k, u, regret)
+# plt.scatter(k[regret.argmax(1)], u, marker='.', color='green', label=r'$\max_u r$')
+ax.set_yticks([])
+plt.legend()
+
+plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[0],
+            linestyle=':')
+plt.axvline(k[regret.max(0).argmin()], label=r'$\theta_{\mathrm{rWC}}$', color=colors[1],
+            linestyle=':')
+plt.axvline(k[bh.min(0).argmin()], label=r'$\theta_{\mathrm{global}}$', color=colors[2],
+            linestyle=':')
+ax.set_xlim([-.1, 1.1])
+ax.set_xlabel(r'$\theta$')
+ax.set_ylabel(r'Criteria')
+# ax2 = ax.twinx()
+plt.title(u'Robust criteria')
+plt.tight_layout()
+# plt.show()
+
+
+
 # EOF ----------------------------------------------------------------------

@@ -3,8 +3,8 @@
 \subfileGlobal{
 \renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
 }
-\newcommand{\IMSE}{\mathop{\mathrm{IMSE}}}
-\newcommand{\GP}{\mathop{\mathrm{GP}}}
+% \DeclareMathOperator{\IMSE}{\mathrm{IMSE}}
+% \newcommand{\IMSE}{\mathop*{\mathrm{IMSE}}}
 
 % For cross referencing
 \subfileLocal{
@@ -47,7 +47,9 @@ Numerical models are usually very expensive to run in terms of computer resource
 \subsubsection{Dimension Reduction}
 
 \subsection{Surrogate models}
-
+\begin{definition}[Surrogate model]
+  A surrogate
+\end{definition}
 
 
 \section{Gaussian process regression}
@@ -194,7 +196,7 @@ One main interesting point of GP regression, is that more than the surrogate $\h
 \begin{figure}[ht]
   \centering
   \input{\imgpath example_GP.pgf}
-  \caption{\label{fig:example_GP} Example of a Gaussian Process}
+  \caption{\label{fig:example_GP} Example of a Gaussian Process. The shaded regions correspond to the regions $m_Z \pm i \cdot \sigma_Z$ for $i=1, 2,3$.}
 \end{figure}
 
 
@@ -219,13 +221,16 @@ A few common stationary covariance functions are introduced~\cref{tab:common_cov
     \caption{\label{tab:common_cov_fc} Common covariance functions}
   \end{table}
 
+
+  These covariance function introduce an additional parameter $l$, called the \emph{length scale}.
+
   One main difference between those covariance functions is the regularity of the sample paths. The choice of one or another can then be motivated by the assumptions on the original function.
 
   
 \begin{figure}[ht]
   \centering
   \input{\imgpath covariance_functions.pgf}
-  \caption{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show sample paths for those different covariance functions.}
+  \caption{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show sample paths for those different covariance functions with same length scale.}
 \end{figure}
 
 
@@ -240,12 +245,12 @@ The main idea behind Stepwise Uncertainty Reduction is to define a criterion, sa
 \begin{equation}
   x_{n+1} = \argmax_{x\in\Xspace} \kappa_n(x) = \argmax_{x\in\Xspace} \kappa(x; Y \mid \mathcal{X})
 \end{equation}
-This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1})\}$.
+This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
 \subsection{Exploration based criteria}
-
+\label{sec:exploration_criteria}
 We are going to introduce common criteria of enrichment, that aim at exploring the input space $\Xspace$
 
-\subsubsection{Maximum variance}
+\subsubsection{Maximum of variance}
 A measure of uncertainty on the GP is $\max_{x\in\Xspace} \sigma_{Y \mid \mathcal{X}}^2(x)$, the maximum value of the prediction variance on the space.
 A simple criterion is to select and evaluate the point corresponding to this maximum of variance:
 \begin{equation}
@@ -261,15 +266,16 @@ The prediction variance is directly given by $\sigma^2_{Y\mid \mathcal{X}}$ and 
 \end{equation}
 For practical reasons, we can consider to integrate the MSE only on a subset $\mathfrak{X}\subset \mathcal{X}$ that yields
 \begin{equation}
-  \IMSE\left(Y,\mathfrak{X} \mid \mathcal{X} \right) = \int_{\mathcal{X}} \sigma^2_{Y\mid \mathcal{X}}(x)  \mathbbm{1}_{\{x \in \mathfrak{X}\}}(x)\,\mathrm{d}x = \int_{\mathfrak{X}} \sigma^2_{Y\mid \mathcal{X}}(x)\,\mathrm{d}x
+  \IMSE_{\mathfrak{X}}\left(Y \mid \mathcal{X} \right) = \int_{\mathcal{X}} \sigma^2_{Y\mid \mathcal{X}}(x)  \mathbbm{1}_{\mathfrak{X}}(x)\,\mathrm{d}x = \int_{\mathfrak{X}} \sigma^2_{Y\mid \mathcal{X}}(x)\,\mathrm{d}x
 \end{equation}
 
 Unfortunately, exact evaluation of this integral is impossible, so it needs to be approximated using numerical integration, such as Monte-carlo or quadrature rules:
 \begin{equation}
-  \IMSE(Y,\mathfrak{X} \mid \mathcal{X}) \approx \sum_{i=1}^{n_{\mathrm{quad}}} w_i \sigma_{Y\mid\mathcal{X}}(x_i)
+  \IMSE_{\mathfrak{X}}(Y\mid \mathcal{X}) \approx \sum_{i=1}^{n_{\mathrm{quad}}} w_i \sigma_{Y\mid\mathcal{X}}(x_i)
 \end{equation}
 
-For a given $x\in \Xspace$ and an outcome $y\in\Yspace$, the augmented design is defined as the experimental design, $\mathcal{X} \cup \left\{(x, y)\right\}$, and the IMSE of the augmented design is $\IMSE\left(Y \mid \mathcal{X} \cup \left\{(x, y)\right\} \right)$. Before the actual experiment though, $y$ is unknown, but we can model it by its distribution given by the GP (per~\cref{eq:YgivenXGP}). So for a given candidate $x$, the mean prediction error we will get when evaluating $x$ is given by
+For a given $x\in \Xspace$ and an outcome $y\in\Yspace$, the augmented design is defined as the experimental design, $\mathcal{X} \cup \left\{(x, y)\right\}$, and the IMSE of the augmented design is $\IMSE\left(Y \mid \mathcal{X} \cup \left\{(x, y)\right\} \right)$.
+Before the actual experiment though, $y$ is unknown, but we can model it by its distribution given by the GP (per~\cref{eq:YgivenXGP}). So for a given candidate $x$, the mean prediction error we will get when evaluating $x$ is given by
 \begin{equation}
   \label{eq:IMSE_augmented}
   \Ex_{Y(x)}\Big[\IMSE\big(Y \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\Big]
@@ -277,43 +283,140 @@ For a given $x\in \Xspace$ and an outcome $y\in\Yspace$, the augmented design is
 where the expectation is to be taken with respect to different realisations of $Y(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy ffound for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Y(x)$, corresponding to evenly spaced quantiles of the its distribution.
 It is maybe important to note that the hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.
 
+
 To enrich the design with the best point, that reduces the most the prediction error, a simple $1$-step strategy is to minimize the expectation of~\cref{eq:IMSE_augmented}.
 \begin{equation}
   x_{n+1} = \argmin_{x\in \Xspace}\Ex_{Y(x)}\Big[\IMSE\big(Y \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\Big]
 \end{equation}
 
+\subsection{Optimization oriented criteria}
+\label{sec:GP_optimization_criteria}
+The criteria we detailed above aim at reducing the epistemic uncertainty modelled through the Gaussian Process. In other words, we try to improve our knowledge on the unknown function globally. We are now going to evoke a few criteria which are driven by the global optimization of the function.
 
+Those methods usually aim at striking a balance between exploration and \emph{intensification}. We covered exclusive exploration in~\cref{sec:exploration_criteria}.
+Let $f$ be the unknown function, and $Y$ be a GP constructed based on an initial design $\mathcal{X} = \{(x_i, f(x_i))\}$.
+\subsubsection{Probability of improvement}
+We are first going to introduce the probability of improvement $\mathrm{PI}$, which is the probability that the GP is smaller than a threshold $f_{\min}$. Due to the Gaussian nature of $Y(x)$, this probability can be written in closed form using $\Phi = F_{\mathcal{N}(0, 1)}$ the cdf of the standard gaussian.
+\begin{align}
+  \mathrm{PI}(x) &= \Prob% _{Y(x)}
+                   \left[Y(x) < f_{\min}\right] \\
+                 &= \Phi\left(\frac{m_Y(x) - f_{\min}}{\sigma_Y(x)}\right)
+\end{align}
+This threshold can have different forms
+\begin{itemize}
+\item $f_{\min} = \min_{i} f(x_i)$, so the GP is to be compared with the current minimal value reached by the function
+\item $f_{\min} = \min_i f(x_i) + \epsilon$ so we introduce a small tolerance $\epsilon$, in order to encourage exploration instead of intensification.
+\end{itemize}
+\subsubsection{Expected improvement and EGO}
+\cite{mockus_bayesian_1974}\cite{jones_efficient_1998}
+Quite related to the probability of improvement, we define the improvement $I(x)$ as the random variable defined as
+\begin{equation}
+  \label{eq:def_improvement}
+  I(x) = {\left[f_{\min} - Y(x)\right]}_+
+\end{equation}
+where $[y]_+ = \max(y, 0)$.
+The \emph{Expected Improvement} $\mathrm{EI}$ is 
+\begin{align}
+  \label{eq:def_ei}
+  \mathrm{EI}(x) = \Ex[I(x)]  = \Ex\left[\left[f_{\min} - Y(x) \right]_+\right]
+\end{align}
+Again, a closed form is available to compute the expected improvement, that does not require the evaluation of the expectation \cref{eq:def_ei}:
+\begin{equation}
+  \mathrm{EI}(x) = \left(f_{\min} - m_Y(x)\right) \Phi\left(\frac{f_{\min} - m_Y(x)}{\sigma_Y(x)}\right) + \sigma_Y(x) \phi\left(\frac{f_{\min} - m_Y(x)}{\sigma_Y(x)}\right)
+\end{equation}
+
+\subsubsection{IAGO}
+\label{ssec:IAGO} Another criterion worth mentioning is a criterion based on the distribution of the minimizers \cite{villemonteix_informational_2006}:
+Let $y_i$ be a sample path of $Y$, and let $x_i^*$ the global minimizer of $y_i$.
+We denote then $X^*$ the random variable corresponding to the global minimizer of $Y$.
+We consider the differential entropy of $X^*$ given the augmented design $\mathcal{X} \cup \left\{(x,Y(x))\right\}$
+\begin{equation}
+  \kappa_{\mathrm{IAGO}}(x \mid \mathcal{X})=\Ex_{Y(x)}\Big[H\left[X^* \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\right]\Big]
+\end{equation}
+ So at each step, we choose the point that gives the smallest uncertainty on the location of the global minimizers of the sample paths.
 
 \subsection{Contour and volume estimation}
 Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019},~\cite{heinrich_level_2012}). 
 
 
-Let us consider $A$, a random closed set, such that its realizations are subsets of $\Xspace$, and $p$ is its coverage probability, that is
+Let us consider $A$, a random closed set, such that its realizations are subsets of $\Xspace$, and $\pi_A$ is its coverage probability, that is
 \begin{equation}
-  p(\theta) = \Prob\left[\theta\in A\right], \theta\in\Xspace
+  \pi_A(x) = \Prob\left[x\in A\right], x\in\Xspace
 \end{equation}
-For $\eta \in [0, 1]$, we define the $\eta$-level set of $p$,
+For a given $x\in\Xspace$, the event ``$x$ belongs to $A$'' happens with probability $\pi_A(x)$, thus has variance $\pi_A(x)(1 - \pi_A(x))$.
+
+For $\eta \in [0, 1]$, we define the $\eta$-level set of $\pi_A$, also called \emph{Vorob'ev quantiles}(see~\cite{vorobyev_new_2003})
 \begin{equation}
-  Q_{\eta} = \{x\in\Xspace \mid p(x) \geq \eta \}
+  Q_{\eta} = \{x\in\Xspace \mid \pi_A(x) \geq \eta \}
 \end{equation}
-It may seem trivial, but let us still note that those sets are decreasing:
+Those sets are decreasing (with respect to the inclusion) when $\eta$ increases:
 \begin{equation}
   0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
 \end{equation}
 
-Let $\mu$ be a Borel $\sigma$-finite measure on $\Xspace$. We define Vorob'ev expectation, as the $\eta^*$-level set of $A$ verifying
+
+
+\begin{definition}[Vorob'ev expectation of random closed sets, Vorob'ev deviation]
+  Let $A$ a random closed set of $\Xspace$, and $\mu$ a measure on $\Xspace$. We define the Vorob'ev expectation, as the $\eta^*$-level set of $A$ that verifies
+  \begin{equation}
+    \Ex[\mu(A)] = \mu(Q_{\eta^*})
+  \end{equation}
+  that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
+  If this equation does not have solutions, $\eta^*$ is chosen as
 \begin{equation}
   \forall \beta < \eta^* \quad \mu(Q_{\beta}) \leq \Ex[\mu(A)] \leq \mu(Q_{\eta^*})
 \end{equation}
-that is the level set of $p$, that has the volume of the mean of the volume of the random set $A$.
+Furthermore, as we have defined a kind of expectation of a random set, we can define a deviation as
+\begin{equation}
+  \Ex[\mu\left(Q_{\eta^*} \triangle A \right)]
+\end{equation}
+with $E\triangle F = \left(E \setminus F\right) \cup \left(F \setminus E\right)$ being the symmetric difference of the sets $E$ and $F$
+\end{definition}
 
-\subsection{Margin of uncertainty}
+\begin{equation}
+  \kappa(x \mid \mathcal{X}) = \Ex_{Y(x)}\left[\Ex\left[\mu\left(Q_{\eta^*_{n+1}}  \triangle A\right)\right]\right]
+\end{equation}
+where $Q_{\eta^*_{n+1}}$ is the Vorob'ev expectation of the random set $A$, constructed using the GP $Y$ with the augmented design $\mathcal{X}\cup\{(x, Y(x))\}$.
+\subsubsection{Margin of uncertainty}
 \label{sec:margin_of_uncertainty}
-Using the quantiles of this level set, we can construct the $\eta$-margin of uncertainty, as~\cite{dubourg_reliability-based_2011}.
+Using the level sets, we can construct the $\eta$-margin of uncertainty, as introduced in~\cite{dubourg_reliability-based_2011}, that is the set of points $x \in \Xspace$ that we cannot classify in or out of $A$ with high enough probability.
 Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
 \begin{equation*}
   \mathbb{M}_{\eta} = \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
 \end{equation*}
+
+
+\subsection{Robust criteria and GP}
+So far, we introduced before different criteria on a generic space $\Xspace$. In order to optimize in a robust way, we are going to consider the joint space $\Xspace = \Kspace \times \Uspace$:
+We assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\kk^{(1)},\uu^{(1)}),\dots,(\kk^{(n)},\uu^{(n)}) \right\}$, denoted as $(\kk,\uu)\mapsto Y(\kk,\uu)$.
+
+As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $C(\cdot, \cdot)$, while $\sigma^2_Y(\kk,\uu) = C\left((\kk,\uu), (\kk,\uu)\right)$
+\begin{equation}
+  Y(\kk,\uu) \sim \mathcal{N}\left(m_{Y}(\kk,\uu), \sigma^2_Y(\kk,\uu) \right)
+\end{equation}
+
+We are going to introduce some criteria that are useful in a robust optimization context. One of the main challenge of these criteria is the differentiation between $\kk$ and $\uu$, as we want to minimize with respect to $\kk$, but explore at the same time with respect to $\UU$.
+
+
+\subsubsection{Expected loss}
+Recalling the definition of $\estimtxt{\kk}{mean} = \argmin_{\kk \in \Kspace} \Ex_{\UU}\left[J(\kk, \UU)\right]$, we can look to minimize the expected 
+In~\cite{janusevskis_simultaneous_2010}, the author define the \emph{projected process} $Z$, a stochastic process $\kk \rightarrow \left(\Omega \rightarrow \mathbb{R}\right)$ as
+\begin{equation}
+  Z(\kk) = \Ex_U[Y(\kk, \UU)] = \int_{\Uspace} Y(\kk, \uu) p_{\UU}(\uu)\,\mathrm{d}\uu
+\end{equation}
+
+
+\subsubsection{Profile expected improvement}
+In the previous chapter, we introduce the conditional minimum $J^*(\UU)$ and the conditional minimizers $\kk^*(\UU)$. To follow on that idea, the function $\uu \mapsto \kk^*(\uu)$ can be explored: \cite{ginsbourger_bayesian_2014} introduces the \emph{Profile Expected Improvement} $\mathrm{PEI}$, defined as
+\begin{equation}
+  \label{eq:def_PEI}
+  \mathrm{PEI}(\kk, \uu)= \Ex\left[[f_{\min} - Y(\kk, \uu)]_+\right] \text{ with } f_{\min} = \max(\min_i f(x_i), \min_{\uu \in \UU} m_Y(\kk, \uu))
+\end{equation}
+This criterion 
+This writing allow us to see the similarity between the 
+
+\todo{faire figure}
+
 
 
 % \subsubsection{Contour and volume estimation}
@@ -323,7 +426,12 @@ Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0
 
 
 
-\subsection{Estimation of relative-regret quantities}
+\subsection{Estimation of regret based estimators}
+We are now going to detail how Gaussian processes can help in recovering the regret-based families of robust estimators:
+\begin{align}
+  \{ \estimtxt{\kk}{add,\beta} &= \max_{\kk\in\Kspace} \Gamma_\beta(\kk) = \Prob_{\UU}\left[J(\kk, \UU) \leq J^*(\UU) + \beta \right] \mid \beta \geq 0 \} \\
+\{ \estimtxt{\kk}{rel,\alpha} &= \max_{\kk\in\Kspace} \Gamma_\alpha(\kk) = \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right] \mid \alpha \geq 1 \}
+\end{align}
 \subsubsection{GP of the penalized cost function $\Delta_{\alpha}$}
 \label{ssec:gp_delta_alpha}
 We assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\kk^{(1)},\uu^{(1)}),\dots,(\kk^{(n)},\uu^{(n)}) \right\}$, denoted as $(\kk,\uu)\mapsto Y(\kk,\uu)$.
@@ -367,7 +475,6 @@ The $\alpha$-relaxed difference defined as  $\Delta_{\alpha} = Y - \alpha Y^*$ i
 \right)
 \end{equation}
 Multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ yields
-
 \begin{align}
   \Delta_{\alpha}(\kk,\uu) &\sim \mathcal{N}\left(m_{\Delta}(\kk,\uu); \sigma^2_{\Delta}(\kk,\uu)\right)  \label{eq:delta_GP}\\
   m_{\Delta}(\kk,\uu) &= m_Y(\kk,\uu) - \alpha m_Y^*(\uu) \label{eq:mu_delta_GP}\\
@@ -389,41 +496,34 @@ Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP}, 3 s
 This decomposition highlights the fact that the uncertainty measured at a point $(\kk, \uu)$ using $\sigma_{\Delta}^2$ will not be reduced completely by evaluating the function at this point, as only the prediction variance $\sigma_Y^2$ will be significantly affected in general. In this case, reducing the uncertainty on a slice of constant $\kk$ (candidate) will not result necessarily in an evaluation on this slice.
 
 
-\subsubsection{Approximation of the targeted probability using GP}
-
-% We are going now to use a different notation for the probabilities, taken with respect to the GP: $\ProbGP$, to represent the uncertainty encompassed by the GP:
-% \begin{equation}
-%   \ProbGP[A] = \int_{A} \, \mathrm{d}\ProbGP(\xi)
-% \end{equation}
-  
-\paragraph{Through the probability of coverage}
-
+\subsubsection{Evaluation and optimization of $\Gamma$}
+\paragraph{Estimation of the probability of coverage}
 
 For a given $\kk\in\Kspace$, the coverage probability of the $\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be $\alpha$-acceptable is
 \begin{align}
   \Gamma_{\alpha}(\kk) &= \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right] \\
                               & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
 \end{align}
-As $J$ is not known perfectly, it devolves into a classification problem
+As $J$ is not known perfectly, it can be seen as a classification problem.
 This classification problem can be approached with a plug-in approach in~\cref{eq:plugin_indicator}, or a probabilistic one in~\cref{eq:prob_indicator}:
 \begin{align}
   \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \mathbbm{1}_{m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu)} \label{eq:plugin_indicator} \\
   \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
 \end{align}
-Using the GPs, for a given $\kk$, $\alpha$ and $\uu$, the probability for our metamodel to verify the inequality is given by
+
 Based on those two approximation, we can define different estimations of $\Gamma$
 \begin{align}
   \hat{\Gamma}_{\alpha, n}(\kk) &= \Prob_U\left[m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu) \right] \tag{plug-in} \\
   \hat{\Gamma}_{\alpha, n}(\kk) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0\right]\right]  = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]\tag{Probabilistic approx} \\
 \end{align}
 
-The probability of coverage for the set $\{Y - \alpha Y^*\leq 0\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$, because $\Delta_{\alpha}$ is a GP, as defined in~\cref{eq:delta_GP,eq:mu_delta_GP,eq:variance_delta_GP}
+The probability of coverage for the set $\{Y - \alpha Y^*\leq 0\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$, because $\Delta_{\alpha}$ is a GP, as defined~\cref{eq:delta_GP,eq:mu_delta_GP,eq:variance_delta_GP}
 \begin{equation}
   \pi_{\alpha}(\kk,\uu) = \Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)
 \end{equation}
-Finally, averaging over $\uu$ yields
+Finally, averaging the coverage probability over $\uu$ yields
 \begin{equation}
-  \hat{\Gamma}_{\alpha,n}(\kk) = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]=\int_{\Uspace}\pi_{\alpha}(\kk,\uu)p(\uu) \,\mathrm{d}\uu = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)p(\uu) \,\mathrm{d}\uu
+  \hat{\Gamma}_{\alpha,n}(\kk) = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]=\int_{\Uspace}\pi_{\alpha}(\kk,\uu)p_{\UU}(\uu) \,\mathrm{d}\uu = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)p_{\UU}(\uu) \,\mathrm{d}\uu
 \end{equation}
 
 The estimation of $\Gamma$ is then maximised with respect to $\kk$ to get the candidate probability
@@ -553,11 +653,11 @@ Let assume that we derived a criterion $\kappa$. And let $f(x) = \frac{\kappa(x)
   However, as $N$ should be large, there is no point in evaluating all the samples $x_i$. This goes by the statistical reduction of the samples:
   This can be done by KMeans algorithm, 
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{/home/victor/acadwriting/sampling_estimation_Meta.pdf}
-  \caption{\label{fig:label} }
-\end{figure}
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{/home/victor/acadwriting/sampling_estimation_Meta.pdf}
+%   \caption{\label{fig:label} }
+% \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,35 @@
+\message{ !name(Chapter3.tex)}\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter3/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+\newcommand\imgpath{/home/victor/acadwriting/Manuscrit/Text/Chapter3/img/} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\message{ !name(Chapter3.tex) !offset(390) }
+\begin{align}
+    \mathrm{RejReg}(\uu_0) &= \left\{\kk\in\Kspace \mid r(\kk, \uu_0) \geq \frac{1}{2}\chi^2_{\dim \Kspace}(1-\nu) \right\} \\
+    &= \left\{\kk\in\Kspace \mid J(\kk, \uu_0) - J^*(\uu_0) \geq \frac{1}{2}\chi^2_{\dim \Kspace}(1-\nu) \right\}
+  \end{align}
+\message{ !name(Chapter3.tex) !offset(417) }
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t %"../../Main_ManuscritThese"
+%%% End:

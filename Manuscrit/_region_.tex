@@ -1,0 +1,36 @@
+\message{ !name(../../Main_ManuscritThese.tex)}\makeatletter 
+\def\input@path{{../../}} 
+\makeatother
+
+%% Preamble
+\input{Preamble/Preamble.tex}
+
+\begin{document}
+
+\message{ !name(Text/Chapter3/Chapter3.tex) !offset(452) }
+, no value shows a better affinity of being a minimizer than the other.
+
+In the more general case, let us consider the random variable $\kk^*(\UU)$. In general, this random variable cannot be classified as continuous or discrete beforehand. However, in the following, we are going to assume that it is a \emph{continuous random variable}, and thus admits a pdf: $p_{\kk^*}$.
+Except for simple analytical problems, this pdf cannot be obtained analytically, and needs to be estimated.
+Let $\{\uu_i\}_{1\leq i \leq n_{\mathrm{samples}}}$ be $n_{\mathrm{samples}}$ i.i.d.\ samples of $\UU$, and
+$\{\kk^*(\uu_i)\}_{1\leq i \leq n_{\mathrm{samples}}}$ the corresponding minimizers, as defined \cref{eq:def_kstar}.
+
+\begin{equation}
+  \hat{p}_{\KK^*}(\kk^*) = \frac{1}{n_{\mathrm{samples}} h^{\dim \Kspace}} \sum_{i=1}^{n_{\mathrm{samples}}} \mathcal{K}\left(\frac{\kk^* - \kk^*(\uu_i)}{h}\right)
+\end{equation}
+
+The entropy of the random variable $\kk^*(\UU)$ is a measure of the sentitivity of the calibration when the environmental variable varies.
+Assuming that the distribution of the minimizers is continuous, this entropy can be estimated by various methods (see for instance~\cite{beirlant_nonparametric_1997}).
+
+
+
+
+
+\message{ !name(../../Main_ManuscritThese.tex) !offset(59) }
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

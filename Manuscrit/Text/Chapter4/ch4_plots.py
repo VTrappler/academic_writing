@@ -8,8 +8,13 @@ from matplotlib.legend_handler import HandlerLineCollection, HandlerTuple
 import numpy as np
 import scipy.stats
 import scipy.special
+import sys
 # import RO.bo_plot as bplt
-# import RO.bo_wrapper as bow
+sys.path.append('/home/victor/RO_VT/RO/')
+import RO.bo_wrapper as bow
+colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern, RBF
 
@@ -113,3 +118,33 @@ for i, ker in enumerate(kernels):
 plt.tight_layout()
 plt.savefig('./img/covariance_functions.pgf')
 plt.close()
+
+
+plt.figure(figsize=col_full)
+plt.subplot(2, 1, 1)
+true, reg, sh1, sh2, sh3 = plot_gp(gp, X_,
+                                   true_function=function_gp,
+                                   show=False,
+                                   label=r'True function $f$')
+plt.legend()
+plt.xlabel(r'$x$')
+plt.xlim(bounds)
+
+ax = plt.subplot(2, 1, 2)
+m_Z, s_Z = gp.predict(X_[:, np.newaxis], return_std=True)
+ax.plot(X_, s_Z**2, label=r'$\sigma_Z$')
+IMSE = []
+scenarios = lambda mp, sp: scipy.stats.norm.ppf(np.linspace(0.05, 0.95, 10, endpoint=True),
+                                                loc=mp, scale=sp)
+for x in X_:
+    mp, sp = gp.predict(np.atleast_2d(x), return_std=True)
+    evaluated_points = scenarios(mp, sp).squeeze()
+    ss = 0
+    for evalu in evaluated_points:
+        gpp = bow.add_points_to_design(gp, x, evalu)
+        ss += bow.integrated_variance(gpp, X_[:, np.newaxis], alpha=None)
+    IMSE.append(ss / float(len(evaluated_points)))
+ax2 = ax.twinx() 
+ax2.plot(X_, -np.asarray(IMSE), label=r'IMSE', color=colors[1])
+# plt.show()
+plt.savefig('./img/IMSE_variance.pgf')

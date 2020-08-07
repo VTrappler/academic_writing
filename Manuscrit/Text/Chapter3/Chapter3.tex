@@ -308,15 +308,13 @@ An example is the following problem:
   J(\kk_1, \UU) &\sim \mathcal{N}(2, 2^2) \\
   J(\kk_2, \UU) & \sim \mathcal{N}(3, 1^2)
 \end{align}
-It is clear that $\Ex_{\UU}[J(\kk_1, \UU)] < \Ex_{\UU}[J(\kk_2, \UU)]$. However, choosing $\estimtxt{\kk}{} = \kk_2$ leads to less extreme (``bad'') values:
+It is clear that $\Ex_{\UU}[J(\kk_1, \UU)] < \Ex_{\UU}[J(\kk_2, \UU)]$. However, choosing $\estimtxt{\kk}{} = \kk_2$ leads to less extreme values:
 \begin{align}
-  \Prob_{U}[J(\kk_1, \UU) > 5] = 1 - \Phi\left(\frac{5-2}{2}\right) = 0.06681 \\
-  \Prob_{U}[J(\kk_2, \UU) > 5] = 1 - \Phi\left(\frac{5-3}{1}\right) = 0.02275 \\
+  \Prob_{U}[J(\kk_1, \UU) > 5] = 0.06681> \Prob_{U}[J(\kk_2, \UU) > 5] = 0.02275
 \end{align}
 Depending on the application, such a behaviour could be prohibitive.
 This difference in probability is explained by the difference in the variance of the random variable $J(\kk, \UU)$.
 Accounting for the variance is discussed in~\cref{sec:multiobjective_optimization}.
-
 
 \subsubsection{Variance, dispersion, Multiobjective optimization}
 \label{sec:multiobjective_optimization}
@@ -439,11 +437,9 @@ The conditional minimum $J^*(\UU)$ is then a random variable describing the best
 % \end{equation}
 
 
-\subsection{The minimizer as a random variable}
-\label{sec:kstar_rv}
-
 If $J$ behaves nicely enough, the mapping
 \begin{equation}
+  \label{eq:def_kstar}
   \begin{array}{rcl}
     \kk^*: \Uspace &\longrightarrow& \Kspace \\
     \uu &\longmapsto& \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
@@ -455,7 +451,7 @@ We assume that $\UU$ is a continuous random variable, with a compact support.
 
 Let us define $\Kspace = \Uspace= [0, 1]$, and $\UU \sim \mathrm{Unif}(\Uspace)$, and the following cost functions:
 \begin{align}
-  J_1(\kk, \uu) &= (1+\uu)\cdot(\kk - 0.5)^2 + 1\\
+  J_1(\kk, \uu) &= (1+\uu)+(\kk - 0.5)^2\\
   J_2(\kk, \uu) &= (\kk-\uu)^2 + 1
 \end{align}
 We have
@@ -464,21 +460,33 @@ We have
   \kk^*_2(\uu) &= \argmin_{\kk\in\Kspace} J_2(\kk, \uu) = \uu
 \end{align}
 
-In the first case, $\kk_0 = \argmin_{\kk} J(\kk, \UU)$, so $\kk^*$ is a constant random variable equals to  $\kk_0$. In other words, the minimizer is not dependent on the value taken by the environmental parameter. The minimum value $J^*$ might be dependent though. On the other hand, if $\KK^*$ is uniformly distributed on $\Kspace$, no value shows a better affinity of being a minimizer than the other.
+In the first case, $\kk_0 = \argmin_{\kk} J(\kk, \UU)$, so $\kk_1^*(\UU)$ is a degenerate random variable equals to  $\kk_0$. In other words, the minimizer is not dependent on the value taken by the environmental parameter. The minimum value $J^*$ might be dependent though. On the other hand, for $J_2$, as $\Kspace=\Uspace$ and $\UU \sim \mathrm{Unif}(\Uspace)$, $\KK_2^*(\UU)$ is uniformly distributed on $\Kspace$, no value shows a better affinity of being a minimizer than the other.
+
+In the more general case, let us consider the random variable $\kk^*(\UU)$. In general, this random variable cannot be classified as continuous or discrete beforehand. However, in the following, we are going to assume that it is a \emph{continuous random variable}, and thus admits a pdf: $p_{\kk^*}$.
+Except for simple analytical problems, this pdf cannot be obtained analytically, and needs to be estimated.
+Let $\{\uu_i\}_{1\leq i \leq n_{\mathrm{samples}}}$ be $n_{\mathrm{samples}}$ i.i.d.\ samples of $\UU$, and
+$\{\kk^*(\uu_i)\}_{1\leq i \leq n_{\mathrm{samples}}}$ the corresponding minimizers, as defined \cref{eq:def_kstar}.
+The isotropic \emph{Kernel density estimation}, or KDE is defined as
+\begin{equation}
+  \hat{p}_{\KK^*}(\kk^*) = \frac{1}{n_{\mathrm{samples}} h^{\dim \Kspace}} \sum_{i=1}^{n_{\mathrm{samples}}} \mathcal{K}\left(\frac{\kk^* - \kk^*(\uu_i)}{h}\right)
+\end{equation}
+where $h>0$ is the bandwidth (that measure the influence of each sample), and $\mathcal{K}$ is a kernel of dimension $\dim \Kspace$, usually defined as the product of one-dimensional kernels $\mathcal{K}_1$. Several choices of 1D kernels are available, and one of the most common one is the Gaussian Kernel: $\mathcal{K}_1(\kk) = (2\pi)^{-1}\exp(-\kk^2 /2)$
 
 
-Some quantities related to this distribution allows also for insights upon the problem of robust calibration. For instance, the entropy of the distribution of the minimizers is a good indication of the information we have upon the possible locations of the minimizers. Some global optimization procedures use this entropy as an objective to reduce at each iteration~\cite{villemonteix_informational_2006}.
+Additionaly, the entropy of the random variable $\kk^*(\UU)$ is a measure of the sentitivity of the calibration when the environmental variable varies.
+Assuming that the distribution of the minimizers is continuous, this entropy can be estimated by various methods (see for instance~\cite{beirlant_nonparametric_1997}).
 
-\subsection{The minimizer as an objective}
-Let us consider the random variable $\kk^*(\UU)$, and assume that it admits a density, noted $p_{\KK^*}$.
+Finally, when we have an estimation of the density of $\KK^*$, and if it exists, we can compute its mode, that we are going to call the \emph{Most Probable estimator}:
 \begin{equation}
   \estimtxt{\kk}{MPE} = \argmax_{\kk \in \Kspace} p_{\KK^*}(\kk)
 \end{equation}
 
+Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is ``most often'' the minimiser of the cost function. However, we have no indications on its performances when it is \emph{not} optimal. In \cref{sec:regret}, we are going to introduce the notions of regret (additive and relative), in order to try to be ``near optimal'' with high probability.
 
 
 \subsection{Regret and model selection}
-
+\label{sec:regret}
+In this section, we will first focus on cost functions defined as the negative log-likelihood in order to link the additive regret and the Likelihood ratio test.
 \subsubsection{Cost as the negative log-likelihood}
 
 Let us define the cost function as the negative log-likelihood:
@@ -486,7 +494,7 @@ Let us define the cost function as the negative log-likelihood:
   J(\kk, \uu) = - \log p_{Y\mid \KK, \UU}(y \mid \kk, \uu) = -\log \mathcal{L}(\kk,\uu)
 \end{equation}
 
-As established in the first chapter, for a fixed $\uu_0\in\Uspace$, the model $\left\{\left(\mathcal{M}(\cdot, \uu_o), \Theta \right)\right\}$ is misspecified.
+As established in the first chapter, for a fixed $\uu_0\in\Uspace$, the model $\left\{\left(\mathcal{M}(\cdot, \uu_0), \Theta \right)\right\}$ is misspecified.
   The notion of Wald's regret introduced earlier is directly linked to the likelihood ratio test:
   \begin{align}
     r(\kk,\uu_0) &= J(\kk, \uu_0) - \min_{\kk^{\prime}\in\Kspace}J(\kk^{\prime}, \uu_0) = J(\kk,\uu_0) - J^*(\uu_0)  \\
@@ -494,15 +502,15 @@ As established in the first chapter, for a fixed $\uu_0\in\Uspace$, the model $\
                  &= -\log \frac{\mathcal{L}(\kk, \uu_0)}{\max_{\kk^{\prime}\in\Kspace}\mathcal{L}(\kk^{\prime}, \uu_0)} = -\log \frac{\max_{\kk^{\prime}\in\{\kk\}}\mathcal{L}(\kk^{\prime}, \uu_0)}{\max_{\kk^{\prime}\in\Kspace}\mathcal{L}(\kk^{\prime}, \uu_0)}
   \end{align}
 
-  Recalling the misspecified likelihood ratio test, the regret $r$ is to be compared with a quantile of the r.v.\ $X$ defined as
+  Recalling the misspecified likelihood ratio test, the regret $r$ is to be compared with a quantile of the r.v.\ $X(\uu_0)$ defined as
   \begin{equation}
     \label{eq:sumchi2}
-X=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \chi^2_1
+X(\uu_0)=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \Xi_i \quad \text{ with } \Xi_i \sim \chi^2_1 \text{ i.i.d.}
 \end{equation}
  where $\{c_i\}_{1\leq i \leq \dim \Kspace}$ are coefficients linked to the eigenvalues of the Fisher information matrix as evoked in~\label{sec:model_misspecification}.
 
   
- However, by making the assumption that for all $1 \leq i \leq \dim \Kspace$, $c_i(\uu_0)=1$, the sum of \cref{eq:sumchi2} can be simplified to find an asymptotical distribution in the well-specified case: $X\sim \chi^2_{\dim \Kspace}$.
+ However, by making the assumption that for all $1 \leq i \leq \dim \Kspace$, $c_i(\uu_0)=1$, the sum of \cref{eq:sumchi2} can be simplified, and $X(\uu) = X \sim \chi^2_{\dim \Kspace}$. This assumption leads us to the likelihood ratio test for well-specified models:
 
  For $\kk\in \Kspace$ we can test for the following hypotheses:
  \begin{itemize}
@@ -518,8 +526,9 @@ X=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \chi^2_1
     \label{eq:lik_interval_add}
     \mathcal{I}_{\mathrm{Lik}}(\uu_0; \beta) = \left\{\kk\in \Kspace \mid  J(\kk, \uu_0) - J^*(\uu_0) \leq \beta=\frac{1}{2}\chi^2_{\dim \Kspace}(1-\nu)\right\}
   \end{equation}
-   In the more general case, we can choose $\beta>0$ in a more arbitrary way, in order to avoid the computations of the coefficients $\{c_i(\uu)\}$.
-\subsubsection{General cost function: interval and probability of acceptability}
+   In the more general case, we can choose $\beta>0$ in a more arbitrary way, in order to avoid the computations of the coefficients $\{c_i(\uu)\}_i$, as we are going to see~\cref{ssec:general_cost_prob}.
+     \subsubsection{General cost function: interval and probability of acceptability}
+     \label{ssec:general_cost_prob}
  We assumed before that $J$ was the negative log-likelihood. In the more general case, $J$ represents a loss function, that we want to minimize. The analog of \cref{eq:lik_interval_add} is what we are calling the \emph{acceptibility interval}.
   \begin{definition}[Acceptable interval]
   By analogy with the likelihood interval defined~\cref{eq:def_lik_interval} and \cref{eq:lik_interval_add}, we can construct a set for an arbitrary threshold $\beta \geq 0$ such that
@@ -544,12 +553,24 @@ As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \e
 
   This set can be measured with respect to the distribution of $\UU$:
   \begin{equation}
+    \label{eq:def_gamma_additive}
     \Gamma_\beta(\kk) = \Prob_U\left[\UU \in R_{\beta}(\kk)\right]
   \end{equation}
   Loosely speaking, for a given $\kk$, $\Gamma_{\beta}(\kk)$ is the probability that the model $(\mathcal{M}(\cdot, \UU), \{\kk\})$ is ``statistically equivalent'' to the ``full model'' $\left(\mathcal{M}(\cdot, \UU), \Kspace)\right)$, at a certain level linked to the value of $\beta$.
 
-  Finding a relevant threshold $\beta$ for the comparison is quide
-\subsection{Relative regret}
+  \begin{definition}[Additive-regret family of estimators]
+    For $\beta \geq 0$, we define the family of robust estimators as the maximizers of \cref{eq:def_gamma_additive}:
+    \begin{equation}
+      \left\{\estimtxt{\kk}{add,\beta} = \max_{\kk\in\Kspace} \Gamma_{\beta}= \Prob_U\left[\UU \in R_{\beta}(\kk)\right]\mid \beta \geq 0\right\}
+    \end{equation}
+  \end{definition}
+
+  In other words, we can find the value $\kk\in\Kspace$ that gives a model $(\mathcal{M}(\cdot, \UU), \{\estimtxt{\kk}{\beta}\})$ that is statistically equivalent with the highest probability.
+
+
+  
+  \subsection{Relative regret}
+\subsubsection{Shortcomings of the additive regret}
 We examined before regret that can be qualified as \emph{additive} as this is the difference between $J$ and $J^*$ that is compared to fixed thresholds.
 However, we can argue that the relative magnitude of the cost function has an importance in the comparison. For illustration purposes, let us consider the situation described \cref{tab:hyp_situation}.
 
@@ -580,7 +601,48 @@ However, we can argue that the relative magnitude of the cost function has an im
 In this situation, for both $\uu_1$ and $\uu_2$, the maximal additive regret is $\max_{\kk} J(\kk, \uu) - J^*(\uu) = 100$, so no clear preference could be infered toward one or another value. % The situation $\UU=\uu_1$ seems less favorable than $\UU=\uu_2$, as the values of the cost function $J(\cdot, \uu_1)$ are larger than for all $\kk$.
 However, choosing $\kk_1$ over $\kk_2$ means to choose to improve the performance of an already pretty bad situation ($10000$ instead of $10100$), while increasing tenfold the loss for the situation $\UU=\uu_2$. 
 
-In that sense, we are going now to introduce the relative regret, that focuses on the \emph{relative error} $\frac{J - J^*}{J^*}$, or more precisely the \emph{relative regret} $J/J^*$, instead of the \emph{absolute regret} $J - J^*$.
+
+From the example developed~\cref{tab:hyp_situation}, considering the additive regret may be ill-advised, as the difference in magnitude of the cost function between $\UU = \uu_1$ and $\UU = \uu_2$ is probably due to the effect of a misspecification. To apply the likelihood ratio test, one should choose the quantiles of two different random variables: $X(\uu_1)$ and $ X(\uu_2)$.
+
+In that sense, we are going now to focus on the \emph{relative regret} $J/J^*$, instead of the \emph{absolute regret} $J - J^*$.
+
+\subsubsection{$\alpha$-acceptability}
+Again, instead of 
+  \begin{definition}[$\alpha$-acceptable interval]
+  For an arbitrary threshold $\alpha \geq 1$, we define the $\alpha$-acceptable interval as
+  \begin{equation}
+    \mathcal{I}_{\alpha}(\uu) = \left\{\kk \in \KK \mid J(\kk,\uu) \leq \alpha J^*(\uu) \right\}
+  \end{equation}
+\end{definition}
+
+Then, for a given $\alpha$ and $\kk$, we can define the set of $\uu\in \Uspace$ such that $\kk$ is $\alpha$-acceptable:
+\begin{equation}
+  R_{\alpha}(\kk) = \left\{\uu \in \Uspace \mid \kk \in \mathcal{I}_{\alpha}(\uu) \right\} = \left\{\uu \in \Uspace \mid  J(\kk, \uu) \leq \alpha J^*(\uu) \right\}
+\end{equation}
+
+We define the family of relative regret estimators as
+\begin{equation}
+      \left\{\estimtxt{\kk}{rel,\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha}= \Prob_U\left[\UU \in R_{\alpha}(\kk)\right]\mid \alpha \geq 1\right\}
+    \end{equation}
+
+
+We can also notice that setting $\alpha=1$ gives
+\begin{align}
+  \mathcal{I}_{\alpha}(\uu) &= \{\kk^*(\uu)\} \\
+  R_1(\kk) &= \left\{\uu\in\Uspace \mid J(\kk, \uu) = J^*(\uu)\right\} = \left\{\uu\in\Uspace \mid \kk = \kk^*(\uu)\right\}
+\end{align}
+
+If $\kk^*(\UU)$ is a continuous random variable, for all $\kk\in\Kspace$, $\Prob_{\UU}[\UU \in R_1(\kk)] = \Prob_{\UU}[\kk^*(\UU) = \kk] = 0$.
+
+
+\subsection{The choice of thresholds}
+\label{sec:choice_threshold}
+  
+Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing \a threshold too small may give a maximal probability too low.
+
+We propose to study jointly the threshold and the maximal probability reached.
+
+
 
 \subsection{Physical analogy, energy, temperature and Gibbs distribution}
 Simulated annealing analogy

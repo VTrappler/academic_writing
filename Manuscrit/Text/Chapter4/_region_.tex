@@ -1,0 +1,35 @@
+\message{ !name(Chapter4.tex)}\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
+}
+\newcommand{\IMSE}{\mathop{\mathrm{IMSE}}}
+\newcommand{\GP}{\mathop{\mathrm{GP}}}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter2/build/Chapter2}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+\newcommand\imgpath{/home/victor/acadwriting/Manuscrit/Text/Chapter4/img/} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\message{ !name(Chapter4.tex) !offset(64) }
+$Z \sim \GP(m_Z, C_Z)$
+\message{ !name(Chapter4.tex) !offset(522) }
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t % "../../Main_ManuscritThese"
+%%% End:

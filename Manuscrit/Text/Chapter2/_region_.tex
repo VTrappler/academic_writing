@@ -1,0 +1,36 @@
+\message{ !name(Chapter2.tex)}\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Chapter2/#1}
+}
+
+% For cross referencing
+\subfileLocal{
+\externaldocument{../../Text/Introduction/build/Introduction}
+\externaldocument{../../Text/Chapter3/build/Chapter3}
+\externaldocument{../../Text/Chapter4/build/Chapter4}
+\externaldocument{../../Text/Chapter5/build/Chapter5}
+\externaldocument{../../Text/Conclusion/build/Conclusion}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\message{ !name(Chapter2.tex) !offset(728) }
+\begin{align}
+  \mathcal{L}_{\mathrm{integrated}}(\theta;y) &= \int_{\Uspace} \mathcal{L}(\theta,\uu;y) p_{\UU}(\uu) \,\mathrm{d}\uu \\
+                                              &=\int_{\Uspace} p_{Y|\theta,\UU}(y \mid \theta,u) p_{\UU}(\uu) \,\mathrm{d}\uu \\
+                                              &=\int_{\Uspace} p_{Y,\UU|\theta}(y,u \mid \theta)\,\mathrm{d}\uu \\
+\end{align}
+\message{ !name(Chapter2.tex) !offset(746) }
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t %"../../Main_ManuscritThese"
+%%% End:
