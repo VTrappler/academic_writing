@@ -202,17 +202,23 @@ One main interesting point of GP regression, is that more than the surrogate $\h
 
 \subsection{Covariance functions}
 \label{sec:cov_fun}
-In the previous section, we described the equaitons to solve to get the surrogate $\hat{Z}$ of $f$ based on GP.
+In the previous section, we described the equations to solve to get the surrogate $\hat{Z}$ of $f$ based on GP.
 The coefficients of the linear estimation are based on the covariance function $C_Z$.
-A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$ 
+A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{\dim\Xspace})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$ 
+For multidimensional problems, covariance functions are usually chosen as the product of $1D$ covariance functions:
+\begin{equation}
+  C_Z(h) = s^2\prod_{i=1}^{\dim \Kspace} C_i(h_i;l_i)
+\end{equation}
+These covariance functions introduce an additional parameter $l$ of dimension $\dim \Xspace$, and a variance parameter $s^2$.
+$l$ called the \emph{length scale}, that measure the influence of each variable on its vicinity. If the length scales are all equals, the covariance kernel is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
 
-A few common stationary covariance functions are introduced~\cref{tab:common_cov_fc}.
+A few common stationary $1D$-covariance functions are introduced~\cref{tab:common_cov_fc}.
 
   \begin{table}[ht]
     \centering
     \begin{tabular}{lrc}
       \toprule
-      Name & $C_Z(h)$ & Regularity of sample paths\\ \midrule
+      Name & $C(h;l)$ & Regularity of sample paths\\ \midrule
       Gaussian & $\exp\left(- \frac{h^2}{2 l^2}\right)$ & $C^{\infty}$\\
       Exponential &$\exp\left(- \frac{\lvert h \rvert}{l}\right)$ & $C^0$  \\
       Matérn 3/2 & $\left(1 + \sqrt{3}\frac{h}{l}\right)\exp\left(-\sqrt{3}\frac{h}{l}\right)$ & $C^1$\\
@@ -222,9 +228,8 @@ A few common stationary covariance functions are introduced~\cref{tab:common_cov
   \end{table}
 
 
-  These covariance function introduce an additional parameter $l$, called the \emph{length scale}.
 
-  One main difference between those covariance functions is the regularity of the sample paths. The choice of one or another can then be motivated by the assumptions on the original function.
+  One main difference that motivates one or the other covariance function is the assumption upon the regularity of the sample paths. For example, if the unknown function $f$ is assumed to be infinitely differentiable, a Gaussian kernel is suited for the modelling. One common choice is the Matérn kernel of order $5/2$, so that the samples paths are twice-differentiable.
 
   
 \begin{figure}[ht]
@@ -233,7 +238,7 @@ A few common stationary covariance functions are introduced~\cref{tab:common_cov
   \caption{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show sample paths for those different covariance functions with same length scale.}
 \end{figure}
 
-
+Those $(\dim \Xspace + 1)$ hyperparameters have to be estimated based on the training set $\mathcal{X}$. This is usually done by MLE~(see for instance~\cite{ribaud_robustness_2019}, or by cross-validation (see \cite{ginsbourger_note_2009})
 \section{Stepwise Enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
 For a unknown function $f$, a GP is initally constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Y \mid \mathcal{X}$ and:
@@ -381,9 +386,10 @@ where $Q_{\eta^*_{n+1}}$ is the Vorob'ev expectation of the random set $A$, cons
 \label{sec:margin_of_uncertainty}
 Using the level sets, we can construct the $\eta$-margin of uncertainty, as introduced in~\cite{dubourg_reliability-based_2011}, that is the set of points $x \in \Xspace$ that we cannot classify in or out of $A$ with high enough probability.
 Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
-\begin{equation*}
+\begin{equation}
+  \label{eq:margin_unc}
   \mathbb{M}_{\eta} = \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}
-\end{equation*}
+\end{equation}
 
 
 \subsection{Robust criteria and GP}
@@ -412,28 +418,19 @@ In the previous chapter, we introduce the conditional minimum $J^*(\UU)$ and the
   \label{eq:def_PEI}
   \mathrm{PEI}(\kk, \uu)= \Ex\left[[f_{\min} - Y(\kk, \uu)]_+\right] \text{ with } f_{\min} = \max(\min_i f(x_i), \min_{\uu \in \UU} m_Y(\kk, \uu))
 \end{equation}
-This criterion 
+
 This writing allow us to see the similarity between the 
 
 \todo{faire figure}
 
+\subsection{GP of the penalized cost function}
+\label{ssec:gp_delta_alpha}
 
-
-% \subsubsection{Contour and volume estimation}
-
-% Let $Y$ be a random process over $\Xspace$, and let us follow what has been done in~\cite{bect_sequential_2012}.
-% Let $\mathfrak{F} \subset \mathbb{R}$ be a region of failure: $f^{-1}(\mathfrak{F})$
-
-
-
-\subsection{Estimation of regret based estimators}
 We are now going to detail how Gaussian processes can help in recovering the regret-based families of robust estimators:
 \begin{align}
   \{ \estimtxt{\kk}{add,\beta} &= \max_{\kk\in\Kspace} \Gamma_\beta(\kk) = \Prob_{\UU}\left[J(\kk, \UU) \leq J^*(\UU) + \beta \right] \mid \beta \geq 0 \} \\
 \{ \estimtxt{\kk}{rel,\alpha} &= \max_{\kk\in\Kspace} \Gamma_\alpha(\kk) = \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right] \mid \alpha \geq 1 \}
 \end{align}
-\subsubsection{GP of the penalized cost function $\Delta_{\alpha}$}
-\label{ssec:gp_delta_alpha}
 We assume that we constructed a GP on $J$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ points $\mathcal{X} = \left\{(\kk^{(1)},\uu^{(1)}),\dots,(\kk^{(n)},\uu^{(n)}) \right\}$, denoted as $(\kk,\uu)\mapsto Y(\kk,\uu)$.
 
 As a GP, $Y$ is described by its mean function $m_{Y}$ and its covariance function $C(\cdot, \cdot)$, while $\sigma^2_Y(\kk,\uu) = C((\kk,\uu), (\kk,\uu))$
@@ -486,18 +483,18 @@ Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP}, 3 s
 \begin{itemize}
 \item $\sigma^2_{Y}$ is the prediction variance of the GP on $J$, that is directly reduced when additional points are evaluated
 \item $\sigma^2_{Y^*}$ is the variance of the predicted value of the minimizer.
-  
 \item Assuming a stationary form of the covariance, the third term is directly dependent on the distance between $\kk$ and $\kk^*(\uu)$. As the covariance term can be written $C((\kk,\uu), (\kk',\uu')) = s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\uu}} \rho_{\theta_j}(\|u_j - u'_j\|)$, substituting $\kk^*(\uu)$ for $\kk^\prime$ gives
 \begin{align}
   C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) &= s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k^*_i(\uu)\|)\prod_{j\in\mathcal{I}_{\uu}} \rho_{\theta_j}(0) \\
   &=s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k^*_i(\uu)\|)
 \end{align}
 \end{itemize}
-This decomposition highlights the fact that the uncertainty measured at a point $(\kk, \uu)$ using $\sigma_{\Delta}^2$ will not be reduced completely by evaluating the function at this point, as only the prediction variance $\sigma_Y^2$ will be significantly affected in general. In this case, reducing the uncertainty on a slice of constant $\kk$ (candidate) will not result necessarily in an evaluation on this slice.
+This decomposition highlights the fact that the uncertainty measured at a point $(\kk, \uu)$ using $\sigma_{\Delta}^2$ will not be reduced completely by evaluating the function at this point, as only the prediction variance $\sigma_Y^2$ will be significantly affected in general. In this case, reducing the uncertainty on a slice of constant $\kk$ (candidate) will not result necessarily in an evaluation located on this slice.
 
 
-\subsubsection{Evaluation and optimization of $\Gamma$}
-\paragraph{Estimation of the probability of coverage}
+\subsection{Evaluation and optimization of $\Gamma$}
+Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{rel, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we can first explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plug-in estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
+\subsubsection{Estimation of the probability of coverage}
 
 For a given $\kk\in\Kspace$, the coverage probability of the $\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be $\alpha$-acceptable is
 \begin{align}
@@ -511,28 +508,58 @@ This classification problem can be approached with a plug-in approach in~\cref{e
   \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
 \end{align}
 
-Based on those two approximation, we can define different estimations of $\Gamma$
+Based on those two approximation, we can define two different estimations of $\Gamma_\alpha$, namely $\hat{\Gamma}_\alpha^{\mathrm{PI}}$ with the plug-in approach, and $\Gamma_{\alpha}^{\pi}$ for the probabilistic one.
+
+\subsubsection{Plug-in approach}
+For the plug-in approach, the chosen estimator is defined \cref{eq:def_gamma_PI}:
+  \begin{equation}
+    \label{eq:def_gamma_PI}
+    \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \Prob_U\left[m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu) \right]
+  \end{equation}
+  The outer expectation operator is to be computed numerically, using quadrature rule, or Monte-carlo methods. In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Y$ of the cost function $J$.
+  In this case, we propose to reduce the IMSE of the GP $Y - \alpha Y^*$. The choice of the IMSE (instead of choosing the point of maximal variance for instance) comes from the decomposition of the variance~\cref{eq:variance_delta_GP}. 
+  
+  \subsubsection{Probabilistic approach}
 \begin{align}
-  \hat{\Gamma}_{\alpha, n}(\kk) &= \Prob_U\left[m_Y(\kk,\uu) \leq \alpha m_Y^*(\uu) \right] \tag{plug-in} \\
-  \hat{\Gamma}_{\alpha, n}(\kk) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\kk,\uu) \leq 0\right]\right]  = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]\tag{Probabilistic approx} \\
+  \hat{\Gamma}_{\alpha}^{\pi}(\kk) &= \Ex_U\left[ \ProbGP\left[ \Delta_{\alpha}(\kk,\UU) \leq 0\right]\right] = \Ex_U\left[ \ProbGP\left[ Y(\kk, \UU) - \alpha Y^*(\UU) \leq 0\right]\right] \\ &= \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]
 \end{align}
 
+  
 The probability of coverage for the set $\{Y - \alpha Y^*\leq 0\}$ is $\pi_{\alpha}$, and can be computed using the CDF of the standard normal distribution $\Phi$, because $\Delta_{\alpha}$ is a GP, as defined~\cref{eq:delta_GP,eq:mu_delta_GP,eq:variance_delta_GP}
 \begin{equation}
+  \label{eq:def_pialphaku}
   \pi_{\alpha}(\kk,\uu) = \Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)
 \end{equation}
 Finally, averaging the coverage probability over $\uu$ yields
 \begin{equation}
-  \hat{\Gamma}_{\alpha,n}(\kk) = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]=\int_{\Uspace}\pi_{\alpha}(\kk,\uu)p_{\UU}(\uu) \,\mathrm{d}\uu = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)p_{\UU}(\uu) \,\mathrm{d}\uu
+  \hat{\Gamma}_{\alpha}^{\pi}(\kk) = \Ex_U\left[\pi_{\alpha}(\kk,\uu)\right]=\int_{\Uspace}\pi_{\alpha}(\kk,\uu)p_{\UU}(\uu) \,\mathrm{d}\uu = \int_{\Uspace}\Phi\left(-\frac{m_{\Delta_\alpha}(\kk,\uu)}{\sigma_{\Delta_\alpha}(\kk,\uu)}\right)p_{\UU}(\uu) \,\mathrm{d}\uu
 \end{equation}
 
-The estimation of $\Gamma$ is then maximised with respect to $\kk$ to get the candidate probability
+
+We can also consider the set $Y - \alpha Y^* \leq 0$ from a random set perspective:
+For each $\kk\in\Kspace$, we can consider the random closed set $A_\kk =  \{\uu \in \Uspace \mid Y(\kk, \uu) - \alpha Y^*(\uu) \leq 0\}$.
+In this case, we can set $\mu = \Prob_{\UU}$, so that $\mu(A_{\kk}) = \Prob_{\UU}[A_{\kk}]$.
+For a given $\kk$, the probability of coverage of the set $A_{\kk}$
+is
 \begin{equation}
-\max_{\kk\in\Kspace}  \hat{\Gamma}_{\alpha,n}(\kk) 
+  \label{eq:prob_cov_randclosedset}
+  \pi_{A_{\kk}}(\uu) = \frac{\pi_{\alpha}(\kk, \uu)}{\int_{\Uspace} \pi_{\alpha}(\kk, \uu)p_{\UU}(\uu)\,\mathrm{d}\uu}
 \end{equation}
-By tweaking the value of $\alpha$, we can get the estimate $\hat{\Gamma}$ to have its maximum equal to the targeted probability. 
-As pointed out earlier the estimation of $\alpha_p$ depends on the estimation of $\hat{\Gamma}$.
-\paragraph{$\alpha$ through quantiles}
+The normalization constant of \cref{eq:prob_cov_randclosedset} can be obtained quite easily numerically, as $\pi_{\alpha}$ can be computed in a closed form~\cref{eq:def_pialphaku}.
+
+The Vorob'ev mean is defined as the $\eta^*$-level set of $\pi_{A_\kk}(\uu)$, or
+\begin{equation}
+  \Prob_{\UU}[Q_{\eta^*}(\kk)] = \Ex\left[\Prob_{\UU}\left[A_{\kk}\right]\right]
+\end{equation}
+
+
+\subsubsection{Sampling-based enrichment: margin of uncertainty}
+The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ defined~\cref{eq:margin_unc} as the sets of points whose coverage probability is between $0.025$ and $0.975$: $\mathbb{M}_{\eta} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}}$
+The points that belong in this set are points whose probability of missclassification is larger than $\eta$.
+
+
+
+\subsection{$\alpha$ through quantiles}
 Instead of maximizing for each $\alpha$ the estimated $\hat{\Gamma}$, we are now going to derive an approach based on the quantiles:
 Let $Y(\kk, \uu) \sim \mathcal{N}(m_Y(\kk,\uu), \sigma^2_{Y}(\kk, \uu))$ be the GP fitted using $\mathcal{X}$. A realisation $y\sim Y$ is then a function from $\Kspace \times \Uspace$ to $\mathbb{R}^{+}_*$.
 Again, the plug-in approach is to compute the ratio $m_Y(\kk, \uu) / m^*_Y(\uu)$ on a large grid for $\uu$ and for each $\kk$, look for the quantile of order $p$ with respect to $\UU$
@@ -557,7 +584,7 @@ and finally,
 \end{equation}
 
 
-\paragraph{Iterative procedure}
+\subsubsection{Iterative procedure}
 The general
 \cref{ssec:gp_delta_alpha}
 \begin{itemize}

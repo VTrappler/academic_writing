@@ -638,9 +638,11 @@ If $\kk^*(\UU)$ is a continuous random variable, for all $\kk\in\Kspace$, $\Prob
 \subsection{The choice of thresholds}
 \label{sec:choice_threshold}
   
-Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing \a threshold too small may give a maximal probability too low.
+Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal probability too low.
 
-We propose to study jointly the threshold and the maximal probability reached.
+
+In order to have an insight on the potential robustness of an estimator $\estimtxt{\kk}{}$, both values can be considered together: the threshold and the maximal probability reached.
+
 
 
 
@@ -664,11 +666,6 @@ $\pi(\kk^*(\uu), \uu) = \frac{1}{Z(\beta)}\exp(-\beta J^*(\uu))$ at t
 Where $Z$ is a function of $\kk,\uu$ that represents the integration constant.
 By interpreting $\alpha$ as the reciprocical of a temperature, 
 
-% Measure information difference between $\delta_{\kk^*(u)}(\kk)$ and $\kk$
-% \begin{align}
-%   \DKL{\delta_{\kk^*(\uu)}}{p_{\KK \mid Y,\UU}} &= \int_{\kk \in \Kspace} \delta_{\kk^*(\uu)}(\kk)\log\left(\frac{p_{\KK \mid Y, \UU}(\kk \mid Y, \UU=\uu, \KK=\kk^*(\uu))}{p_{\KK \mid Y, \UU}(\kk \mid Y, \UU=\uu)} \right) \, \mathrm{d}\kk \\
-%                                                 &=
-% \end{align}
 
 \section{Partial Conclusion}
 \label{sec:ch3_partial_ccl}
