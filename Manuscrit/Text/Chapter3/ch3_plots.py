@@ -359,20 +359,23 @@ def minimizer_sample(func, Nsamples=300,
 
 import pandas as pd
 import seaborn as sns
-theta_star, u_sampled = minimizer_sample(lambda x, y: branin_hoo(x, y), Nsamples=2000, nrestart=1)
+theta_star, u_sampled = minimizer_sample(lambda x, y: branin_hoo(y, x), Nsamples=2000, nrestart=1)
 plt.figure(figsize=1 * col_full)
 
 plt.subplot(1, 2, 1)
 plt.contourf(k, u, bh)
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
 plt.scatter(theta_star, u_sampled, marker='.', color='white')
 plt.subplot(1, 2, 2)
+sns.distplot(theta_star, hist=True).set_xlim([0, 1])
 df = pd.DataFrame(np.asarray((theta_star, u_sampled)).T)
 df.columns = [r'$\theta^*$', r'$u$']
 sns.pairplot(data=df)
-# plt.show()
-plt.savefig('./img/theta_star_samples.pgf')
+plt.show()
+# plt.savefig('./img/theta_star_samples.pgf')
 plt.close()
 
 
@@ -394,18 +397,48 @@ bh = new_fun(kmg, umg)
 Delta = bh - bh.min(1)[:, np.newaxis] < 25
 # regret = bh - bh.min(0)[:, np.newaxis]
 plt.figure(figsize=col_full)
-# plt.subplot(1, 2, 1)
+plt.subplot(1, 2, 1)
 plt.contourf(k, u, bh)
 # plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
 plt.scatter(k[bh.argmin(1)], u, marker='.', color='red', label=r'$\min_k J$')
-plt.contour(k, u, Delta, levels=[0, 0.5, 1])
+plt.contour(k, u, Delta)
 # plt.contour(k, u, bh - 1.2 * bh.min(1)[:, np.newaxis] < 0, levels=[0, 0.5, 1], cma=plt.get_cmap('RdPu'))
-indU, indK = 200,360
-plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU])
-plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]])
-
+indU, indK = 200, 360
+plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU],
+         color=colors[0])
+plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
+         color=colors[1])
+plt.annotate(s=r'$\mathcal{I}_{\beta}(u)$',
+             xy=(k[indK] + 0.1, u[indU]), color='white')
+plt.annotate(s=r'$R_{\beta}(\theta)$',
+             xy=(k[indK], u[Delta[:, indK]][-1]), color='white')
 plt.xlim([0, 1])
 plt.ylim([0, 1])
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
+plt.title(r'Additive regret')
+plt.tight_layout()
+plt.subplot(1, 2, 2)
+Delta = bh - 1.2 * bh.min(1)[:, np.newaxis] < 0
+plt.contourf(k, u, bh)
+# plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
+plt.scatter(k[bh.argmin(1)], u, marker='.', color='red', label=r'$\min_k J$')
+plt.contour(k, u, Delta)
+# plt.contour(k, u, bh - 1.2 * bh.min(1)[:, np.newaxis] < 0, levels=[0, 0.5, 1], cma=plt.get_cmap('RdPu'))
+# indU, indK = 200, 360
+plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU],
+         color=colors[0])
+plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
+         color=colors[1])
+plt.annotate(s=r'$\mathcal{I}_{\alpha}(u)$',
+             xy=(k[indK] + 0.1, u[indU]), color='white')
+plt.annotate(s=r'$R_{\alpha}(\theta)$',
+             xy=(k[indK], u[Delta[:, indK]][-1]), color='white')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.title(r'Relative regret')
+plt.xlabel(r'$\theta$')
+plt.ylabel(r'$u$')
 plt.tight_layout()
 plt.show()
 

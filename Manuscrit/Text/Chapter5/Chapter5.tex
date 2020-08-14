@@ -17,6 +17,9 @@
 %% CHAPTER TITLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand\imgpath{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/} 
+
+
 \begin{document}
 % \subfileLocal{\dominitoc}
 % \subfileLocal{\setcounter{chapter}{4}}
@@ -29,15 +32,64 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Physical parametrization of the bottom friction}
+\section{The CROCO model}
+
+CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under testing), gradually including algorithms from MARS3D (sediments)  and HYCOM (vertical coordinates). An important objective for CROCO is to resolve very fine scales (especially in the coastal area), and their interactions with larger scales. It is the oceanic component of a complex coupled system including various components, e.g., atmosphere, surface waves, marine sediments, biogeochemistry and ecosystems\footnote{taken from \url{http://www.croco-ocean.org/}}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath depth_maps.pdf}
+  \caption{\label{fig:depth_maps} Map of the depth in CROCO}
+\end{figure}
+
+
+\section{Deterministic calibration of the bottom friction}
+
+
+
+\subsection{Physical parametrization of the bottom friction}
+\begin{align}
+  \label{eq:quadratic_friction_vonkarman}
+  (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b) \\  
+  C_d = \left\{\begin{array}{ll}
+                 {\left(\frac{\kappa}{\log({\Delta z_b}/{r_z})}\right)}^2 & \text{for } C_d \in [C_d^{\min}, C_d^{\max}] \\
+                 C_d^{\min} & \\
+                 C_d^{\max}
+       \end{array}
+  \right. \\
+  \kappa=0.41 \\  
+\end{align}
+
+
+\subsection{Twin experiments setup}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath gaussian_english_channel.pdf}
+  \caption{\label{fig:gaussian_zob} Distribution of the true value of the calibration parameter}
+\end{figure}
+
+
+ \begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optim_dahu/map_125.pdf}
+  \caption{\label{fig:optimization_map_126} Optimization of $z_0$ on the whole space using gradient obtained via adjoint method, after $126$ iterations}
+\end{figure}
+
+
 
 \section{Modelling the uncertainties}
-
-\section{Sensitivity Analysis}
-
+\cite{egbert_efficient_2002} TPX model of tides
 \section{Dimension Reduction}
 
 \subsection{Ad-hoc segmentations methods}
+
+\subsubsection{Segmentation based on the depth}
+
+\subsubsection{Geographical segmentation}
+\section{Sensitivity Analysis}
+
+
+
 
 
 

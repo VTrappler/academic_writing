@@ -462,7 +462,11 @@ We have
 
 In the first case, $\kk_0 = \argmin_{\kk} J(\kk, \UU)$, so $\kk_1^*(\UU)$ is a degenerate random variable equals to  $\kk_0$. In other words, the minimizer is not dependent on the value taken by the environmental parameter. The minimum value $J^*$ might be dependent though. On the other hand, for $J_2$, as $\Kspace=\Uspace$ and $\UU \sim \mathrm{Unif}(\Uspace)$, $\KK_2^*(\UU)$ is uniformly distributed on $\Kspace$, no value shows a better affinity of being a minimizer than the other.
 
-In the more general case, let us consider the random variable $\kk^*(\UU)$. In general, this random variable cannot be classified as continuous or discrete beforehand. However, in the following, we are going to assume that it is a \emph{continuous random variable}, and thus admits a pdf: $p_{\kk^*}$.
+
+In the more general case, let us consider the random variable $\kk^*(\UU)$. In general, this random variable cannot be classified as continuous or discrete beforehand. However, in the following, we are going to assume that it is a \emph{continuous random variable}, and thus admits a pdf $p_{\kk^*}$ \citep{hennig_entropy_2011}:
+\begin{equation}
+  p_{\KK^*}(\kk) = \int_{\Uspace} p_{\UU}(\uu)\prod_{\substack{\tilde{\kk}\in \Kspace\\\tilde{\kk}\neq \kk}} \mathbbm{1}_{\{J(\tilde{\kk},\uu) > J(\kk, \uu)\}}\,\mathrm{d}\uu
+\end{equation}
 Except for simple analytical problems, this pdf cannot be obtained analytically, and needs to be estimated.
 Let $\{\uu_i\}_{1\leq i \leq n_{\mathrm{samples}}}$ be $n_{\mathrm{samples}}$ i.i.d.\ samples of $\UU$, and
 $\{\kk^*(\uu_i)\}_{1\leq i \leq n_{\mathrm{samples}}}$ the corresponding minimizers, as defined \cref{eq:def_kstar}.
@@ -470,10 +474,9 @@ The isotropic \emph{Kernel density estimation}, or KDE is defined as
 \begin{equation}
   \hat{p}_{\KK^*}(\kk^*) = \frac{1}{n_{\mathrm{samples}} h^{\dim \Kspace}} \sum_{i=1}^{n_{\mathrm{samples}}} \mathcal{K}\left(\frac{\kk^* - \kk^*(\uu_i)}{h}\right)
 \end{equation}
-where $h>0$ is the bandwidth (that measure the influence of each sample), and $\mathcal{K}$ is a kernel of dimension $\dim \Kspace$, usually defined as the product of one-dimensional kernels $\mathcal{K}_1$. Several choices of 1D kernels are available, and one of the most common one is the Gaussian Kernel: $\mathcal{K}_1(\kk) = (2\pi)^{-1}\exp(-\kk^2 /2)$
+where $h>0$ is the bandwidth (that measure the influence of each sample), and $\mathcal{K}$ is a kernel of dimension $\dim \Kspace$, usually defined as the product of one-dimensional kernels $\mathcal{K}_1$. Several choices of 1D kernels are available, and one of the most common one is the Gaussian Kernel: $\mathcal{K}_1(\kk) = (2\pi)^{-1/2}\exp(-\kk^2 /2)$
 
-
-Additionaly, the entropy of the random variable $\kk^*(\UU)$ is a measure of the sentitivity of the calibration when the environmental variable varies.
+More generally, the entropy of the random variable $\kk^*(\UU)$ can be seen as a measure of the sensitivity of the calibration when the environmental variable varies.
 Assuming that the distribution of the minimizers is continuous, this entropy can be estimated by various methods (see for instance~\cite{beirlant_nonparametric_1997}).
 
 Finally, when we have an estimation of the density of $\KK^*$, and if it exists, we can compute its mode, that we are going to call the \emph{Most Probable estimator}:
@@ -529,7 +532,7 @@ X(\uu_0)=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \Xi_i \quad \text{ with } \Xi_i \s
    In the more general case, we can choose $\beta>0$ in a more arbitrary way, in order to avoid the computations of the coefficients $\{c_i(\uu)\}_i$, as we are going to see~\cref{ssec:general_cost_prob}.
      \subsubsection{General cost function: interval and probability of acceptability}
      \label{ssec:general_cost_prob}
- We assumed before that $J$ was the negative log-likelihood. In the more general case, $J$ represents a loss function, that we want to minimize. The analog of \cref{eq:lik_interval_add} is what we are calling the \emph{acceptibility interval}.
+ We assumed before that $J$ was the negative log-likelihood. In the more general case, $J$ represents a loss function, that we want to minimize. The generalization of \cref{eq:lik_interval_add} is what we are calling the \emph{acceptibility interval}.
   \begin{definition}[Acceptable interval]
   By analogy with the likelihood interval defined~\cref{eq:def_lik_interval} and \cref{eq:lik_interval_add}, we can construct a set for an arbitrary threshold $\beta \geq 0$ such that
   \begin{equation}
@@ -638,7 +641,7 @@ If $\kk^*(\UU)$ is a continuous random variable, for all $\kk\in\Kspace$, $\Prob
 \subsection{The choice of thresholds}
 \label{sec:choice_threshold}
   
-Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal probability too low.
+Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-acceptable) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal probability too low.
 
 
 In order to have an insight on the potential robustness of an estimator $\estimtxt{\kk}{}$, both values can be considered together: the threshold and the maximal probability reached.
@@ -646,25 +649,25 @@ In order to have an insight on the potential robustness of an estimator $\estimt
 
 
 
-\subsection{Physical analogy, energy, temperature and Gibbs distribution}
-Simulated annealing analogy
-We can also interpret the cost function as an energy. We introduce an analog to the temperature $T = \frac{1}{\beta}$.
+% \subsection{Physical analogy, energy, temperature and Gibbs distribution}
+% Simulated annealing analogy
+% We can also interpret the cost function as an energy. We introduce an analog to the temperature $T = \frac{1}{\beta}$.
 
-The probability of the ``system'' verifying $\KK=\kk$ and $\UU=\uu$ is
-\begin{equation}
-\pi(\kk, \uu)=\frac{1}{Z(T)}\exp\left(-\frac{1}{T}J(\kk,\uu)\right)
-\end{equation}
-As the temperature grows, $\pi$ flattens.
+% The probability of the ``system'' being in the state corresponding to $\kk$ and $\UU=\uu$ is
+% \begin{equation}
+% \pi(\kk, \uu)=\frac{1}{Z(T)}\exp\left(-\frac{1}{T}J(\kk,\uu)\right)
+% \end{equation}
+% As the temperature grows, $\pi$ flattens.
 
-Let us consider $u$ fixed:
-the lower state of energy that the system can attain is $J^*(\uu)$, reached with probability
-$\pi(\kk^*(\uu), \uu) = \frac{1}{Z(\beta)}\exp(-\beta J^*(\uu))$ at t
-\begin{align}
-  \text{probability of being optimal}\frac{1}{Z(\kk, \uu, 1)}\exp(-J(\kk,\uu)) \\
-  \frac{1}{Z(\kk^*(\uu), \uu, \alpha)}\exp(-\alpha J^*(\uu))
-\end{align}
-Where $Z$ is a function of $\kk,\uu$ that represents the integration constant.
-By interpreting $\alpha$ as the reciprocical of a temperature, 
+% Let us consider $u$ fixed:
+% the lower state of energy that the system can attain is $J^*(\uu)$, reached with probability
+% $\pi(\kk^*(\uu), \uu) = \frac{1}{Z(\beta)}\exp(-\beta J^*(\uu))$ at t
+% \begin{align}
+%   \text{probability of being optimal}\frac{1}{Z(\kk, \uu, 1)}\exp(-J(\kk,\uu)) \\
+%   \frac{1}{Z(\kk^*(\uu), \uu, \alpha)}\exp(-\alpha J^*(\uu))
+% \end{align}
+% Where $Z$ is a function of $\kk,\uu$ that represents the integration constant.
+% By interpreting $\alpha$ as the reciprocical of a temperature, 
 
 
 \section{Partial Conclusion}
