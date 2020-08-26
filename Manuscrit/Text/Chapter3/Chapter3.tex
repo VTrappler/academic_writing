@@ -180,7 +180,7 @@ We discussed so far the calibration problem with nuisance parameters in the form
 \begin{equation}
   J: \Kspace \times \Uspace \rightarrow \mathbb{R}^+
 \end{equation} 
-This function in a context of calibration is measuring the misfit between the data $y$, and the forward operator. However, the methods introduced in the following are not specific to this context, and $J$ can represent other undesirable properties, such as instability or drag in airfoil design optimization for instance. This work is largely based on~\cite{trappler_robust_2020}, which was submitted for review in February 2020.
+This function in a context of calibration is measuring the misfit between the data $y$, and the forward operator. However, the methods introduced in the following are not specific to this context, and $J$ can represent other properties that ought to be reduced such as instability or drag in airfoil design optimization for instance. This general problem is sometimes quoted as \emph{Optimization under uncertainties} (OUU) (\cite{cook_effective_2018,seshadri_density-matching_2014})
 
 
 All in all, $J(\kk, \uu)$ represent the cost of taking the decision $\kk\in\Kspace$ when the environmental variable is equal to $\uu$.
@@ -380,40 +380,23 @@ If the skewness coefficient is negative, the distribution presents a heavier lef
   \input{\imgpath skewness_examples.pgf}
   \caption{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
-\aciter{Horsetail matching?}
 
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{ll}
-    \toprule
-    Objective name & Objective to minimize wrt $\kk$  \\ \midrule
-    Profile Likelihood & $-\log \max_{\uu \in \Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)$  \\
-    Integrated Likelihood & $-\log \int_{\Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu) \,\mathrm{d}\uu=-\log p_{Y\mid \KK}(y\mid \kk)$ \\
-    Marginal maximum a posteriori & $-\log p_{\KK\mid Y}(\kk \mid y)$  \\ \midrule
-    Global Optimum & $\min_{\uu\in\Uspace} J(\kk, \uu)$ \\
-    Worst-case & $\max_{\uu \in \Uspace} J(\kk, \uu)$ \\
-    Regret worst-case & $\max_{\uu\in\Uspace}\left\{J(\kk, \uu) - \min_{\kk^{\prime}\in\Kspace} J(\kk^{\prime}, \uu)\right\}$ \\ \midrule
-    Mean & $\Ex_{\UU}[J(\kk, \UU)]$  \\
-    Mean and variance & $ \lambda \Ex_{\UU}[J(\kk, \UU)] + (1-\lambda) \sqrt{\Var_{\UU}[J(\kk, \UU)]}$  \\ \bottomrule
-  \end{tabular}
-  \caption{Summary of single objective robust estimators}
-\end{table}
 
 \section{Regret-based estimators family}
 \label{sec:rr_family}
+This work is largely based on~\cite{trappler_robust_2020}, which was submitted for review in February 2020.
 All the methods introduced above required first to eliminate in some sense the dependency on the environmental parameter, in order to transform the random variable $J(\kk, \UU)$ into an objective that depends solely on $\kk$, and to optimize this deterministic counterpart.
 
-For a given $\kk\in\Kspace$, this elimination is done by aggregating all the possible outcomes $J(\kk, \uu)$ where $\uu$ is a sample from $\UU$.
+For a given $\kk\in\Kspace$, this elimination is done by aggregating all the possible outcomes $J(\kk, \uu)$ when $\uu$ is a sample of $\UU$.
 
 
-We propose now to reverse these steps, by first optimizing with respect to $\kk$ the cost function, and from the set of minimizer that depend on $\uu$ obtained, derive an estimator. The rationale behind this idea is that every situation induced by the realisation $\uu$ is to be taken separately, quite similarly as Savage's regret introduced \cref{ssec:regret_savage}. In turn, this avoid aggregation (and in a sense compensation) between the different $\uu$.
+We propose now to reverse these steps, by first optimizing the cost function with respect to $\kk$, and,  from the set of minimizers that depend on $\uu$ obtained, derive an estimator. The rationale behind this permutation is that every situation induced by a realisation $\uu$ is to be taken separately, quite similarly as Savage's regret introduced \cref{ssec:regret_savage}.
+In turn, this avoid aggregation (and in a sense compensation) between the different $\uu$.
 \begin{figure}[ht]
   \centering
   \input{\imgpath reversing.pgf}
   \caption{\label{fig:reversing_steps} Principle of regret based estimators}
 \end{figure}
-
 
 
 \subsection{Conditional minimimum and minimizer}
@@ -431,13 +414,10 @@ We propose now to reverse these steps, by first optimizing with respect to $\kk$
  is defined as the \emph{conditional minimizer}
 \end{definition}
 As $\uu$ is thought to be a realization of a random variable $\UU$, we can consider the two random variables $\kk^*(\UU)$ and $J^*(\UU)$.
-The conditional minimum $J^*(\UU)$ is then a random variable describing the best performances for the calibration, if we could optimize the cost function for each realization of $\UU$. % As we look for a single value $\hat{\kk}$, $J^*(\UU)$ can be seen as an unattainable target:
-% \begin{equation}
-%   \forall (\kk,\uu) \in \Kspace \times \Uspace, \quad J^*(\uu) \leq J(\kk, \uu)
-% \end{equation}
+The conditional minimum $J^*(\UU)$ is then a random variable describing the best performances of the calibration, if we could optimize the cost function for each realization of $\UU$.
 
 
-If $J$ behaves nicely enough, the mapping
+On the other hand, if $J$ behaves nicely enough, the mapping
 \begin{equation}
   \label{eq:def_kstar}
   \begin{array}{rcl}
@@ -529,8 +509,10 @@ X(\uu_0)=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \Xi_i \quad \text{ with } \Xi_i \s
     \label{eq:lik_interval_add}
     \mathcal{I}_{\mathrm{Lik}}(\uu_0; \beta) = \left\{\kk\in \Kspace \mid  J(\kk, \uu_0) - J^*(\uu_0) \leq \beta=\frac{1}{2}\chi^2_{\dim \Kspace}(1-\nu)\right\}
   \end{equation}
-   In the more general case, we can choose $\beta>0$ in a more arbitrary way, in order to avoid the computations of the coefficients $\{c_i(\uu)\}_i$, as we are going to see~\cref{ssec:general_cost_prob}.
-     \subsubsection{General cost function: interval and probability of acceptability}
+  In the more general case, we can choose $\beta>0$ in a more arbitrary way, in order to avoid the computations of the coefficients $\{c_i(\uu)\}_i$, as we are going to see~\cref{ssec:general_cost_prob}.
+
+  
+  \subsubsection{General cost function: interval and probability of acceptability}
      \label{ssec:general_cost_prob}
  We assumed before that $J$ was the negative log-likelihood. In the more general case, $J$ represents a loss function, that we want to minimize. The generalization of \cref{eq:lik_interval_add} is what we are calling the \emph{acceptibility interval}.
   \begin{definition}[Acceptable interval]
@@ -564,7 +546,7 @@ As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \e
   \begin{definition}[Additive-regret family of estimators]
     For $\beta \geq 0$, we define the family of robust estimators as the maximizers of \cref{eq:def_gamma_additive}:
     \begin{equation}
-      \left\{\estimtxt{\kk}{add,\beta} = \max_{\kk\in\Kspace} \Gamma_{\beta}= \Prob_U\left[\UU \in R_{\beta}(\kk)\right]\mid \beta \geq 0\right\}
+      \left\{\estimtxt{\kk}{add,\beta} = \max_{\kk\in\Kspace} \Gamma_{\beta}(\kk)= \Prob_U\left[\UU \in R_{\beta}(\kk)\right]\mid \beta \geq 0\right\}
     \end{equation}
   \end{definition}
 
@@ -609,72 +591,81 @@ From the example developed~\cref{tab:hyp_situation}, considering the additive re
 
 In that sense, we are going now to focus on the \emph{relative regret} $J/J^*$, instead of the \emph{absolute regret} $J - J^*$.
 
-\subsubsection{$\alpha$-acceptability}
-Again, instead of 
-  \begin{definition}[$\alpha$-acceptable interval]
-  For an arbitrary threshold $\alpha \geq 1$, we define the $\alpha$-acceptable interval as
+\subsubsection{$\alpha$-acceptable intervals and relative-regret estimators family}
+Similarly as the additive regret defined before we are going first to define the notions of acceptability in the case of the relative regret.
+\begin{definition}[Relative-regret estimators family]
+  Let $\alpha\geq 1$.
+  A point $(\kk, \uu)$ is said $\alpha$-acceptable if $J(\kk, \uu) \leq \alpha J^*(\uu)$.
+  We define the $\alpha$-acceptable interval as
   \begin{equation}
-    \mathcal{I}_{\alpha}(\uu) = \left\{\kk \in \KK \mid J(\kk,\uu) \leq \alpha J^*(\uu) \right\}
+    \mathcal{I}_{\alpha}(\uu) = \left\{\kk \in \Kspace \mid J(\kk,\uu) \leq \alpha J^*(\uu) \right\}
   \end{equation}
-\end{definition}
 
 Then, for a given $\alpha$ and $\kk$, we can define the set of $\uu\in \Uspace$ such that $\kk$ is $\alpha$-acceptable:
 \begin{equation}
   R_{\alpha}(\kk) = \left\{\uu \in \Uspace \mid \kk \in \mathcal{I}_{\alpha}(\uu) \right\} = \left\{\uu \in \Uspace \mid  J(\kk, \uu) \leq \alpha J^*(\uu) \right\}
 \end{equation}
 
-We define the family of relative regret estimators as
+\end{definition}
+$R_{\alpha}(\kk)$ is a \tocheck{measurable} subset of $\Uspace$, and by integrating this set with respect to $\Prob_\UU$, we get $\Gamma_{\alpha}(\kk)$, the probability of being $\alpha$-acceptable.
+Finally, maximizing this probability gives the 
+We define the family of relative regret estimators as the set of the maximizers
 \begin{equation}
-      \left\{\estimtxt{\kk}{rel,\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha}= \Prob_U\left[\UU \in R_{\alpha}(\kk)\right]\mid \alpha \geq 1\right\}
+      \left\{\estimtxt{\kk}{rel,\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk)= \Prob_U\left[\UU \in R_{\alpha}(\kk)\right]\mid \alpha \geq 1\right\}
     \end{equation}
-
-
-We can also notice that setting $\alpha=1$ gives
+One remarkable value for $\alpha$ is $1$. 
 \begin{align}
   \mathcal{I}_{\alpha}(\uu) &= \{\kk^*(\uu)\} \\
   R_1(\kk) &= \left\{\uu\in\Uspace \mid J(\kk, \uu) = J^*(\uu)\right\} = \left\{\uu\in\Uspace \mid \kk = \kk^*(\uu)\right\}
 \end{align}
 
-If $\kk^*(\UU)$ is a continuous random variable, for all $\kk\in\Kspace$, $\Prob_{\UU}[\UU \in R_1(\kk)] = \Prob_{\UU}[\kk^*(\UU) = \kk] = 0$.
+
+We have then that $\Gamma_1(\kk) % = \Prob_{\UU}\left[J(\kk, \UU) = J^*(\UU)\right]
+$ is non-zero if the set $R_1(\kk)$ has non-zero measure with respect to $\Prob_{\UU}$.
+$\Prob_{\UU}\left[\kk=\kk^*(\UU)\right]$. In other words, $\Gamma_1(\kk)$ is non-zero if $\kk$ is the minimizer of $J(\cdot,\uu)$ for a non-negligible set of $\uu$s.
 
 
-\subsection{The choice of thresholds}
+
+
+
+\subsection{Tuning the relaxation or the probability ?}
 \label{sec:choice_threshold}
+  In order to have an insight on the potential robustness of an estimator $\estimtxt{\kk}{}$, both values can be studied together: the threshold and the maximal probability reached.
+
   
-Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-acceptable) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal probability too low.
+Finding a relevant threshold, either for the additive or for the relative regret,  can be a thorny issue, especially with no further information than $J$. Setting it too large will lead to large $\beta$-acceptable (resp. $\alpha$-acceptable) intervals, and $\Gamma_\beta$ (resp. $\Gamma_\alpha$) may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal acceptability probability too low to assess the robustness of the chosen solution.
 
+In that sense, we can contemplate two starting points:
+\begin{itemize}
+\item Set a probability we want to reach $p$, and define $\alpha_p = \inf_{\alpha \geq 1}\{\max_{\kk \in \Kspace}\Gamma_{\alpha}(\kk)\geq p \}$, so the problem can be thought as the estimation and the optimization of a particular random variable.
+\item Set a relaxation parameter $\alpha > 1$ or $\beta > 0$. From this, the maximal probability is $p_{\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha} = \max_{\kk\in\Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]$. This task can be seen as the estimation and optimization of a well chosen probability.
+\end{itemize}
 
-In order to have an insight on the potential robustness of an estimator $\estimtxt{\kk}{}$, both values can be considered together: the threshold and the maximal probability reached.
-
-
-
-
-% \subsection{Physical analogy, energy, temperature and Gibbs distribution}
-% Simulated annealing analogy
-% We can also interpret the cost function as an energy. We introduce an analog to the temperature $T = \frac{1}{\beta}$.
-
-% The probability of the ``system'' being in the state corresponding to $\kk$ and $\UU=\uu$ is
-% \begin{equation}
-% \pi(\kk, \uu)=\frac{1}{Z(T)}\exp\left(-\frac{1}{T}J(\kk,\uu)\right)
-% \end{equation}
-% As the temperature grows, $\pi$ flattens.
-
-% Let us consider $u$ fixed:
-% the lower state of energy that the system can attain is $J^*(\uu)$, reached with probability
-% $\pi(\kk^*(\uu), \uu) = \frac{1}{Z(\beta)}\exp(-\beta J^*(\uu))$ at t
-% \begin{align}
-%   \text{probability of being optimal}\frac{1}{Z(\kk, \uu, 1)}\exp(-J(\kk,\uu)) \\
-%   \frac{1}{Z(\kk^*(\uu), \uu, \alpha)}\exp(-\alpha J^*(\uu))
-% \end{align}
-% Where $Z$ is a function of $\kk,\uu$ that represents the integration constant.
-% By interpreting $\alpha$ as the reciprocical of a temperature, 
+Those two separate issues are tackled in the next chapter.
 
 
 \section{Partial Conclusion}
 \label{sec:ch3_partial_ccl}
+As shown through this chapter, there is no clear candidate for optimization under uncertainty, 
+ as a large number of criterion can be developed according to different desired properties.
 
-
-
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    Objective name & Objective to minimize wrt $\kk$  \\ \midrule
+    Profile Likelihood & $-\log \max_{\uu \in \Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)$  \\
+    Integrated Likelihood & $-\log \int_{\Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu) \,\mathrm{d}\uu=-\log p_{Y\mid \KK}(y\mid \kk)$ \\
+    Marginal maximum a posteriori & $-\log p_{\KK\mid Y}(\kk \mid y)$  \\ \midrule
+    Global Optimum & $\min_{\uu\in\Uspace} J(\kk, \uu)$ \\
+    Worst-case & $\max_{\uu \in \Uspace} J(\kk, \uu)$ \\
+    Regret worst-case & $\max_{\uu\in\Uspace}\left\{J(\kk, \uu) - \min_{\kk^{\prime}\in\Kspace} J(\kk^{\prime}, \uu)\right\}$ \\ \midrule
+    Mean & $\Ex_{\UU}[J(\kk, \UU)]$  \\
+    Mean and variance & $ \lambda \Ex_{\UU}[J(\kk, \UU)] + (1-\lambda) \sqrt{\Var_{\UU}[J(\kk, \UU)]}$  \\ \bottomrule
+  \end{tabular}
+  \caption{Summary of single objective robust estimators}
+\end{table}
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BIB

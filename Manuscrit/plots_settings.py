@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals, print_function, with_statement
 import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.pyplot as plt
@@ -31,7 +32,6 @@ params = {# 'backend': 'pgf',
           'axes.labelsize': 10,
           'axes.titlesize': 11,
           'image.cmap': u'viridis'}  # extend as needed
-
 plt.rc('text.latex', preamble=(r'\usepackage{amsmath} \usepackage{amssymb}'))
 # mpl.use('pgf')
 plt.style.use('seaborn')
@@ -43,3 +43,28 @@ plt.rc('text', usetex=True)
 col_half = get_figsize()
 col_full = get_figsize(wf=1.0)
 col_3quarter = get_figsize(wf=.75)
+
+
+def add_all_decorations(ax):
+    lonmin = -9.
+    lonmax = 1.
+    latmin = 43.
+    latmax = 51.
+
+    ax.set_extent([lonmin, lonmax, latmin, latmax], ccrs.PlateCarree())
+    ax.add_feature(cfeature.LAND.with_scale('10m'), zorder=100, edgecolor='k')
+    ax.add_feature(cfeature.COASTLINE.with_scale('10m'), zorder=101)
+    ax.add_feature(cfeature.RIVERS.with_scale('10m'), zorder=101)
+    ax.add_feature(cfeature.BORDERS.with_scale('10m'), linestyle=':', zorder=102)
+    ax.coastlines(resolution='50m')
+    ax.set_ylim([43, 51])
+    gl = ax.gridlines(alpha=0.1, draw_labels=True)
+    gl.xlabels_top = False
+    gl.ylabels_right = False
+    gl.xlocator = mticker.FixedLocator([-10, -8, -6, -4, -2, 0, 2])
+    gl.ylocator = mticker.FixedLocator([42, 44, 46, 48, 50, 52])
+    gl.xformatter = LONGITUDE_FORMATTER
+    gl.yformatter = LATITUDE_FORMATTER
+    gl.xlabel_style = {'size': 6}
+    gl.ylabel_style = {'size': 6}
+    ax.set_aspect(1)

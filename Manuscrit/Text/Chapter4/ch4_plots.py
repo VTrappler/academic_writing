@@ -11,6 +11,7 @@ import scipy.special
 import sys
 # import RO.bo_plot as bplt
 sys.path.append('/home/victor/RO_VT/RO/')
+
 import RO.bo_wrapper as bow
 colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
@@ -148,3 +149,4 @@ ax2 = ax.twinx()
 ax2.plot(X_, -np.asarray(IMSE), label=r'IMSE', color=colors[1])
 # plt.show()
 plt.savefig('./img/IMSE_variance.pgf')
+

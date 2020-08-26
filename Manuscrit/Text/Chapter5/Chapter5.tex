@@ -71,10 +71,21 @@ CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydros
 
  \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optim_dahu/map_125.pdf}
+  \includegraphics{/home/victor/optimisation_dahu/optim_true/map_150.png}
   \caption{\label{fig:optimization_map_126} Optimization of $z_0$ on the whole space using gradient obtained via adjoint method, after $126$ iterations}
 \end{figure}
 
+ \begin{figure}[ht]
+  \centering
+  \input{/home/victor/optimisation_dahu/optim_true/ctrl_true.pgf}
+  \caption{\label{fig:ctrl_true} Gradient descent procedure}
+\end{figure}
+
+ \begin{figure}[ht]
+  \centering
+  \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
+  \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
+\end{figure}
 
 
 \section{Modelling the uncertainties}
@@ -85,7 +96,15 @@ CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydros
 
 \subsubsection{Segmentation based on the depth}
 
+\cite{boutet_estimation_2015}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath depth_repartition.pdf}
+  \caption{\label{fig:depth_repartition} }
+\end{figure}
+
 \subsubsection{Geographical segmentation}
+
 \section{Sensitivity Analysis}
 
 
