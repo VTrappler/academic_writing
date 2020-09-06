@@ -50,14 +50,8 @@ CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydros
 \subsection{Physical parametrization of the bottom friction}
 \begin{align}
   \label{eq:quadratic_friction_vonkarman}
-  (\tau_b^x, \tau_b^y) = C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b) \\  
-  C_d = \left\{\begin{array}{ll}
-                 {\left(\frac{\kappa}{\log({\Delta z_b}/{r_z})}\right)}^2 & \text{for } C_d \in [C_d^{\min}, C_d^{\max}] \\
-                 C_d^{\min} & \\
-                 C_d^{\max}
-       \end{array}
-  \right. \\
-  \kappa=0.41 \\  
+  (\tau_b^x, \tau_b^y) &= C_d \sqrt{u_b^2 + v_b^2}(u_b, v_b) \\  
+  C_d &= \left(\frac{\kappa}{\log\left(\frac{z_b - H}{z_{0,b}}\right)}\right)^2 \text{for } C_d \in [C_d^{\min}, C_d^{\max}]
 \end{align}
 
 

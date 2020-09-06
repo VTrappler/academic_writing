@@ -37,18 +37,23 @@
 %%% 				SECTION 0 : Introduction	   %%%
  In this chapter, we will focus on the use of \emph{surrogate models} to solve robust optimization problems, according to some of the criteria introduced in the previous chapter.
 
-\section{The computational bottleneck}
+\section{Computational bottleneck, curse of dimensionality and surrogate models}
 
-Numerical models are usually very expensive to run in terms of computer resources. Indeed, for most realistic physical simulations, the programs have to solve systems of PDEs over large grids. Even though the computations are optimized and parallelized to take best advantage of high performance computers, the time required to compute the quantities of interest may range from a few seconds to days. In that sense,  methods that require a large number of runs of the model for exhaustivity should be avoided.
-\subsection{The curse of dimensionality}
+Numerical models are usually very expensive to run in terms of computer resources. Indeed, for most realistic physical simulations, the programs have to solve systems of PDEs over large grids. Even though the computations are optimized and parallelized to take best advantage of high-performance computers, the time required to compute the quantities of interest may range from a few seconds to days. In that sense,  methods that require a large number of runs of the model for exhaustivity should be avoided.
+Also, 
 
-\subsubsection{Sensitivity analysis}
+% \subsection{The curse of dimensionality}
+Another common issue encoutered is the 
+% \subsubsection{Sensitivity analysis}
 
 \subsubsection{Dimension Reduction}
 \cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018}
 \subsection{Surrogate models}
 
+In this chapter, we will focus exclusively on Kriging, or Gaussian Process regression.
 In this chapter, after defining the usual kriging equations for Gaussian Process Regression, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to develop on the case of robust optimisation, by splitting the input space in $\Kspace$ and $\Uspace$. We are then going to introduce other strategies to solve for robust optimisation criteria, as introduced previously.
+
+
 
 \section{Gaussian process regression}
 In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and supposedly expensive to evaluate, but it has already been evaluated on a set of points $x_i$
@@ -242,17 +247,38 @@ Those $(\dim \Xspace + 1)$ hyperparameters have to be estimated based on the tra
 
 \section{Stepwise Enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
-For a unknown function $f$, a GP is initially constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Y \mid \mathcal{X}$ andis defined as
+
+For a unknown function $f$, a GP is initially constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Y \mid \mathcal{X}$ and is defined as
 \begin{equation}
   \label{eq:YgivenXGP}
   Y\mid \mathcal{X} \sim \mathcal{N}(m_{Y\mid\mathcal{X}}(x),\sigma^2_{Y\mid\mathcal{X}}(x))
 \end{equation}
-Based on this conditioned GP \todo{finir} 
-The main idea behind Stepwise Uncertainty Reduction is to define a criterion, say $\kappa_n$, that measures in a way the uncertainty upon a certain objective associated with the GP and $f$, and to maximize this criterion, in order to select the next point:
+For notational convenience, the conditioning with respect to $\mathcal{X}$ will be omitted if the experimental design is clear from the context.
+
+Stepwise Uncertainty Reduction is based on the construction of a measure of uncertainty, which is problem dependent.
+
+is to define a criterion, say $\kappa_n$, that measures in a way the uncertainty upon a certain objective associated with the GP and $f$, and to maximize this criterion, in order to select the next point:
 \begin{equation}
   x_{n+1} = \argmax_{x\in\Xspace} \kappa_n(x) = \argmax_{x\in\Xspace} \kappa(x; Y \mid \mathcal{X})
 \end{equation}
-This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
+% This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
+
+\begin{algorithm}
+  \caption{SUR strategy}
+\begin{algorithmic}
+\REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
+\STATE Fit $Y$, a GP using the design $\mathcal{X}_0$
+\STATE $n \leftarrow 0$
+\WHILE{Stopping criterion not met or max budget evaluation not reached}
+\STATE $x_{n+1} \leftarrow \argmax_{x \in \Xspace} \kappa(x; Y \mid \mathcal{X}_{n})$
+\STATE Evaluate $f(x_{n+1})$
+\STATE $\mathcal{X}_{n+1} \leftarrow \mathcal{X}_n \cup \left\{\left(x_{n+1}, f(x_{n+1})\right)\right\}$
+\STATE $n \leftarrow n + 1$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+
 \subsection{Exploration based criteria}
 \label{sec:exploration_criteria}
 We are going to introduce first some common criteria of enrichment, that aim at exploring the input space $\Xspace$.
@@ -287,8 +313,8 @@ Before the actual experiment though, $y$ is unknown, but we can model it by its 
   \label{eq:IMSE_augmented}
   \Ex_{Y(x)}\Big[\IMSE\big(Y \mid \mathcal{X} \cup \left\{(x, Y(x))\right\} \big)\Big]
 \end{equation}
-where the expectation is to be taken with respect to different realisations of $Y(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy ffound for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Y(x)$, corresponding to evenly spaced quantiles of the its distribution.
-It is maybe important to note that the hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.
+where the expectation is to be taken with respect to the random variable $Y(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy ffound for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Y(x)$, corresponding to evenly spaced quantiles of the its distribution.
+It is maybe important to note that the hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.\@
 
 To enrich the design with the best point, that reduces the most the expected prediction error, a simple $1$-step strategy is to minimize the expectation of~\cref{eq:IMSE_augmented}.
 \begin{equation}
@@ -418,6 +444,21 @@ A surrogate of $J$ using $Y$ is then $m_Y$.
 
 One main challenge when making the distinction $\Xspace = \Kspace \times \Uspace$ is that the objectives on the two spaces are not the same. Most of criteria need first to remove the dependence on $\UU$ (by projecting the GP for instance in~\cref{ssec:expected_loss_GP_projection}), and then to minimize a criterion with respect to $\kk$, giving $\kk_{\mathrm{candidate}}$.
 The next point to evaluate however has to be chosen in $\Kspace \times \Uspace$, thus needing to select a point $(\kk_{n+1}, \uu_{n+1})$, where $\kk_{n+1}$ may not be equal to $\kk_{\mathrm{candidate}}$.
+\begin{algorithm}
+  \caption{SUR strategy with distinctive spaces}
+\begin{algorithmic}
+\REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
+\STATE Fit $Y$, a GP using the design $\mathcal{X}_0$
+\STATE $n \leftarrow 0$
+\WHILE{Stopping criterion not met or max budget evaluation not reached} 
+\STATE $\tilde{\kk} \leftarrow \argmax_{\kk \in \Kspace} \kappa(\kk; Y \mid \mathcal{X}_{n})$
+\STATE $(\kk_{n+1},\uu_{n+1}) \leftarrow \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa((\kk,\uu); \tilde{\kk}, Y \mid \mathcal{X}_{n})$
+\STATE Evaluate $J(\kk_{n+1}, \uu_{n+1})$
+\STATE $\mathcal{X}_{n+1} \leftarrow \mathcal{X}_n \cup \left\{\left((\kk_{n+1},\uu_{n+1}), J(\kk_{n+1}, \uu_{n+1})\right)\right\}$
+\STATE $n \leftarrow n + 1$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 
 
 \subsubsection{Expected loss}
@@ -427,6 +468,11 @@ In~\cite{janusevskis_simultaneous_2010}, the author define the \emph{projected p
 \begin{equation}
   Z(\kk) = \Ex_U[Y(\kk, \UU)] = \int_{\Uspace} Y(\kk, \uu) p_{\UU}(\uu)\,\mathrm{d}\uu
 \end{equation}
+
+\begin{align}
+  \tilde{\kk} &= \argmax_{\kk \in \Kspace} \mathrm{EI}_Z(\kk) \\
+  (\kk_{n+1}, \uu_{n+1}) &= \argmin \Var
+\end{align}
 
 
 \subsubsection{Profile expected improvement}
@@ -548,7 +594,7 @@ For the plug-in approach, the chosen estimator is defined \cref{eq:def_gamma_PI}
 
   In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Y$ of the cost function $J$.
   In this case, we propose to reduce the IMSE of the GP $Y - \alpha Y^*$. The choice of the IMSE (instead of choosing the point of maximal variance for instance) comes from the decomposition of the variance~\cref{eq:variance_delta_GP}.
-  Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrate the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$.
+  Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrates the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$.
 
 \begin{figure}[ht]
   \centering
@@ -587,12 +633,12 @@ Instead of evaluating this integrated variance, on the current design $\mathcal{
   \mathrm{IVPC}(\mathcal{X} \cup \{((\kk, \uu), Y(\kk, \uu))\}
 \end{equation}
 
-Finally, we can look for the point that minimizes the expected $\mathrm{IVPC}$ with respect to the random variable $Y(\kk, \uu)$:
+Finally, we can define a new learning function, which is the expected $\mathrm{IVPC}$ with respect to the random variable $Y(\kk, \uu)$:
 \begin{equation}
   \label{eq:expected_aIVPC}
   \kappa(\kk, \uu) = \Ex_{Y(\kk, \uu)}\Big[\mathrm{IVPC}(\mathcal{X} \cup \{   \left(\left(\kk, \uu \right), Y(\kk, \uu) \right)  \}     \Big]
 \end{equation}
-
+\Cref{fig:IVPC_enrichment} shows the evolution of the error in the estimation of $\Gamma_{\alpha}$, with respect to the $L^2$ and $L^{\infty}$ norm.
 \begin{figure}[ht]
   \centering
   \input{\imgpath IVPC_enrichment.pgf}

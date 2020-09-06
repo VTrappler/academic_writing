@@ -150,3 +150,7 @@ ax2.plot(X_, -np.asarray(IMSE), label=r'IMSE', color=colors[1])
 # plt.show()
 plt.savefig('./img/IMSE_variance.pgf')
 
+
+
+aIVPC_2stage_UB
+aIVPC = np.load('/home/victor/Bureau/aIVPC_new.npy', allow_pickle=True)

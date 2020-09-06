@@ -7,7 +7,7 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
-
+import sys
 # -> Manuscrit 415.41025
 # -> Notes 418.25368
 
@@ -32,8 +32,12 @@ params = {# 'backend': 'pgf',
           'axes.labelsize': 10,
           'axes.titlesize': 11,
           'image.cmap': u'viridis'}  # extend as needed
-plt.rc('text.latex', preamble=(r'\usepackage{amsmath} \usepackage{amssymb}'))
-# mpl.use('pgf')
+print(sys.version)
+if sys.version_info >= (3, 0):
+    plt.rc('text.latex', preamble=r"\usepackage{amsmath} \usepackage{amssymb}")
+else:
+    plt.rc('text.latex', preamble=r"\usepackage{amsmath} \usepackage{amssymb}")
+    # mpl.use('pgf')
 plt.style.use('seaborn')
 plt.rc('font', **{'family': 'serif',
                   'serif': ['Computer Modern Roman']})
@@ -43,6 +47,7 @@ plt.rc('text', usetex=True)
 col_half = get_figsize()
 col_full = get_figsize(wf=1.0)
 col_3quarter = get_figsize(wf=.75)
+colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
 
 def add_all_decorations(ax):

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # import matplotlib as mpl
-# from matplotlib import cm
+from matplotlib import cm
 # import matplotlib.pyplot as plt
 # import numpy as np
 # import scipy.stats
@@ -75,11 +75,13 @@ ax.annotate('', xy=(1.0, 0.5), xytext=(1.0, 0.0),
 ax.legend()
 plt.savefig('./img/cdf_pdf_example.pgf')
 plt.close()
+
+from mpl_toolkits.mplot3d import Axes3D
 # ----------------------------------------------------------------------
 # Pdf of normal
-plt.figure(figsize=col_full)
+fig = plt.figure(figsize=col_full)
 x = np.linspace(-5, 7, 200)
-ax = plt.subplot(1, 2, 1)
+ax = fig.add_subplot(1, 2, 1)
 ax.set_xlim([-5, 7.5])
 ax.set_ylim([-0.02, 0.5])
 ax.plot(x, scipy.stats.norm.pdf(x), label=r'$p_X,\, X\sim \mathcal{N}(0,1)$')
@@ -87,14 +89,17 @@ ax.plot(x, scipy.stats.norm.pdf(x, loc=1, scale=2), label=r'$p_X,\, X\sim \mathc
 ax.set_xlabel(r'$x$')
 ax.legend()
 ax.set_title(r'Pdf of two Gaussian r.v.')
-ax = plt.subplot(1, 2, 2)
-xmg, ymg = np.mgrid[-3:3:.01, -3:3:.01]
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+xmg, ymg = np.mgrid[-4:3:.01, -3:3:.01]
 pos = np.dstack((xmg, ymg))
 rv = scipy.stats.multivariate_normal([-1, -1], [[2.0, 0.3], [0.3, 0.5]])
-ax.contour(xmg, ymg, rv.pdf(pos))
+ax.plot_surface(xmg, ymg, rv.pdf(pos), cmap=cm.get_cmap('viridis'), alpha=0.6)
+ax.contour(xmg, ymg, rv.pdf(pos), zdir='z', offset=-0.1)
+ax.set_zlim([-0.1, 0.15])
 ax.set_title(r'Pdf of a 2D-Gaussian r.v.')
 ax.set_xlabel(r'$x$')
 ax.set_ylabel(r'$y$')
+plt.tight_layout()
 plt.savefig('./img/gaussian_distribution_examples.pgf')
 plt.close()
 # ----------------------------------------------------------------------
@@ -187,8 +192,30 @@ plt.subplot(2, 1, 2)
 plt.plot(np.linspace(0.5, 1, 400), likgrid.mean(0))
 plt.plot(np.linspace(0.5, 1, 400), likgrid.max(0))
 plt.close()
+# plt.show()
 
-
+# OVERFITTING
+plt.figure(figsize=col_full)
+plt.plot(x, y, 'o', label=r'samples')
+def get_poly_fitnp(x, y, deg):
+    polycoeff = np.polyfit(x, y, deg)
+    def fit(x):
+        ss = 0
+        for i in range(deg + 1):
+            ss = ss + polycoeff[i] * x**(deg - i)
+        return ss
+    return fit
+legs = [r'Linear fit, $\min J=$', r'Polynomial fit of degree $5$, $\min J=$', r'Polynomial fit of degree $9$, $\min J=$']
+for i,deg in enumerate([1, 5, 9]):
+    ff = get_poly_fitnp(x, y, deg=deg)
+    rss = str(round(np.sum((ff(x) - y)**2), 3))
+    plt.plot(np.linspace(0, 10, 200), ff(np.linspace(0, 10, 200)), label=legs[i] + rss)
+plt.legend()
+plt.xlabel(r'$x$')
+plt.ylabel(r'$y$')
+plt.title(r'Regression and overfitting')
+plt.savefig('/home/victor/acadwriting/Manuscrit/Text/Chapter2/img/overfitting.pgf')
+plt.close()
 
 
 
