@@ -44,7 +44,8 @@ exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
 # plt.rc('text', usetex=True)
 # col_half = get_figsize()
 # col_full = get_figsize(wf=1.0)
-
+def end_figure(name):
+    print('---> Chapter3' + name[1:])
 
 ## Banana
 plt.figure(figsize=col_full)
@@ -96,6 +97,7 @@ ax.ticklabel_format(axis='y', style='sci', useMathText=False)
 plt.legend()
 plt.tight_layout()
 plt.savefig('./img/profile_integrated_lik.pgf')
+end_figure('./img/profile_integrated_lik.pgf')
 plt.close()
 
 
@@ -139,6 +141,7 @@ plt.xlabel(r'$\theta$')
 plt.ylabel(r'$J$')
 plt.tight_layout()
 plt.savefig('./img/integrated_lik_average_costfunction.pgf')
+end_figure('./img/integrated_lik_average_costfunction.pgf')
 plt.close()
 
 
@@ -166,6 +169,7 @@ plt.title(u'Pareto frontier for \n the multiobjective optimization problem $(\mu
 plt.legend()
 plt.tight_layout()
 plt.savefig('./img/pareto_frontier.pgf')
+end_figure('./img/pareto_frontier.pgf')
 plt.close()
 
 
@@ -183,6 +187,8 @@ def asym_normal(x, position, scale, shape, displaymoments=False):
 
 x = np.linspace(-3, 4., 200)
 xcdf = np.linspace(-3, 2., 200)
+
+
 def compute_mean(asym):
     return np.sum(x * asym) * (x[1] - x[0])
     
@@ -214,6 +220,7 @@ plt.legend()
 plt.title(u'Cdf of r.v. \n with different skewness')
 plt.tight_layout()
 plt.savefig('./img/skewness_examples.pgf')
+end_figure('./img/skewness_examples.pgf')
 plt.close()
 
 
@@ -233,8 +240,8 @@ def new_fun(x, y):
     return (1 + y * (x + 0.1)**2) * (1 + (x - y)**2)
     # return (x - np.sin(2 * np.pi * y) + 0.5)**2 - x
 
-k = np.linspace(0, 1, 500)
-u = np.linspace(0, 1, 500)
+k = np.linspace(0, 1, 1000)
+u = np.linspace(0, 1, 1000)
 kmg, umg = np.meshgrid(k, u)
 # bh = branin_hoo(kmg, umg)
 # bh = -np.log(likmg)
@@ -242,15 +249,17 @@ bh = new_fun(kmg, umg)
 regret = bh - bh.min(1)[:, np.newaxis]
 plt.figure(figsize=col_full)
 plt.subplot(1, 2, 1)
-plt.contourf(k, u, bh)
+plt.contourf(kmg, umg, bh)
 # plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
-plt.scatter(k[bh.argmin(0)], u, marker='.', color='red', label=r'$\min_k J$')
+plt.scatter(k[bh.argmin(0)][:-3], u[:-3], marker='.', color='white', label=r'$\min_\theta J$', s=5)
 plt.xlim([0, 1])
 plt.ylim([0, 1])
 plt.legend()
 plt.title(r'Cost function')
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
+plt.legend(loc=4)
+
 ax = plt.subplot(1, 2, 2)
 # plt.contourf(k, u, regret)
 # plt.scatter(k[regret.argmax(1)], u, marker='.', color='green', label=r'$\max_u r$')
@@ -258,7 +267,6 @@ ax.set_yticks([])
 plt.plot(k, bh.max(0), label=r'$\max_{u} J(\theta,u)$', color=colors[0])
 plt.plot(k, regret.max(0), label=r'$\max_{u} r(\theta,u)$', color=colors[1])
 plt.plot(k, bh.min(0), label=r'$\min_{u} J(\theta, u)$', color=colors[2])
-plt.legend()
 
 plt.axvline(k[bh.max(0).argmin()], label=r'$\theta_{\mathrm{WC}}$', color=colors[0],
             linestyle=':')
@@ -275,6 +283,7 @@ plt.title(u'Robust criteria')
 plt.tight_layout()
 # plt.show()
 plt.savefig('./img/decision_under_uncertainty.pgf')
+end_figure('./img/decision_under_uncertainty.pgf')
 plt.close()
 # ----------------------------------------------------------------------
 ## Example with branin: mean, worst case, sd
@@ -308,19 +317,19 @@ plt.legend(loc=2)
 plt.title(u'')
 plt.tight_layout()
 plt.savefig('./img/mean_std_wc.pgf')
+end_figure('./img/mean_std_wc.pgf')
 plt.close()
 
 
 
 #  ------------------------------------------------------------
 plt.figure(figsize = col_full)
-idx = [150, 300, 460]
+idx = [150 * 2, 300 * 2, 460 * 2]
 threshold = 0.05
 
 for i in range(3):
     plt.plot(k, bh[:, idx[i]], label=r'$J(\cdot, u_{})$'.format(i + 1), color=colors[i])
     a = np.where(bh[:, idx[i]] - bh[:, idx[i]].min() < threshold, True, False)
-    print(sum(a))
     plt.plot(k[a], np.ones_like(k)[a] * (bh[:, idx[i]].min() + threshold), colors[i], linestyle=':')
     plt.plot(k[a], (0.75 - i / 10.0) * np.ones_like(k)[a], colors[i])
     plt.annotate(r'$\mathcal{{I}}_{{\beta}}(u_{})$'.format(i + 1),
@@ -330,6 +339,7 @@ plt.xlabel(r'$\theta$')
 plt.ylabel(r'$J$')
 plt.tight_layout()
 plt.savefig('./img/lik_interval_threshold.pgf')
+end_figure('./img/lik_interval_threshold.pgf')
 plt.close()
 
 # ----------------------------------------------------------------------
@@ -341,7 +351,7 @@ plt.contourf(k, u, bh)
 plt.legend()
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$J$')
-plt.scatter(k[bh.argmin(0)], u, marker='.', color='red', label=r'$\min_k J$')
+plt.scatter(k[bh.argmin(0)], u, marker='.', color='white', label=r'$\min_k J$', s=5)
 plt.contour(k, u, (bh - bh.min(0)).T < threshold, levels=[0.5])
 plt.contour(k, u, (bh/bh.min(0)).T < 1.01, levels=[0.5])
 plt.tight_layout()
@@ -385,7 +395,7 @@ plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
 plt.xlim([0, 1])
 plt.ylim([0, 1])
-plt.scatter(theta_star, u_sampled, marker='.', color='red', label=r'$(\theta^*(u), u)$')
+plt.scatter(theta_star, u_sampled, marker='.', color='white', label=r'$(\theta^*(u), u)$', s=5)
 lleg = plt.legend()
 for text in lleg.get_texts():
     text.set_color('white')
@@ -405,6 +415,7 @@ ax.legend(loc='upper left')
 plt.tight_layout()
 plt.savefig('./img/theta_star_samples.pgf')
 # plt.show()
+end_figure('./img/theta_star_samples.pgf')
 plt.close()
 
 
@@ -419,7 +430,11 @@ for j, cst in enumerate(['beta', 'alpha']):
 
     ax1 = plt.subplot(1, 2, 1)
     ax1.contourf(k, u, bh)
-    # ax1.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='red', label=r'$\min_k J$')
+    ax1.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='white', label=r'$(\theta^*(u), u)$')
+    # ax1.scatter(theta_star, u_sampled, marker='.', color='red', label=r'$(\theta^*(u), u)$')
+    lleg = plt.legend()
+    for text in lleg.get_texts():
+        text.set_color('white')
     ax2 = plt.subplot(1, 2, 2)
     if cst == 'beta':
         gen = enumerate(zip([.2, 0.5, 1], [1, 1, 1]))
@@ -428,7 +443,7 @@ for j, cst in enumerate(['beta', 'alpha']):
         gen = enumerate(zip([0, 0, 0], [1.1, 1.5, 2.0]))
         typ_reg = 'RR'
     for i, gr in gen:
-        print(gr)
+        # print(gr)
         Delta = bh - gr[1] * bh.min(1)[:, np.newaxis] - gr[0] < 0 
         ax1.contour(k, u, Delta, levels=[0.45, 0.55], cmap=ListedColormap(colors[i]))
         ax2.plot(k, Delta.mean(0), label=r'${{{c}}}_{{{index}}}$'.format(c='\\' + cst, index=i + 1))
@@ -445,6 +460,7 @@ for j, cst in enumerate(['beta', 'alpha']):
     ax1.set_title(r'Regions of acceptability for increasing ${{{c}}}$'.format(c='\\' + cst))
     plt.tight_layout()
     plt.savefig('./img/gamma_{}_increasing.pgf'.format(cst))
+    end_figure('./img/gamma_{}_increasing.pgf'.format(cst))
     plt.close()
 
 
@@ -463,20 +479,20 @@ bh = new_fun(kmg, umg) * (0.1 + 10 * (umg)**2)
 Delta = bh - bh.min(1)[:, np.newaxis] < 50
 Delta = bh - bh.min(1)[:, np.newaxis] < 0.1
 
-print(Delta.min(), Delta.max())
+# print(Delta.min(), Delta.max())
 # regret = bh - bh.min(0)[:, np.newaxis]
 plt.figure(figsize=col_full)
 plt.subplot(1, 2, 1)
 plt.contourf(k, u, bh)
 # plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
-plt.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='red', label=r'$\min_k J$')
-plt.contour(k, u, Delta, levels=[0.45, 0.55], cmap=plt.get_cmap('gray'))
+plt.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='white', label=r'$(\theta^*(u), u)$')
+plt.contour(k, u, Delta, levels=[0.45, 0.55], cmap=ListedColormap(colors[0]))
 # plt.contour(k, u, bh - 1.2 * bh.min(1)[:, np.newaxis] < 0, levels=[0, 0.5, 1], cma=plt.get_cmap('RdPu'))
 indU, indK = 200, 200
 plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU],
-         color=colors[0])
-plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
          color=colors[1])
+plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
+         color=colors[2])
 plt.annotate(s=r'$\mathcal{I}_{\beta}(u)$',
              xy=(k[indK] + 0.2, u[indU]), color='white')
 plt.annotate(s=r'$R_{\beta}(\theta)$',
@@ -486,18 +502,22 @@ plt.ylim([0, 1])
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
 plt.title(r'Additive regret')
+lleg = plt.legend(loc=7)
+for text in lleg.get_texts():
+    text.set_color('white')
 plt.subplot(1, 2, 2)
 Delta = bh - 1.03 * bh.min(1)[:, np.newaxis] < 0
 plt.contourf(k, u, bh)
 # plt.scatter(k[bh.argmax(1)], u, marker='.', color=colors[0], label=r'$\max_u J$')
-plt.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='red', label=r'$\min_k J$')
-plt.contour(k, u, Delta, levels=[0.45, 0.55], cmap=plt.get_cmap('gray'))
+plt.scatter(k[bh.argmin(1)], u, marker='.', s=5, color='white', label=r'$(\theta^*(u), u)$')
+plt.contour(k, u, Delta, levels=[0.45, 0.55], cmap=ListedColormap(colors[0]))#plt.get_cmap('gray'))
+
 # plt.contour(k, u, bh - 1.2 * bh.min(1)[:, np.newaxis] < 0, levels=[0, 0.5, 1], cma=plt.get_cmap('R(dPu'))
 # indU, indK = 200, 360
 plt.plot(k[Delta[indU, :]], np.ones_like(k[Delta[indU, :]]) * u[indU],
-         color=colors[0])
-plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
          color=colors[1])
+plt.plot(np.ones_like(u[Delta[:, indK]]) * k[indK], u[Delta[:, indK]],
+         color=colors[2])
 plt.annotate(s=r'$\mathcal{I}_{\alpha}(u)$',
              xy=(k[indK] + 0.2, u[indU]), color='white')
 plt.annotate(s=r'$R_{\alpha}(\theta)$',
@@ -507,8 +527,12 @@ plt.ylim([0, 1])
 plt.title(r'Relative regret')
 plt.xlabel(r'$\theta$')
 plt.ylabel(r'$u$')
+lleg = plt.legend(loc=7)
+for text in lleg.get_texts():
+    text.set_color('white')
 plt.tight_layout()
 plt.savefig('./img/illustration_region_regret.pgf')
+end_figure('./img/illustration_region_regret.pgf')
 # plt.show()
 plt.close()
 plt.xlim([0, 1])

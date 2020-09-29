@@ -80,6 +80,7 @@ from mpl_toolkits.mplot3d import Axes3D
 # ----------------------------------------------------------------------
 # Pdf of normal
 fig = plt.figure(figsize=col_full)
+fig.patch.set_facecolor('white')
 x = np.linspace(-5, 7, 200)
 ax = fig.add_subplot(1, 2, 1)
 ax.set_xlim([-5, 7.5])
@@ -90,13 +91,28 @@ ax.set_xlabel(r'$x$')
 ax.legend()
 ax.set_title(r'Pdf of two Gaussian r.v.')
 ax = fig.add_subplot(1, 2, 2, projection='3d')
-xmg, ymg = np.mgrid[-4:3:.01, -3:3:.01]
+# seaborn.set(rc={'figure.facecolor': 'white'})
+# ax.w_xaxis.pane.fill = False
+# ax.w_yaxis.pane.fill = False
+# ax.w_xaxis.pane.set_color((234/256., 234/256., 242/256., 1))
+ax.patch.set_color('white')
+xmg, ymg = np.mgrid[-4:3:.1, -3:3:.1]
 pos = np.dstack((xmg, ymg))
 rv = scipy.stats.multivariate_normal([-1, -1], [[2.0, 0.3], [0.3, 0.5]])
-ax.plot_surface(xmg, ymg, rv.pdf(pos), cmap=cm.get_cmap('viridis'), alpha=0.6)
+ax.plot_surface(xmg, ymg, rv.pdf(pos), cmap=cm.get_cmap('viridis'), alpha=1, facecolor='white')
 ax.contour(xmg, ymg, rv.pdf(pos), zdir='z', offset=-0.1)
-ax.set_zlim([-0.1, 0.15])
-ax.set_title(r'Pdf of a 2D-Gaussian r.v.')
+ax.set_zlim([-0.1, 0.12])
+ax.set_zticks([0, 0.1])
+ax.set_zlabel(r'$p_Z$')
+ax.xaxis.labelpad=0
+ax.yaxis.labelpad=0
+ax.zaxis.labelpad=-2
+ax.xaxis.set_tick_params(pad=3)
+ax.yaxis.set_tick_params(pad=3)
+ax.zaxis.set_tick_params(pad=3)
+ax.zaxis.set_rotate_label(False)
+# ax.dist=15
+ax.set_title(r'Pdf of a 2D-Gaussian r.v.', pad=21)
 ax.set_xlabel(r'$x$')
 ax.set_ylabel(r'$y$')
 plt.tight_layout()

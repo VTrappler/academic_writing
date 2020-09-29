@@ -30,6 +30,7 @@ nctarget.close()
 
 depth_bins = [10., 20, 30, 50, 100, 200, 5000]
 # depth_bins = [0., 30, 100, 5000]
+depth_bins = [0, 60, 100, 200, 5000] # For SA
 
 
 def map_grid_by_depth(z0bvalues, depth_idx):
@@ -93,14 +94,24 @@ cmap = plt.get_cmap('Set2', n_int)
 # norm = mpl.colors.BoundaryNorm(np.arange(-0.5,3), cmap.N)
 
 fig = plt.figure(figsize=(col_full[0], col_full[1]))
-ax1 = plt.subplot(1, 1, 1, projection=ccrs.PlateCarree())    
+ax1 = plt.subplot(1, 1, 1, projection=ccrs.PlateCarree())
+plt.subplots_adjust(left=0.1, right=.75)
+cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
+    
+
 im1 = ax1.contourf(lon, lat, z0barray, 10, transform=ccrs.PlateCarree(), cmap=cmap)
-cbar = plt.colorbar(im1, ax=ax1)
+resize_colorbar = get_resize_event_function(ax1, cbar_ax)
+fig.canvas.mpl_connect('resize_event', resize_colorbar)
+
+cbar = plt.colorbar(im1, ax=ax1, cax=cbar_ax)
 tick_locs = (np.arange(n_int) + 0.5) * (n_int - 1) / n_int
 cbar.set_ticks(tick_locs)
-labels = [r'${0}\leq h <{1}$'.format(depth_bins[i], depth_bins[i + 1]) for i in range(n_int)]
+labels = [r'$\mathsf{{D}}_{2}: {0}\leq \mathsf{{h}} <{1}$'.format(depth_bins[i], depth_bins[i + 1], i + 1) for i in range(n_int)]
 cbar.ax.set_yticklabels(labels)
 add_all_decorations(ax1)
-ax1.set_title(r'Repartition of the depth of the ocean bed')
+ax1.set_title(r'\textsf{Repartition of the depth of the ocean bed}')
+plt.tight_layout()
+resize_colorbar(None)
+
 plt.savefig('./img/depth_repartition.pdf')
 plt.close()

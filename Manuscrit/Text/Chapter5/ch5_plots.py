@@ -4,7 +4,7 @@
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
+import matplotlib.colors as colorz
 import numpy as np
 from netCDF4 import Dataset
 import cartopy.crs as ccrs
@@ -68,7 +68,7 @@ def main():
 
     im1 = ax1.contourf(lon, lat, depth, 10, transform=ccrs.PlateCarree())
     im2 = ax2.contourf(lon, lat, depth, 50, transform=ccrs.PlateCarree(),
-                       norm=colors.LogNorm())
+                       norm=colorz.LogNorm())
     cb1 = plt.colorbar(im1, ax=ax1)
     # cb1.ax.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
     # cb1.ax.ticklabel_format(style='sci', axis='y', useOffset=True, scilimits=(0, 0))
@@ -92,8 +92,8 @@ def main():
     im1 = ax1.contourf(lon, lat, np.asarray(croco_grd['z0b']).squeeze(), 10, transform=ccrs.PlateCarree())
     add_all_decorations(ax1)
     plt.colorbar(im1, ax=ax1, format='%.0e')
-    plt.title(r'True value of $z_0$ (in $\mathrm{m}$)')
-    plt.savefig('./img/gaussian_english_channel.pdf')
+    plt.title(r'\textsf{True value of }$\mathsf{\theta}$ \textsf{(in $\mathrm{m}$)}')
+    plt.savefig('./img/gaussian_english_channel.png', dpi=300)
     plt.close()
 
     
@@ -104,6 +104,31 @@ def main():
     # z0b = np.empty((len(lines), 3))
     # for i, ll in enumerate(lines):
     #     z0b[i, :] = np.fromiter(map(float, ll.split()), dtype=float)
-    
+    import csv
+    import pandas as pd
+    fig = plt.figure(figsize=(col_full[0], col_full[1]))
+    # SA_results = np.empty((6, 6))
+    # with open('/home/victor/acadwriting/Manuscrit/Text/Chapter5/SA_croco.csv') as fi:
+    #     SAfile = csv.reader(fi)
+    #     SAfile.next()
+    #     for i, row in enumerate(SAfile):
+    #         print(row)
+
+    df = pd.read_csv('/home/victor/acadwriting/Manuscrit/Text/Chapter5/SA_croco.csv', header=0)
+    colnames = ['num', 'Sobol indice', r'$D_1$', r'$D_2$', r'$D_3$', r'$D_4$', r'$u_1$', r'$u_2$']
+    df = df.rename(dict(zip(df.columns.values, colnames)), axis='columns')
+    df = df.drop(columns='num')
+    df = df.melt(id_vars=['Sobol indice'])
+
+    import seaborn as sns
+    df['Sobol indice'][df['Sobol indice'] == 'S2'] = r'$S_2$'
+    df['Sobol indice'][df['Sobol indice'] == 'S'] = r'$S_1$'
+    df['Sobol indice'][df['Sobol indice'] == 'T'] = r'$S_T$'
+    sns.barplot(x = 'variable', y='value', hue='Sobol indice', data=df)
+    plt.title(r'Sobol indices for CROCO')
+    plt.xlabel(r'Sobol indices')
+  
+    plt.savefig('./img/SA_croco.pgf')
+    plt.close()
 if __name__ == '__main__':
     main()

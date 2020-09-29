@@ -145,9 +145,11 @@ for x in X_:
         gpp = bow.add_points_to_design(gp, x, evalu)
         ss += bow.integrated_variance(gpp, X_[:, np.newaxis], alpha=None)
     IMSE.append(ss / float(len(evaluated_points)))
-ax2 = ax.twinx() 
-ax2.plot(X_, -np.asarray(IMSE), label=r'IMSE', color=colors[1])
-# plt.show()
+ax2 = ax.twinx()
+ax2.plot(X_, -np.asarray(IMSE), label=r'$-$ augmented IMSE', color=colors[1])
+ax2.plot(np.nan, np.nan, label=r'$\sigma_Z$', color=colors[0])
+ax.legend()
+plt.show()
 plt.savefig('./img/IMSE_variance.pgf')
 
 

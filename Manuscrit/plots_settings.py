@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals, print_function, with_statement
+from __future__ import print_function, with_statement
 import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.pyplot as plt
@@ -32,11 +32,12 @@ params = {# 'backend': 'pgf',
           'axes.labelsize': 10,
           'axes.titlesize': 11,
           'image.cmap': u'viridis'}  # extend as needed
+
 print(sys.version)
 if sys.version_info >= (3, 0):
     plt.rc('text.latex', preamble=r"\usepackage{amsmath} \usepackage{amssymb}")
 else:
-    plt.rc('text.latex', preamble=r"\usepackage{amsmath} \usepackage{amssymb}")
+    plt.rc('text.latex', preamble=b"\usepackage{amsmath} \usepackage{amssymb}")
     # mpl.use('pgf')
 plt.style.use('seaborn')
 plt.rc('font', **{'family': 'serif',
@@ -73,3 +74,51 @@ def add_all_decorations(ax):
     gl.xlabel_style = {'size': 6}
     gl.ylabel_style = {'size': 6}
     ax.set_aspect(1)
+
+
+def add_colorbar_subplot(mappable, format):
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    # if im is None:
+    last_axes = plt.gca()
+    ax = mappable.axes
+    fig = ax.figure
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    cbar = fig.colorbar(mappable, cax=cax, format=format)
+    plt.sca(last_axes)
+    return cbar
+
+
+def get_resize_event_function(ax, cbar_ax):
+    """
+    Returns a function to automatically resize the colorbar
+    for cartopy plots
+    
+    Parameters
+    ----------
+    ax : axis
+    cbar_ax : colorbar axis
+    
+    Example
+    -------
+        import cartopy.crs as ccrs
+        import matplotlib.pyplot as plt
+    
+        fig, ax = plt.subplots(figsize=(10,5), subplot_kw={'projection': ccrs.PlateCarree()})
+        cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
+        
+        [... your code generating a scalar mappable ...]
+    
+        resize_colorbar = get_resize_event_function(ax, cbar_ax)
+        fig.canvas.mpl_connect('resize_event', resize_colorbar)
+    
+    Credits
+    -------
+    Solution by pelson at http://stackoverflow.com/a/30077745/512111
+    """
+    def resize_colorbar(event):
+        plt.draw()
+        posn = ax.get_position()
+        cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0,
+                              0.02, posn.height])
+    return resize_colorbar
