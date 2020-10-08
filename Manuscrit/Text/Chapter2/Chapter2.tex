@@ -46,14 +46,15 @@ In this chapter we will first lay the ground for developing the general ideas be
 
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
-Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are for example unresolved at the model's scale (friction of the ocean bed, or $k-\epsilon$ turbulence models for instance \todo{trop précis, selon si évoqué dans intro générale}), or ill-known. A proper estimation of these parameters has to be performed in order to guarantee a meaningful output when evaluating the model.
+Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are for example unresolved at the model's scale (such as the modelling of the turbulences)% friction of the ocean bed, or $k-\epsilon$ turbulence models for instance \todo{trop précis, selon si évoqué dans intro générale})
+, or ill-known. A proper estimation of these parameters has to be performed in order to guarantee a meaningful output when evaluating the model.
 
 Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, we will first review the problem from a probabilistic point of view, in order to define properly some appropriate objective functions and introduce tools from optimal control theory to optimize them.
 
  \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
 In order to describe accurately a physical system, we have to define the notion of models, and will be following~\cite{tarantola_inverse_2005} approach to define inverse problems.
- A model represents the link between some parameters and some observable quantities. \todo{This is not a simple example} A simple example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space.
+ A model represents the link between some parameters and some observable quantities. An example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space.
 
 
  \begin{definition}[Model]
@@ -72,8 +73,6 @@ As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$,
   The dimension of a model $\mathfrak{M}=(\mathcal{M},\Theta)$ is the number of parameters not reduced to a singleton, so if $\Theta \subset \mathbb{R}^n$, the dimension of $\mathfrak{M}$ is $d \leq n$. The dimension of a model $\mathfrak{M}$ is sometimes called the degrees of freedom of $\mathfrak{M}$.
   \end{remark}
 
-
-\todo{Intéret de préciser ?}
 \begin{example}
   A model with parameter space $\Theta = \mathbb{R}^2\times \interval{0}{1}$ has dimension $3$, while $\Theta = \mathbb{R}^2 \times \{1\}$ has dimension $2$.
 \end{example}
@@ -136,7 +135,7 @@ Observing an event $B \in \mathcal{F}$ can bring information upon another event 
 \end{definition}
 Formally, an event can be seen as an outcome of some uncertain experiment, and its probability is ``how likely'' this event will happen.
 
-Let us now introduce a measurable state (or sample) space $S$, that is the set of all possible events (upon which we can assign a probability).
+Let us now introduce a measurable state (or sample) space $S$, that is the set of all possible outcomes we can observe (and upon which we can assign a probability).
 \begin{definition}[Random Variable, Expectation]
   \label{def:random_variable}
   A random variable (abbreviated as r.v.) $X$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an upper case letter. A realisation or observation $x$ of the r.v. $X$ is the actual image of $\omega\in\Omega$ under $X$: $x = X(\omega)$. If $S$ is countable, the random variable is said to be \emph{discrete}. When $S\subseteq \mathbb{R}^p$ for $p\geq 1$, $X$ is sometimes called a random vector
@@ -384,7 +383,7 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
 \begin{figure}[!h]
   \centering
   \input{\imgpath gaussian_distribution_examples.pgf}
-  \caption[Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)]{Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)\todo[inline]{Revoir figure de droite}}
+  \caption[Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)]{Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of $Z$, a 2D Gaussian r.v.\ (right)}
   \label{fig:example_normal}
 \end{figure}
 When adding independent squared samples of the normal distribution, the resulting random variable follows a $\chi^2$ distribution.
@@ -466,7 +465,7 @@ whose one sample is $y=\mathscr{M}(\vartheta)$.
 Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions taking as arguments the samples in $\Yspace$, we may look at it as a function of $\theta$, as the observations $y\in\Yspace$ do not vary. We can then define the likelihood function and its associated extremum estimator.
 \begin{definition}[Likelihood function, MLE]
   \label{def:mle}
-  The probability density function of the observations for a set of parameters is called the likelihood of those parameters given the observations, and is written $\mathcal{L}$:
+  The probability density function of the observations for a set of parameters is called the likelihood of those parameters given the observations, and is written $\mathcal{L}$. In the Gaussian case, this can be written as
   \begin{align}
     \label{eq:likelihood_definition}
     \mathcal{L}(\cdot ;y): \theta \mapsto p_{Y}(y;\theta) &= \mathcal{L}(\theta;y) \\
@@ -496,7 +495,7 @@ Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions ta
   \end{equation}
   % More generally, we can show that the MLE is also the minimizer of the KL-divergence between the sampling distribution:
 
-As the optimization is performed on $\theta$, we can remove the constant terms of the objective function, and rewrite the cost function as a $L^2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
+As the optimization is performed on $\theta$, we can remove the constant terms of the objective function, and rewrite the objective function as a $L^2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
   \begin{align}
     \estimtxt{\theta}{MLE} &= \argmin_{\theta \in \Theta}\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y) \nonumber\\
                            &= \argmin_{\theta \in \Theta}\frac12 \| \mathcal{M}(\theta) - y \|^2_{\Sigma^{-1}} \label{eq:MLE_L2norm}
@@ -505,8 +504,7 @@ As the optimization is performed on $\theta$, we can remove the constant terms o
   Frequentist inference and Maximum Likelihood estimation boils down to Generalized non-linear least-square regression, that minimizes the squared Mahalanobis distance between $\mathcal{M}({\theta})$ and $y$. This is only true as we assumed a Gaussian form of the errors in~\cref{eq:lik_gaussian}. Other choices of the sampling distribution~\cref{eq:lik_gaussian} will result in different objective functions. To reduce the sensitivity on outliers, some authors such as~\cite{rao_robust_2015} introduce Student or Laplace distributed errors, or specifically designed norm such as the Huber norm~\cite{huber_robust_2011}.
 
   If the covariance matrix is diagonal, the residual errors are then uncorrelated, thus independent due to their Gaussian nature as defined in~\cref{eq:lik_gaussian}. The likelihood can be rewritten as the product of densities evaluated at the different samples $y_i$, obtained from their true distribution $Y$.
-  A direct link can be written between the KL--divergence and the MLE:
-  The KL--divergence between the true density $p_Y$ and the parametric sampling distribution $p_Y(\cdot;\theta)$ is
+  A direct link can be written between the KL--divergence and the MLE. The KL--divergence between the true density $p_Y$ and the parametric sampling distribution $p_Y(\cdot;\theta)$ is
   \begin{equation}
   \DKL{p_Y}{p_Y(\cdot;\theta)} = \Ex_Y\left[\log p_Y(Y)\right]-\Ex_Y\left[\log p_Y(Y;\theta)\right]  
 \end{equation}
@@ -640,7 +638,7 @@ The choice of a prior distribution has an influence on the inference of the para
 % As mentioned before, the MAP does not require the full knowledge of the posterior distribution $p_{\theta \mid Y}$, as ``only'' an optimization is required.
 
 
-All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This cost function will be written $J$ in the following, to match the notation of data assimilation. 
+All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This objective function will be written $J$ in the following, to match the notation of data assimilation. 
 In this context of calibration, we can then summarize the estimation as a minimization problem, where $J$ represents some kind of distance between $\mathcal{M}(\theta)$ and the observations.
 \begin{equation}
   \estimtxt{\theta}{} = \argmin_{\theta\in \Theta} J(\theta)
@@ -650,7 +648,7 @@ In this context of calibration, we can then summarize the estimation as a minimi
 \section{Calibration using adjoint-based optimization}
 \label{sec:calibration_adjoint_optimization}
 Point estimates in this context take the form of extremum estimators, that is an extremum of some given objective function $J$. This function takes the form of the log-likelihood for the MLE, or the log-posterior for the MAP, but other misfits can be considered, such as optimal transport based metrics. The formulation is then quite simple, but the problem of efficient optimization remains. For differentiable problems, most of minimization instances are solved using gradient based methods, such as gradient descent, quasi-newton methods.
-However, this implies to be able to compute efficiently the gradient of the cost function $J$ with respect to the parameter: $\nabla_{\theta} J$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one which is $1$. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
+However, this implies to be able to compute efficiently the gradient of the objective function $J$ with respect to the parameter: $\nabla_{\theta} J$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one which is $1$. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
 \begin{equation}
   \label{eq:finite_diff}
   \nabla_{\theta} J  \approx \left[\frac{J(\theta + \epsilon e_1) - J(\theta)}{\epsilon}, \frac{J(\theta + \epsilon e_2) - J(\theta)}{ \epsilon},\dots, \frac{J(\theta + \epsilon e_n)- J(\theta)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
@@ -659,7 +657,7 @@ In addition to the run of the model at $\theta$, we have to evaluate the model $
 
 In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost. This gradient is used afterward in optimization methods such as conjuguate gradient, or BFGS for instance. Adjoint methods are thus very popular in large-scale optimization of Computational Fluid Dynamics codes, as the additional cost of implementation is often worth the gain in the short term. This situation is common in data assimilation, as shown in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}, or in shape optimization of airfoils in~\cite{huyse_free-form_2001}.
 
-To derive the adjoint equations, we will first rewrite the cost function as a function of the forward operator and the parameter: $J(\theta) = J(\mathcal{M}(\theta),\theta)$:
+To derive the adjoint equations, we will first rewrite the objective function as a function of the forward operator and the parameter: $J(\theta) = J(\mathcal{M}(\theta),\theta)$:
 The estimation of the parameter can be written as the following constrained optimisation problem:
 \begin{equation}
   \begin{aligned}
@@ -696,7 +694,7 @@ When differentiating with respect to the state variable, the equation that verif
 \begin{equation}
   \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation}
 \end{equation}
-Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the cost function can be expressed using the partial derivative \emph{with respect to $\theta$} of the cost function and of the forward model, and the adjoint variable:
+Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the objective function can be expressed using the partial derivative \emph{with respect to $\theta$} of the objective function and of the forward model, and the adjoint variable:
 
 \begin{equation}
     \pfrac{\mathscr{L}}{\theta} = \nabla_\theta J %  &= \pfrac{J}{\theta}(y,\theta) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}(y,\theta)} \\
@@ -705,7 +703,7 @@ Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F
                                = \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
 \end{equation}
 
-So, to get $\nabla_\theta J$, as the partial derivatives with respect to the control variable are relatively easy to obtain, the challenge lies in solving the adjoint equation. Albeit tedious, one can derive those equations by writing the tangent linear model of the original model, and implement a dedicated solver for the adjoint variables. A more common and way simpler approach is to derive the adjoint equations directly from the computer code implemented to solve the model, by using Automatic differentiation tools, such as \textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs directly translate the source code into a program that solves the original model equations and the adjoint equations, and outputs the gradient along with the cost function.
+So, to get $\nabla_\theta J$, as the partial derivatives with respect to the control variable are relatively easy to obtain, the challenge lies in solving the adjoint equation. Albeit tedious, one can derive those equations by writing the tangent linear model of the original model, and implement a dedicated solver for the adjoint variables. A more common and way simpler approach is to derive the adjoint equations directly from the computer code implemented to solve the model, by using Automatic differentiation tools, such as \textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs directly translate the source code into a program that solves the original model equations and the adjoint equations, and outputs the gradient along with the objective function.
 
 
 \section{Model selection}
@@ -723,7 +721,7 @@ For this problem of curve fitting, increasing the degree of the polynomial used 
 \begin{figure}[ht]
   \centering
   \input{\imgpath overfitting.pgf}
-  \caption{\label{fig:overfitting} Overfitting phenomenon, and reduction of the cost function}
+  \caption{\label{fig:overfitting} Overfitting phenomenon, and reduction of the minimal value of the objective function}
 \end{figure}
 
 
@@ -751,7 +749,7 @@ Based on this quantity, we can test whether the smaller model is sufficient to e
 \item The null hypothesis $\mathcal{H}_0$: The two models are statistically equivalent: the difference between the maximal values of the likelihood is not statistically significant. This corresponds to $\Lambda$ close to $1$
 \item  The alternative hypothesis $\mathcal{H}_1$: the two models are statistically different: the larger model performs better than the reduced one. This corresponds to $\Lambda$ significantly smaller than $1$.
 \end{itemize}
-Under $\mathcal{H}_0$ (the null hypothesis), $-2 \log \Lambda$ (sometimes called the deviance) follows asymptotically (as the number of observations becomes large) a $\chi^2$ distribution defined in~\cref{ex:chi2}, according to Wilks' theorem~\cite{wilks_large-sample_1938}. The number of degrees of freedom of the $\chi^2$ distribution is given by the difference of dimensionality between the two models:
+Under the null hypothesis  $\mathcal{H}_0$, $-2 \log \Lambda$ follows asymptotically (as the number of observations grows large) a $\chi^2$ distribution defined in~\cref{ex:chi2}, according to Wilks' theorem~\cite{wilks_large-sample_1938}. The number of degrees of freedom of the $\chi^2$ distribution is given by the difference of dimensionality between the two models:
 \begin{equation}
   \label{eq:deviance_asymptotics}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
@@ -764,21 +762,21 @@ So if the data $y \in \mathrm{RejReg}_{\nu}$, we reject $\mathcal{H}_0$ at the $
 By reformulating using the log-likelihoods and objective functions $l(\theta;y) = \log \mathcal{L}(\theta;y) = - J(\theta)$
 \begin{align}
   \mathrm{RejReg}_{\nu} &= \left\{ y \mid (\sup_{\theta\in\Theta_1} l(\theta;y) - \sup_{\theta\in\Theta_2} l(\theta;y)) > \frac12 \chi^2_{r-d}(1-\nu) \right\} \\
-                             &= \left\{ y \mid J(\hat{\theta}_2) - J(\hat{\theta}_1) >  \frac12 \chi^2_{r-d}(1-\nu) \right\} \label{eq:rejreg_chi2}
+                             &= \left\{ y \mid J(\theta_2) - J(\theta_1) >  \frac12 \chi^2_{r-d}(1-\nu) \right\} \label{eq:rejreg_chi2}
 \end{align}
 
 
 \begin{example}[Likelihood Ratio test for the MLE]
   \label{ex:lrt_mle}
-  Let $\Theta_1 = \Theta\subset \mathbb{R}$ and $\Theta_2 = \{\estimtxt{\kk}{MLE}\}\subset \Theta_1$.
- The difference of dimensionality is then $r-d=1$ and the .95 quantile of the $\chi^2$ law is $\chi^2_1(1-0.05) =3.84$. When the data falls into the rejection region (\emph{i.e.} $J(\hat{\theta}_2)$ significantly larger than $J(\hat{\theta}_1)$), the null hypothesis is rejected, and the models can be asserted significantly different. 
+  Let $\Theta_1 = \Theta\subset \mathbb{R}$ and $\Theta_2 = \{\kk\}\subset \Theta_1$.
+  We have then $\sup_{\Theta_1} \mathcal{L} = \mathcal{L}(\estimtxt{\kk}{MLE})$, and $\sup_{\Theta_2} \mathcal{L} = \mathcal{L}(\kk)$
+ The difference of dimensionality is then $r-d=1$ and the .95 quantile of the $\chi^2$ r.v.\ is $\chi^2_1(1-0.05) =3.84$. When the data falls into the rejection region (\emph{i.e.} $J(\theta_2)$ significantly larger than $J({\theta}_1)$), the null hypothesis is rejected, and the models can be asserted significantly different. 
 \end{example}
 
 
 
 \label{sec:relative_likelihood}
-Conversely, the rejection region defined above allows us to define an asymptotic confidence interval for the parameter. Let us consider $\Theta_1 = \Theta$, and $\Theta_2 = \{\kk\}$
-Let us introduce the \emph{Relative Likelihood} (\cite{kalbfleisch_probability_1985}) which is the ratio of the likelihood evaluated at a point $\kk$ to the maximal value of the likelihood:
+Conversely, the rejection region defined above allows us to define an asymptotic confidence interval for the parameter. Let us consider $\Theta_1 = \Theta$, and $\Theta_2 = \{\kk\}$ as in \cref{ex:lrt_mle}, and let us introduce the \emph{Relative Likelihood} (\cite{kalbfleisch_probability_1985}) which is the ratio of the likelihood evaluated at a point $\kk$ to the maximal value of the likelihood:
 \begin{equation}
   R(\theta) = \frac{\mathcal{L}(\theta;y)}{\mathcal{L}(\estimtxt{\theta}{MLE};y)} = \frac{\mathcal{L}(\theta;y)}{\sup_{\theta^{\prime} \in \Theta}\mathcal{L}(\theta^{\prime};y)}
 \end{equation}
@@ -789,7 +787,7 @@ The likelihood interval of level $p\in ]0,1]$ is defined as
   \mathcal{I}_{\mathrm{Lik}}(p) = \left\{\theta \mid R(\theta)=\frac{\mathcal{L}(\theta;y)}{\mathcal{L}(\estimtxt{\theta}{MLE};y)} \geq p\right\}
 \end{equation}
 
-$p$ can be set to an arbitrary threshold, but it can also be chosen specifically in order to avoid the rejection region of a likelihood ratio test with certain confidence.
+$p$ can be set to an arbitrary threshold, but it can also be chosen specifically so that $\mathcal{I}_{\mathrm{Lik}}(p)$ is the complement of the rejection region of a likelihood ratio test with certain confidence.
 
 Using the Likelihood ratio test, as in~\cref{ex:lrt_mle}, we can test whether a given value of the parameter $\kk$ performs compared to the MLE by comparing the models $(\mathcal{M}, \{\theta\})$ and $(\mathcal{M},\Theta)$. Let $R(\theta)$ be the corresponding likelihood ratio. The complement of the rejection region \cref{eq:rejreg_chi2} written using \cref{eq:def_lik_interval} is
 \begin{equation}
@@ -808,7 +806,7 @@ For $1$ dimensional models, and the confidence level of $.05$, the threshold of 
   \caption{Example of relative likelihood, and associated likelihood interval, for $p=0.15$}
 \end{figure}
 
-Due to the likelihood ratio test and the relative likelihood, we can see that even though $\estimtxt{\theta}{MLE}$ is the optimizer of the likelihood function, other values close to it may not be discarded, provided that the log-likelihood does not drop off too much.
+Due to the likelihood ratio test and the relative likelihood, we can see that even though $\estimtxt{\theta}{MLE}$ is the optimizer of the likelihood function, other values close to it may not be discarded, provided that the value of the log-likelihood does not drop off too much.
 
 \subsection{Criteria for non-nested model comparison}
 % \todo{revoir}
@@ -822,24 +820,25 @@ Two quite popular examples of criteria are the AIC (Akaike Information Criterion
 
 Then, to compare two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$, the magnitude of the difference $\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is compared to some thresholds as shown in~\cite{burnham_multimodel_2004}.
 The difference shows whether a model should be preferred, or if no substantial evidence exists for either model.
-These criteria, as well as the likelihood ratio test, are based on the evaluation of the likelihood at its maximal value. Another approach is to marginalize the likelihood with respect to the prior distribution of the calibration parameter, giving Bayesian model comparison. The criterion for a model $\mathfrak{M}_1$ is the evidence of model, \emph{i.e.} the pdf of the data given the model $\mathfrak{M}_1$, and $\mathrm{Crit}(\mathfrak{M}_1) = \log \int_\Kspace \mathcal{L} p_\kk(\kk)\,\mathrm{d}\kk$.
+These criteria, as well as the likelihood ratio test, are based on the evaluation of the likelihood at its maximal value.
 
 
-% \subsection{Bayesian model comparison}
-Given a model $\mathfrak{M}$, the model evidence is the likelihood marginalized over the parameter space as introduced in~\cref{def:model_evidence}, and will be written $p_{Y\mid \mathfrak{M}}$. This evidence represents how likely have the data $y$ been generated using the statistical model $\mathfrak{M}$.
-
-For two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$ the Bayes' factor is defined as the ratio of the evidence of the two models:
-\begin{equation}
-  \label{eq:bayes_factor}
-  \mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)= \frac{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_1) }{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_2)}
-\end{equation}
-where
-\begin{equation}
-  p_{Y \mid \mathfrak{M}_i}(y \mid \mathfrak{M}_i)= \int_{\Theta_i} p_{Y, \theta \mid \mathfrak{M}_i}(y, \theta \mid \mathfrak{M}_i) \,\mathrm{d}\theta= \int_{\Theta_i} p_{Y \mid \theta,\mathfrak{M}_i}(y \mid \theta, \mathfrak{M}_i)p_{\theta \mid \mathfrak{M}_i}(\theta \mid \mathfrak{M}_i) \,\mathrm{d}\theta 
-\end{equation}
-
-% This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
-Quite similarly to the BIC and AIC, the logarithm of the Bayes' factor is usually compared to specific values, allowing us to conclude roughly on how strong does the data favor $\mathfrak{M}_1$. Again, the logarithm of Bayes' factor is compared with specified thresholds~\cite{kass_bayes_1995,burnham_multimodel_2004}.
+Another approach is to marginalize the likelihood with respect to the prior distribution of the calibration parameter, giving Bayesian model comparison. The criterion for a model $\mathfrak{M}_1$ is the evidence of model, \emph{i.e.} the pdf of the data given the model $\mathfrak{M}_1$, and $\mathrm{Crit}(\mathfrak{M}_1) = \log \int_\Kspace \mathcal{L}(\kk) p_\kk(\kk)\,\mathrm{d}\kk$.
+% % \subsection{Bayesian model comparison}
+% Given a model $\mathfrak{M}$, the model evidence is the likelihood marginalized over the parameter space as introduced in~\cref{def:model_evidence}, and will be written $p_{Y\mid \mathfrak{M}}$. This evidence represents how likely have the data $y$ been generated using the statistical model $\mathfrak{M}$.
+% For two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$ the Bayes' factor is defined as the ratio of the evidence of the two models:
+% \begin{equation}
+%   \label{eq:bayes_factor}
+%   \mathop{\mathrm{BF}}(\mathfrak{M}_1,\mathfrak{M}_2)= \frac{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_1) }{p_{Y\mid \mathfrak{M}_1}(y \mid \mathfrak{M}_2)}
+% \end{equation}
+% where
+% \begin{equation}
+%   p_{Y \mid \mathfrak{M}_i}(y \mid \mathfrak{M}_i)= \int_{\Theta_i} p_{Y, \theta \mid \mathfrak{M}_i}(y, \theta \mid \mathfrak{M}_i) \,\mathrm{d}\theta= \int_{\Theta_i} p_{Y \mid \theta,\mathfrak{M}_i}(y \mid \theta, \mathfrak{M}_i)p_{\theta \mid \mathfrak{M}_i}(\theta \mid \mathfrak{M}_i) \,\mathrm{d}\theta 
+% \end{equation}
+% % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
+% Quite similarly to the BIC and AIC, the logarithm of the Bayes' factor
+% Again, it is usually compared to specific values, allowing us to conclude roughly on how strong does the data favor $\mathfrak{M}_1$. 
+Again, the logarithm of Bayes' factor is compared with specified thresholds~\cite{kass_bayes_1995,burnham_multimodel_2004}.
 % Given a model, a criterion is derived either by maximization (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
 % In both cases, the preference toward one or another model is directly linked to the difference on the logarithms of the densities.
 
@@ -872,7 +871,7 @@ Some estimators still carry nice properties. The MLE for instance, defined~\cref
   \estimtxt{\theta}{MLE}(\uu_0)=  \argmin_{\kk \in \Kspace}\DKL[empirical]{p_Y}{p_{Y \mid \theta, \UU}(\cdot \mid \theta, \UU=\uu_0)}
 \end{equation}
 and can be seen as the ``best'' value given $\UU=\uu_0$. However, the asymptotic properties of the MLE are slightly different as described in~\cite{white_maximum_1982}.
-So when the model is misspecified, minimizing the same cost function still makes sense.
+So when the model is misspecified, minimizing the same objective function still makes sense.
 
 However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}(\uu_0) = \argmin_{\theta \in \Theta} J(\theta,\uu_0)$, and there is no guarantee that $\estimtxt{\theta}{}(\uu_0)$ will minimize $J(\cdot, \uu_1)$ for $\uu_0 \neq \uu_1$, as illustrated~\cref{fig:minimizer_misspecification}.
 
@@ -883,7 +882,7 @@ However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}
   \label{fig:minimizer_misspecification}
 \end{figure}
 
-$\uu_0$ and $\uu_1$ are close to each other, but $\hat{\kk}(\uu_0)$ and $\hat{\kk}(\uu_1)$ are not. However, as the cost function shows similar values at those points, choosing either one would lead to a satisfactory cost given $\UU = \uu_0$ or $\UU=\uu_1$. If $\UU = \uu_2$ is considered as well, the modeller may have a preference and choose $\estimtxt{\kk}{}(\uu_1)$ as the final estimator.
+$\uu_0$ and $\uu_1$ are close to each other, but ${\kk}(\uu_0)$ and ${\kk}(\uu_1)$ are not. However, as the objective function shows similar values at those points, choosing either one would lead to a satisfactory outcome given $\UU = \uu_0$ or $\UU=\uu_1$. If $\UU = \uu_2$ is considered as well, the modeller may have a preference and choose $\estimtxt{\kk}{}(\uu_1)$ as the final estimator.
 
 In terms of model selection, the asymptotic distribution of the likelihood ratio statistic defined~\cref{sec:likelihood_ratio_test} is also slightly different. Instead of following a $\chi^2_{r}$ distribution, where $r$ is the number of dimensions for the test, $-2\log \Lambda$ will asymptotically have the same distribution as a weighted sum of $r$ random variables, where every one have a $\chi^2_1$ distribution and whose weights are the eigenvalues of a matrix involving the Jacobian and the Hessian of the log-likelihood~\cite{kent_robust_1982}.
 
@@ -893,9 +892,9 @@ In terms of model selection, the asymptotic distribution of the likelihood ratio
 \section{Partial conclusion}
 \label{sec:chap2_partial}
 
-In this chapter, starting from a probabilistic point of view, we established the usual tools encountered in model calibration: the misfit between the data and the numerical model is measured by a cost function $J$, that can be minimized using for instance gradient descent. From this optimization, we can define a ``acceptable'' region for the estimate. In other words, values in this set yield an misfit that is not different enough to be completely discarded.
+In this chapter, starting from a probabilistic point of view, we established the usual tools encountered in model calibration: the misfit between the data and the numerical model is measured by an objective function $J$, that can be minimized using for instance gradient descent. From this optimization, we can define a ``acceptable'' region for the estimate. In other words, values in this set yield an misfit that is not different enough to be completely discarded.
 
-Adding an environmental variable as a random parameter introduces a random parametric misspecification of the model: each realization of this underlying random variable will yield a different estimation. In \cref{chap:robust_estimators}, we will discuss the notion of robustness under this random misspecification, and introduce a family of robust estimators, inspired by model selection. 
+Adding an environmental variable as a random parameter introduces a random parametric misspecification to the model: each realization of this underlying random variable will yield a different estimation. In \cref{chap:robust_estimators}, we will discuss the notion of robustness under this random misspecification, and introduce a family of robust estimators, inspired by model selection. 
 
 
 % Robustness under parametric model 

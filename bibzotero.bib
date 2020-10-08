@@ -54,6 +54,17 @@
   number = {6}
 }
 
+@inproceedings{amri_bayesian_2019,
+  title = {Bayesian {{Optimization Under Uncertainty}} for {{Chance Constrained Problems}}},
+  booktitle = {{{PGMO Days}} 2019},
+  author = {Amri, Mohamed Reda El and {Blanchet-Scalliet}, Christophette and Helbert, Celine and Riche, Rodolphe Le},
+  year = {2019},
+  month = dec,
+  abstract = {Chance constraint is an important tool for modeling the reliability on decision making in the presence of uncertainties. Indeed, the chance constraint enforces that the constraint is satisfied with probability 1 - {$\alpha$} ( 0 {$<$} {$\alpha$} {$<$} 1 ) at least. In addition, we consider that the objective func- tion is affected by uncertainties. This problem is challenging since modeling a complex system under uncertainty can be expensive and for most real-world stochastic optimization will not be computationally viable. In this talk, we propose a Bayesian methodology to efficiently solve such class of problems. The central idea is to use Gaussian Process (GP) models [1] together with appropriate acquisi- tion functions to guide the search for an optimal solution. We first show that by specifying a GP prior to the objective function, the loss function becomes tractable [2]. Similarly, using GP models for the constraints, the probability satisfaction can be efficiently approximated. Sub- sequently, we introduce new acquisition functions to iteratively select the points to query the expensive objective and constraint functions. Finally, we present numerical examples to validate our approach compared to benchmark results.},
+  file = {/home/victor/Zotero/storage/ESL4A8EM/emse-02351011.html},
+  language = {en}
+}
+
 @article{andreassian_all_2012,
   title = {All That Glitters Is Not Gold: The Case of Calibrating Hydrological Models: {{Invited Commentary}}},
   shorttitle = {All That Glitters Is Not Gold},
@@ -261,6 +272,22 @@
   file = {/home/victor/Zotero/storage/DY8I85EE/Azäis et Wschebor - 2009 - Level Sets and Extrema of Random Processes and Fie.pdf},
   isbn = {978-0-470-43464-2 978-0-470-40933-6},
   language = {en}
+}
+
+@article{azzimonti_quantifying_2016,
+  title = {Quantifying {{Uncertainties}} on {{Excursion Sets Under}} a {{Gaussian Random Field Prior}}},
+  author = {Azzimonti, Dario and Bect, Julien and Chevalier, Cl{\'e}ment and Ginsbourger, David},
+  year = {2016},
+  month = jan,
+  volume = {4},
+  pages = {850--874},
+  issn = {2166-2525},
+  doi = {10.1137/141000749},
+  abstract = {We focus on the problem of estimating and quantifying uncertainties on the excursion set of a function under a limited evaluation budget. We adopt a Bayesian approach where the objective function is assumed to be a realization of a Gaussian random field. In this setting, the posterior distribution on the objective function gives rise to a posterior distribution on excursion sets. Several approaches exist to summarize the distribution of such sets based on random closed set theory. While the recently proposed Vorob'ev approach exploits analytical formulae, further notions of variability require Monte Carlo estimators relying on Gaussian random field conditional simulations. In the present work we propose a method to choose Monte Carlo simulation points and obtain quasi-realizations of the conditional field at fine designs through affine predictors. The points are chosen optimally in the sense that they minimize the posterior expected distance in measure between the excursion set and its reconstruction. The proposed method reduces the computational costs due to Monte Carlo simulations and enables the computation of quasi-realizations on fine designs in large dimensions. We apply this reconstruction approach to obtain realizations of an excursion set on a fine grid which allow us to give a new measure of uncertainty based on the distance transform of the excursion set. Finally we present a safety engineering test case where the simulation method is employed to compute a Monte Carlo estimate of a contour line.},
+  file = {/home/victor/Zotero/storage/2G4NSBMC/Azzimonti et al. - 2016 - Quantifying Uncertainties on Excursion Sets Under .pdf},
+  journal = {SIAM/ASA Journal on Uncertainty Quantification},
+  language = {en},
+  number = {1}
 }
 
 @article{baccou_development_2019,
@@ -572,6 +599,14 @@
   abstract = {Pour \'evaluer la rentabilit\'e d'une production en amont du lancement du processus de fabrication, la plupart des entreprises industrielles ont recours \`a la simulation num\'erique. Cela permet de tester virtuellement plusieurs configurations des param\`etres d'un produit donn\'e et de statuer quant \`a ses performances (i.e. les sp\'ecifications impos\'ees par le cahier des charges).  Afin de mesurer l'impact des fluctuations des proc\'ed\'es industriels sur les performances du produit, nous nous int\'eressons en particulier \`a l'estimation de sa probabilit\'e de d\'efaillance. Chaque simulation exigeant l'ex\'ecution d'un code de calcul complexe et co\^uteux, il n'est pas possible d'effectuer un nombre de tests suffisant pour estimer cette probabilit\'e via, par exemple, une m\'ethode Monte-Carlo. Sous la contrainte d'un nombre limit\'e d'appels au code, nous proposons deux m\'ethodes d'estimation tr\`es diff\'erentes. La premi\`ere s'appuie sur les principes de l'estimation bay\'esienne. Nos observations sont les r\'esultats de simulation num\'erique. La probabilit\'e de d\'efaillance est vue comme une variable al\'eatoire, dont la construction repose sur celle d'un processus al\'eatoire destin\'e \`a mod\'eliser le code de calcul co\^uteux. Pour d\'efinir correctement ce mod\`ele, on utilise la m\'ethode de krigeage. Conditionnellement aux observations, la loi a posteriori de la variable al\'eatoire, qui mod\'elise la probabilit\'e de d\'efaillance, est inaccessible. Pour apprendre sur cette loi, nous construisons des approximations des caract\'eristiques suivantes: esp\'erance, variance, quantiles... On utilise pour cela la th\'eorie des ordres stochastiques pour la comparaison de variables al\'eatoires et, plus particuli\`erement, l'ordre convexe. La construction d'un plan d'exp\'eriences optimal est assur\'ee par la mise en place d'une proc\'edure de planificationd'exp\'eriences s\'equentielle, bas\'ee sur le principe des strat\'egies SUR ("Stepwise Uncertainty Reduction"). La seconde m\'ethode est une proc\'edure it\'erative, particuli\`erement adapt\'ee au cas o\`u la probabilit\'e de d\'efaillance est tr\`es petite, i.e. l'\'ev\'enement redout\'e est rare. Le code de calcul co\^uteux est repr\'esent\'e par une fonction que l'on suppose lipschitzienne. \`A chaque it\'eration, cette hypoth\`ese est utilis\'ee pour construire des approximations, par d\'efaut et par exc\`es, de la probabilit\'e de d\'efaillance. Nous montrons que ces approximations convergent vers la valeur vraie avec le nombre d'it\'erations. En pratique, on les estime gr\^ace \`a la m\'ethode Monte-Carlo dite de "splitting". Les m\'ethodes que l'on propose sont relativement simples \`a mettre en \oe uvre et les r\'esultats qu'elles fournissent peuvent \^etre interpr\'et\'es sans difficult\'e. Nous les testons sur divers exemples, ainsi que sur un cas r\'eel provenant de la soci\'et\'e STMicroelectronics. Full text is available here: https://tel.archives-ouvertes.fr/tel-02279258}
 }
 
+@article{bernard_methodes_nodate,
+  title = {{M\'ethodes probabilistes pour l'estimation de probabilit\'es de d\'efaillance}},
+  author = {Bernard, Lucie},
+  pages = {168},
+  file = {/home/victor/Zotero/storage/XEWCUKGL/Bernard - Méthodes probabilistes pour l'estimation de probab.pdf},
+  language = {fr}
+}
+
 @article{bertsimas_robust_2014,
   title = {Robust {{Sample Average Approximation}}},
   author = {Bertsimas, Dimitris and Gupta, Vishal and Kallus, Nathan},
@@ -600,6 +635,22 @@
   file = {/home/victor/Zotero/storage/T6QT64CY/Bertsimas et al. - 2010 - Theory and Applications of Robust Optimization.pdf;/home/victor/Zotero/storage/6DFX49PU/1010.html},
   journal = {arXiv:1010.5445 [cs, math]},
   keywords = {90C25,Computer Science - Computational Engineering; Finance; and Science,Mathematics - Optimization and Control},
+  primaryClass = {cs, math}
+}
+
+@article{bertsimas_theory_2010-1,
+  title = {Theory and {{Applications}} of {{Robust Optimization}}},
+  author = {Bertsimas, Dimitris and Brown, David B. and Caramanis, Constantine},
+  year = {2010},
+  month = oct,
+  abstract = {In this paper we survey the primary research, both theoretical and applied, in the area of Robust Optimization (RO). Our focus is on the computational attractiveness of RO approaches, as well as the modeling power and broad applicability of the methodology. In addition to surveying prominent theoretical results of RO, we also present some recent results linking RO to adaptable models for multi-stage decision-making problems. Finally, we highlight applications of RO across a wide spectrum of domains, including finance, statistics, learning, and various areas of engineering.},
+  archivePrefix = {arXiv},
+  eprint = {1010.5445},
+  eprinttype = {arxiv},
+  file = {/home/victor/Zotero/storage/JRZF7SYP/Bertsimas et al. - 2010 - Theory and Applications of Robust Optimization.pdf},
+  journal = {arXiv:1010.5445 [cs, math]},
+  keywords = {90C25,Computer Science - Computational Engineering; Finance; and Science,Mathematics - Optimization and Control},
+  language = {en},
   primaryClass = {cs, math}
 }
 
@@ -1313,6 +1364,23 @@
   language = {en}
 }
 
+@article{chunlin_sample_2012-1,
+  title = {Sample {{Average Approximation Method}} for {{Chance Constrained Stochastic Programming}} in {{Transportation Model}} of {{Emergency Management}}},
+  author = {Chunlin, Deng and Liu, Yang},
+  year = {2012},
+  month = jan,
+  volume = {5},
+  pages = {137--143},
+  issn = {2211-3819},
+  doi = {10.1016/j.sepro.2012.04.022},
+  abstract = {In this paper, an optimal model for the transportation of emergency resource is established on chance constrained stochastic programming. We use Conditional Value at Risk (CVaR) to approximate the chance constraint, and we get the approximation problem of the chance constrained stochastic programming by using the sample average approximation (SAA) method. For a given sample, the SAA problem is a deterministic nonlinear programming (NLP) and any appropriate NLP code can be applied to solve the problem. The model and method provide a new way for the emergency logistics management engineering.},
+  file = {/home/victor/Zotero/storage/NDZ9P4NP/Chunlin et Liu - 2012 - Sample Average Approximation Method for Chance Con.pdf;/home/victor/Zotero/storage/LKTZ6PTJ/S2211381912000653.html},
+  journal = {Systems Engineering Procedia},
+  keywords = {chance constraint,Conditional Value-at-Risk,emergency managemen engineering,sample average approximation,transportation model},
+  language = {en},
+  series = {Safety and {{Emergency Systems Engineering}}}
+}
+
 @article{cohn_introduction_1997,
   title = {An {{Introduction}} to {{Estimation Theory}} ({{gtSpecial IssueltData Assimilation}} in {{Meteology}} and {{Oceanography}}: {{Theory}} and {{Practice}})},
   shorttitle = {An {{Introduction}} to {{Estimation Theory}} ({{gtSpecial IssueltData Assimilation}} in {{Meteology}} and {{Oceanography}}},
@@ -1829,6 +1897,21 @@
   number = {5}
 }
 
+@article{dubrule_cross_1983,
+  title = {Cross Validation of Kriging in a Unique Neighborhood},
+  author = {Dubrule, Olivier},
+  year = {1983},
+  month = dec,
+  volume = {15},
+  pages = {687--699},
+  issn = {1573-8868},
+  doi = {10.1007/BF01033232},
+  abstract = {Cross validation is an appropriate tool for testing interpolation methods: it consists of leaving out one data point at a time, and determining how well this point can be estimated from the other data. Cross validation is often used for testing ``moving neighborhood'' kriging models; in this case, each unknown value is predicted from a small number of surrounding data. In ``unique neighborhood'' kriging algorithms, each estimation uses all the available data; as a result, cross validation would spend much computer time. For instance, with ndata points it would cost at least the resolution of nsystems of n \texttimes{} nlinear equations (each with a different matrix).Here, we present a much faster method for cross validation in a unique neighborhood. Instead of solving nsystems n \texttimes{} n,it only requires the inversion of one n \texttimes{} nmatrix. We also generalized this method to leaving out several points instead of one.},
+  journal = {Journal of the International Association for Mathematical Geology},
+  language = {en},
+  number = {6}
+}
+
 @article{dunlop_map_2016,
   title = {{{MAP Estimators}} for {{Piecewise Continuous Inversion}}},
   author = {Dunlop, Matthew M. and Stuart, Andrew M.},
@@ -2159,6 +2242,22 @@
   file = {/home/victor/Zotero/storage/RQW32K5F/Frangos et al. - 2010 - Surrogate and reduced-order modeling a comparison.pdf;/home/victor/Zotero/storage/U8J84R4V/105500.html}
 }
 
+@article{frazier_knowledge-gradient_2008,
+  title = {A {{Knowledge}}-{{Gradient Policy}} for {{Sequential Information Collection}}},
+  author = {Frazier, Peter I. and Powell, Warren B. and Dayanik, Savas},
+  year = {2008},
+  month = jan,
+  volume = {47},
+  pages = {2410--2439},
+  issn = {0363-0129, 1095-7138},
+  doi = {10.1137/070693424},
+  abstract = {In a sequential Bayesian ranking and selection problem with independent normal populations and common known variance, we study a previously introduced measurement policy which we refer to as the knowledge-gradient policy. This policy myopically maximizes the expected increment in the value of information in each time period, where the value is measured according to the terminal utility function. We show that the knowledge-gradient policy is optimal both when the horizon is a single time period, and in the limit as the horizon extends to infinity. We show furthermore that, in some special cases, the knowledge-gradient policy is optimal regardless of the length of any given fixed total sampling horizon. We bound the knowledge-gradient policy's suboptimality in the remaining cases, and show through simulations that it performs competitively with or significantly better than other policies.},
+  file = {/home/victor/Zotero/storage/ZGFMIHD8/Frazier et al. - 2008 - A Knowledge-Gradient Policy for Sequential Informa.pdf},
+  journal = {SIAM Journal on Control and Optimization},
+  language = {en},
+  number = {5}
+}
+
 @article{freedman_histogram_1981,
   title = {On the Histogram as a Density Estimator:{{L2}} Theory},
   shorttitle = {On the Histogram as a Density Estimator},
@@ -2219,6 +2318,19 @@
   file = {/home/victor/Zotero/storage/6MSAE4SI/Frisch et Bec - 2000 - Burgulence.pdf},
   journal = {arXiv:nlin/0012033},
   keywords = {Astrophysics,Condensed Matter,Nonlinear Sciences - Chaotic Dynamics},
+  language = {en}
+}
+
+@article{fuhg_state---art_2020,
+  title = {State-of-the-{{Art}} and {{Comparative Review}} of {{Adaptive Sampling Methods}} for {{Kriging}}},
+  author = {Fuhg, Jan N. and Fau, Am{\'e}lie and Nackenhorst, Udo},
+  year = {2020},
+  month = aug,
+  issn = {1886-1784},
+  doi = {10.1007/s11831-020-09474-6},
+  abstract = {Metamodels aim to approximate characteristics of functions or systems from the knowledge extracted on only a finite number of samples. In recent years kriging has emerged as a widely applied metamodeling technique for resource-intensive computational experiments. However its prediction quality is highly dependent on the size and distribution of the given training points. Hence, in order to build proficient kriging models with as few samples as possible adaptive sampling strategies have gained considerable attention. These techniques aim to find pertinent points in an iterative manner based on information extracted from the current metamodel. A review of adaptive schemes for kriging proposed in the literature is presented in this article. The objective is to provide the reader with an overview of the main principles of adaptive techniques, and insightful details to pertinently employ available tools depending on the application at hand. In this context commonly applied strategies are compared with regards to their characteristics and approximation capabilities. In light of these experiments, it is found that the success of a scheme depends on the features of a specific problem and the goal of the analysis. In order to facilitate the entry into adaptive sampling a guide is provided. All experiments described herein are replicable using a provided open source toolbox.},
+  file = {/home/victor/Zotero/storage/BRKD4UA7/Fuhg et al. - 2020 - State-of-the-Art and Comparative Review of Adaptiv.pdf},
+  journal = {Archives of Computational Methods in Engineering},
   language = {en}
 }
 
@@ -2553,6 +2665,9 @@
   title = {On Differentiating Parameterized Argmin and Argmax Problems with Application to Bi-Level Optimization},
   author = {Gould, Stephen and Fernando, Basura and Cherian, Anoop and Anderson, Peter and Cruz, Rodrigo Santa and Guo, Edison},
   year = {2016},
+  archivePrefix = {arXiv},
+  eprint = {1607.05447},
+  eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/5TLGQHHW/argmin-TR-2016.pdf},
   journal = {arXiv preprint arXiv:1607.05447}
 }
@@ -2670,6 +2785,14 @@
   primaryClass = {cs}
 }
 
+@article{hamill_ensemble-based_nodate,
+  title = {Ensemble-{{Based Data Assimilation}}},
+  author = {Hamill, Thomas M},
+  pages = {30},
+  file = {/home/victor/Zotero/storage/MSXRLF22/Hamill - Ensemble-Based Data Assimilation.pdf},
+  language = {en}
+}
+
 @article{han_simultaneous_2009,
   title = {Simultaneous {{Determination}} of {{Tuning}} and {{Calibration Parameters}} for {{Computer Experiments}}},
   author = {Han, Gang and Santner, Thomas J. and Rawlinson, Jeremy J.},
@@ -2699,6 +2822,24 @@
   keywords = {Hamiltonian MCMC,MCMC},
   language = {English},
   number = {LA-UR-01-1016}
+}
+
+@article{harris_array_2020,
+  title = {Array Programming with {{NumPy}}},
+  author = {Harris, Charles R. and Millman, K. Jarrod and {van der Walt}, St{\'e}fan J. and Gommers, Ralf and Virtanen, Pauli and Cournapeau, David and Wieser, Eric and Taylor, Julian and Berg, Sebastian and Smith, Nathaniel J. and Kern, Robert and Picus, Matti and Hoyer, Stephan and {van Kerkwijk}, Marten H. and Brett, Matthew and Haldane, Allan and {del R{\'i}o}, Jaime Fern{\'a}ndez and Wiebe, Mark and Peterson, Pearu and {G{\'e}rard-Marchant}, Pierre and Sheppard, Kevin and Reddy, Tyler and Weckesser, Warren and Abbasi, Hameer and Gohlke, Christoph and Oliphant, Travis E.},
+  year = {2020},
+  month = sep,
+  volume = {585},
+  pages = {357--362},
+  publisher = {{Nature Publishing Group}},
+  issn = {1476-4687},
+  doi = {10.1038/s41586-020-2649-2},
+  abstract = {Array programming provides a powerful, compact and expressive syntax for accessing, manipulating and operating on data in vectors, matrices and higher-dimensional arrays. NumPy is the primary array programming library for the Python language. It has an essential role in research analysis pipelines in fields as diverse as physics, chemistry, astronomy, geoscience, biology, psychology, materials science, engineering, finance and economics. For example, in astronomy, NumPy was an important part of the software stack used in the discovery of gravitational waves1 and in the first imaging of a black hole2. Here we review how a few fundamental array concepts lead to a simple and powerful programming paradigm for organizing, exploring and analysing scientific data. NumPy is the foundation upon which the scientific Python ecosystem is constructed. It is so pervasive that several projects, targeting audiences with specialized needs, have developed their own NumPy-like interfaces and array objects. Owing to its central position in the ecosystem, NumPy increasingly acts as an interoperability layer between such array computation libraries and, together with its application programming interface (API), provides a flexible framework to support the next decade of scientific and industrial analysis.},
+  copyright = {2020 The Author(s)},
+  file = {/home/victor/Zotero/storage/TW7H46IB/Harris et al. - 2020 - Array programming with NumPy.pdf;/home/victor/Zotero/storage/HZRF6DPP/s41586-020-2649-2.html},
+  journal = {Nature},
+  language = {en},
+  number = {7825}
 }
 
 @misc{hartnett_what_nodate,
@@ -3118,6 +3259,21 @@
   number = {5}
 }
 
+@book{jolliffe_principal_2002,
+  title = {Principal {{Component Analysis}}},
+  author = {Jolliffe, I. T.},
+  year = {2002},
+  edition = {Second},
+  publisher = {{Springer-Verlag}},
+  address = {{New York}},
+  doi = {10.1007/b98835},
+  abstract = {Principal component analysis is central to the study of multivariate data. Although one of the earliest multivariate techniques, it continues to be the subject of much research, ranging from new model-based approaches to algorithmic ideas from neural networks. It is extremely versatile, with applications in many disciplines. The first edition of this book was the first comprehensive text written solely on principal component analysis. The second edition updates and substantially expands the original version, and is once again the definitive text on the subject. It includes core material, current research and a wide range of applications. Its length is nearly double that of the first edition. Researchers in statistics, or in other fields that use principal component analysis, will find that the book gives an authoritative yet accessible account of the subject. It is also a valuable resource for graduate courses in multivariate analysis. The book requires some knowledge of matrix algebra. Ian Jolliffe is Professor of Statistics at the University of Aberdeen. He is author or co-author of over 60 research papers and three other books. His research interests are broad, but aspects of principal component analysis have fascinated him and kept him busy for over 30 years.},
+  file = {/home/victor/Zotero/storage/WNMLCMD7/9780387954424.html},
+  isbn = {978-0-387-95442-4},
+  language = {en},
+  series = {Springer {{Series}} in {{Statistics}}}
+}
+
 @article{jones_efficient_1998,
   title = {Efficient Global Optimization of Expensive Black-Box Functions},
   author = {Jones, Donald R. and Schonlau, Matthias and Welch, William J.},
@@ -3419,6 +3575,38 @@
   primaryClass = {math}
 }
 
+@article{kreitmair_effect_2019,
+  title = {The Effect of Uncertain Bottom Friction on Estimates of Tidal Current Power},
+  author = {Kreitmair, M. J. and Draper, S. and Borthwick, A. G. L. and {van den Bremer}, T. S.},
+  year = {2019},
+  month = jan,
+  volume = {6},
+  issn = {2054-5703},
+  doi = {10.1098/rsos.180941},
+  abstract = {Uncertainty affects estimates of the power potential of tidal currents, resulting in large ranges in values reported for a given site, such as the Pentland Firth, UK. We examine the role of bottom friction, one of the most important sources of uncertainty. We do so by using perturbation methods to find the leading-order effect of bottom friction uncertainty in theoretical models by Garrett \& Cummins (2005 Proc. R. Soc. A 461, 2563\textendash 2572. (doi:10.1098/rspa.2005.1494); 2013 J. Fluid Mech. 714, 634\textendash 643. (doi:10.1017/jfm.2012.515)) and Vennell (2010 J. Fluid Mech. 671, 587\textendash 604. (doi:10.1017/S0022112010006191)), which consider quasi-steady flow in a channel completely spanned by tidal turbines, a similar channel but retaining the inertial term, and a circular turbine farm in laterally unconfined flow. We find that bottom friction uncertainty acts to increase estimates of expected power in a fully spanned channel, but generally has the reverse effect in laterally unconfined farms. The optimal number of turbines, accounting for bottom friction uncertainty, is lower for a fully spanned channel and higher in laterally unconfined farms. We estimate the typical magnitude of bottom friction uncertainty, which suggests that the effect on estimates of expected power lies in the range -5 to +30\%, but is probably small for deep channels such as the Pentland Firth (5\textendash 10\%). In such a channel, the uncertainty in power estimates due to bottom friction uncertainty remains considerable, and we estimate a relative standard deviation of 30\%, increasing to 50\% for small channels.},
+  file = {/home/victor/Zotero/storage/EHQQKSRK/Kreitmair et al. - 2019 - The effect of uncertain bottom friction on estimat.pdf},
+  journal = {Royal Society Open Science},
+  number = {1},
+  pmcid = {PMC6366226},
+  pmid = {30800352}
+}
+
+@article{kreitmair_effect_2020-1,
+  title = {The Effect of Bed Roughness Uncertainty on Tidal Stream Power Estimates for the {{Pentland Firth}}},
+  author = {Kreitmair, M. J. and Adcock, T. A. A. and Borthwick, A. G. L. and Draper, S. and {van den Bremer}, T. S.},
+  year = {2020},
+  month = jan,
+  volume = {7},
+  issn = {2054-5703},
+  doi = {10.1098/rsos.191127},
+  abstract = {Uncertainty affects estimates of the power potential of tidal currents, resulting in large ranges in values reported for sites such as the Pentland Firth, UK. Kreitmair et al. (2019, R. Soc. open sci. 6, 180941. (doi:10.1098/rsos.191127)) have examined the effect of uncertainty in bottom friction on tidal power estimates by considering idealized theoretical models. The present paper considers the role of bottom friction uncertainty in a realistic numerical model of the Pentland Firth spanned by different fence configurations. We find that uncertainty in removable power estimates resulting from bed roughness uncertainty depends on the case considered, with relative uncertainty between 2\% (for a fully spanned channel with small values of mean roughness and input uncertainty) and 44\% (for an asymmetrically confined channel with high values of bed roughness and input uncertainty). Relative uncertainty in power estimates is generally smaller than (input) relative uncertainty in bottom friction by a factor of between 0.2 and 0.7, except for low turbine deployments and very high mean values of friction. This paper makes a start at quantifying uncertainty in tidal stream power estimates, and motivates further work for proper characterization of the resource, accounting for uncertainty inherent in resource modelling.},
+  file = {/home/victor/Zotero/storage/RAY9NE9T/Kreitmair et al. - 2020 - The effect of bed roughness uncertainty on tidal s.pdf},
+  journal = {Royal Society Open Science},
+  number = {1},
+  pmcid = {PMC7029936},
+  pmid = {32218944}
+}
+
 @article{kreutz_likelihood_2012,
   title = {Likelihood Based Observability Analysis and Confidence Intervals for Predictions of Dynamic Models},
   author = {Kreutz, Clemens and Raue, Andreas and Timmer, Jens},
@@ -3635,6 +3823,17 @@
   keywords = {Error estimation,Gaussian Processes,Kriging,Polynomial Chaos Expansions,Sobol' indices}
 }
 
+@misc{le_riche_introduction_2014,
+  title = {Introduction to Kriging},
+  author = {Le Riche, Rodolphe},
+  year = {2014},
+  month = sep,
+  address = {{France}},
+  abstract = {This is a two hours class on conditional Gaussian processes, i.e., kriging.  We attempt to strike a compromise between a good theoretical foundation on Gaussian processes and practical issues (e.g., how to sample a Gaussian process). Note also that the case of Gaussian Processes with trends is discussed. Finally, we try to link kriging to Bayesian regression and Support Vector Machines. Illustrations are based on the R package DiceKriging.},
+  file = {/home/victor/Zotero/storage/F2Z35U8J/Le Riche - 2014 - Introduction to kriging.pdf},
+  type = {Doctoral}
+}
+
 @article{lecun_machine_nodate,
   title = {{{MACHINE LEARNING AND PATTERN RECOGNITION}}},
   author = {LeCun, Yann},
@@ -3666,6 +3865,15 @@
   file = {/home/victor/Zotero/storage/SC8QPVVA/DESIGNING COMP_EXP ROBUST CONTROL VARIABLES.pdf;C\:\\Users\\Victor\\Documents\\A14n213.pdf},
   journal = {Statistica Sinica},
   keywords = {Optim Robuste}
+}
+
+@article{lehman_designing_nodate,
+  title = {{{DESIGNING COMPUTER EXPERIMENTS TO DETERMINE ROBUST CONTROL VARIABLES}}},
+  author = {Lehman, Jeffrey S and Santner, Thomas J and Notz, William I},
+  pages = {21},
+  abstract = {This paper is concerned with the design of computer experiments when there are two types of inputs: control variables and environmental variables. Control variables, also called manufacturing variables, are determined by a product designer while environmental variables, called noise variables in the quality control literature, are uncontrolled in the field but take values that are characterized by a probability distribution. Our goal is to find a set of control variables at which the response is insensitive to the value of the environmental variables, a ``robust'' choice of control variables. Such a choice ensures that the mean response is as insensitive as possible to perturbations of the nominal environmental variable distribution. We present a sequential strategy to select the inputs at which to observe the response so as to determine a robust setting of the control variables. Our solution is Bayesian; the prior takes the response as a draw from a stationary Gaussian stochastic process. Given the previous information, the sequential algorithm computes for each untested site the ``improvement'' over the current guess of the optimal robust setting. The design selects the next site to maximize the expected improvement criterion.},
+  file = {/home/victor/Zotero/storage/KHQII6VL/Lehman et al. - DESIGNING COMPUTER EXPERIMENTS TO DETERMINE ROBUST.pdf},
+  language = {en}
 }
 
 @book{lehmann_theory_2006,
@@ -3935,6 +4143,18 @@
   publisher = {{Mit Press Cambridge, MA}}
 }
 
+@article{marchesiello_open_2001,
+  title = {Open Boundary Conditions for Long-Term Integration of Regional Oceanic Models},
+  author = {Marchesiello, Patrick and McWilliams, James C. and Shchepetkin, Alexander},
+  year = {2001},
+  volume = {3},
+  pages = {1--20},
+  publisher = {{Elsevier}},
+  file = {/home/victor/Téléchargements/marchesiello_omod2001.pdf;/home/victor/Zotero/storage/TVAL7K5I/S1463500300000135.html},
+  journal = {Ocean modelling},
+  number = {1-2}
+}
+
 @article{markowitz_portfolio_1952,
   title = {Portfolio Selection},
   author = {Markowitz, Harry},
@@ -4148,6 +4368,22 @@
   language = {en}
 }
 
+@article{moazeni_regularized_2013,
+  title = {Regularized Robust Optimization: The Optimal Portfolio Execution Case},
+  shorttitle = {Regularized Robust Optimization},
+  author = {Moazeni, Somayeh and Coleman, Thomas F. and Li, Yuying},
+  year = {2013},
+  month = jun,
+  volume = {55},
+  pages = {341--377},
+  issn = {0926-6003, 1573-2894},
+  doi = {10.1007/s10589-012-9526-3},
+  file = {/home/victor/Zotero/storage/MV56F6II/Moazeni et al. - 2013 - Regularized robust optimization the optimal portf.pdf},
+  journal = {Computational Optimization and Applications},
+  language = {en},
+  number = {2}
+}
+
 @incollection{mockus_bayesian_1974,
   title = {On Bayesian Methods for Seeking the Extremum},
   booktitle = {Optimization {{Techniques IFIP Technical Conference Novosibirsk}}, {{July}} 1\textendash 7, 1974},
@@ -4203,6 +4439,22 @@
   journal = {Communications in Applied Mathematics and Computational Science},
   language = {en},
   number = {2}
+}
+
+@article{moustapha_quantile-based_2016,
+  title = {Quantile-Based Optimization under Uncertainties Using Adaptive {{Kriging}} Surrogate Models},
+  author = {Moustapha, Maliki and Sudret, Bruno and Bourinet, Jean-Marc and Guillaume, Beno{\^i}t},
+  year = {2016},
+  month = dec,
+  volume = {54},
+  pages = {1403--1421},
+  issn = {1615-147X, 1615-1488},
+  doi = {10.1007/s00158-016-1504-4},
+  abstract = {Uncertainties are inherent to real-world systems. Taking them into account is crucial in industrial design problems and this might be achieved through reliability-based design optimization (RBDO) techniques. In this paper, we propose a quantile-based approach to solve RBDO problems. We first transform the safety constraints usually formulated as admissible probabilities of failure into constraints on quantiles of the performance criteria. In this formulation, the quantile level controls the degree of conservatism of the design. Starting with the premise that industrial applications often involve high-fidelity and time-consuming computational models, the proposed approach makes use of Kriging surrogate models (a.k.a. Gaussian process modeling). Thanks to the Kriging variance (a measure of the local accuracy of the surrogate), we derive a procedure with two stages of enrichment of the design of computer experiments (DoE) used to construct the surrogate model. The first stage globally reduces the Kriging epistemic uncertainty and adds points in the vicinity of the limit-state surfaces describing the system performance to be attained. The second stage locally checks, and if necessary, improves the accuracy of the quantiles estimated along the optimization iterations. Applications to three analytical examples and to the optimal design of a car body subsystem (minimal mass under mechanical safety constraints) show the accuracy and the remarkable efficiency brought by the proposed procedure.},
+  file = {/home/victor/Zotero/storage/A5F7IMTC/Moustapha et al. - 2016 - Quantile-based optimization under uncertainties us.pdf},
+  journal = {Structural and Multidisciplinary Optimization},
+  language = {en},
+  number = {6}
 }
 
 @incollection{muller_simulation_2005,
@@ -4340,6 +4592,23 @@
   language = {en}
 }
 
+@incollection{nicosia_fast_2013-1,
+  title = {Fast {{Computation}} of the {{Multi}}-{{Points Expected Improvement}} with {{Applications}} in {{Batch Selection}}},
+  booktitle = {Learning and {{Intelligent Optimization}}},
+  author = {Chevalier, Cl{\'e}ment and Ginsbourger, David},
+  editor = {Nicosia, Giuseppe and Pardalos, Panos},
+  year = {2013},
+  volume = {7997},
+  pages = {59--69},
+  publisher = {{Springer Berlin Heidelberg}},
+  address = {{Berlin, Heidelberg}},
+  doi = {10.1007/978-3-642-44973-4_7},
+  abstract = {The Multi-points Expected Improvement criterion (or q-EI) has recently been studied in batch-sequential Bayesian Optimization. This paper deals with a new way of computing q-EI, without using Monte-Carlo simulations, through a closed-form formula. The latter allows a very fast computation of q-EI for reasonably low values of q (typically, less than 10). New parallel kriging-based optimization strategies, tested on different toy examples, show promising results.},
+  file = {/home/victor/Zotero/storage/Z5DB9E6X/Chevalier et Ginsbourger - 2013 - Fast Computation of the Multi-Points Expected Impr.pdf},
+  isbn = {978-3-642-44972-7 978-3-642-44973-4},
+  language = {en}
+}
+
 @article{nielsen_cramer-rao_2013,
   title = {Cramer-{{Rao Lower Bound}} and {{Information Geometry}}},
   author = {Nielsen, Frank},
@@ -4354,6 +4623,23 @@
   keywords = {Computer Science - Information Theory},
   language = {en},
   primaryClass = {cs, math}
+}
+
+@article{ning_optimization_2019,
+  title = {Optimization under Uncertainty in the Era of Big Data and Deep Learning: {{When}} Machine Learning Meets Mathematical Programming},
+  shorttitle = {Optimization under Uncertainty in the Era of Big Data and Deep Learning},
+  author = {Ning, Chao and You, Fengqi},
+  year = {2019},
+  month = jun,
+  volume = {125},
+  pages = {434--448},
+  issn = {0098-1354},
+  doi = {10.1016/j.compchemeng.2019.03.034},
+  abstract = {This paper reviews recent advances in the field of optimization under uncertainty via a modern data lens, highlights key research challenges and promise of data-driven optimization that organically integrates machine learning and mathematical programming for decision-making under uncertainty, and identifies potential research opportunities. A brief review of classical mathematical programming techniques for hedging against uncertainty is first presented, along with their wide spectrum of applications in Process Systems Engineering. A comprehensive review and classification of the relevant publications on data-driven distributionally robust optimization, data-driven chance constrained program, data-driven robust optimization, and data-driven scenario-based optimization is then presented. This paper also identifies fertile avenues for future research that focuses on a closed-loop data-driven optimization framework, which allows the feedback from mathematical programming to machine learning, as well as scenario-based optimization leveraging the power of deep learning techniques. Perspectives on online learning-based data-driven multistage optimization with a learning-while-optimizing scheme are presented.},
+  file = {/home/victor/Zotero/storage/2276QMQP/Ning et You - 2019 - Optimization under uncertainty in the era of big d.pdf;/home/victor/Zotero/storage/PIMDR9DT/S0098135419300687.html},
+  journal = {Computers \& Chemical Engineering},
+  keywords = {Big data,Data-driven optimization,Decision making under uncertainty,Deep learning,Machine learning},
+  language = {en}
 }
 
 @misc{noauthor_[1209.2736]_nodate,
@@ -4455,6 +4741,18 @@
   file = {/home/victor/Zotero/storage/6SXFXTKC/index.html},
   journal = {Wikipedia},
   language = {en}
+}
+
+@article{noauthor_prevision_2020,
+  title = {{Pr\'evision d'ensembles}},
+  year = {2020},
+  month = apr,
+  abstract = {La pr\'evision d'ensembles est une m\'ethode de pr\'evision num\'erique du temps utilis\'e pour tenter de g\'en\'erer un \'echantillon repr\'esentatif des \'etats futurs possibles d'un syst\`eme dynamique. En effet, ni les observations, ni l'analyse, ni le mod\`ele de pr\'evision ne sont parfaits et la dynamique atmosph\'erique est tr\`es sensible, dans certaines conditions, \`a la moindre fluctuation.  C'est une forme de m\'ethode de Monte Carlo : plusieurs pr\'edictions num\'eriques sont r\'ealis\'ees \`a l'aide de conditions initiales l\'eg\`erement diff\'erentes mais plausibles \'etant donn\'e les limites de r\'esolution des observations et des \'equations. Dans chaque cas, l'analyse est d\'elib\'er\'ement rendue l\'eg\`erement diff\'erente des autres membres de l'ensemble, \`a l'int\'erieur des incertitudes intrins\`eques de mesure ou d'analyse. Les sc\'enarios plus ou moins divergents des pr\'evisions offertes par les membres de l'ensemble permettent de quantifier la pr\'evisibilit\'e de l'atmosph\`ere et d'offrir une marge d'erreur statistique sur la pr\'evision.},
+  annotation = {Page Version ID: 169948197},
+  copyright = {Creative Commons Attribution-ShareAlike License},
+  file = {/home/victor/Zotero/storage/BQYYUF4U/index.html},
+  journal = {Wikip\'edia},
+  language = {fr}
 }
 
 @misc{noauthor_probability_nodate,
@@ -4664,12 +4962,61 @@
   number = {6}
 }
 
+@article{pagnoncelli_sample_2009,
+  title = {Sample {{Average Approximation Method}} for {{Chance Constrained Programming}}: {{Theory}} and {{Applications}}},
+  shorttitle = {Sample {{Average Approximation Method}} for {{Chance Constrained Programming}}},
+  author = {Pagnoncelli, B. K. and Ahmed, S. and Shapiro, A.},
+  year = {2009},
+  month = aug,
+  volume = {142},
+  pages = {399--416},
+  issn = {0022-3239, 1573-2878},
+  doi = {10.1007/s10957-009-9523-6},
+  abstract = {We study sample approximations of chance constrained problems. In particular, we consider the sample average approximation (SAA) approach and discuss the convergence properties of the resulting problem. We discuss how one can use the SAA method to obtain good candidate solutions for chance constrained problems. Numerical experiments are performed to correctly tune the parameters involved in the SAA. In addition, we present a method for constructing statistical lower bounds for the optimal value of the considered problem and discuss how one should tune the underlying parameters. We apply the SAA to two chance constrained problems. The first is a linear portfolio selection problem with returns following a multivariate lognormal distribution. The second is a joint chance constrained version of a simple blending problem.},
+  file = {/home/victor/Zotero/storage/IZDYKJ38/Pagnoncelli et al. - 2009 - Sample Average Approximation Method for Chance Con.pdf},
+  journal = {Journal of Optimization Theory and Applications},
+  language = {en},
+  number = {2}
+}
+
+@article{palmer_representing_2005,
+  title = {{{REPRESENTING MODEL UNCERTAINTY IN WEATHER AND CLIMATE PREDICTION}}},
+  author = {Palmer, T.N. and Shutts, G.J. and Hagedorn, R. and {Doblas-Reyes}, F.J. and Jung, T. and Leutbecher, M.},
+  year = {2005},
+  month = may,
+  volume = {33},
+  pages = {163--193},
+  issn = {0084-6597, 1545-4495},
+  doi = {10.1146/annurev.earth.33.092203.122552},
+  file = {/home/victor/Zotero/storage/H5C7STD2/Palmer et al. - 2005 - REPRESENTING MODEL UNCERTAINTY IN WEATHER AND CLIM.pdf},
+  journal = {Annual Review of Earth and Planetary Sciences},
+  language = {en},
+  number = {1}
+}
+
 @techreport{paquet_bayesian_2008,
   title = {Bayesian Inference for Latent Variable Models},
   author = {Paquet, Ulrich},
   year = {2008},
   institution = {{University of Cambridge, Computer Laboratory}},
   file = {/home/victor/Zotero/storage/9S33KVNC/UCAM-CL-TR-724.pdf}
+}
+
+@incollection{pardalos_differentiating_2015,
+  title = {Differentiating the {{Multipoint Expected Improvement}} for {{Optimal Batch Design}}},
+  booktitle = {Machine {{Learning}}, {{Optimization}}, and {{Big Data}}},
+  author = {Marmin, S{\'e}bastien and Chevalier, Cl{\'e}ment and Ginsbourger, David},
+  editor = {Pardalos, Panos and Pavone, Mario and Farinella, Giovanni Maria and Cutello, Vincenzo},
+  year = {2015},
+  volume = {9432},
+  pages = {37--48},
+  publisher = {{Springer International Publishing}},
+  address = {{Cham}},
+  doi = {10.1007/978-3-319-27926-8_4},
+  abstract = {This work deals with parallel optimization of expensive objective functions which are modelled as sample realizations of Gaussian processes. The study is formalized as a Bayesian optimization problem, or continuous multi-armed bandit problem, where a batch of q {$>$} 0 arms is pulled in parallel at each iteration. Several algorithms have been developed for choosing batches by trading off exploitation and exploration. As of today, the maximum Expected Improvement (EI) and Upper Confidence Bound (UCB) selection rules appear as the most prominent approaches for batch selection. Here, we build upon recent work on the multipoint Expected Improvement criterion, for which an analytic expansion relying on Tallis' formula was recently established. The computational burden of this selection rule being still an issue in application, we derive a closed-form expression for the gradient of the multipoint Expected Improvement, which aims at facilitating its maximization using gradient-based ascent algorithms. Substantial computational savings are shown in application. In addition, our algorithms are tested numerically and compared to state-of-the-art UCB-based batch-sequential algorithms. Combining starting designs relying on UCB with gradient-based EI local optimization finally appears as a sound option for batch design in distributed Gaussian Process optimization.},
+  file = {/home/victor/Zotero/storage/UBYNM2DS/Marmin et al. - 2015 - Differentiating the Multipoint Expected Improvemen.pdf},
+  isbn = {978-3-319-27925-1 978-3-319-27926-8},
+  language = {en}
 }
 
 @incollection{pardo-iguzquiza_corrected_2014,
@@ -5003,6 +5350,21 @@
   file = {/home/victor/Zotero/storage/2FJ9UWPY/2011TOU30283.pdf;/home/victor/Zotero/storage/H6T3HW7X/2011TOU30283.html}
 }
 
+@article{rakes_selecting_1985,
+  title = {Selecting Tolerances in Chance-Constrained Programming: {{A}} Multiple Objective Linear Programming Approach},
+  shorttitle = {Selecting Tolerances in Chance-Constrained Programming},
+  author = {Rakes, Terry R and Reeves, Gary R},
+  year = {1985},
+  month = jun,
+  volume = {4},
+  pages = {65--69},
+  issn = {01676377},
+  doi = {10.1016/0167-6377(85)90034-3},
+  journal = {Operations Research Letters},
+  language = {en},
+  number = {2}
+}
+
 @article{ranjan_sequential_2008-1,
   title = {Sequential {{Experiment Design}} for {{Contour Estimation From Complex Computer Codes}}},
   author = {Ranjan, Pritam and Bingham, Derek and Michailidis, George},
@@ -5159,6 +5521,24 @@
   abstract = {In the context of robust shape optimization, the estimation cost of some physical models is reduced 10 by the use of a response surface. The multi objective methodology for robust optimization that requires the partitioning of the Pareto front (minimization of the function and the robustness criterion) has already been developed. However, the efficient estimation of the robustness criterion in the context of time-consuming simulation has not been much explored. We propose a robust optimization procedure based on the prediction of the function and its derivatives by a kriging. The 15 usual moment 2 is replaced by an approximated version using Taylor theorem. A Pareto front of the robust solutions is generated by a genetic algorithm named NSGA-II. This algorithm gives a Pareto front in an reasonable time of calculation. We detail seven relevant strategies and compare them for the same budget in two test functions (2D and 6D). In each case, we compare the results when the derivatives are observed and not.},
   file = {/home/victor/Zotero/storage/22TIVRVK/Ribaud et al. - 2019 - Robustness kriging-based optimization.pdf},
   keywords = {Expected Improvement 25,Gaussian process modelling,Gaussian process regression,Multi-objective optimization,Robust Optimization,robustness criterion,Tay-lor expansion}
+}
+
+@article{riddle_uncertainties_1996,
+  title = {Uncertainties in Modelling of Tidal Flows off {{Singapore Island}}},
+  author = {Riddle, A. M.},
+  year = {1996},
+  month = sep,
+  volume = {8},
+  pages = {133--145},
+  issn = {0924-7963},
+  doi = {10.1016/0924-7963(96)00003-6},
+  abstract = {A hydrodynamic model has been constructed for predicting the tidal currents off the south west coast of Singapore Island and has been verified against survey data from the area. A study examining the sensitivity of the model to changes in the input parameters has been undertaken and a statistical experimental design technique has been employed to determine the minimum number of computer runs required to quantify the sensitivity of the model. The uncertainty in predicting the time of the turn of tide is estimated from the statistical results as is the uncertainty in the predicted movement of drogues in both simple and complex tidal flows. The method is extended to estimate the uncertainties in the spread and concentration of a dye patch using a particle tracking random walk model and allowing for the uncertainties in the wind and in horizontal and vertical mixing rates as determined from a series of experimental studies of dye patch spread.},
+  file = {/home/victor/Zotero/storage/5CGR98WT/0924796396000036.html},
+  journal = {Journal of Marine Systems},
+  keywords = {Hydrodynamic,Mathematical model,Parameter variation,Random walk,Singapore,Tidal flow,Uncertainty},
+  language = {en},
+  number = {3},
+  series = {Joint {{Numerical Sea Modelling}}}
 }
 
 @book{rios_insua_robust_2000,
@@ -5484,6 +5864,21 @@
   language = {en}
 }
 
+@article{schobi_rare_2017,
+  title = {Rare {{Event Estimation Using Polynomial}}-{{Chaos Kriging}}},
+  author = {Sch{\"o}bi, R. and Sudret, B. and Marelli, S.},
+  year = {2017},
+  month = jun,
+  volume = {3},
+  issn = {2376-7642, 2376-7642},
+  doi = {10.1061/AJRUA6.0000870},
+  abstract = {Structural reliability analysis aims at computing the probability of failure of systems whose performance may be assessed by using complex computational models (e.g. expensive-to-run finite element models). A direct use of Monte Carlo simulation is not feasible in practice, unless a surrogate model (such as Kriging, a.k.a Gaussian process modeling) is used. Such meta-models are often used in conjunction with adaptive experimental designs (i.e. design enrichment strategies), which allows one to iteratively increase the accuracy of the surrogate for the estimation of the failure probability while keeping low the overall number of runs of the costly original model.},
+  file = {/home/victor/Zotero/storage/KTQEW6DJ/Schöbi et al. - 2017 - Rare Event Estimation Using Polynomial-Chaos Krigi.pdf},
+  journal = {ASCE-ASME Journal of Risk and Uncertainty in Engineering Systems, Part A: Civil Engineering},
+  language = {en},
+  number = {2}
+}
+
 @article{schwarz_estimating_1978,
   title = {Estimating the {{Dimension}} of a {{Model}}},
   author = {Schwarz, Gideon},
@@ -5751,6 +6146,21 @@
   number = {5}
 }
 
+@article{steen_gaussian_1969,
+  title = {Gaussian Quadratures for the Integrals {$_{0}\sphat\lbrace\infty\rbrace\mathsl{e}\mathsl{x}\mathsl{p}$}(-{$\mathsl{x}^2$}){$\mathsl{f}$}({$\mathsl{x}$}){$\mathsl{d}\mathsl{x}$} and {$_{0}\sphat\lbrace\mathsl{b}\rbrace\mathsl{e}\mathsl{x}\mathsl{p}$}(-{$\mathsl{x}^2$}){$\mathsl{f}$}({$\mathsl{x}$}){$\mathsl{d}\mathsl{x}$}},
+  author = {Steen, N. M. and Byrne, G. D. and Gelbard, E. M.},
+  year = {1969},
+  volume = {23},
+  pages = {661--671},
+  issn = {0025-5718, 1088-6842},
+  doi = {10.1090/S0025-5718-1969-0247744-3},
+  abstract = {Gaussian quadratures are developed for the evaluation of the integrals given in the title. The weights and abscissae for the semi-infinite integral are given for two through fifteen points with fifteen places. For , the weights and abscissae are given for two through ten points with fifteen places.},
+  file = {/home/victor/Zotero/storage/8SA9JFKV/Steen et al. - 1969 - Gaussian quadratures for the integrals ₀^ ∞ .pdf;/home/victor/Zotero/storage/ZYBLTSPL/home.html},
+  journal = {Mathematics of Computation},
+  language = {en},
+  number = {107}
+}
+
 @article{stefanski_calculus_2002,
   title = {The Calculus of {{M}}-Estimation},
   author = {Stefanski, Leonard A. and Boos, Dennis D.},
@@ -5854,6 +6264,14 @@
   language = {en}
 }
 
+@article{sullivan_introduction_nodate,
+  title = {Introduction to {{Uncertainty Quantification}}},
+  author = {Sullivan, T J},
+  pages = {74},
+  file = {/home/victor/Zotero/storage/DAT6V64I/Sullivan - Introduction to Uncertainty Quantiﬁcation.pdf},
+  language = {en}
+}
+
 @article{sunar_comparative_nodate,
   title = {A {{Comparative Study}} of {{Multiobjective Optimization Methods}} in {{Structural Design}}},
   author = {Sunar, Mehmet and Kahraman, Ramazan},
@@ -5906,6 +6324,22 @@
   isbn = {978-0-89871-572-9},
   keywords = {stochastic inverse problem},
   language = {eng}
+}
+
+@article{ten_brummelhuis_parameter_1990,
+  title = {Parameter Identification in Tidal Models with Uncertain Boundary Conditions},
+  author = {{ten Brummelhuis}, P. G. J. and Heemink, A. W.},
+  year = {1990},
+  month = sep,
+  volume = {4},
+  pages = {193--208},
+  issn = {1435-151X},
+  doi = {10.1007/BF01543083},
+  abstract = {In this paper a parameter estimation algorithm is developed to estimate uncertain parameters in two dimensional shallow water flow models. Since in practice the open boundary conditions of these models are usually not known accurately, the uncertainty of these boundary conditions has to be taken into account to prevent that boundary errors are interpreted by the estimation procedure as parameter fluctuations. Therefore the open boundary conditions are embedded into a stochastic environment and a constant gain extended Kalman filter is employed to identify the state of the system. Defining a error functional that measures the differences between the filtered state of the system and the measurements, a quasi Newton method is employed to determine the minimum of this functional. To reduce the computational burden, the gradient of the criterium that is required using the quasi Newton method is determined by solving the adjoint system.},
+  file = {/home/victor/Zotero/storage/UCC7PVFY/ten Brummelhuis et Heemink - 1990 - Parameter identification in tidal models with unce.pdf},
+  journal = {Stochastic Hydrology and Hydraulics},
+  language = {en},
+  number = {3}
 }
 
 @techreport{terlizzese_relative_2008,
@@ -6063,6 +6497,9 @@
   shorttitle = {From {{Data}} to {{Decisions}}},
   author = {Van Parys, Bart PG and Esfahani, Peyman Mohajerin and Kuhn, Daniel},
   year = {2017},
+  archivePrefix = {arXiv},
+  eprint = {1704.04118},
+  eprinttype = {arxiv},
   file = {/home/victor/Zotero/storage/KMNWRXK6/5961.pdf},
   journal = {arXiv preprint arXiv:1704.04118}
 }
@@ -6414,6 +6851,24 @@
   file = {/home/victor/Zotero/storage/DK4WPX56/dataviz.html}
 }
 
+@article{wilks_large-sample_1938,
+  title = {The {{Large}}-{{Sample Distribution}} of the {{Likelihood Ratio}} for {{Testing Composite Hypotheses}}},
+  author = {Wilks, S. S.},
+  year = {1938},
+  month = mar,
+  volume = {9},
+  pages = {60--62},
+  publisher = {{Institute of Mathematical Statistics}},
+  issn = {0003-4851, 2168-8990},
+  doi = {10.1214/aoms/1177732360},
+  abstract = {Project Euclid - mathematics and statistics online},
+  file = {/home/victor/Zotero/storage/X9BFZ7VP/Wilks - 1938 - The Large-Sample Distribution of the Likelihood Ra.pdf;/home/victor/Zotero/storage/IASAJ8YW/1177732360.html},
+  journal = {Annals of Mathematical Statistics},
+  language = {EN},
+  number = {1},
+  zmnumber = {0018.32003}
+}
+
 @article{williams_sequential_2000,
   title = {Sequential Design of Computer Experiments to Minimize Integrated Response Functions},
   author = {Williams, Brian J. and Santner, Thomas J. and Notz, William I.},
@@ -6487,6 +6942,23 @@
   primaryClass = {stat}
 }
 
+@article{wong_neglecting_2018,
+  title = {Neglecting Model Structural Uncertainty Underestimates Upper Tails of Flood Hazard},
+  author = {Wong, Tony E. and Klufas, Alexandra and Srikrishnan, Vivek and Keller, Klaus},
+  year = {2018},
+  month = jul,
+  volume = {13},
+  pages = {074019},
+  publisher = {{IOP Publishing}},
+  issn = {1748-9326},
+  doi = {10.1088/1748-9326/aacb3d},
+  abstract = {Coastal flooding drives considerable risks to many communities, but projections of future flood risks are deeply uncertain. The paucity of observations of extreme events often motivates the use of statistical approaches to model the distribution of extreme storm surge events. One key deep uncertainty that is often overlooked is model structural uncertainty. There is currently no strong consensus among experts regarding which class of statistical model to use as a `best practice'. Robust management of coastal flooding risks requires coastal managers to consider the distinct possibility of non-stationarity in storm surges. This increases the complexity of the potential models to use, which tends to increase the data required to constrain the model. Here, we use a Bayesian model averaging approach to analyze the balance between (i) model complexity sufficient to capture decision-relevant risks and (ii) data availability to constrain complex model structures. We characterize deep model structural uncertainty through a set of calibration experiments. Specifically, we calibrate a set of models ranging in complexity using long-term tide gauge observations from the Netherlands and the United States. We find that in both considered cases, roughly half of the model weight is associated with the non-stationary models. Our approach provides a formal framework to integrate information across model structures, in light of the potentially sizable modeling uncertainties. By combining information from multiple models, our inference sharpens for the projected storm surge 100 year return levels, and estimated return levels increase by several centimeters. We assess the impacts of data availability through a set of experiments with temporal subsets and model comparison metrics. Our analysis suggests that about 70 years of data are required to stabilize estimates of the 100 year return level, for the locations and methods considered here.},
+  file = {/home/victor/Zotero/storage/UMZS493E/Wong et al. - 2018 - Neglecting model structural uncertainty underestim.pdf},
+  journal = {Environmental Research Letters},
+  language = {en},
+  number = {7}
+}
+
 @article{wu_bayesian_nodate,
   title = {Bayesian {{Optimization}} with {{Gradients}}},
   author = {Wu, Jian and Poloczek, Matthias and Wilson, Andrew G and Frazier, Peter},
@@ -6494,6 +6966,22 @@
   abstract = {Bayesian optimization has been successful at global optimization of expensiveto-evaluate multimodal objective functions. However, unlike most optimization methods, Bayesian optimization typically does not use derivative information. In this paper we show how Bayesian optimization can exploit derivative information to find good solutions with fewer objective function evaluations. In particular, we develop a novel Bayesian optimization algorithm, the derivative-enabled knowledgegradient (d-KG), which is one-step Bayes-optimal, asymptotically consistent, and provides greater one-step value of information than in the derivative-free setting. d-KG accommodates noisy and incomplete derivative information, comes in both sequential and batch forms, and can optionally reduce the computational cost of inference through automatically selected retention of a single directional derivative. We also compute the d-KG acquisition function and its gradient using a novel fast discretization-free technique. We show d-KG provides state-of-the-art performance compared to a wide range of optimization procedures with and without gradients, on benchmarks including logistic regression, deep learning, kernel learning, and k-nearest neighbors.},
   file = {/home/victor/Zotero/storage/IW7GFGC8/Wu et al. - Bayesian Optimization with Gradients.pdf},
   language = {en}
+}
+
+@article{wu_estimating_2005,
+  title = {Estimating the {{Uncertainty}} in a {{Regional Climate Model Related}} to {{Initial}} and {{Lateral Boundary Conditions}}},
+  author = {Wu, Wanli and Lynch, Amanda H. and Rivers, Aaron},
+  year = {2005},
+  month = apr,
+  volume = {18},
+  pages = {917--933},
+  publisher = {{American Meteorological Society}},
+  issn = {0894-8755},
+  doi = {10.1175/JCLI-3293.1},
+  file = {/home/victor/Zotero/storage/H49MW7ND/Wu et al. - 2005 - Estimating the Uncertainty in a Regional Climate M.pdf;/home/victor/Zotero/storage/7V5Z8SAD/Estimating-the-Uncertainty-in-a-Regional-Climate.html},
+  journal = {Journal of Climate},
+  language = {en},
+  number = {7}
 }
 
 @article{wu_inverse_2018,
@@ -6588,6 +7076,22 @@
   month = jul,
   abstract = {We propose a dimension reduction technique for Bayesian inverse problems with nonlinear forward operators, non-Gaussian priors, and non-Gaussian observation noise. The likelihood function is approximated by a ridge function, i.e., a map which depends non-trivially only on a few linear combinations of the parameters. We build this ridge approximation by minimizing an upper bound on the Kullback-Leibler divergence between the posterior distribution and its approximation. This bound, obtained via logarithmic Sobolev inequalities, allows one to certify the error of the posterior approximation. Computing the bound requires computing the second moment matrix of the gradient of the log-likelihood function. In practice, a sample-based approximation of the upper bound is then required. We provide an analysis that enables control of the posterior approximation error due to this sampling. Numerical and theoretical comparisons with existing methods illustrate the benefits of the proposed methodology.},
   file = {/home/victor/Zotero/storage/PLPEVGG7/Zahm et al. - 2018 - Certified dimension reduction in nonlinear Bayesia.pdf}
+}
+
+@article{zahm_gradient-based_2019,
+  title = {Gradient-Based Dimension Reduction of Multivariate Vector-Valued Functions},
+  author = {Zahm, Olivier and Constantine, Paul and Prieur, Cl{\'e}mentine and Marzouk, Youssef},
+  year = {2019},
+  month = nov,
+  abstract = {Multivariate functions encountered in high-dimensional uncertainty quantification problems often vary along a few dominant directions in the input parameter space. We propose a gradient-based method for detecting these directions and using them to construct ridge approximations of such functions, in a setting where the functions are vector-valued (e.g., taking values in Rn). The methodology consists of minimizing an upper bound on the approximation error, obtained by subspace Poincar\textasciiacute e inequalities. We provide a thorough mathematical analysis in the case where the parameter space is equipped with a Gaussian probability measure. The resulting method generalizes the notion of active subspaces associated with scalar-valued functions. A numerical illustration shows that using gradients of the function yields effective dimension reduction. We also show how the choice of norm on the codomain of the function has an impact on the function's low-dimensional approximation.},
+  archivePrefix = {arXiv},
+  eprint = {1801.07922},
+  eprinttype = {arxiv},
+  file = {/home/victor/Zotero/storage/K8A4Y9Z7/Zahm et al. - 2019 - Gradient-based dimension reduction of multivariate.pdf},
+  journal = {arXiv:1801.07922 [math]},
+  keywords = {41A30; 41A63; 65D15,Mathematics - Analysis of PDEs},
+  language = {en},
+  primaryClass = {math}
 }
 
 @phdthesis{zahm_model_2015,

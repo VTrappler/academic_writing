@@ -105,15 +105,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 				PACKAGE LIENS REFERENCES		%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{breakurl}
 \usepackage{hyperref}
-\hypersetup{colorlinks, breaklinks,
+\hypersetup{colorlinks,%, breaklinks,
 	urlcolor  = cfgUrlColor,
 	linkcolor = cfgLinkColor,
 	citecolor = cfgCiteColor,
 	pdftitle    = {\ThesisTitle},
 	pdfauthor   = {\ThesisAuthor},
 	pdfsubject  = {\ThesisSubject},
-	%pdfkeywords = {keyword1, key2, key3},
+	% pdfkeywords = {keyword1, key2, key3},
 }
 \urlstyle{same}
 \usepackage[capitalize, nameinlink]{cleveref}
@@ -395,6 +396,15 @@
   \cleardoublepage
   }
 \makeatletter
+
+
+
+% \newcommand{\newchapter}[1]{%
+%     \chapter{#1}
+%       \addtocontents{lof}{\contentsline{chapter}{%
+%     Chapter \thechapter \vspace{10pt}}{}
+% }
+% }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 			ENVIRONNEMENTS DES THEOREMES		%%

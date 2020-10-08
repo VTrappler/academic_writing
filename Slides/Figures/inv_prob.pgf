@@ -14,18 +14,16 @@
 
 \begin{tikzpicture}
 
-%\node [align = center] at (0,0) (input) {Control variable \\$\mathbf{k} \in \mathbb{K}$};
-\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathbb{K}$};
+%\node [align = center] at (0,0) (input) {Control variable \\$\mathbf{k} \in \Kspace$};
+\node [align = center] at (0,0) (input) {Control variable \\$\theta \in \Kspace$};
 \node[block] at (4,0) (code){Direct Simulation};
-%\node [align = center, above =of  code ] (envir) {Environmental variables \\$\mathbf{u} \in \mathbb{U}$ fixed};
-\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\bm{u} \in \mathbb{U}$ fixed};
+%\node [align = center, above =of  code ] (envir) {Environmental variables \\$\mathbf{u} \in \Uspace$ fixed};
+\node [align = center] at (4,1.5) (envir) {Environmental variables \\$\uu \in \Uspace$ fixed};
 
 
 
 
-%\node[align = center, right =of  code] (output) {$M(\mathbf{k})$};
-\node[align = center] at (8,0) (output) {$\mathcal{M}(\bm{k},\bm{u})$};
-%\node [align = center, right =of  inv, below = of output]  (obs) {$\mathbf{y}$};
+\node[align = center] at (8,0) (output) {$\mathcal{M}(\theta,\uu)$};
 \node [align = center] at (8,-1) (obs) {$\yobs$};
 \node[block] at (4,-1) (inv) {Inverse Problem};
 

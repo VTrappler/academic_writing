@@ -51,7 +51,7 @@ The uncertain variable $\uu$ on the other hand is uncertain in the aleatoric sen
       \input{/home/victor/acadwriting/Manuscrit/Text/Chapter3/img/modelling_uncertainties}
     }
     \end{center}
-  \caption{\label{fig:sources_uncertainties} Sources of uncertainties and errors in the modelling. The natural variability of the physical system can be seen as aleatoric uncertainties, and the errors on the parameters as epistemic uncertainties}
+  \caption[Sources of uncertainties and errors in the modelling]{\label{fig:sources_uncertainties} Sources of uncertainties and errors in the modelling. The natural variability of the physical system can be seen as aleatoric uncertainties, and the errors on the parameters as epistemic uncertainties}
 \end{figure}
 
 \subsection{Robustness and/or reliability}
@@ -92,7 +92,7 @@ Other definitions of robustness can be encountered in the literature, and will n
 
 \subsection{Robustness under parameteric misspecification}
 
-Given a family of models $\left\{\left(\mathcal{M}(\cdot, \uu), \Theta\right), \uu\in\Uspace\right\}$ and some observations $y\in \Yspace$ sampled from a random variable $Y$, we can derive a problem of parameter estimation for each $\uu \in \Uspace$. As detailed in~\cref{chap:inverse_problem}, we can formulate the likelihood $\mathcal{L}$ and the posterior distribution, and then compute the MLE and the MAP.
+Given a family of models $\left\{\left(\mathcal{M}(\cdot, \uu), \Theta\right), \uu\in\Uspace\right\}$ and some observations $y\in \Yspace$ sampled from a random variable $Y$, we can derive a problem of parameter estimation for each $\uu \in \Uspace$. As detailed in~\cref{chap:inverse_problem}, we can formulate the likelihood $\mathcal{L}$ and the posterior distribution, and then compute the MLE and the MAP.\@
 
 % More generally, we can assume the existence of an objective function $J$ that takes two distinct inputs where $\kk\in \Kspace$ is the calibration parameter, and $\uu \in \Uspace$ is the uncertain parameter.
 % \begin{equation}
@@ -201,8 +201,9 @@ Assuming that we are able to get i.i.d.\ samples $\{(\kk_i, \uu_i)\}_{1\leq i \l
 \begin{figure}[ht]
   \centering
   \input{\imgpath profile_integrated_lik.pgf}
-  \caption{\label{fig:profile_integrated_lik} Joint likelihood and posterior (left). Profile and integrated likelihood for an uniform nuisance parameter and marginal posterior distribution (right)}
+  \caption[Joint likelihood and posterior distribution]{\label{fig:profile_integrated_lik} Joint likelihood and posterior (left). Profile and integrated likelihood for an uniform nuisance parameter and marginal posterior distribution (right)}
 \end{figure}
+Those three estimators appear quite naturally in the probabilistic formulations. The main difference between the MMAP and the integrated likelihood is the presence of the prior distribution of $\kk$ in the formulation, thus similarly as in the inference problem of the previous chapter (without nuisance parameter), we can incorporate information on the calibration parameter. Regarding the profile likelihood however, this estimation relies on the optimisation with respect to $\uu$, and thus does not really take into account its random nature.
 
 \clearpage
 \section{Variational approach}
@@ -228,7 +229,7 @@ We are going to make several assumptions on this function:
 \end{itemize}
 
 As the function represents a cost, \emph{i.e.} an undesirable property, we are interested in minimising in some sense this random variable, which depends on $\kk$.
-Most of existing methods to approach such a problem require first to remove the dependency on the uncertain variable, by defining a \emph{robust} (and deterministic) counterpart of the minimization problem under uncertainty, that we can solve using classical methods of optimization.
+Most of existing methods to approach such a problem require first to remove the dependency on the uncertain variable, by defining a \emph{robust} counterpart of the minimization problem, which implies to remove the dependence on the uncertain variable $\UU$, that we can solve using classical methods of optimization.
 
 \subsection{Decision under deterministic uncertainty set}
 We will first detail some estimators that can be argued robust, even though the random nature of $\UU$ is not directly taken into account.
@@ -288,7 +289,7 @@ We can see how the worst-case minimization (in blue) and Savage's maximin regret
 \begin{figure}[ht]
   \centering
   \input{\imgpath decision_under_uncertainty.pgf}
-  \caption{\label{fig:decision_under_uncertainty} Illustration of global optimization, worst-case, and regret worst-case. The red points on the contour of the cost function correspond to the minimizers of $J$ at each $\uu$ fixed}
+  \caption[Robust optimisation under uncertainty set]{\label{fig:decision_under_uncertainty} Illustration of global optimization, worst-case, and regret worst-case. The red points on the contour of the cost function correspond to the minimizers of $J$ at each $\uu$ fixed}
 \end{figure}
 
 So far, we did not use the fact that $\uu$ was a realisation of a random variable, and did not take advantage of the knowledge we have upon it. In the next sections, we will see how to incorporate the knowledge of the distribution of $\UU$ in the estimations.
@@ -317,7 +318,7 @@ The conditional mean is minimized, giving $\estimtxt{\kk}{mean}$. Assuming that 
                                                             &= \argmin_{\kk\in\Kspace} - \int_\Uspace\log\left(p_{Y \mid \KK,\UU}(y \mid \kk,\uu)\right)p_{\UU}(\uu)\,\mathrm{d}\uu 
 \end{align}
 
-Taking the average of a objective function is the basis of \emph{stochastic programming}.
+Taking the average of an objective function is the basis of \emph{stochastic programming}.
 However, the integral \cref{eq:mean_objective} is intractable analytically, so instead of computing it exactly, one usually resorts to minimizing the empirical mean risk. For $1\leq i \leq n_U$, let $\uu_i$ be i.i.d.\ samples from $\UU$. We can then use those samples to approximate $\mu$: the empirical mean is
 \begin{equation}
   \label{eq:emp_mean_objective}
@@ -335,7 +336,7 @@ Despite some similarities with the integrated likelihood introduced \cref{eq:def
 \begin{figure}[ht]
   \centering
   \input{\imgpath integrated_lik_average_costfunction.pgf}
-  \caption{\label{fig:difference_arithmetic_geometric_mean} Difference between the negative logarithm of the integrated likelihood defined~\cref{eq:def_int_lik}, and the mean loss of $J = -\log \mathcal{L}$ defined~\cref{eq:mean_objective} and the subsequent difference in estimators}
+  \caption[Difference between integrated likelihood and mean loss]{\label{fig:difference_arithmetic_geometric_mean} Difference between the negative logarithm of the integrated likelihood defined~\cref{eq:def_int_lik}, and the mean loss of $J = -\log \mathcal{L}$ defined~\cref{eq:mean_objective} and the subsequent difference in estimators}
 \end{figure}
 
 
@@ -357,7 +358,7 @@ Accounting for the variance in the objective function is discussed in~\cref{sec:
 
 \paragraph{Variance optimization}
 In \cref{sec:exp_loss_minimization}, we used the mean as a measure of the central tendency that we want to minimize. Jointly with the central tendency, information about the dispersion of the random variable may also be relevant, in order to predict how much deviation should be expected around the mean.
-Let us define the variance of the cost function:
+Let us define the variance of the objective function:
 \begin{equation}
   \sigma^2(\kk) = \Var\left[J(\kk,\UU)\right]
 \end{equation}
@@ -370,17 +371,17 @@ As the exact variance computation require the evaluation of an expensive integra
   \min_{\kk\in \Kspace} \frac{1}{n_{\UU}-1} \sum_{i=1}^{n_{\UU}} \left(J(\kk, \uu_i) - \mu^{\mathrm{emp}}(\kk)\right)^2
 \end{equation}
 
-\Cref{fig:mean_std} shows the conditional mean and conditional standard deviation for the cost function $J$ defined~\cref{eq:decision_under_unc}.
+\Cref{fig:mean_std} shows the conditional mean and conditional standard deviation for the objective function $J$ defined~\cref{eq:decision_under_unc}.
 \begin{figure}[ht]
   \centering
   \input{\imgpath mean_std_wc.pgf}
-  \caption{Illustration of conditional mean and conditional standard deviation, as a function of $\kk$. Those quantities have been rescaled to share the same range on the right plot.}
+  \caption[Conditional mean and standard deviation]{Illustration of conditional mean and conditional standard deviation, as a function of $\kk$. Those quantities have been rescaled to share the same range on the right plot.}
   \label{fig:mean_std} 
 \end{figure}
 
 \paragraph{Multiobjective optimization}
 \label{sec:multiobjective_optimization}
-Minimizing the variance is often irrelevant without additional constraints, as it could just point toward really high values of the cost function, but steady with respect to $\kk$. Taking both objectives: low mean value and low variance together to the following multiobjective optimization problem:
+Minimizing the variance is often irrelevant without additional constraints, as it could just point toward really high values of the objective function, but steady with respect to $\kk$. Taking both objectives: low mean value and low variance together to the following multiobjective optimization problem:
 \begin{align}
   \label{eq:multiobj_e_var}
   \min_{\kk\in\Kspace} \left(\mu(\kk),\sigma(\kk)\right)
@@ -395,7 +396,7 @@ On~\cref{fig:pareto} is illustrated the Pareto frontier for a multiobjective pro
 \begin{figure}[ht]
   \centering
   \input{\imgpath pareto_frontier.pgf}
-  \caption{\label{fig:pareto} 
+  \caption[Pareto frontier]{\label{fig:pareto} 
  Illustration of the Pareto frontier for the multiobjective problem of~\cref{eq:multiobj_e_var}. The shaded regions corresponds to the domain dominated by each points}
 \end{figure}
 
@@ -414,7 +415,7 @@ The skewness coefficient measures the asymmetry in the distribution, and is the 
 \end{equation}
 where $\mu = \Ex[X]$ and $\sigma = \sqrt{\Var[X]}$.
 
-Adding the skewness in the optimization translates to a preference toward a risk-averse or a risk-seeking approach. Indeed, as the main goal is the optimization of a cost function, deviations of the value of the random variable toward lower values is more desirable than deviations toward larger values.
+Adding the skewness in the optimization translates to a preference toward a risk-averse or a risk-seeking approach. Indeed, as the main goal is the optimization of an objective function, deviations of the value of the random variable toward lower values is more desirable than deviations toward larger values.
 
 This is illustrated \cref{fig:skewness_example}: all three of the random variables displayed have the same mean and variance.
 If the skewness coefficient is negative, the distribution presents a heavier left tail than right. In other words, a sample taken from this distribution has a higher probability of being a ``good surprise''. On the other hand, if a big deviation occurs for a sample from a right-skewed distribution, it is more probable to be a large deviation toward large values of the sample space, hence the term ``bad surprise''.
@@ -422,7 +423,7 @@ If the skewness coefficient is negative, the distribution presents a heavier lef
 \begin{figure}[ht]
   \centering
   \input{\imgpath skewness_examples.pgf}
-  \caption{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
+  \caption[Influence of the skewness]{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
 
 In order to have a finer tuning on the ``risk-averse'' or ``risk-seeking'' properties of the wanted solution, some authors propose to directly minimize with respect to $\kk$ the difference between the cdf of the r.v. $J(\kk, \UU)$ and a target cdf, giving \emph{Horsetail matching}~\cite{cook_extending_2017,cook_effective_2018}.
@@ -436,7 +437,7 @@ All the methods introduced above required first to eliminate in some sense the d
 For a given $\kk\in\Kspace$, this elimination is done by aggregating all the possible outcomes $J(\kk, \uu)$ when $\uu$ is a sample of $\UU$.
 
 
-We propose now to reverse these steps, by first optimizing the cost function with respect to $\kk$, and, from the set of minimizers that depend on $\uu$ obtained, derive an estimator. The rationale behind this permutation is that every situation induced by a realisation $\uu$ is to be taken separately, quite similarly as Savage's regret introduced \cref{ssec:regret_savage}.
+We propose now to reverse these steps, by first optimizing the objective function with respect to $\kk$, and, from the set of minimizers that depend on $\uu$ obtained, derive an estimator. The rationale behind this permutation is that every situation induced by a realisation $\uu$ is to be taken separately, quite similarly as Savage's regret introduced \cref{ssec:regret_savage}.
 In turn, this avoids aggregation (and in a sense compensation) between the different $\uu$.
 
 The work detailed in this section is largely based on~\cite{trappler_robust_2020}, which was submitted for review in February 2020.
@@ -452,7 +453,7 @@ The work detailed in this section is largely based on~\cite{trappler_robust_2020
 \label{sec:MPE}
 We assume that $\UU$ is a continuous random variable, with a compact support. 
 \begin{definition}[Conditional minimum, minimizer]
-  Let $J: \Kspace \times \Uspace$ be a cost function, and let us assume that for each $\uu \in \Uspace$, $\min_{\kk \in \Kspace} J(\kk,\uu)$ exists and is attained at a unique point.
+  Let $J: \Kspace \times \Uspace$ be an objective function, and let us assume that for each $\uu \in \Uspace$, $\min_{\kk \in \Kspace} J(\kk,\uu)$ exists and is attained at a unique point.
   We denote
   \begin{equation}
     J^*(\uu) = \min_{\kk \in \Kspace} J(\kk,\uu)
@@ -465,12 +466,12 @@ We assume that $\UU$ is a continuous random variable, with a compact support.
  is defined as the \emph{conditional minimizer}
 \end{definition}
 As $\uu$ is thought to be a realization of a random variable $\UU$, we can consider the two random variables $\kk^*(\UU)$ and $J^*(\UU)$.
-The conditional minimum $J^*(\UU)$ is then a random variable describing the best performances of the calibration, if we could optimize the cost function for each realization of $\UU$.
+The conditional minimum $J^*(\UU)$ is then a random variable describing the best performances of the calibration, if we could optimize the objective function for each realization of $\UU$.
 
 Similarly, let us assume that the conditional minimizer is well defined for all $\uu\in \Uspace$. We can study the image random variable through this mapping, that we will denote $\kk^*(\UU)$.
 This random variable in itself gives already information on the ``identifiability'' of a robust estimate, depending on the information carried by its distribution.
 \begin{example}
-Let $\Kspace = \Uspace= [0, 1]$, and $\UU \sim \mathrm{Unif}(\Uspace)$, and the following cost functions:
+Let $\Kspace = \Uspace= [0, 1]$, and $\UU \sim \mathrm{Unif}(\Uspace)$, and the following objective functions:
 \begin{align}
   J_1(\kk, \uu) &= (1+\uu)+(\kk - 0.5)^2\\
   J_2(\kk, \uu) &= (\kk-\uu)^2 + 1
@@ -485,9 +486,11 @@ In the first case, $\kk_0 = \argmin_{\kk} J(\kk, \UU)$, so $\kk_1^*(\UU)$ is a d
 \end{example}
 
 In general, this random variable cannot be classified as continuous or discrete without further study. However, in the following, we are going to assume that it is a \emph{continuous random variable}.
-The entropy of the random variable $\kk^*(\UU)$ defined \cref{def:KL_entropy} can be seen as a measure of the sensitivity of the calibration when the environmental variable varies. \todo{ajouter}
+The entropy of the random variable $\kk^*(\UU)$ defined \cref{def:KL_entropy} can be seen as a measure of the sensitivity of the calibration when the environmental variable varies. If the support of the random variable $\kk^*(\UU)$ is bounded, the distribution with the highest entropy on this support is a uniform distribution. 
 Per the continuity assumption, this entropy can be estimated by various methods (see for instance~\cite{beirlant_nonparametric_1997}).
-This distribution of the minimizers can be used for global optimization, as outlined in~\cite{hennig_entropy_2011}. Furthermore, the authors provide an analytical expression of the pdf of the minimizers, and the nature of the infinite product is discussed:
+
+
+This distribution of the minimizers and its entropy can be used for global optimization, as outlined in~\cite{hennig_entropy_2011}. Furthermore, the authors provide an analytical expression of the pdf of the minimizers, and the nature of the infinite product is discussed:
 \begin{equation}
   p_{\KK^*}(\kk) = \int_{\Uspace} p_{\UU}(\uu)\prod_{\substack{\tilde{\kk}\in \Kspace\\\tilde{\kk}\neq \kk}} \mathbbm{1}_{\{J(\tilde{\kk},\uu) > J(\kk, \uu)\}}\,\mathrm{d}\uu
 \end{equation}
@@ -499,7 +502,7 @@ Given the samples $\uu_i$  and the minimizers $\kk^*(\uu_i)$ for $1\leq i \leq n
 \begin{equation}
   \hat{p}_{\KK^*}(\kk^*) = \frac{1}{n_{\mathrm{samples}} h^{\dim \Kspace}} \sum_{i=1}^{n_{\mathrm{samples}}} \mathcal{K}\left(\frac{\kk^* - \kk^*(\uu_i)}{h}\right)
 \end{equation}
-where $h>0$ is the bandwidth (that measures the influence of each sample), and $\mathcal{K}$ is a kernel of dimension $\dim \Kspace$, usually defined as the product of one-dimensional kernels $\mathcal{K}_{1\mathrm{D}}$: $\mathcal{K}(\kk) = \prod_{j=1}^{\dim \Kspace}\mathcal{K}_{1\mathrm{D}}(\kk_j)$. Several choices of 1D kernels are available, and one of the most common one is the Gaussian Kernel: $\mathcal{K}_{1\mathrm{D}}(\kk_j) = (2\pi)^{-1/2}\exp(-\kk_j^2 /2)$. \Cref{fig:theta_star_samples} shows the estimated density $\hat{p}_{\kk^*}$ using KDE and Scott's rule for the bandwidth~\cite{scott_optimal_1979}, along with the histogram of the minimizers.
+where $h>0$ is the bandwidth (that measures the influence of each sample), and $\mathcal{K}$ is a kernel of dimension $n=\dim \Kspace$, usually defined as the product of one-dimensional kernels $\mathcal{K}_{1\mathrm{D}}$: $\mathcal{K}(\kk) = \prod_{j=1}^{\dim \Kspace}\mathcal{K}_{1\mathrm{D}}(\kk_j)$. Several choices of 1D kernels are available, and one of the most common one is the Gaussian Kernel: $\mathcal{K}_{1\mathrm{D}}(\kk_j) = (2\pi)^{-1/2}\exp(-\kk_j^2 /2)$. \Cref{fig:theta_star_samples} shows the estimated density $\hat{p}_{\kk^*}$ using KDE and Scott's rule for the bandwidth~\cite{scott_optimal_1979}, along with the histogram of the minimizers.
 
 
 \begin{figure}[ht]
@@ -514,16 +517,16 @@ Finally, when we have an estimation of the density of $\KK^*$, and if it exists,
 \end{equation}
 This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\cite{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximization algorithm introduced~\cite{dempster_maximum_1977}.
 
-Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is ``most often'' the minimiser of the cost function. However, we have no indications on its performances when it is \emph{not} optimal, and how often this non-optimality happens. 
+Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is ``most often'' the minimiser of the objective function. However, we have no indications on its performances when it is \emph{not} optimal, and how often this non-optimality happens. 
 In \cref{sec:regret}, we are going to introduce the notions of regret (additive and relative), in order to try to be ``near optimal'' with high probability.
 
 
 \subsection{Regret and model selection}
 \label{sec:regret}
-In this section, we will first focus on cost functions defined as the negative log-likelihood in order to link the additive regret and the likelihood ratio test.
-\subsubsection{Cost as the negative log-likelihood}
+In this section, we will first focus on objective functions defined as the negative log-likelihood in order to link the additive regret and the likelihood ratio test.
+\subsubsection{Objective as the negative log-likelihood}
 
-Let the cost function be the negative log-likelihood:
+Let the objective function be the negative log-likelihood:
 \begin{equation}
   J(\kk, \uu) = - \log p_{Y\mid \KK, \UU}(y \mid \kk, \uu) = -\log \mathcal{L}(\kk,\uu)
 \end{equation}
@@ -576,7 +579,7 @@ The null hypothesis $\mathcal{H}_0$ is rejected at a level $\eta \in ]0;1[$ if
 As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \emph{interval of acceptability}. In other words, we say that $\kk\in \Kspace$ is $\beta$-acceptable for $\UU=\uu$ if $\kk \in \mathcal{I}_{\beta}(\uu)$. 
 \end{definition}
 
-\Cref{fig:lik_interval_threshold} shows a cost function evaluated for different fixed $u_i$. The $\beta$-acceptable intervals for those environmental variables are plotted below the curves.
+\Cref{fig:lik_interval_threshold} shows an objective function evaluated for different fixed $u_i$. The $\beta$-acceptable intervals for those environmental variables are plotted below the curves.
 \begin{figure}[ht]
   \centering
   \input{\imgpath lik_interval_threshold.pgf}
@@ -600,7 +603,7 @@ As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \e
 \begin{figure}[ht]
   \centering
   \input{\imgpath gamma_beta_increasing.pgf}
-  \caption{\label{fig:gamma_beta_increasing} Boundaries of regions of acceptability for increasing $\beta$, and $\Gamma_{\beta}$. The colored lines on the left plot are the boundaries of those regions}
+  \caption[Regions of $\beta$-acceptability]{\label{fig:gamma_beta_increasing} Boundaries of regions of acceptability for increasing $\beta$, and $\Gamma_{\beta}$. The colored lines on the left plot are the boundaries of those regions}
 \end{figure}
 
 
@@ -620,7 +623,7 @@ As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \e
   \subsubsection{Absolute and relative error}
   \label{ssec:hyp_situation}
 We examined before regret that can be qualified as \emph{additive} as this is the difference between $J$ and $J^*$ that is compared to fixed thresholds.
-However, we can argue that the relative magnitude of the cost function has an importance in the comparison. For illustration purposes, let us consider the situation described~\cref{tab:hyp_situation}, with $\Kspace = \{\kk_1, \kk_2\}$ and $\Uspace = \{\uu_1, \uu_2\}$, and $\Prob[\UU = \uu_1] =\Prob[\UU = \uu_2]= 1/2$.
+However, we can argue that the relative magnitude of the objective function has an importance in the comparison. For illustration purposes, let us consider the situation described~\cref{tab:hyp_situation}, with $\Kspace = \{\kk_1, \kk_2\}$ and $\Uspace = \{\uu_1, \uu_2\}$, and $\Prob[\UU = \uu_1] =\Prob[\UU = \uu_2]= 1/2$.
 
 \begin{table}[ht]
   \centering
@@ -644,13 +647,13 @@ However, we can argue that the relative magnitude of the cost function has an im
     $\kk_1$ & 0 & 10 \\
     $\kk_2$ & 0.01 & 0  \\ \bottomrule
   \end{tabular}  
-  \caption{\label{tab:hyp_situation} Illustration of a cost function, expected loss, additive regret and relative error}
+  \caption{\label{tab:hyp_situation} Illustration of an objective function, expected loss, additive regret and relative error}
 \end{table}
-In this situation, for both $\uu_1$ and $\uu_2$, the maximal additive regret is $\max_{\kk} J(\kk, \uu) - J^*(\uu) = 100$, so no clear preference could be inferred toward one or another value. % The situation $\UU=\uu_1$ seems less favorable than $\UU=\uu_2$, as the values of the cost function $J(\cdot, \uu_1)$ are larger than for all $\kk$.
+In this situation, for both $\uu_1$ and $\uu_2$, the maximal additive regret is $\max_{\kk} J(\kk, \uu) - J^*(\uu) = 100$, so no clear preference could be inferred toward one or another value. % The situation $\UU=\uu_1$ seems less favorable than $\UU=\uu_2$, as the values of the objective function $J(\cdot, \uu_1)$ are larger than for all $\kk$.
 However, choosing $\kk_1$ over $\kk_2$ means to choose to improve the performance of an already pretty bad situation ($10000$ instead of $10100$), while increasing tenfold the loss for the situation $\UU=\uu_2$. 
 
 
-From the example developed~\cref{tab:hyp_situation}, an alternative to the additive regret may be considered, as the difference in magnitude of the cost function between $\UU = \uu_1$ and $\UU = \uu_2$ is probably due to the effect of a misspecification. So to take into account this difference, we are now going to consider the \emph{relative regret} $J/J^*$, instead of the \emph{absolute regret} $J - J^*$, and derive a family of estimators in a similar fashion. 
+From the example developed~\cref{tab:hyp_situation}, an alternative to the additive regret may be considered, as the difference in magnitude of the objective function between $\UU = \uu_1$ and $\UU = \uu_2$ is probably due to the effect of a misspecification. So to take into account this difference, we are now going to consider the \emph{relative regret} $J/J^*$, instead of the \emph{absolute regret} $J - J^*$, and derive a family of estimators in a similar fashion. 
 
 \subsubsection{Relative-regret estimators family}
 Analogously as the additive regret defined before, we are going first to define the notions of acceptability in the case of the relative regret.
@@ -707,6 +710,8 @@ Let $\beta_{\inf{}}$ and $\alpha_{\inf{}}$, which verify
 \end{equation}
 To put it differently, $\alpha_{\inf{}}$ and $\beta_{\inf{}}$ are the smallest thresholds where there exists a value in $\Kspace$ acceptable almost surely. This value shares similarities with the minimizer of Savage's regret: $\estimtxt{\kk}{rWC}$ introduced~\cref{ssec:regret_savage}, as it minimizes almost surely (\emph{i.e.} for all $\uu$ in a non-negligible set) the regret, either additive or relative.
 
+
+
 % \begin{equation}
 %   \Prob_{\UU}\left[J(\estimtxt{\kk}{AR, \beta_1}, \UU) - J^*(\UU) \leq \beta_1\right]=1 \quad \text{ and } \Prob_{\UU}\left[J(\estimtxt{\kk}{RR, \alpha_1}, \UU) \leq \alpha_1 J^*(\UU)\right]=1
 % \end{equation}
@@ -715,18 +720,18 @@ To put it differently, $\alpha_{\inf{}}$ and $\beta_{\inf{}}$ are the smallest t
 \begin{figure}[ht]
   \centering
   \input{\imgpath gamma_alpha_increasing.pgf}
-  \caption{\label{fig:gamma_alpha_increasing} Regions of acceptability for relative regret and increasing $\alpha$. The colored lines on the left plot are the boundaries of those regions}
+  \caption[Regions of $\alpha$-acceptability]{\label{fig:gamma_alpha_increasing} Regions of acceptability for relative regret and increasing $\alpha$. The colored lines on the left plot are the boundaries of those regions}
 \end{figure}
 
 For both regret-based approach, the interval of acceptability at a fixed $\uu$ grows with the threshold, and the sharper the minimum is (in the sense of a large curvature), the faster it grows.
 A more telling illustration of the differences between relative and additive regret is shown~\cref{fig:illustration_region_regret}.
-The regions of acceptability of a cost function $J$ have been plotted, along with an interval $\mathcal{I}(\uu)$ and the region $R$ for a given $\kk$ for both regrets.
+The regions of acceptability of an objective function $J$ have been plotted, along with an interval $\mathcal{I}(\uu)$ and the region $R$ for a given $\kk$ for both regrets.
 \begin{figure}[ht]
   \centering
   \input{\imgpath illustration_region_regret.pgf}
   \caption{\label{fig:illustration_region_regret} Comparison of the regions of acceptability for additive and relative regret}
 \end{figure}
-For $\uu$ around $0$, $J$ is quite flat, but also has very low values. In this case, the interval $\mathcal{I}_{\beta}(\uu)$ is also large. But for $\uu$ around $1$, the cost function presents higher values, and a sharper minimum (\emph{i.e.} a higher curvature). Additive regret in this case puts stronger confidence on the value of the parameter as indicated by the smaller interval of acceptability.
+For $\uu$ around $0$, $J$ is quite flat, but also has very low values. In this case, the interval $\mathcal{I}_{\beta}(\uu)$ is also large. But for $\uu$ around $1$, the objective function presents higher values, and a sharper minimum (\emph{i.e.} a higher curvature). Additive regret in this case puts stronger confidence on the value of the parameter as indicated by the smaller interval of acceptability.
 
 For the relative regret, the situation is reversed. Although sharp, the large value attained by the minimum $J^*(\uu)$, for $\uu$ around $1$ leads to a large interval of acceptability, meaning that we can deviate a bit more from this minimum, as the situation $\uu \approx 1$ is already pretty bad. For $\uu \approx 0$, which is close to the global minimum of $J$, the interval is smaller, as this criterion does not favour a large deviation from this global minimum.
 
@@ -741,14 +746,28 @@ We are now going to focus exclusively on the relative-regret, and the associated
   
   Finding a relevant threshold can be a thorny issue, especially with no further information on $J$. Setting it too large will lead to large $\alpha$-acceptable intervals, and $\Gamma_\alpha$  may reach $1$ for several different values. On the other hand, choosing a threshold too small may give a maximal acceptability probability too low to assess the robustness of the chosen solution.
  summarize, we can contemplate three starting points:
-\begin{itemize}
-\item Set a probability $0< p\leq 1 $ we want to reach, and define $\alpha_p = \inf_{\alpha \geq 1}\{\max_{\kk \in \Kspace}\Gamma_{\alpha}(\kk)\geq p \}$, so the problem can be thought as the estimation and the optimization of quantile of a particular random variable.
+ \begin{itemize}
 \item Set a relaxation parameter $\alpha > 1$. From this, the maximal probability is $p_{\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha} = \max_{\kk\in\Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]$. This task can be seen as the estimation and optimization of a well chosen probability.
+
+   
+\item Set a probability $0< p\leq 1 $ we want to reach, and define $\alpha_p = \inf_{\alpha \geq 1}\{\max_{\kk \in \Kspace}\Gamma_{\alpha}(\kk)\geq p \}$, so the problem can be thought as the estimation and the optimization of quantile of a particular random variable: we can define $\alpha_p$ as the solution of the following chance constrained problem:
+ \begin{equation}
+  \left\{
+  \begin{array}{rl}
+    \min_{\kk\in\Kspace} &  q(\kk) \\
+  \text{such that} & \Prob_{\UU}\left[r(\kk, \UU) \leq q(\kk) \right] \geq p
+  \end{array}
+  \right.
+\end{equation}
+where $r(\kk, \uu) = J(\kk, \uu)/J^*(\uu)$ or $r(\kk, \uu)=J(\kk, \uu) - J^*(\uu)$ depending on the context, and $q(\kk)$ is the quantile of order $p$ of the r.v. $r(\kk, \UU)$.
+
+
 
 \item Study the evolution of one quantity with respect to the other, in order to find a balance between the probability of being acceptable, and the relaxation needed to reach it.
 \end{itemize}
 
-Specific techniques may be applied in order to perform the first two approaches efficiently, and some will be introduced in the next chapter. The third one however requires the knowledge of the cost function on the whole joint space $\Kspace \times \Uspace$, in order to compute $\max \Gamma$ for a various number of thresholds, thus may not be adapted for costly computer simulations.
+Specific techniques may be applied in order to perform the first two approaches efficiently, and some will be introduced in the next chapter. The third one however requires the knowledge of the objective function on the whole joint space $\Kspace \times \Uspace$, in order to compute $\max \Gamma$ for a various number of thresholds, thus may not be adapted for costly computer simulations.
+
 
 
 \section{Partial Conclusion}
@@ -760,7 +779,7 @@ As shown through this chapter, when optimizing under uncertainties, a lot of cri
     \toprule
     Objective name & Objective to \emph{minimize} wrt $\kk$  \\ \midrule
     Profile Likelihood & $-\log \left(\max_{\uu \in \Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)\right)$  \\
-    Integrated Likelihood & $-\log \int_{\Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu) \,\mathrm{d}\uu=-\log p_{Y\mid \KK}(y\mid \kk)$ \\
+    Integrated Likelihood & $-\log \int_{\Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)p_{\UU}(\uu) \,\mathrm{d}\uu=-\log p_{Y\mid \KK}(y\mid \kk)$ \\
     Marginal maximum a posteriori & $-\log p_{\KK\mid Y}(\kk \mid y)$  \\ \midrule
     Global Optimum & $\min_{\uu\in\Uspace} J(\kk, \uu)$ \\
     Worst-case & $\max_{\uu \in \Uspace} J(\kk, \uu)$ \\
@@ -771,11 +790,11 @@ As shown through this chapter, when optimizing under uncertainties, a lot of cri
     Additive-regret & $-\Prob_{\UU}\left[J(\kk, \UU) \leq J^*(\UU) + \beta \right]=-\Gamma_{\beta}(\kk)$ \\
     Relative-regret & $-\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU) \right]=-\Gamma_{\alpha}(\kk) $ \\ \bottomrule
   \end{tabular}
-  \caption{\label{tab:summary_robust}Summary of single objective robust estimators}
+  \caption{\label{tab:summary_robust} Summary of single objective robust estimators}
 \end{table}
  
 Obviously, other criteria can be defined, that satisfy other robustness requirements.
-Furthermore, we did not treat the possibility of combining some of those objectives by using them to set constraints. An example is the minimization of  the variance, under the constraint that the mean value does not exceed a certain threshold $T$:
+Furthermore, we did not treat the possibility of combining some of those objectives by using them to set constraints. An example is the minimization of  the variance, under the constraint that the mean value does not exceed a certain threshold $T$ as in \cite{lehman_designing_2004}:
 \begin{align*}
   \min \Var_{\UU}&\left[J(\kk, \UU)\right]  \\
   \text{s.t. } \Ex_{\UU}&\left[J(\kk, \UU)\right]   \leq T

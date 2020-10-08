@@ -8,10 +8,10 @@
 
 \begin{tikzpicture}[node distance=3cm]
 
-\node [align = center] at (0,0) (input) {Control variable \\$\bm{k} \in \mathbb{K}$};
-\node [align = center] at (4,1.5) (envir) {Environmental variables \\\alert<2>{$\bm{U}$ random}};
+\node [align = center] at (0,0) (input) {Control variable \\$\kk \in \Kspace$};
+\node [align = center] at (4,1.5) (envir) {Environmental variables \\\alert<2>{$\UU$ random}};
 \node[block] at (4,0)(code){Direct Simulation};
-\node[align = center] at (8,0) (output) {$\mathcal{M}(\bm{k},\alert<2>{\bm{U}})$};
+\node[align = center] at (8,0) (output) {$\mathcal{M}(\kk,\alert<2>{\UU})$};
 \node [align = center] at (8,-1) (obs) {$\yobs$};
 \node[block] at (4,-1) (inv) {Inverse Problem};
 \draw[->] (input) -- (code);

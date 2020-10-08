@@ -40,15 +40,11 @@
 
 In the previous chapter, we introduced different notions of robustness for the estimation of a calibration parameter. Those objectives usually require the evaluation of various integrals, and the perform several optimizations. A large number of model evaluations is then needed, but it may bring some practical issues, as numerical models are usually very expensive to run in terms of computer resources. Indeed, for most realistic physical simulations, the programs have to solve systems of PDEs over large discretized domains. Even though the programs are optimized and parallelized to take best advantage of high-performance computers, the time required to compute the quantities of interest may range from a few seconds to days. Because of that, methods requiring a large number of runs of the model for exhaustivity should be avoided.
 
-On the other hand, one other issue commonly encountered is the dimensionality of the parameter spaces. The number of samples required to get the fixed coverage of a space scales exponentially with the number of dimensions: this is the \emph{curse of dimensionality}. This motivates the ongoing research on dimension reduction. Some classical techniques, such as Principal Component analysis (PCA) \cite{jolliffe_principal_2002}, and Singular Value Decomposition (SVD) look . \cite{zahm_certified_2018} look to find the subspaces where the Bayesian update has the most effects.\cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018}
+% On the other hand, one other issue commonly encountered is the dimensionality of the parameter spaces. The number of samples required to get the fixed coverage of a space scales exponentially with the number of dimensions: this is the \emph{curse of dimensionality}. This motivates the ongoing research on dimension reduction. Some classical techniques, such as Principal Component analysis (PCA) \cite{jolliffe_principal_2002}, and Singular Value Decomposition (SVD) look . \cite{zahm_certified_2018} look to find the subspaces where the Bayesian update has the most effects.\cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018}
 
 % \subsubsection{Sensitivity analysis}
 
  In this chapter, we will focus on the use of \emph{surrogate models} to solve robust optimization problems, according to some of the criteria introduced in the previous chapter.
-
-We will focus exclusively on Kriging \cite{krige_statistical_1951,matheron_traite_1962}, or Gaussian Process regression, but other methods can be used to solve such problems. Polynomial Chaos regression for instance \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015},\cite{miranda_adjoint-based_2016}
-In this chapter, after defining the usual kriging equations for Gaussian Process Regression, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to develop on the case of robust optimisation, by splitting the input space in $\Kspace$ and $\Uspace$. We are then going to introduce other strategies to solve for robust optimisation criteria, as introduced previously.
-
 \begin{definition}[Surrogate model]
   Let $f: \Xspace \rightarrow \mathbb{R}$ be a function representing the computation of a quantity of interest. A \emph{surrogate}, or \emph{metamodel}, or \emph{emulator} of $f$, say $g$, is a function from $\Xspace$ to $\mathbb{R}$ which possesses two main properties:
   \begin{itemize}
@@ -56,10 +52,13 @@ In this chapter, after defining the usual kriging equations for Gaussian Process
   \item $g$ is cheaper to evaluate than $f$ 
   \end{itemize}
 \end{definition}
-Surrogate models are often built using initial evaluations of $f$.
+We will focus exclusively on Kriging \cite{krige_statistical_1951,matheron_traite_1962}, or Gaussian Process regression, but other methods can be used to solve such problems. Polynomial Chaos regression for instance \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}.
+In this chapter, after defining the usual kriging equations for Gaussian Process Regression, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to focus on robust optimization, by splitting the input space in $\Kspace$ and $\Uspace$, and introduce other strategies to take advantage of the nature of the surrogate in~\cref{sec:robust_criteria_gp}.
+
+% Surrogate models are often built using initial evaluations of $f$.
 \section{Gaussian process regression}
-In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and supposedly expensive to evaluate, but it has already been evaluated on a set of points $x_i$
-\cite{rasmussen_gaussian_2006}
+In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and supposedly expensive to evaluate.
+
 \subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
 \begin{align}
@@ -90,7 +89,7 @@ Evaluating the function at an additional point $x \notin \mathcal{X}$ provides n
 In this work, we are going to focus exclusively on a specific type of random process, namely, the Gaussian process (abbreviated as GP), but other types of random process can be encountered in the literature: Student t-processes in~\cite{shah_student-t_2014} are introduced as alternatives to GP, or various graphical models such as Gaussian and Markov Random Fields in~\cite{bishop_pattern_2006,li_markov_2009}.
 
 \begin{definition}[Gaussian process]
-  Let $Z$ be a random process on $\Xspace$, i.e. a collection of random variables indexed by $\Xspace$. $Z$ is a Gaussian process (GP) if any finite number of those random variables have a multivariate joint Gaussian distribution.
+  Let $Z$ be a random process on $\Xspace$, i.e. a collection of random variables indexed by $\Xspace$. $Z$ is a Gaussian process (GP) if any finite number of those random variables have a multivariate joint Gaussian distribution.  A more thorough description of Gaussian processes and their applications can be found in~\cite{rasmussen_gaussian_2006}.
   In that case, $Z$ is uniquely defined by its mean function $m_Z:\Xspace \rightarrow \mathbb{R}$ and its covariance function $C_Z:\Xspace \times \Xspace \rightarrow \mathbb{R}$:
   \begin{align}
     m_Z(x) &= \Ex\left[Z(x)\right] \\
@@ -139,103 +138,12 @@ where
 \end{align}
 and $\mu_Z = \Ex\left[Z(x)\right]$ is the mean of the unconditionned GP. When this mean is assumed to be known, the Kriging procedure is qualified of \emph{Simple Kriging}, otherwise, we often talk about \emph{Ordinary Kriging}. Finally, when this mean is a deterministic function (that may be estimated), we talk about \emph{Universal Kriging}~\cite{le_riche_introduction_2014}. In the following, we consider Simple Kriging.
 
-Using the properties of the multivariate distribution, the GP conditioned on the observations of~\eqref{eq:GP_Z_cond} has mean and covariance functions defined by
+Using the properties of the multivariate distribution, the GP conditioned on the observations of~\eqref{eq:GP_Z_cond} has mean and covariance function defined by
 \begin{align}
   m_{Z \mid \mathcal{X}}(x) &= m_Z(x) + K_{\mathcal{X}}(x)^T \mathbf{K}_{\mathcal{X}}^{-1}(f(\mathbf{x}) - \mu_Z ) \\
   C_{Z\mid \mathcal{X}}(x, x^\prime) &= C_Z(x, x^\prime)  - K_{\mathcal{X}}(x)^T\mathbf{K}_{\mathcal{X}}^{-1}K_{\mathcal{X}}(x^\prime)
 \end{align}
 These are called the \emph{Kriging equations}.
-
-
-% This surrogate will be constructed as a linear estimation:
-% A linear estimation $\hat{Z}$ of $f$ at an unobserved point $x\notin \mathcal{X}$ can be written as
-% \begin{equation}
-%   \label{eq:lin_est}
-%   \hat{Z}(x) =
-%   \begin{bmatrix}
-%     w_1 \dots w_n
-%     \end{bmatrix}
-%     \begin{bmatrix}
-%       f(x_1) \\ \vdots \\ f(x_n)
-%     \end{bmatrix} = \mathbf{W}^Tf(\mathcal{X}) = \sum_{i=1}^n w_i(x) f(x_i)
-% \end{equation}
-% Using those \emph{kriging weights} $\mathbf{W}$, a few additional conditions must be added, in order to obtain the Best Linear Unbiased Estimator:
-% \begin{itemize}
-% \item Non-biased estimation: $\Ex[\hat{Z}(x) - Z(x)]=0$
-% \item Minimal variance: $\min~\Ex[(\hat{Z}(x) - Z(x))^2]$
-% \end{itemize}
-% The non-biasedness condition using~\cref{eq:lin_est} can be rewritten
-% \begin{equation}
-%   \Ex[\hat{Z}(x) - Z(x)]=0 \iff m\left(\sum_{i=1}^n w_i(x)-1\right) = 0 \iff \sum_{i=1}^n w_i(x) = 1 \iff \mathbf{1}^T \mathbf{W} = 1
-% \end{equation}
-% For the minimum of variance, we introduce the augmented random vectors $\mathbf{Z}_n(x) = [Z(x_1),\dots Z(x_n), Z(x)]$ and $\mathbf{Z}_n = [Z(x_1),\dots Z(x_n)]$, and
-% the variance can be expressed as:
-% \begin{align}
-%   \Ex[(\hat{Z}(x) - Z(x))^2] &= \Cov\left[[\mathbf{W}^T, -1] \cdot \mathbf{Z}_n(x) \right] \\
-%                              &= [\mathbf{W}^T, -1] \Cov\left[\mathbf{Z}_n(x) \right] [\mathbf{W}^T, -1]^T
-% \end{align}
-% In addition, we have
-% \begin{equation}
-%   \Cov\left[\mathbf{Z}_n(x) \right] =
-%   \begin{bmatrix}
-%     \Cov\left[ \mathbf{Z}_n^T\right]
-%     & \Cov\left[\mathbf{Z}_n^T, Z(x) \right]
-%   \\
-%   \Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T & \Var\left[Z(x)\right]
-%   \end{bmatrix}
-% \end{equation}
-% Once expanded, the kriging weights solve then the following optimisation problem:
-% \begin{align}
-%   \min_{\mathbf{W}} ~&~\mathbf{W}^T \Cov\left[\mathbf{Z}_n\right] \mathbf{W}+ \Var\left[Z(x)\right] \\ &-\Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T \mathbf{W}- \mathbf{W}^T\Cov\left[\mathbf{Z}_n^T, Z(x) \right] \\ 
-%   \text{s.t. }&  \mathbf{1}^T\mathbf{W} = 1
-% \end{align}
-% This leads to
-% \begin{align}
-%   \begin{bmatrix}
-%     \mathbf{W} \\ m
-%   \end{bmatrix}
-%   &=
-%   \begin{bmatrix}
-%     \Cov\left[\mathbf{Z}_n\right] & \mathbf{1} \\
-%   \mathbf{1}^T & 0
-% \end{bmatrix}^{-1}
-%                  \begin{bmatrix}
-%                   \Cov\left[\mathbf{Z}_n^T, Z(x) \right]^T \\ 1 
-% \end{bmatrix}
-%   \\ &=
-%     \begin{bmatrix}
-%       C(x_1, x_1) & \cdots & C(x_1, x_n) & 1 \\
-%       C(x_2, x_1) & \cdots & C(x_2, x_n) & 1 \\
-%       \vdots & \ddots & \vdots & \vdots \\
-%       C(x_n, x_1) & \cdots & C(x_n, x_n)& 1 \\
-%       1 & \cdots & 1 & 0
-%     \end{bmatrix}^{-1}
-%                        \begin{bmatrix}
-%                          C(x_1, x) \\
-%                          C(x_2, x) \\
-%                          \vdots \\
-%                          C(x_n, x) \\
-%                          1
-%                        \end{bmatrix}
-% \end{align}
-% and
-% \begin{equation}
-%   \hat{Z}(x) =
-%       \begin{bmatrix}
-%       C(x_1, x) &
-%       C(x_2, x) &
-%       \dots &
-%       C(x_n, x)
-%       \end{bmatrix}
-%       \left(\begin{bmatrix} C(x_1, x_1) & \cdots & C(x_1, x_n)\\
-%       C(x_2, x_1) & \cdots & C(x_2, x_n) \\
-%       \vdots & \ddots & \vdots  \\
-%       C(x_n, x_1) & \cdots & C(x_n, x_n) \\
-%     \end{bmatrix}^{-1}\right)^T
-%   \begin{bmatrix}
-%     f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n)
-%   \end{bmatrix}
-% \end{equation}
 
 
 Given the fact that a conditioned GP is still a GP, at a point $x \in \Xspace$, we have
@@ -244,19 +152,19 @@ Given the fact that a conditioned GP is still a GP, at a point $x \in \Xspace$, 
   Z(x) \mid \mathcal{X} \sim \mathcal{N}\left(m_{Z\mid \mathcal{X}}(x), \sigma^2_{Z\mid \mathcal{X}}(x)\right) \quad \text{ with } \quad \sigma^2_{Z\mid \mathcal{X}}(x) = C_{Z \mid \mathcal{X}}(x, x)
 \end{equation}
 The function $m_{Z \mid \mathcal{X}}: \Xspace \rightarrow \mathbb{R}$ can then be defined as a surrogate for $f$. This surrogate provides an interpolation of the unkown function $f$, since for $x \in \mathcal{X}$, $f(x) = m_{Z \mid \mathcal{X}}(x)$.
-In addition to that interpolation property, for points not in the design, we have a measure of the epistemic uncertainty modelled by the normal r.v.\ in \eqref{eq:cond_gp}.
+In addition to that interpolation property, for points not in the design, we have a measure of the epistemic uncertainty modelled by the normal r.v.\ in~\eqref{eq:cond_gp}.
 For a few training points and their evaluations, we represented the GP regression of an unknown function $f$ \cref{fig:example_GP}.
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath example_GP.pgf}
-  \caption{\label{fig:example_GP} Example of a Gaussian Process, as a surrogate for a function $f$ evaluated at 4 inputs. The shaded regions correspond to the regions $m_Z \pm i \cdot \sigma_Z$ for $i=1, 2,3$.}
+  \caption[Illustration of GP regression]{\label{fig:example_GP} Example of a Gaussian Process, as a surrogate for a function $f$ evaluated at 4 inputs. The shaded regions correspond to the regions $m_Z \pm i \cdot \sigma_Z$ for $i=1, 2,3$.}
 \end{figure}
 
 From a computational point of view, GP are relatively cheap to handle:
 \begin{itemize}
-\item If the covariance function $C_Z$ is known, the most expensive step in the estimation of $m_{Z\mid \mathcal{X}}$ and $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the unobserved point, thus its inversion need only to be performed once.
-\item In order to get a sample path from this GP, one need to be able to sample from a multivariate normal distribution, and need to compute the Cholesky decomposition of the conditioned covariance matrix
+\item If the covariance function $C_Z$ is known, the most expensive step in the estimation of $m_{Z\mid \mathcal{X}}$ and $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the points $x$ upon which we wish to apply $m_{Z\mid \mathcal{X}}$, thus its inversion need only to be performed once.
+\item In order to get a sample path from this GP, one need to be able to sample from a multivariate normal distribution, and thus only need to compute the Cholesky decomposition of the conditioned covariance matrix.
 \end{itemize}
 However, if some points of the design are very close to each other, the covariance matrix can be ill-conditioned. In this case,
 for numerical stability, we can add \emph{nugget} effect to $\mathbf{K}_{\mathcal{X}}$.~\eqref{eq:GP_joint_distrib_nugget} becomes:
@@ -277,14 +185,14 @@ for numerical stability, we can add \emph{nugget} effect to $\mathbf{K}_{\mathca
     \end{pmatrix}
 \right)
 \end{equation}
-From a probabilistic point of view, we can see the nugget effect as an added Gaussian noise when evaluating the function,\emph{i.e.} that we are observing $f(x_i)+\epsilon$ with $\epsilon \sim \mathcal{N}(0, \varsigma^2)$. When $\varsigma^2 \neq 0$, the GP is no longer interpolant, as $\Var\left[Z(x) \mid \mathcal{X}\right] \neq 0$ for $x\in \mathcal{X}$.
+From a probabilistic point of view, we can see the nugget effect as an added Gaussian noise when evaluating the function,\emph{ i.e.} that we are observing $f(x_i)+\epsilon$ with $\epsilon \sim \mathcal{N}(0, \varsigma^2)$. When $\varsigma^2 \neq 0$, the GP is no longer interpolant, as $\Var\left[Z(x) \mid \mathcal{X}\right] \neq 0$ for $x\in \mathcal{X}$.
 
 \subsection{Covariance functions}
 \label{sec:cov_fun}
 In the previous section, we described the equations to solve to get the surrogate $m_{Z\mid \mathcal{X}}$ of $f$ based on GP.
 The kriging equations are based on the covariance function $C_Z$.
-A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{\dim\Xspace})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$ 
-For multidimensional problems, covariance functions are usually chosen as the product of $1D$ covariance functions:
+A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{\dim\Xspace})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$.
+For multidimensional problems, covariance functions are usually chosen as the product of one dimensional covariance functions:
 \begin{equation}
   C_Z(h) = s^2\prod_{i=1}^{\dim \Xspace} C_i(h_i;l_i)
 \end{equation}
@@ -303,41 +211,39 @@ A few common stationary $1D$-covariance functions are introduced~\cref{tab:commo
       Matérn 3/2 & $\left(1 + \sqrt{3}\frac{h}{l}\right)\exp\left(-\sqrt{3}\frac{h}{l}\right)$ & $C^1$\\
       Matérn 5/2 & $\left(1+ \sqrt{5}\frac{h}{l} + \frac{5}{3}\frac{h^2}{l^2}\right) \exp\left(-\sqrt{5}\frac{h}{l}\right)$ & $C^2$\\ \bottomrule
     \end{tabular}
-    \caption{\label{tab:common_cov_fc} Common covariance functions}
+    \caption{\label{tab:common_cov_fc} Common stationary covariance functions}
   \end{table}
 
-
-
-  One main difference that motivates one or the other covariance function is the assumption upon the regularity of the sample paths. For example, if the unknown function $f$ is assumed to be infinitely differentiable, a Gaussian kernel is suited for the modelling. One common choice is the Matérn kernel of order $5/2$, so that the samples paths are twice-differentiable.
+  The difference between those covariance functions that motivates the choice of a particular covariance function is the assumption upon the regularity of the sample paths. For example, if the unknown function $f$ is assumed to be infinitely differentiable, a Gaussian kernel is suited for the modelling. One common choice is the Matérn kernel of order $5/2$, so that the samples paths are twice-differentiable.
 
   
 \begin{figure}[ht]
   \centering
   \input{\imgpath covariance_functions.pgf}
-  \caption{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show (unconditioned) sample paths for those different covariance functions with same length scale.}
+  \caption[Common covariance functions for GP]{\label{fig:cov_fc_examples} Common covariance functions for GP regression. The right plots show (unconditioned) sample paths for those different covariance functions with same length scale.}
 \end{figure}
 
+\subsection{Initial design and validation}
+
 Those $(\dim \Xspace + 1)$ hyperparameters have to be estimated based on the training set $\mathcal{X}$. This is usually done by MLE~(see for instance~\cite{ribaud_robustness_2019}), or by cross-validation (see~\cite{ginsbourger_note_2009}).
-
-\subsection{Initial design and }
-In order to construct a Gaussian process, or a general metamodel for that matter, the model must first be evaluated on an initial design. It should be chosen with good space-filling properties. An usual choice is to use Latin Hypercube Sampling (LHS), and a rule of thumb for the initial number of points of $\Xspace$ to be evaluated is about $10\dim X $.
+In order to construct a Gaussian process, or a general metamodel for that matter, the model must first be evaluated on an initial design which should present good space-filling properties. An usual choice is to use Latin Hypercube Sampling (LHS), and an usual rule of thumb for the initial number of points of $\Xspace$ to be evaluated is about $10\cdot\dim \Xspace $. In order to validate the GP, \emph{i.e.} to verify that the GP does not overfit the data, one can use cross-validation as described in~\cite{dubrule_cross_1983}.
 
 
 
-\section{Stepwise Enrichment strategies for Gaussian Processes}
+\section{Enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
-
+\subsection{1-step lookahead strategies}
 For a unknown function $f$, a GP is initially constructed based on a design $\mathcal{X} = \left\{\left(x_1,f(x_1)\right), \dots, \left(x_n, f(x_n)\right)\right\}$, that consists of $n$ points of $\Xspace$, and their corresponding evaluations. This GP is denoted $Z \mid \mathcal{X}$ and is defined as
 \begin{equation}
   \label{eq:ZgivenXGP}
   Z\mid \mathcal{X} \sim \mathcal{N}(m_{Z\mid\mathcal{X}}(x),\sigma^2_{Z\mid\mathcal{X}}(x))
 \end{equation}
 For notational convenience, the conditioning with respect to $\mathcal{X}$ will be omitted if the experimental design is clear from the context.
-Stepwise Uncertainty Reduction is based on the definition of a criterion, say $\kappa_n$, that measures in a way the uncertainty upon a certain objective associated with the GP and with $f$, and to maximize this criterion, in order to select the next point:
+Stepwise Uncertainty Reduction is based on the definition of a criterion, say $\kappa_n$, that measures in a way the uncertainty upon a certain objective associated with the GP and with $f$. This criterion is then maximized in order to select the next point to evaluate on the true function $f$.
 \begin{equation}
   x_{n+1} = \argmax_{x\in\Xspace} \kappa_n(x) = \argmax_{x\in\Xspace} \kappa(x; Z \mid \mathcal{X})
 \end{equation}
-The general principle of these strategies is summarized \cref{alg:SUR_strat}
+The GP is updated according to the new evaluation which is added to the design. The general principle of these strategies is summarized \cref{alg:SUR_strat}
 % This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
 
 \begin{algorithm}
@@ -356,6 +262,35 @@ The general principle of these strategies is summarized \cref{alg:SUR_strat}
 \end{algorithmic}
 \end{algorithm}
 
+
+\subsubsection{Batch selection}
+Due to the structure of many computer codes, it may sometimes be beneficial to evaluate a batch of points, instead of selecting a unique point at each step of the procedure.
+\paragraph{Adaptation of 1-step criteria}
+
+\cite{ginsbourger_kriging_2010} introduces a few ways to  make the best use of parallelism in enrichment strategies based on GP. The expected improvement for instance can be adapted to select $q$ points at each iteration, by the optimization of a modified criterion $q-\mathrm{EI}$ on $\Xspace^q$. More generally, using a greedy approach, we can modify $1$-step criteria to $q-$step criteria: let $\kappa$ be an enrichment criterion, $\mathcal{X}_n$ the design at the iteration $n$,  and we define for $1\leq i \leq q$, 
+\begin{equation} 
+ x^{n+i} = \argmax_{x \in \Xspace} \kappa\left(x; Z \mid \mathcal{X}_n\cup\left\{(x^{n+1}, z^{n+1}), \dots ,( x^{n+i-1}, z^{n+i-1})\right\} \right)
+\end{equation}
+The points $(x^{n+1},\dots x^{n+q})$ and their evaluations are then added to the design, the GP is updated.
+
+
+In this case, for the $i$-th point to select, we maximize the criterion constructed using the augmented design $\mathcal{X}_n \cup  \left\{(x^{n+1}, z^{n+1}), \dots ,( x^{n+i-1}, z^{n+i-1})\right\}$. Depending on the choice of the realizations $y^{n},\dots,z^{n+i-1}$. We can augment the design in different ways:
+\begin{itemize}
+\item $\left(x^j, z^j\right) = \left(x^j, m_Z(x^j)\right)$ is the \emph{Kriging believer} (KB) method, as we the observation is replaced by the Kriging prediction
+\item $\left(x^j, z^j\right) = \left(x^j, L\right)$ leads to the \emph{Constant liar} (CL) method, as we replace the observation with an arbitrary choice of $L$, such as $\min f$, $\max f$, $\mathrm{mean} f$.
+% \item  $\left(x^j, z^j\right) = \left(x^j, Z(x^j)\right)$ assumes unknown the realisation. , require the evaluation of several expensive integrals in order to evaluate $\kappa$, so it may not be suited for realistic applications
+\end{itemize}
+
+\paragraph{Sampling-based methods}
+\label{sec:sampling_based_criterion}
+Instead of adapting 1-step criteria, we can rely on sampling in order to get $q$ points of $\Xspace$ to evaluate.
+This technique is described in~\cite{dubourg_reliability-based_2011}, and use the criterion $\kappa$ as a pdf, in order to sample points according to their interest.
+Let $\kappa$ be a 1-step criterion, and let $\bar{\kappa}(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the normalized criterion, so that $\int_{\Xspace} \bar{\kappa}=1$. In this case, $\bar{\kappa}$ can be seen as a density.  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $S=\{x_i\}_{1\leq i \leq N}$. 
+  
+However, as $N$ should be large, there is no point in evaluating all the samples in $S$. Using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as KMeans algorithm, in order to select $q$, in compliance with the wanted batch size.
+One central sampling based method is sampling in the region of points which cannot be classified with high enough probability
+
+
 We are going to introduce a few criteria which are used for three different problems:
 \begin{itemize}
 \item Exploration of the input space~\cref{sec:exploration_criteria}
@@ -367,7 +302,7 @@ We are going to introduce a few criteria which are used for three different prob
 \label{sec:exploration_criteria}
 We are going to introduce first some common criteria of enrichment, that aim at exploring the input space $\Xspace$.
 
-\subsubsection{Maximum of variance}
+\paragraph{Maximum of variance}
 A measure of uncertainty on the GP is $\max_{x\in\Xspace} \sigma_{Z \mid \mathcal{X}}^2(x)$, the maximum value of the prediction variance on the space.
 A simple criterion is to select and evaluate the point corresponding to this maximum of variance:
 \begin{equation}
@@ -375,7 +310,7 @@ A simple criterion is to select and evaluate the point corresponding to this max
 \end{equation}
 This criterion by its simplicity is easy to implement, as the prediction variance is cheap to compute given a GP, and does not depend directly on the evaluations of the function $f(x_i)$, uniquely on the distance between the inputs points and the covariance parameters.
 
-\subsubsection{Integrated Mean Square Error}
+\paragraph{Integrated Mean Square Error}
 The prediction variance is directly given by $\sigma^2_{Z\mid \mathcal{X}}$ and represents the uncertainty on the Gaussian regression. To summarize this uncertainty on the whole space $\mathcal{X}$, we define the Integrated Mean Square Error (IMSE)\cite{sacks_designs_1989}
  as
 \begin{equation}
@@ -399,13 +334,13 @@ Before the actual experiment though, $z$ is unknown, but we can model it by its 
   \label{eq:IMSE_augmented}
   \Ex_{Z(x)}\Big[\IMSE\big(Z \mid \mathcal{X} \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
-where the expectation is to be taken with respect to the random variable $Z(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy found for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Z(x)$, corresponding to evenly spaced quantiles of its distribution, or using Gauss-Hermite quadratures in order to take advantage of the Gaussian nature of $Z(x)$.
+where the expectation is to be taken with respect to the random variable $Z(x)$. As each scenario requires to fit a GP, and to compute the IMSE, a precise evaluation is quite expensive. A strategy found for instance in~\cite{villemonteix_informational_2006} is to take $M$ possible outcomes for $Z(x)$, corresponding to evenly spaced quantiles of its distribution, or using Gauss-Hermite quadratures~\cite{bernard_methodes_2019} in order to take advantage of the Gaussian nature of $Z(x)$.
 
 The hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.\@
 
-Finally, we can minimize the expression in~\cref{eq:IMSE_augmented} to enrich the design:
+Finally, we can maximize a criterion which is the opposite of the expression in~\cref{eq:IMSE_augmented} to enrich the design:
 \begin{equation}
-  x_{n+1} = \argmin_{x\in \Xspace}\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(Z \mid \mathcal{X} \cup \left\{(x, Z(x))\right\} \big)\Big]
+  x_{n+1} = \argmax_{x\in \Xspace}-\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(Z \mid \mathcal{X} \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
 
 % \tocheck{Et si au lieu d'estimer l'espérance, on choisit un échantillon. Stochastic simulation ?}
@@ -414,9 +349,9 @@ Finally, we can minimize the expression in~\cref{eq:IMSE_augmented} to enrich th
 \label{sec:GP_optimization_criteria}
 The criteria we detailed above aim at reducing the epistemic uncertainty modelled through the Gaussian Process. In other words, we try to improve our knowledge on the unknown function globally. We are now going to evoke a few criteria which are driven by the global optimization of the function.
 
-Those methods usually aim at striking a balance between exploration and \emph{intensification}. We covered exclusive exploration in~\cref{sec:exploration_criteria}.
+Those methods usually aim at striking a balance between \emph{exploration}, exploring the whole space $\Xspace$, and \emph{intensification}, evaluating the function near its optimum.
 Let $f$ be the unknown function, and $Z$ be a GP constructed based on an initial design $\mathcal{X} = \{(x_i, f(x_i))\}$.
-\subsubsection{Probability of improvement}
+\paragraph{Probability of improvement}
 We are first going to introduce the probability of improvement $\mathrm{PI}$, which is the probability that the GP is smaller than a threshold $f_{\min}$. Due to the Gaussian nature of $Z(x)$, this probability can be written in closed form using $\Phi = F_{\mathcal{N}(0, 1)}$ the cdf of a centered standard Gaussian r.v.\
 \begin{align}
   \mathrm{PI}(x) &= \Prob% _{Z(x)}
@@ -425,11 +360,14 @@ We are first going to introduce the probability of improvement $\mathrm{PI}$, wh
 \end{align}
 This threshold can have different forms
 \begin{itemize}
-\item $f_{\min} = \min_{i} f(x_i)$, so the GP is to be compared with the current minimal value reached by the function
-\item $f_{\min} = \min_i f(x_i) + \epsilon$ so we introduce a small tolerance $\epsilon$, in order to encourage exploration instead of intensification.
+\item $f_{\min} = \min_{i} f(x_i)$: the GP is compared with the current minimal value reached by the function
+\item $f_{\min} = \min_i f(x_i) + \epsilon$: by introducing a small tolerance $\epsilon$, we encourage exploration instead of intensification.
 \end{itemize}
 Using the probability of improvement tends to select points quite close to the point evaluated so far, thus does favor intensification at the expense of exploration.
-\subsubsection{Expected improvement and EGO}
+\begin{equation}
+  x_{n+1} = \argmax_{x\in \Xspace} \mathrm{PI}(x)
+\end{equation}
+\paragraph{Expected improvement and EGO}
 One of the most common criteria for global optimization is the \emph{Expected Improvement} (EI)~\cite{mockus_bayesian_1974}, and the SUR strategy using it as a enrichment criterion is called \emph{Efficient Global Optimization} (EGO)~\cite{jones_efficient_1998}.
 Analogously to the probability of improvement, we define the improvement $I(x)$ as the random variable defined as
 \begin{equation}
@@ -442,17 +380,19 @@ The Expected Improvement $\mathrm{EI}$ is
   \label{eq:def_ei}
   \mathrm{EI}(x) = \Ex[I(x)]  = \Ex\left[\left[f_{\min} - Z(x) \right]_+\right]
 \end{align}
-Again, a closed form is available to compute the expected improvement, that does not require the evaluation of the expectation \cref{eq:def_ei}.
+Again, a closed form is available to compute the expected improvement, that does not require the direct evaluation of the expectation \cref{eq:def_ei}.
 \begin{equation}
   \mathrm{EI}(x) = \left(f_{\min} - m_Z(x)\right) \Phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right) + \sigma_Z(x) \phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right)
 \end{equation}
-The EI is then quite easy to evaluate, and furthermore, it is possible to compute the gradient of the EI and used them for the optimization.
-
-\subsubsection{IAGO}
+The EI is then quite easy to evaluate, and furthermore, it is possible to compute the gradient of the EI and used them for the optimization as done in~\cite{pardalos_differentiating_2015}.
+\begin{equation}
+  x_{n+1} = \argmax_{x\in \Xspace} \mathrm{EI}(x)
+\end{equation}
+\paragraph{IAGO}
 \label{ssec:IAGO} Another criterion worth mentioning is a criterion based on the distribution of the minimizers~\cite{villemonteix_informational_2006,hennig_entropy_2011}.
 Let $y_i$ be a sample path of $Z$, and let $x_i^*$ the global minimizer of $y_i$.
 We denote then $X^*$ the random variable corresponding to the global minimizer of $Z$.
-We consider the differential entropy of $X^*$ given the augmented design $\mathcal{X} \cup \left\{\left(x,Z(x)\right)\right\}$.
+We consider the differential entropy of $X^*$ introduced \cref{def:KL_entropy}, given the augmented design $\mathcal{X} \cup \left\{\left(x,Z(x)\right)\right\}$: $H[X^*\mid \mathcal{X} \cup \left\{(x, Z(x))\right\}]$.
  So at each step, we choose the point that gives the smallest expected uncertainty on the location of the global minimizers of the sample paths.
 The criterion can then be written as
 \begin{equation}
@@ -464,7 +404,7 @@ The criterion can then be written as
 \begin{figure}[ht!]
   \centering
   \input{\imgpath example_optimization_criteria.pgf}
-  \caption{\label{fig:example_optimization_criteria} Example of optimization criteria. At this iteration, $\mathrm{EI}$ and $\mathrm{PI}$ aim toward intensification, while $\mathrm{IAGO}$ and the maximum of variance favorize exploration}
+  \caption[Optimization criteria for GP]{\label{fig:example_optimization_criteria} Example of optimization criteria. At this iteration, $\mathrm{EI}$ and $\mathrm{PI}$ aim toward intensification, while $\mathrm{IAGO}$ and the maximum of variance favorize exploration}
 \end{figure}
 
 
@@ -492,9 +432,7 @@ We can also define the probability of missclassification, which is
 \end{equation}
 For both $\mathscr{P}_{\mathrm{mis}}$ and $\mathscr{V}_A$, the maximum is reached for $\pi_A(x) = 1/2$.
 
-As we want to classify each point either \emph{in} $A$ or \emph{out of} $A$, 
-
-For $\eta \in [0, 1]$, we define the $\eta$-level set of $\pi_A$, also called \emph{Vorob'ev quantiles} (see~\cite{vorobyev_new_2003})
+As we want to classify each point either \emph{in} $A$ or \emph{out of} $A$, we can look for the different level-sets of the probability of coverage: for $\eta \in [0, 1]$, we define the $\eta$-level set of $\pi_A$, also called \emph{Vorob'ev quantiles} (see~\cite{vorobyev_new_2003})
 \begin{equation}
   Q_{\eta} = \{x\in\Xspace \mid \pi_A(x) \geq \eta \}
 \end{equation}
@@ -504,15 +442,15 @@ Those sets are decreasing (with respect to the inclusion) when $\eta$ increases:
 \end{equation}
 
 For a function $f$, let us assume that we are interested in the estimation of the estimation of the set $f^{-1}(B) = \{x \in \Xspace \mid f(x) \leq T\}$, with  $B = ]-\infty, T]$.
-
-Let $Z \sim \GP(m_Z, C_Z)$, constructed using an initial design $\mathcal{X}$ on $\Xspace$ for the function $f$. Substituting $Z$ for $f$,
-We have the random set $A = Z^{-1}(B) = \{x \in \Xspace \mid Z(x) \leq T\}$.
-Using the properties of the GP, since for $x\in\Xspace$, $Z(x)\sim\mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right)$, we can express the probability of coverage of the random set $A$ using $\Phi$, the cdf of the centered standard Gaussian distribution:
+Let $Z$ be a GP, constructed using an initial design $\mathcal{X}$ on $\Xspace$ for the function $f$, $Z\sim \GP(m_Z, C_Z)$
+The inverse image of $B$ through $Z$ gives the random set $A = Z^{-1}(B) = \{x \in \Xspace \mid Z(x) \leq T\}$.
+Using the properties of the GP, we can express the probability of coverage of the random set $A$ using $\Phi$, the cdf of the centered standard Gaussian distribution:
 \begin{align}
   \pi_A(x) &= \Prob_{Z(x)}\left[Z(x) \leq T\right] = \Phi\left(-\frac{m_Z(x) - T}{\sigma_Z(x)}\right) \\
   \mathscr{V}_A(x) &= \pi_A(x)(1 - \pi_A(x)) \\
   \mathscr{P}_{\mathrm{mis}}(x) &= \Phi\left(- \frac{\lvert m_Z(x) - T \rvert}{\sigma_Z(x)} \right) \label{eq:prob_missclassification_GP}
 \end{align}
+since for $x\in\Xspace$, $Z(x)\sim\mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right)$.
 \cite{echard_ak-mcs_2011} defines the argument of the cdf \cref{eq:prob_missclassification_GP} as the \emph{reliability index} $\rho$ (denoted $U$ in its original definition \cite{echard_ak-mcs_2011})):
 \begin{equation}
   \rho(x) = \frac{\lvert m_Z(x) - T \rvert}{\sigma_Z(x)}
@@ -523,13 +461,13 @@ We can define then two criteria. First, we can minimize the point which has the 
   \kappa_{\rho}(x) = -\rho(x) = -\frac{\lvert m_Z(x) - T \rvert}{\sigma_Z(x)}
 \end{equation}
 
-We can also consider the variance of the coverage, as the criteria introduced~\cite{bect_sequential_2012}.
+We can also consider the variance of the coverage over the whole space $\mathcal{X}$, as the criteria introduced~\cite{bect_sequential_2012}.
 In a similar fashion as the $\IMSE$, we can define the integrated variance of the probability of coverage
 \begin{equation}
   \label{eq:IVPC_def}
 \mathrm{IVPC}(\mathcal{X}) =  \int_{\Xspace} \mathscr{V}_A(x)\,\mathrm{d}x
 \end{equation}
-and define a criterion,
+and define a criterion based on an augmented design:
 \begin{equation}
   \label{eq:expected_aIVPC}
   \kappa(x) = -\Ex_{Z(x)}\Big[\mathrm{IVPC}(\mathcal{X} \cup \{   \left(x, Z(x) \right)  \}     \Big]
@@ -538,39 +476,19 @@ and define a criterion,
 Other criterion have also been developed, such as the utilisation of the theory of random sets~\cite{el_amri_data-driven_2019}, in order to define a measure of uncertainty based on Vorob'ev mean and deviation \cite{vorobyev_new_2003}.
 
 
-\subsubsection{Batch selection}
-Due to the structure of many computer codes, it may sometimes be beneficial to evaluate a batch of points, instead of selecting a unique point at each step of the procedure.
-\paragraph{Adaptation of 1-step criteria}
-
-\cite{ginsbourger_kriging_2010} introduces a few ways to  make the best use of parallelism in enrichment strategies based on GP. The expected improvement for instance can be adapted to select $q$ points at each iteration, by the optimization of a modified criterion $q-\mathrm{EI}$ on $\Xspace^q$. More generally, using a greedy approach, we can modify $1$-step criteria to $q-$step criteria: let $\kappa$ be an enrichment criterion, $\mathcal{X}_n$ the design at the iteration $n$,  and we define for $1\leq i \leq q$, 
-\begin{equation} 
- x^{n+i} = \argmax_{x \in \Xspace} \kappa\left(x; Z \mid \mathcal{X}_n\cup\left\{(x^{n+1}, y^{n+1}), \dots ,( x^{n+i-1}, y^{n+i-1})\right\} \right)
-\end{equation}
-The points $(x^{n+1},\dots x^{n+q})$ and their evaluations are then added to the design, and the iterations go on.
-In this case, for the $i$-th point to select, we maximize the criterion constructed using the augmented design $\mathcal{X}_n \cup  \left\{(x^{n+1}, y^{n+1}), \dots ,( x^{n+i-1}, y^{n+i-1})\right\}$. Depending on the choice of the realizations $y^{n},\dots,y^{n+i-1}$. We can augment the design in different ways:
-\begin{itemize}
-\item $\left(x^j, y^j\right) = \left(x^j, m_Z(x^j)\right)$ is the \emph{Kriging believer} (KB) method, as we the observation is replaced by the Kriging prediction
-\item $\left(x^j, y^j\right) = \left(x^j, L\right)$ leads to the \emph{Constant liar} (CL) method, as we replace the observation with an arbitrary choice of $L$, such as $\min f$, $\max f$, $\mathrm{mean} f$.
-\end{itemize}
-
-\paragraph{Sampling-based methods}
-\label{sec:sampling_based_criterion}
-Similarly as the adaptation of 1-step criterion, we want to select $q$ points in $\Xspace$ to evaluate.
-This technique is described in~\cite{dubourg_reliability-based_2011}, and use the criterion $\kappa$ as a pdf, in order to sample points according to their interest.
-Let $\kappa$ be a 1-step criterion, and let $\bar{\kappa}(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the normalized criterion, so that $\int_{\Kspace} \bar{\kappa}=1$. In this case, $\bar{\kappa}$ can be seen as a density.  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $S=\{x_i\}_{1\leq i \leq N}$. 
-  
-However, as $N$ should be large, there is no point in evaluating all the samples in $S$. Using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as KMeans algorithm, in order to select $q$, in compliance with the wanted batch size.
 \paragraph{Margin of uncertainty}
 \label{sec:margin_of_uncertainty}
 
 Using the level sets, we can construct the $\eta$-margin of uncertainty, as introduced in~\cite{dubourg_reliability-based_2011}, that is the set of points $x \in \Xspace$ that we cannot classify in or out of $A$ with high enough probability.
-Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$. The complement of $Q_{\frac{\eta}{2}}$ in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
+Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0.975}$ is the set of points whose probability of coverage is higher than $0.975$, while $Q_{\frac{\eta}{2}}=Q_{0.025}$ is the set of points whose probability of coverage is higher than $0.025$, thus its complement in $\Xspace$, denoted by $Q_{\frac{\eta}{2}}^C$ is the set of points whose probability of coverage is lower than $0.025$. Obviously, $Q_{1-\frac{\eta}{2}} \subset Q_{\frac{\eta}{2}}$.
+
+The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of points whose coverage probability is between $0.025$ and $0.975$.
 \begin{align}
   \label{eq:margin_unc}
   \mathbb{M}_{\eta} &= \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}} \\
                     &= \left\{x \in \Xspace \mid \frac{\eta}{2} \leq \pi_A(x) \leq 1 - \frac{\eta}{2} \right\}
 \end{align}
-
+We can then construct easily a sampling criterion: $\kappa_{\mathbb{M}}(x) = \mathbbm{1}_{\mathbb{M}_{\eta}}(x)$
 \begin{algorithm}
  \caption{Enrichment of the design using sampling}
 \begin{algorithmic}
@@ -591,8 +509,11 @@ Setting the classical level $\eta=0.05$ for instance, $Q_{1-\frac{\eta}{2}}=Q_{0
 \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
+
+
 \section{Robust criteria and enrichment of GP}
-So far, we introduced strategies for either optimization or exploration to be applied on a generic space $\Xspace$. From a robust point of view, we are going to consider the cost function $J$ on a joint space $\Xspace = \Kspace \times \Uspace$:
+\label{sec:robust_criteria_gp}
+So far, we introduced strategies for either optimization or exploration to be applied on a generic space $\Xspace$. From a robust point of view, we are going to consider the objective function $J$ on a joint space $\Xspace = \Kspace \times \Uspace$:
 
 We assume that we constructed a GP $Z$ on the joint space $\Kspace \times \Uspace$, based on a design of $n$ evaluated points $\mathcal{X}_n = \left\{\left((\kk_i,\uu_i),J(\kk_i, \uu_i) \right)\right\}_{1\leq i \leq n}$, denoted as $(\kk,\uu)\mapsto Z(\kk,\uu)$. If the design used to construct the GP is clear from the context, it is omitted in the notation.
 
@@ -671,7 +592,7 @@ we can construct accurate surrogates of $J^*(\uu)$ and $\kk^*(\uu)$, using the G
 and with a set of i.i.d.\ samples $\{\uu_i\}_i$ of $\UU$, use the surrogates to find the MPE, based on the distribution of $\{\kk_Z^*(\uu_i)\}$.
 
 
-\subsection{GP of the penalized cost function}
+\subsection{GP of the penalized objective function}
 \label{ssec:gp_delta_alpha}
 
 We are now going to detail how Gaussian processes can help to estimate regret-based estimators:
@@ -789,7 +710,7 @@ For the plug-in approach, the chosen estimator is defined \cref{eq:def_gamma_PI}
 
   Due to the fact that the GP surrogate is cheap to evaluate, the computation of the outer expectation with respect to $\UU$ is assumed to be performed without too much problems.
 
-  In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Z$ of the cost function $J$.
+  In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Z$ of the objective function $J$.
   In this case, we propose to reduce the IMSE of the GP $Z - \alpha Z^*$. The choice of the IMSE (instead of choosing the point of maximal variance for instance) comes from the decomposition of the variance~\cref{eq:variance_delta_GP_ab}.
   Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrates the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$.
 
@@ -847,6 +768,17 @@ Finally, we can define a new learning function, which is the expected $\mathrm{I
   \caption{\label{fig:IVPC_enrichment} Enriching the design according to the criterion of \cref{eq:expected_aIVPC}}
 \end{figure}
 
+\paragraph{Sampling in the margin of uncertainty}
+We can also enrich the design by means of sampling within the margin of uncertainty defined~\cref{sec:margin_of_uncertainty}. In this case, the probability of coverage is defined as
+\begin{equation}
+  \pi_{\alpha,\beta}(\kk, \uu) = \ProbGP\left[\Delta_{\alpha,\beta} \leq 0\right] = \Phi\left(-\frac{m_{\Delta}}{\sigma_{\Delta}}\right)
+\end{equation}
+and the margin of uncertainty of level $\eta$ is
+\begin{equation}
+  \mathbb{M}_{\eta} = \left\{ (\kk, \uu) \mid \frac{\eta}{2} \leq \pi_{\alpha,\beta}(\kk, \uu) \leq 1 - \frac{\eta}{2}\right\}
+\end{equation}
+
+Let us assume that we obtained $N_s$ points which represent statistically the margin of uncertainty. As mentioned before, the uncertainty on those points to be acceptable can be reduced by either evaluating the function at this point (thus reducing $\sigma_Z$), or by improving the knowledge of the conditional minimiser (reducing $\alpha^2 \sigma_Z^*$). 
 
 
 % \subsubsection{Vorob'ev expectation as placeholder}
@@ -895,6 +827,7 @@ and
 \begin{equation}
   \label{eq:alpha_p_quantile_max}
   p = \Prob_{\UU}\left[\max_{\kk \in \Kspace}\frac{J(\kk, \UU)}{J^*(\UU)} \leq \alpha_p\right] \iff \alpha_p = Q_{\UU}\left(\max_{\kk\in\Kspace} \frac{J(\kk,\UU)}{J^*(\UU)};p\right)
+  ????
 \end{equation}
 
 Those two formulations \cref{eq:alpha_p_min}, and \cref{eq:alpha_p_quantile_max} shows two ways of getting to $\alpha_p$.
@@ -953,8 +886,6 @@ Once a candidate $\tilde{\kk}$  which maximizes a specified criterion has been o
   (\kk_{n+1}, \uu_{n+1}) & = \argmin_{(\kk,\uu) \in \Kspace \times \Uspace} \Ex_{Z(\kk, \uu)}\left[ \mathrm{IVPC}\left(\tilde{\kk} \mid \mathcal{X}_n \cup\left\{\left((\kk,\uu), Z(\kk, \uu)\right)\right\} \right)  \right]
 \end{align}
 
-
-  
 
 
 % \begin{table}[ht]

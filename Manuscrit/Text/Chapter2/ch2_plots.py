@@ -96,7 +96,7 @@ ax = fig.add_subplot(1, 2, 2, projection='3d')
 # ax.w_yaxis.pane.fill = False
 # ax.w_xaxis.pane.set_color((234/256., 234/256., 242/256., 1))
 ax.patch.set_color('white')
-xmg, ymg = np.mgrid[-4:3:.1, -3:3:.1]
+xmg, ymg = np.mgrid[-4:3:.2, -3:3:.2]
 pos = np.dstack((xmg, ymg))
 rv = scipy.stats.multivariate_normal([-1, -1], [[2.0, 0.3], [0.3, 0.5]])
 ax.plot_surface(xmg, ymg, rv.pdf(pos), cmap=cm.get_cmap('viridis'), alpha=1, facecolor='white')
