@@ -263,7 +263,7 @@ The GP is updated according to the new evaluation which is added to the design. 
 \end{algorithm}
 
 
-\subsubsection{Batch selection}
+\subsection{Batch selection}
 Due to the structure of many computer codes, it may sometimes be beneficial to evaluate a batch of points, instead of selecting a unique point at each step of the procedure.
 \paragraph{Adaptation of 1-step criteria}
 
@@ -287,11 +287,33 @@ Instead of adapting 1-step criteria, we can rely on sampling in order to get $q$
 This technique is described in~\cite{dubourg_reliability-based_2011}, and use the criterion $\kappa$ as a pdf, in order to sample points according to their interest.
 Let $\kappa$ be a 1-step criterion, and let $\bar{\kappa}(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the normalized criterion, so that $\int_{\Xspace} \bar{\kappa}=1$. In this case, $\bar{\kappa}$ can be seen as a density.  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $S=\{x_i\}_{1\leq i \leq N}$. 
   
-However, as $N$ should be large, there is no point in evaluating all the samples in $S$. Using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as KMeans algorithm, in order to select $q$, in compliance with the wanted batch size.
+However, as $N$ should be large, there is no point in evaluating all the samples in $S$. Using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as the KMeans algorithm \cite{macqueen_methods_1967}, in order to select precisely $q$ points, number chosen in compliance with the wanted batch size. We then look for the closest points to the centroids, among those sampled originally, as the centroid can be located in a region of low or even zero $\bar{\kappa}$.
+
+Such an procedure is described \cref{alg:sampling_enrichment}.
+\begin{algorithm}
+  \caption{Enrichment of the design using sampling}
+  \label{alg:sampling_enrichment}
+\begin{algorithmic}
+  \REQUIRE Initial design $\mathcal{X}_0$, normalized criterion function $\bar{\kappa}$
+  \REQUIRE number of points to evaluate each iterations $q$, number of samples $N$
+\STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
+\STATE $n \leftarrow 0$
+\WHILE{Stopping criterion not met or max budget evaluation not reached} 
+\STATE Sample $N$ points $S = \{x^s_i\}_{1 \leq i \leq N}$ according to the distribution with pdf $\bar{\kappa}$
+\STATE Get the $q$ centroids $\{x_i^{\mathrm{center}}\}_{1 \leq i \leq q}$ using KMeans on $S$
+\FOR{$j=1$ to $q$} % \COMMENT{Find the $N_s$ closest points}
+\STATE $x_{n+j}=\argmin_{x \in S \setminus \{x_{n+1}, \dots, x_{n+j-1}\}} \|x - x_j^{\mathrm{center}} \|$
+\ENDFOR
+\STATE Evaluate $f(x_{n+j})$
+\STATE $\mathcal{X}_{n+q} \leftarrow \mathcal{X}_n \cup \left\{\left(x_{n+1}, f(x_{n+1})\right),\dots,  \left(x_{n+q}, f(x_{n+q})\right)\right\}$
+\STATE Condition the GP according to $\mathcal{X}_{n+q}$
+\STATE $n \leftarrow n + q$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 One central sampling based method is sampling in the region of points which cannot be classified with high enough probability
 
-
-We are going to introduce a few criteria which are used for three different problems:
+We are going to introduce a few criteria which are used for three different problems involving an unknown function $f$:
 \begin{itemize}
 \item Exploration of the input space~\cref{sec:exploration_criteria}
 \item Global optimization of the function~\cref{sec:GP_optimization_criteria}
@@ -408,12 +430,12 @@ The criterion can then be written as
 \end{figure}
 
 
- 
+ \clearpage
 \subsection{Contour and volume estimation}
 \label{sec:GP_vol_estim}
 
 \subsubsection{Probability of coverage}
-We can be interested in the estimation of a volume given by an unknown function. Given $\Prob_{X}$ a probability measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute $V=\Prob_{X}\left[f^{-1}(B)\right]$. For $B = [T, \infty[$, this is equivalent to compute the \emph{excursion set} of $f$ above $T$: $V=\Prob_{X}[f(X) \leq T]$.
+We can be interested in the estimation of a volume given by an unknown function. Given $\Prob_{X}$ a probability measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute $V=\Prob_{X}\left[f^{-1}(B)\right]$. For $B = [T, \infty[$, this is equivalent to compute the volume of the \emph{excursion set} of $f$ above $T$: $V=\Prob_{X}[f(X) \leq T]$.
 
 
 % Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019,heinrich_level_2012,vorobyev_new_2003}). 
@@ -476,7 +498,7 @@ and define a criterion based on an augmented design:
 Other criterion have also been developed, such as the utilisation of the theory of random sets~\cite{el_amri_data-driven_2019}, in order to define a measure of uncertainty based on Vorob'ev mean and deviation \cite{vorobyev_new_2003}.
 
 
-\paragraph{Margin of uncertainty}
+\subsubsection{Margin of uncertainty}
 \label{sec:margin_of_uncertainty}
 
 Using the level sets, we can construct the $\eta$-margin of uncertainty, as introduced in~\cite{dubourg_reliability-based_2011}, that is the set of points $x \in \Xspace$ that we cannot classify in or out of $A$ with high enough probability.
@@ -488,28 +510,9 @@ The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of p
   \mathbb{M}_{\eta} &= \left(Q_{1-\frac{\eta}{2}} \cup Q^C_{\frac{\eta}{2}} \right)^C = Q_{1-\frac{\eta}{2}}^C \cap Q_{\frac{\eta}{2}} = Q_{\frac{\eta}{2}} \setminus Q_{1-\frac{\eta}{2}} \\
                     &= \left\{x \in \Xspace \mid \frac{\eta}{2} \leq \pi_A(x) \leq 1 - \frac{\eta}{2} \right\}
 \end{align}
-We can then construct easily a sampling criterion: $\kappa_{\mathbb{M}}(x) = \mathbbm{1}_{\mathbb{M}_{\eta}}(x)$
-\begin{algorithm}
- \caption{Enrichment of the design using sampling}
-\begin{algorithmic}
-  \REQUIRE Initial design $\mathcal{X}_0$, normalized criterion function $\bar{\kappa}$
-  \REQUIRE number of points to evaluate each iterations $q$, number of samples $N$
-\STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
-\STATE $n \leftarrow 0$
-\WHILE{Stopping criterion not met or max budget evaluation not reached} 
-\STATE Sample $N$ points $S = \{x^s_i\}_{1 \leq i \leq N}$ according to the distribution with pdf $\bar{\kappa}$
-\STATE Get the $q$ centroids $\{x_i^{\mathrm{center}}\}_{1 \leq i \leq q}$ using KMeans on $S$
-\FOR{$j=1$ to $q$} % \COMMENT{Find the $N_s$ closest points}
-\STATE $x_{n+j}=\argmin_{x \in S \setminus \{x_{n+1}, \dots, x_{n+j-1}\}} \|x - x_j^{\mathrm{center}} \|$
-\ENDFOR
-\STATE Evaluate $f(x_{n+j})$
-\STATE $\mathcal{X}_{n+q} \leftarrow \mathcal{X}_n \cup \left\{\left(x_{n+1}, f(x_{n+1})\right),\dots,  \left(x_{n+q}, f(x_{n+q})\right)\right\}$
-\STATE Condition the GP according to $\mathcal{X}_{n+q}$
-\STATE $n \leftarrow n + q$
-\ENDWHILE
-\end{algorithmic}
-\end{algorithm}
-
+We can then construct easily a sampling criterion: $\kappa_{\mathbb{M}}(x) = \mathbbm{1}_{\mathbb{M}_{\eta}}(x)$.
+Evaluating points in this region allows to reduce the uncertainty at $x$ (completely if the GP is interpolant, as $\sigma_Z(x)$ becomes $0$ after evaluating $f(x)$) on the classification of the point $x$.
+\todo{ajouter figure}
 
 \section{Robust criteria and enrichment of GP}
 \label{sec:robust_criteria_gp}
@@ -525,28 +528,8 @@ A surrogate of $J$ based on $Z$ is then $m_Z$.
 
 One main challenge when making the distinction $\Xspace = \Kspace \times \Uspace$ is that the objectives on the two spaces are not the same.
 While some methods introduced here involve the computation and the maximization of a criterion on the joint space directly, following the method of~\cref{alg:SUR_strat},
-some others use the GP $Z$ to remove the dependence on $\UU$, by projecting the GP for instance in~\cref{ssec:expected_loss_GP_projection}, or by estimating $\Gamma_{\alpha}$. A measure of the uncertainty on this derived quantity is evaluated and used to choose a ``candidate'' $\tilde{\kk}$, so that we can reduce the uncertainty on $\{\tilde{\kk}\} \times \Uspace$.
-The next point $(\kk_{n+1}, \uu_{n+1})$ to evaluate is then chosen in $\Kspace \times \Uspace$, where $\kk_{n+1}$ may not be equal to $\tilde{\kk}$.
-The selection of The general 2-stage SUR strategy is described~\cref{alg:2stage_SUR}.
-
-
-\begin{algorithm}
-  \caption{\label{alg:2stage_SUR} Two-stages SUR strategies for robust optimization problem}
-\begin{algorithmic}
-\REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
-\STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
-\STATE $n \leftarrow 0$
-\WHILE{Stopping criterion not met or max budget evaluation not reached} 
-\STATE $\tilde{\kk} \leftarrow \argmax_{\kk \in \Kspace} \kappa(\kk; Z \mid \mathcal{X}_{n})$
-\STATE $(\kk_{n+1},\uu_{n+1}) \leftarrow \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa((\kk,\uu); \tilde{\kk}, Z \mid \mathcal{X}_{n})$
-\STATE Evaluate $J(\kk_{n+1}, \uu_{n+1})$
-\STATE $\mathcal{X}_{n+1} \leftarrow \mathcal{X}_n \cup \left\{\left((\kk_{n+1},\uu_{n+1}), J(\kk_{n+1}, \uu_{n+1})\right)\right\}$
-\STATE $n \leftarrow n + 1$
-\ENDWHILE
-\end{algorithmic}
-\end{algorithm}
-
-
+some others use the GP $Z$ to remove the dependence on $\UU$, by projecting the GP for instance in~\cref{ssec:expected_loss_GP_projection}.
+We will detail hereafter a 1-step criterion in order to estimate $\estimtxt{\kk}{mean}$, defined as the minimum of the expected value of the objective function, and a criterion in order to reconstruct the conditional minimisers and conditional minimum, in order to compute $\estimtxt{\kk}{MPE}$.
 \subsection{Expected loss}
 \label{ssec:expected_loss_GP_projection}
 Recalling the definition of $\estimtxt{\kk}{mean} = \argmin_{\kk \in \Kspace} \Ex_{\UU}\left[J(\kk, \UU)\right]$, we can look to minimize the expected loss. 
@@ -561,7 +544,7 @@ Then, we will look for the pair $(\kk, \uu) \in \Kspace\times \Uspace$ which min
   (\kk_{n+1}, \uu_{n+1}) &= \argmin_{(\kk, \uu)\in\Kspace\times \Uspace} \Var\left[W(\tilde{\kk}) \mid \mathcal{X} \cup (\kk,\uu) \right]
 \end{align}
 The variance of the augmented projected process does not depend on the realization of r.v.\ $Z(\kk, \uu)$, but only on the distance of $(\kk, \uu)$ to the current experimental design.
-
+\todo{ajouter figure}
 \subsection{Profile expected improvement}
 In the previous chapter, we introduced the conditional minimum $\uu\mapsto J^*(\uu)$ and the conditional minimizers $\uu \mapsto \kk^*(\uu)$. These require an optimization procedure, thus can be expensive from a computational point of view.~\cite{ginsbourger_bayesian_2014} proposes a criterion, adapted from the EI, which aims at solving such a problem: the \emph{Profile Expected Improvement} $\mathrm{PEI}$, which is defined as
 \begin{equation}
@@ -581,7 +564,7 @@ is maximized over $\Kspace \times \Uspace$.
   \input{\imgpath PEI_example.pgf}
   \caption[Illustration of enrichment using the PEI criterion]{\label{fig:example_PEI} GP after 30 additional iterations chosen using PEI. The GP prediction using the initial design is represented on the top left plot, and the PEI criterion for this GP is evaluated over the whole space is plotted top right. Bottom left plot is the GP prediction after 30 iterations. Bottom right is the surrogate estimation of the conditional minimum. The shaded region corresponds to the initial surrogate conditional minimum, $\pm$ one standard deviation. After the iterations, the surrogate estimate and the true value coincide}
 \end{figure}
-Once a stopping criterion is met, such as the maximal variance attained at the conditional minimum, 
+Once a stopping criterion is met, such as the maximal variance attained at the conditional minimum is below a specified threshold $T$, 
 \begin{equation}
   \max_{\uu\in\Uspace} \sigma^2_Z(\argmin_{\kk\in\Kspace}m_Z(\kk,\uu), \uu) \leq T
 \end{equation}
@@ -618,8 +601,7 @@ where
 \end{align}
 We use then the minimizer and the minimum of the GP prediction as estimates of the conditional minimum and minimiser, similarly as in~\cite{ginsbourger_bayesian_2014}. % for instance, but other choices could be considered, such as $m_Z(\kk^*_Z(\uu)) - \gamma \sigma^{2}_{Z^*}(\kk_Z^*(\uu))$. This choice would lead to be more ``optimistic'' in the estimation of the minimum (i.e.\ a lower minimum), and in turn, would have a tendency to overestimate the estimated value of $\alpha$, thus trending toward more conservative estimates.
 To generalize notions of the additive and relative regret, we can define a GP based on $J - \alpha J^* - \beta$: which is $\Delta_{\alpha, \beta} = Z - \alpha Z^* - \beta$.
-This difference $\Delta_{\alpha,\beta} = Z - \alpha Z^*$ is a linear combination of correlated Gaussian processes, thus is a GP as well.
-Its distribution can be derived by first considering the joint distribution of $Z(\kk,\uu)$ and $Z^*(\uu) = Z(\kk^*(\uu), \uu)$:
+This difference $\Delta_{\alpha,\beta}$ is a linear combination of correlated Gaussian processes, thus is a GP as well and its distribution can be derived by first considering the joint distribution of $Z(\kk,\uu)$ and $Z^*(\uu) = Z(\kk^*(\uu), \uu)$:
 \begin{equation}
   \begin{bmatrix}
     Z(\kk,\uu) \\
@@ -645,17 +627,12 @@ Multiplying by the matrix $\begin{pmatrix}1 & -\alpha \end{pmatrix}$ and transla
   \sigma^2_{\Delta}(\kk,\uu) &= \sigma_Z^2(\kk,\uu) + \alpha^2 \sigma_{Z^*}^2(\uu) - 2\alpha C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) \label{eq:variance_delta_GP_ab}
 \end{align}
 
-We are then interested in the set $\{(\kk, \uu) \mid \Delta_{\alpha, \beta}(\kk, \uu) \leq 0\}$
+We are then interested in the set $\{(\kk, \uu) \mid \Delta_{\alpha, \beta}(\kk, \uu) \leq 0\}$. The different value of $\alpha$ and $\beta$ dictate if we are either interested in the additive or the relative regret:
 \begin{itemize}
-\item $(\alpha, \beta) = (1, \beta)$ for the additive regret
-\item $(\alpha, \beta) = (\alpha, 0)$ for the relative regret
+\item $(\alpha, \beta) = (1, \beta)$ corresponds to the additive regret
+\item $(\alpha, \beta) = (\alpha, 0)$ corresponds to the relative regret
 \end{itemize}
 
-% \begin{align}
-%   \Delta_{\alpha}(\kk,\uu) &\sim \mathcal{N}\left(m_{\Delta}(\kk,\uu); \sigma^2_{\Delta}(\kk,\uu)\right)  \label{eq:delta_GP}\\
-%   m_{\Delta}(\kk,\uu) &= m_Z(\kk,\uu) - \alpha m_Z^*(\uu) \label{eq:mu_delta_GP}\\
-%   \sigma^2_{\Delta}(\kk,\uu) &= \sigma_Z^2(\kk,\uu) + \alpha^2 \sigma_{Z^*}^2(\uu) - 2\alpha C\left((\kk,\uu),(\kk^*(\uu),\uu)\right) \label{eq:variance_delta_GP}
-% \end{align}
 
 
 Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
@@ -670,9 +647,30 @@ Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP_ab}, 
                                            &= s  \mathcal{K}_{\kk}(\|\kk - \kk^*(\uu)\|)
 \end{align}
 \end{itemize}
-This decomposition highlights the fact that the prediction error $\sigma_{\Delta}^2$ of the difference $\Delta_{\alpha}$ measured at a point $(\kk, \uu)$ will not be reduced completely by evaluating the function $J$ at this point, as only the prediction variance $\sigma_Z^2$ will be significantly affected in general. In other words, reducing the uncertainty at a point $(\kk, \uu)$ may need the evaluation of another point $(\tilde{\kk},\uu)$.
+This decomposition highlights the fact that the prediction error $\sigma_{\Delta}^2$ of the difference $\Delta_{\alpha}$ measured at a point $(\kk, \uu)$ will not be reduced completely by evaluating the function $J$ at this point, as only the prediction variance $\sigma_Z^2$ will be significantly affected in general. In other words, reducing the uncertainty at a point $(\kk, \uu)$ may require the evaluation of another point $(\tilde{\kk},\tilde{\uu}) \neq (\kk, \uu)$.
 
 
+\subsection{2 stages enrichment strategies}
+A measure of the uncertainty on this derived quantity is evaluated and used to choose a ``candidate'' $\tilde{\kk}$, so that we can reduce the uncertainty on $\{\tilde{\kk}\} \times \Uspace$.
+The next point $(\kk_{n+1}, \uu_{n+1})$ to evaluate is then chosen in $\Kspace \times \Uspace$, where $\kk_{n+1}$ may not be equal to $\tilde{\kk}$.
+A general 2-stage SUR strategy is described~\cref{alg:2stage_SUR}.
+
+
+\begin{algorithm}
+  \caption{\label{alg:2stage_SUR} Two-stages SUR strategies for robust optimization problem}
+\begin{algorithmic}
+\REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
+\STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
+\STATE $n \leftarrow 0$
+\WHILE{Stopping criterion not met or max budget evaluation not reached} 
+\STATE $\tilde{\kk} \leftarrow \argmax_{\kk \in \Kspace} \kappa(\kk; Z \mid \mathcal{X}_{n})$
+\STATE $(\kk_{n+1},\uu_{n+1}) \leftarrow \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa((\kk,\uu); \tilde{\kk}, Z \mid \mathcal{X}_{n})$
+\STATE Evaluate $J(\kk_{n+1}, \uu_{n+1})$
+\STATE $\mathcal{X}_{n+1} \leftarrow \mathcal{X}_n \cup \left\{\left((\kk_{n+1},\uu_{n+1}), J(\kk_{n+1}, \uu_{n+1})\right)\right\}$
+\STATE $n \leftarrow n + 1$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 
 
 \subsection{Evaluation and optimization of $\Gamma$}
