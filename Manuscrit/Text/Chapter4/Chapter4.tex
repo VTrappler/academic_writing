@@ -288,8 +288,7 @@ This technique is described in~\cite{dubourg_reliability-based_2011}, and use th
 Let $\kappa$ be a 1-step criterion, and let $\bar{\kappa}(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the normalized criterion, so that $\int_{\Xspace} \bar{\kappa}=1$. In this case, $\bar{\kappa}$ can be seen as a density.  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $S=\{x_i\}_{1\leq i \leq N}$. 
   
 However, as $N$ should be large, there is no point in evaluating all the samples in $S$. Using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as the KMeans algorithm \cite{macqueen_methods_1967}, in order to select precisely $q$ points, number chosen in compliance with the wanted batch size. We then look for the closest points to the centroids, among those sampled originally, as the centroid can be located in a region of low or even zero $\bar{\kappa}$.
-
-Such an procedure is described \cref{alg:sampling_enrichment}.
+Such a procedure is described~\cref{alg:sampling_enrichment}.
 \begin{algorithm}
   \caption{Enrichment of the design using sampling}
   \label{alg:sampling_enrichment}
