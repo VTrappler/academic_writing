@@ -24,28 +24,48 @@
 % \subfileLocal{\dominitoc}
 % \subfileLocal{\setcounter{chapter}{4}}
 % \subfileLocal{\chapter{Application to the numerical coastal model CROCO}}
-\specialchapter{Application to the numerical coastal model CROCO}
+\chapter{Application to the numerical coastal model CROCO}
 \label{chap:croco}
 \minitoc
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this chapter, we will study the problem of calibration of a specific model under uncertainties. We will first address the problem of the high dimensionality of the input space by segmentating it in arbitrary way. Then, after applying some of the methods introduced in the previous chapter, 
+
 
 \section{The CROCO model}
 
 CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under testing), gradually including algorithms from MARS3D (sediments)  and HYCOM (vertical coordinates). An important objective for CROCO is to resolve very fine scales (especially in the coastal area), and their interactions with larger scales. It is the oceanic component of a complex coupled system including various components, e.g., atmosphere, surface waves, marine sediments, biogeochemistry and ecosystems\footnote{taken from \url{http://www.croco-ocean.org/}}.
-
+\cite{mcwilliams_irreducible_2007}\cite{zanna_ocean_2011}
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps.pdf}
   \caption{\label{fig:depth_maps} Map of the depth in CROCO}
 \end{figure}
 
+\begin{table}[!h]
+  \centering % % Chose order from the rank in the TPXO file :
+% "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
+% " 1  2  3  4  5  6  7  8  9 10"
+  \begin{tabular}{rrr}\toprule
+    Darwin Symbol & Period (h)& Species \\ \midrule
+    $M_2$& 12.4206 & Principal Lunar Semidiurnal \\
+    $S_2$& 12 & Principal solar Semidiurnal \\
+    $N_2$& 12.65834751& Larger lunar elliptic semidiurnal  \\
+    $K_2$& 11.96723606  & Lunisolar semidiurnal \\
+    $O_1$& 25.81933871 & Lunar diurnal \\
+    $P_1$& 24.06588766 & Solar diurnal\\
+    $Q_1$& 26.868350 & Larger lunar elliptic diurnal \\
+    $M_f$& 13.660830779 & Lunisolar fortnightly  \\
+    $M_m$& 27.554631896 &Lunar monthly  \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tide components}
+  \label{tab:tides_components}
+\end{table}
 
 \section{Deterministic calibration of the bottom friction}
-
-
 
 \subsection{Physical parametrization of the bottom friction}
 \begin{align}
@@ -62,10 +82,19 @@ CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydros
   \caption{\label{fig:gaussian_zob} Distribution of the true value of the calibration parameter}
 \end{figure}
 
+\subsection{Environmental parametrization}
+\label{sec:environmental_param}
+\cite{egbert_efficient_2002} TPX model of tides
+
+\subsubsection{Sensitivity analysis on the tide components}
+
+
+
 
  \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/optim_true/map_150.png}
+  \includegraphics{/home/victor/croco_dahu2/Run/z0b_shallow_bins/map_199.png% /home/victor/optimisation_dahu/optim_true/map_150.png
+  }
   \caption{\label{fig:optimization_map_126} Optimization of $z_0$ on the whole space using gradient obtained via adjoint method, after $126$ iterations}
 \end{figure}
 
@@ -82,8 +111,6 @@ CROCO is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydros
 \end{figure}
 
 
-\section{Modelling the uncertainties}
-\cite{egbert_efficient_2002} TPX model of tides
 \section{Dimension Reduction}
 
 \subsection{Ad-hoc segmentations methods}

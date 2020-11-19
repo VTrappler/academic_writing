@@ -1,0 +1,50 @@
+nctarget = netcdf.Dataset('/home/victor/sandbox/CROCO_FILES_test/croco_grd_template.nc',
+                          'r', format='NETCDF4')
+bathy = nctarget['h'][:]
+nctarget.close()
+
+depth_bins = [10., 20, 30, 50, 100, 200, 5000]
+depth_bins = [0., 30, 100, 5000]
+
+
+def map_grid_by_depth(z0bvalues, depth_idx):
+    z0barray = np.zeros_like(bathy)
+    print('depth_idx={}'.format(len((depth_idx))))
+    print('z0bvalues={}'.format(len(z0bvalues)))
+    if len(depth_idx) != len(z0bvalues):
+        print('TODO: add error message')
+    else:
+        print('ifentered')
+        for i, z in enumerate(z0bvalues):
+            print(i)
+            print(depth_idx[i])
+            z0barray[depth_idx[i]] = z
+    return z0barray
+
+
+def make_grid_by_depth(z0bvalues, depth_bins, plot=False, grd_file_modif=False):
+    nctarget = netcdf.Dataset('/home/victor/sandbox/CROCO_FILES_test/croco_grd_template.nc',
+                          'r', format='NETCDF4')
+    bathy = nctarget['h'][:]
+    nctarget.close()
+    idx = np.full((len(depth_bins) - 1, bathy.shape[0], bathy.shape[1]), False, dtype=bool)
+    print(len(depth_bins))
+    for j in range(len(depth_bins) - 1):
+        idx[j] = np.logical_and((bathy >= depth_bins[j]), (bathy < depth_bins[j + 1]))
+    z0barray = map_grid_by_depth(z0bvalues, depth_idx=idx)
+    if plot:
+        for j in range(len(depth_bins) - 1):
+            plt.subplot(3, 2, j + 1)
+            plt.contourf(idx[j])
+        plt.show()
+        plt.contourf(z0barray)
+        for i in range(len(depth_bins) - 1):
+            plt.contour(idx[i])
+        plt.show()
+    if grd_file_modif:
+        make_grid.make_grid(z0barray)
+    else:
+        return z0barray
+
+z0barray = make_grid_by_depth(np.array([0.0105377 , 0.01078108, 0.]), depth_bins, plot=True)
+

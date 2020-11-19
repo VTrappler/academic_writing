@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import matplotlib as mpl
+from matplotlib import cm
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats
+import scipy.special
+
+exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
+
+
+
+def Matern_fun(h, nu, rho=1):
+    arg = np.sqrt(2 * nu) * h / rho
+    return 2.0**(1 - nu) / scipy.special.gamma(nu) * scipy.special.kv(nu, arg) * (arg)**nu
+
+
+def gaussian_fun(h, rho=1):
+    return np.exp(- h**2 / (2 * rho**2))
+
+
+xp = np.linspace(0, 3, 500)
+
+plt.figure(figsize = col_full)
+plt.plot(xp, Matern_fun(xp, 0.5), label=r'Exponential kernel')
+plt.plot(xp, Matern_fun(xp, 3.0 / 2.0), label=r'Mat\'ern $3/2$')
+plt.plot(xp, Matern_fun(xp, 5.0 / 2.0), label=r'Mat\'ern $5/2$')
+plt.plot(xp, gaussian_fun(xp), label=r'Gaussian')
+plt.legend()
+plt.xlabel(r'$h$')
+plt.ylabel(r'$Cov(x, x+h)$')
+plt.title(u'Common covariance function for GP regression')
+plt.tight_layout()
+plt.savefig('./img/covariance_functions.pgf')
+plt.close()

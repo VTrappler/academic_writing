@@ -35,17 +35,17 @@ def plot_gp(gp, X_, true_function=None, nsamples=0, show=True, label=None):
 
     reg, = plt.plot(X_, y_mean, 'k', lw=1, zorder=9, label=r'GP regression')
     sh1 = plt.fill_between(X_,
-                     y_mean - y_std,
-                     y_mean + y_std,
-                     alpha=0.1, color='k', linewidth=0.0)
+                           y_mean - y_std,
+                           y_mean + y_std,
+                           alpha=0.1, color='k', linewidth=0.0)
     sh2 = plt.fill_between(X_,
-                     y_mean - 2 * y_std,
-                     y_mean + 2 * y_std,
-                     alpha=0.05, color='k', linewidth=0.0)
+                           y_mean - 2 * y_std,
+                           y_mean + 2 * y_std,
+                           alpha=0.05, color='k', linewidth=0.0)
     sh3 = plt.fill_between(X_,
-                     y_mean - 3 * y_std,
-                     y_mean + 3 * y_std,
-                     alpha=0.05, color='k', linewidth=0.0)
+                           y_mean - 3 * y_std,
+                           y_mean + 3 * y_std,
+                           alpha=0.05, color='k', linewidth=0.0)
 
     if nsamples > 0:
         y_samples = gp.sample_y(X_[:, np.newaxis], 10)
@@ -81,78 +81,121 @@ gp = GaussianProcessRegressor(kernel=Matern(1.0 / 5.0),
                               n_restarts_optimizer=50)
 gp.fit(initial_design, response)
 
-plt.figure(figsize=col_full)
-true, reg, sh1, sh2, sh3 = plot_gp(gp, X_, true_function=function_gp, show=False, label=r'True function $f$')
-# plt.plot(np.nan, 'ob', label=r'Training points $f(x_i)$')
-# plt.plot(np.nan, label=r'GP regression', color='k', lw=1)
-# plt.plot(np.nan, 'r--', label=r'True function $f$')
-# plt.legend([true, reg, (sh1, sh2, sh3)], handler_map={tuple: HandlerTuple(ndivide=None)})
-plt.legend()
-plt.xlabel(r'$x$')
-plt.xlim(bounds)
-plt.savefig('./img/example_GP.pgf')
-plt.close()
+# plt.figure(figsize=col_full)
+# true, reg, sh1, sh2, sh3 = plot_gp(gp, X_, true_function=function_gp, show=False, label=r'True function $f$')
+# # plt.plot(np.nan, 'ob', label=r'Training points $f(x_i)$')
+# # plt.plot(np.nan, label=r'GP regression', color='k', lw=1)
+# # plt.plot(np.nan, 'r--', label=r'True function $f$')
+# # plt.legend([true, reg, (sh1, sh2, sh3)], handler_map={tuple: HandlerTuple(ndivide=None)})
+# plt.legend()
+# plt.xlabel(r'$x$')
+# plt.xlim(bounds)
+# plt.savefig('./img/example_GP.pgf')
+# plt.close()
 
-xp = np.linspace(0, 4, 200)
-plt.figure(figsize=(col_full[0], col_full[1] * 1.2))
-plt.subplot(4, 2, (1, 7))
-plt.plot(xp, Matern_fun(xp, 0.5), label=r'Exponential')
-plt.plot(xp, Matern_fun(xp, 3.0 / 2.0), label=r'Mat\'ern $3/2$')
-plt.plot(xp, Matern_fun(xp, 5.0 / 2.0), label=r'Mat\'ern $5/2$')
-plt.plot(xp, gaussian_fun(xp), label=r'Gaussian')
-plt.legend()
-plt.xlabel(r'$h$')
-plt.ylabel(r'$C_Z(h)$')
-plt.title(u'Common covariance functions')
+# xp = np.linspace(0, 4, 200)
+# plt.figure(figsize=(col_full[0], col_full[1] * 1.2))
+# plt.subplot(4, 2, (1, 7))
+# plt.plot(xp, Matern_fun(xp, 0.5), label=r'Exponential')
+# plt.plot(xp, Matern_fun(xp, 3.0 / 2.0), label=r'Mat\'ern $3/2$')
+# plt.plot(xp, Matern_fun(xp, 5.0 / 2.0), label=r'Mat\'ern $5/2$')
+# plt.plot(xp, gaussian_fun(xp), label=r'Gaussian')
+# plt.legend()
+# plt.xlabel(r'$h$')
+# plt.ylabel(r'$C_Z(h)$')
+# plt.title(u'Common covariance functions')
 
-nsamples=10
-kernels = [Matern(1.0, nu=0.5), Matern(1.0, nu=1.5), Matern(1.0, nu=3.5), RBF(1.0)]
-lab = [r'Exponential', r'Mat\'ern 3/2', r'Mat\'ern 5/2', r'Gaussian']
-for i, ker in enumerate(kernels):
-    plt.subplot(4, 2, (i + 1) * 2)
-    gp = GaussianProcessRegressor(kernel=ker)
-    plt.plot(gp.sample_y(xp[:, np.newaxis], nsamples).squeeze(), linewidth=1)
-    plt.title(lab[i])
-    plt.xticks([])
-    plt.yticks([])
+# nsamples = 10
+# kernels = [Matern(1.0, nu=0.5), Matern(1.0, nu=1.5), Matern(1.0, nu=3.5), RBF(1.0)]
+# lab = [r'Exponential', r'Mat\'ern 3/2', r'Mat\'ern 5/2', r'Gaussian']
+# for i, ker in enumerate(kernels):
+#     plt.subplot(4, 2, (i + 1) * 2)
+#     gp = GaussianProcessRegressor(kernel=ker)
+#     plt.plot(gp.sample_y(xp[:, np.newaxis], nsamples).squeeze(), linewidth=1)
+#     plt.title(lab[i])
+#     plt.xticks([]) # À changer ?
+#     # plt.yticks([])
 
-plt.tight_layout()
-plt.savefig('./img/covariance_functions.pgf')
-plt.close()
+# plt.tight_layout()
+# plt.savefig('./img/covariance_functions.pgf')
+# plt.close()
 
+
+# plt.figure(figsize=col_full)
+# plt.subplot(2, 1, 1)
+# true, reg, sh1, sh2, sh3 = plot_gp(gp, X_,
+#                                    true_function=function_gp,
+#                                    show=False,
+#                                    label=r'True function $f$')
+# plt.legend()
+# plt.xlabel(r'$x$')
+# plt.xlim(bounds)
+
+# ax = plt.subplot(2, 1, 2)
+# m_Z, s_Z = gp.predict(X_[:, np.newaxis], return_std=True)
+# ax.plot(X_, s_Z**2, label=r'$\sigma_Z$')
+# IMSE = []
+# scenarios = lambda mp, sp: scipy.stats.norm.ppf(np.linspace(0.05, 0.95, 10, endpoint=True),
+#                                                 loc=mp, scale=sp)
+# for x in X_:
+#     mp, sp = gp.predict(np.atleast_2d(x), return_std=True)
+#     evaluated_points = scenarios(mp, sp).squeeze()
+#     ss = 0
+#     for evalu in evaluated_points:
+#         gpp = bow.add_points_to_design(gp, x, evalu)
+#         ss += bow.integrated_variance(gpp, X_[:, np.newaxis], alpha=None)
+#     IMSE.append(ss / float(len(evaluated_points)))
+# ax2 = ax.twinx()
+# ax2.plot(X_, -np.asarray(IMSE), label=r'$-$ augmented IMSE', color=colors[1])
+# ax2.plot(np.nan, np.nan, label=r'$\sigma_Z$', color=colors[0])
+# ax.legend()
+# # plt.show()
+# plt.savefig('./img/IMSE_variance.pgf')
+
+import scipy.stats
+T = -1.5
+A = X_[function_gp(X_) < T]
 
 plt.figure(figsize=col_full)
 plt.subplot(2, 1, 1)
 true, reg, sh1, sh2, sh3 = plot_gp(gp, X_,
                                    true_function=function_gp,
                                    show=False,
-                                   label=r'True function $f$')
-plt.legend()
+                                   label=r'True function $f$'
+                                   )
+plt.title('True function and GP surrogate')
+plt.xlim(bounds)
+# plt.fill_betweenx([-10, 10], A.min(), A.max(), color='cyan', alpha=0.1)
+plt.ylim([-6, 7])
+plt.axhline(T, color='g', lw=2, label='$y=T$')
+plt.legend(fontsize=8, ncol=2)
+plt.xlabel(r'$x$')
+
+plt.subplot(2, 1, 2)
+m, s = gp.predict(X_.reshape(-1, 1), return_std=True)
+Am = X_[m.squeeze() < T]
+# plt.plot(A, 0.5 * np.ones(sum(function_gp(X_) < T)))
+plt.fill_betweenx([0.5, 0.75], A.min(), A.max(), color='red', alpha=0.5,
+                  label=r'$f \leq T$')
+plt.fill_betweenx([0.25, 0.5], Am.min(), Am.max(), color='cyan', alpha=0.5,
+                  label=r'$m_Z \leq T$')
+prob_a = scipy.stats.norm.cdf(-((m.squeeze() - T) / s.squeeze()))
+plt.title(r'Probability of coverage of $A = ]-\infty, T]$')
+plt.plot(X_, prob_a.squeeze(), label=r'$\pi_A$')
+plt.legend(fontsize=8)
+plt.ylim([-0.1, 1.1])
+plt.ylabel(r'$\pi_A$')
 plt.xlabel(r'$x$')
 plt.xlim(bounds)
-
-ax = plt.subplot(2, 1, 2)
-m_Z, s_Z = gp.predict(X_[:, np.newaxis], return_std=True)
-ax.plot(X_, s_Z**2, label=r'$\sigma_Z$')
-IMSE = []
-scenarios = lambda mp, sp: scipy.stats.norm.ppf(np.linspace(0.05, 0.95, 10, endpoint=True),
-                                                loc=mp, scale=sp)
-for x in X_:
-    mp, sp = gp.predict(np.atleast_2d(x), return_std=True)
-    evaluated_points = scenarios(mp, sp).squeeze()
-    ss = 0
-    for evalu in evaluated_points:
-        gpp = bow.add_points_to_design(gp, x, evalu)
-        ss += bow.integrated_variance(gpp, X_[:, np.newaxis], alpha=None)
-    IMSE.append(ss / float(len(evaluated_points)))
-ax2 = ax.twinx()
-ax2.plot(X_, -np.asarray(IMSE), label=r'$-$ augmented IMSE', color=colors[1])
-ax2.plot(np.nan, np.nan, label=r'$\sigma_Z$', color=colors[0])
-ax.legend()
-plt.show()
-plt.savefig('./img/IMSE_variance.pgf')
-
-
-
-aIVPC_2stage_UB
-aIVPC = np.load('/home/victor/Bureau/aIVPC_new.npy', allow_pickle=True)
+plt.tight_layout()
+plt.savefig('/home/victor/acadwriting/Manuscrit/Text/Chapter4/img/prob_coverage_exemple.pgf')
+# plt.subplot(3, 1, 3)
+# plt.title('Variance of the coverage probability\nand probability of missclassification')
+# plt.plot(X_, prob_a * (1 - prob_a), label=r'$\mathcal{V}$')
+# plt.plot(X_, np.fmin(prob_a, 1 - prob_a), label=r'$P_{mis}$')
+# plt.fill_betweenx([-10, 10], A.min(), A.max(), color='cyan', alpha=0.1)
+# plt.xlim(bounds)
+# plt.ylim([-0.1, 0.6])
+# plt.legend()
+# plt.tight_layout()
+# plt.show()

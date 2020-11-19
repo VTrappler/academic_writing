@@ -1,0 +1,25 @@
+\nomenclatureentry{boneCAP@[{CAP}]\begingroup Capitate\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneSCA@[{SCA}]\begingroup Scaphoid\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneTPM@[{TPM}]\begingroup Trapezium\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneTPD@[{TPD}]\begingroup Trapezoid\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneHAM@[{HAM}]\begingroup Hamate\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneLUN@[{LUN}]\begingroup Lunate\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneTRQ@[{TRQ}]\begingroup Triquetrum\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{bonePIS@[{PIS}]\begingroup Pisiform\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneRAD@[{RAD}]\begingroup Radius\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneULN@[{ULN}]\begingroup Ulna\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneMC1@[{MC1}]\begingroup Metacarpal 1\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneMC2@[{MC2}]\begingroup Metacarpal 2\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneMC3@[{MC3}]\begingroup Metacarpal 3\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneMC4@[{MC4}]\begingroup Metacarpal 4\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{boneMC5@[{MC5}]\begingroup Metacarpal 5\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{cjointTMC@[{TMC}]\begingroup Trapeziometacarpal joint\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{cjointCMC@[{CMC}]\begingroup Carpometacarpal joint\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{imgAcquiMRI@[{MRI}]\begingroup Magnetic Resonance Imaging\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{imgAcquiCT@[{CT}]\begingroup Computed Tomography\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodPCA@[{PCA}]\begingroup Principal Component Analysis\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodMDL@[{MDL}]\begingroup Minimum Description Length\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodPDM@[{PDM}]\begingroup Point Distribution Model\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodICP@[{ICP}]\begingroup Iterative Closest Point\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodSSM@[{SSM}]\begingroup Statistical Shape Model\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{methodGPMM @[{GPMM }]\begingroup Gaussian Process Morphable Model\nomeqref {0}|nompageref}{1}

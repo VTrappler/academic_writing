@@ -1,0 +1,344 @@
+\message{ !name(slides_laurent.tex)}\documentclass[11pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{mathrsfs}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\GP}{\mathsf{GP}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\kk}{\theta}
+\newcommand{\uu}{u}
+\newcommand{\UU}{U}
+
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\Theta}
+\usepackage[duration=25, lastminutes=5]{pdfpcnotes}
+\newcommand\manupath{/home/victor/acadwriting/Manuscrit/Text/}
+\usepackage{adjustbox}
+\usetikzlibrary{positioning}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+\graphicspath{{../Figures/}}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+% \definecolor{BlueTOL}{HTML}{222255}
+% \definecolor{BrownTOL}{HTML}{666633}
+% \definecolor{GreenTOL}{HTML}{225522}
+% \setbeamercolor{normal text}{fg=BlueTOL,bg=white}
+% \setbeamercolor{alerted text}{fg=BrownTOL}
+% \setbeamercolor{example text}{fg=GreenTOL}
+\definecolor{darkcyan}{rgb}{0.0, 0.55, 0.55}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{Maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{Black}{cmyk}{0, 0, 0, 0}
+\definecolor{blueGreen}{HTML}{4CA6A7}
+\definecolor{blueGreenN2}{HTML}{3964B4}
+% Using colorbrewer, 1 is lightest colour, 4 is darkest
+\definecolor{brewsuperlight}{HTML}{F0F9E8}
+\definecolor{brewlight}{HTML}{BAE4BC}
+\definecolor{brewdark}{HTML}{7BCCC4}
+\definecolor{brewsuperdark}{HTML}{2B8CBE}
+
+
+\colorlet{cfgHeaderBoxColor}{blueGreen} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{blueGreen} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{blueGreen}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{blueGreen} % vLionel : blueGreenN2
+
+%%% VICTOR COLORS ----------------------------------------
+\colorlet{cfgHeaderBoxColor}{brewsuperdark} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{RoyalBlue} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{RoyalBlue}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{RoyalBlue} % vLionel : blueGreenN2
+
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+\setbeamerfont{author}{size=\footnotesize}
+
+\title{Robust calibration of numerical models based on Relative-regret}
+\subtitle{Robust Estimation of bottom friction}
+\author{{\large \bf Victor Trappler} \hfill \texttt{victor.trappler@univ-grenoble-alpes.fr} \\
+  É. Arnaud, L. Debreu, A. Vidard \\
+  AIRSEA Research team (Inria)\hfill \texttt{team.inria.fr/airsea/en/}\\
+  Laboratoire Jean Kuntzmann}
+
+
+\institute{\begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}}
+
+\date{\textbf{GdR MASCOTNUM, Grenoble, 2020}
+  % {\bf } \today
+}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+\message{ !name(slides_laurent.tex) !offset(220) }
+\section{Robust minimization}
+
+\subsection{Criteria of robustness}
+
+\frame{
+  \frametitle{Non-exhaustive list of ``Robust'' Objectives }
+  \pnote{
+    I'm going to present very quickly some estimates that can be considered robust, but will focus mainly on the last one.
+    First we can think about minimising in the worst case sense. This usually leads to overly conservative estimates as we are maximizing over the whole space U. We can also think about minimising the moments, such as the mean or the variance, or even combine them in a multiobjective setting by looking for the pareto front.
+
+
+    Every choice of environmental variable gives a distinct situation 
+    The aspect we are going to focus on is based on the regret, so it implies a comparison with the best performance attainable for each u.
+}
+\begin{itemize}
+% \item Global Optimum: $ \min_{(\kk,\uu)} J(\uu,\kk)$ $ \longrightarrow $ EGO
+\item Worst case~\cite{marzat_worst-case_2013}: $$ \min_{\kk \in \Kspace} \left\{\max_{\uu \in \Uspace} J(\kk,\uu)\right\}$$
+\item M-robustness~\cite{lehman_designing_2004}: $$\min_{\kk\in\Kspace} \Ex_{\UU}\left[J(\kk,\UU)\right]$$
+\item V-robustness~\cite{lehman_designing_2004}: $$\min_{\kk\in\Kspace} \Var_{\UU}\left[J(\kk,\UU)\right]$$
+\item Multiobjective~\cite{baudoui_optimisation_2012}: $$ \text{Pareto frontier}
+  $$
+% \item Region of failure given by $J(\kk,\uu)>T$~\cite{bect_sequential_2012}: $$\max_{\kk \in \Kspace} R(\kk) = \max_{\kk\in \Kspace} \Prob_{\uu}\left[J(\kk,\uu) \leq T \right]$$
+\item Best performance achievable given $\uu \sim \UU$
+\end{itemize}
+}
+
+% \frame{
+%   \frametitle{Toy Problem: Minimization of mean value}
+%   \vspace{-5ex}
+%    \begin{center}
+%     {\includegraphics[height = .8\textheight, width = \linewidth]{mean_minimization_illustration}}
+%   \end{center}
+%   \vspace{-3ex}
+%    $\longrightarrow$ Quite different from the value $\kk \approx 0.1$ obtained by optimization knowing the true value of $\uu_{\mathrm{ref}}$ 
+% }
+
+\frame{
+  \frametitle{``Most Probable Estimate'', and relaxation}%
+
+  \pnote{
+    The main idea is that we want to consider individually all situations induced by the value of the environmental variable.
+    Basically, once a value u is sampled, the problem is deterministic, so under some assumption, we have a minimiser theta star that is a function of u
+
+
+    Keeping in mind the random nature of U, we can define the random variable thetastar, and its density (if it is defined), can be seen as the frequency of which a value theta is optimal.
+
+
+    That is an interesting information, but we can have a little more than that. We may want to include theta that yield values of the cost function close to a minimum. To do that, we introduce a relaxation of the equality constraint with alpha, so that for a given u, we consider acceptable the theta that give values of the cost function between Jstar, the optimal value and alpha times Jstar
+    So finally, we compute the probability that this given theta is acceptable with respect to the level alpha
+    }
+  Given $\uu \sim \UU$, the optimal value is $J^*(\uu)$, attained at
+  $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$.
+  \pause
+    % \begin{columns}
+    %   \begin{column}{0.6\textwidth}
+
+  
+      The minimizer can be seen as a random variable:
+      \begin{equation*}
+        \kk^*(\UU) = \argmin_{\kk\in\Kspace} J(\kk,\alert<1>{\UU})
+      \end{equation*}
+      $\longrightarrow$ estimate its density (how often is the value $\kk$ a minimizer)
+      \begin{align*}
+        p_{\kk^*}(\kk)%\,\mathrm{d} \kk & = \Prob\left[\kk^* \in \left[\kk,\kk+\mathrm{d}\kk \right]\right] \\
+                                        %        & =\Prob\left[\argmin J(\kk, \uu) \in \left[\kk,\kk+\mathrm{d}\kk \right]\right] \\
+                                               &= "\Prob_{\UU}\left[J(\kk,\UU)= J^*(\UU) \right]"                                               % & \Prob\left[ J(\uu) \leq J(\kk, \uu) \forall \kk \in \left[\kk,\kk+\mathrm{d}\kk \right]\right]
+      \end{align*}
+      \pause
+      How to take into account values not optimal, but not too far either
+      $\longrightarrow$ relaxation of the equality with $\alpha> 1$:
+      \begin{equation*}
+        \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
+      \end{equation*}
+      % \begin{align*}
+      %   R(\kk) & = \Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\kk)} & = \Prob_{\uu}\left[J(\kk,\uu) \leq \phantom{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alert{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
+      %          \end{align*}%
+             % \begin{align*}
+             %            R(\kk) &=\Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
+             %            R_{\alpha}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alpha\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]
+             %          \end{align*}
+             %        }
+               % \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
+                  % \end{column}%
+                  % \begin{column}{0.5\textwidth}
+                  %   \begin{center}
+                  %     \includegraphics[scale=0.3]{summary_criteria}
+                  %   \end{center}
+                  %   % \pause
+                  %   % Idea: Relaxation of the constraint:
+                  %   % \begin{equation*}
+                  %   %   R_{\alpha}(\kk) = \Prob\left[J(\kk,\uu) \leq \alpha \min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right],\quad \alpha \geq 1
+                  %   % \end{equation*}
+                  %   % and increase $\alpha$ until $\max_{\kk} R_{\alpha}(\kk)$ reaches a level of confidence.
+                  % \end{column}
+                % \end{columns}   %
+    }
+
+
+
+ 
+\begin{frame}
+  \frametitle{Illustration}
+  \pnote{
+    What does it look like on a concrete example. We have the plot of a cost function, where theta is the x axis, and u is on the y axis.
+
+    As said earlier, for each horizontal cross section, so for u fixed, we compute the minimiser, theta star of u.
+
+    We can then compute the whole set of the conditional minimisers
+
+    Now, we set alpha: inside the yellow lines, we are between the minimum and alpha times the minimum
+
+    Finally, we construct and measure for each theta the probability to be within this acceptable region.
+   Great, now we just have to know how to choose alpha. % Recalling that Gamma here is a probability, we can set levels of interests, such as 1, 0.9 or 0.95 for instance, and take the smallest alpha such that there is a value k where gamma of alpha and k reaches this level, similarly to a quantile.
+ }
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \vfill
+      \only<1>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_1.pgf}}}%
+      \only<2>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_2.pgf}}}%
+      \only<3>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_3.pgf}}}
+      \only<4>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_4.pgf}}}%
+      \vfill
+\end{column}
+\begin{column}{.6\textwidth}
+  \begin{itemize}
+  \item<1-> Sample $\uu\sim\UU$, and solve
+    $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$
+  \item<2->Set of conditional minimisers: $\{(\kk^*(\uu), \uu) \mid \uu \in \Uspace\}$
+  \item<3-> Set $\alpha \geq 1$
+  \item<4> $R_{\alpha}(\kk) = \{\uu \mid J(\kk,\uu) \leq \alpha J^*(\uu) \}$
+  \item<4> $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[\UU\in R_{\alpha}(\kk) \right]$
+  % \onslide<5->{\item How to choose $\alpha$? When $\max_{\kk} \Gamma_\alpha(\kk)$ reaches fixed levels}
+  \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% \frame{
+% \frametitle{Illustration of the relaxation}
+% \begin{center}
+% \scalebox{0.45}{%
+% \input{../Figures/regions_relax_alpha2.pgf}}
+% \end{center}
+% }
+
+\begin{frame}
+  \pnote{Great so now we have Gamma(theta) which is the probability that theta gives a cost alpha acceptable
+    If we have an idea of a threshold we don't want to exceed, so if alpha is known we can maximize the probability of being alpha acceptable
+
+    Or, on the other hand, as gamma is a probability, we can look for the smallest relaxation, where the probability of acceptability reaches a certain confidence 1-eta.
+
+    We can then define the family of relative-regret estimators, which are the maximizers of such a probability of being alpha acceptable.
+    Depending on the approach, we can nudge toward optimal performances with small alpha, or risk adverse preference, by setting a bigger relaxation.
+  }
+  \frametitle{Getting an estimator}
+  $\Gamma_{\alpha}(\kk)$: probability that the cost (thus $\kk$) is $\alpha$-acceptable
+  \begin{itemize}
+  \item If $\alpha$ known, maximize the probability that $\kk$ gives acceptable values:
+    \begin{equation}
+      \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \max_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
+    \end{equation}
+  \item Set a target probability $1-\eta$, and find the smallest $\alpha$.
+    \begin{equation}
+      \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq 1 - \eta \}
+    \end{equation}
+  \end{itemize}
+
+  \begin{block}{Relative-regret family of estimators}
+  \begin{equation}
+   \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
+  \end{equation}
+\end{block}
+
+\end{frame}
+\begin{frame}
+  \frametitle{Interpretation}
+If we either set $\alpha$ or $\eta$
+  \begin{align}
+    \hat{\kk} &= \argmax \Gamma_{\alpha} \\
+    \max \Gamma_{\alpha} &= \Gamma_{\alpha}(\hat{\kk}) = 1-\eta
+    \end{align}
+    The maximal \emph{relative regret} $J / J^*$ of the function will be $\alpha$, except for the $100\eta\%$ least favourable cases.
+    \begin{itemize}
+    \item $\alpha$ and $\eta$ 
+    \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Why the relative regret ?}
+  \pnote{we discussed so far the relative regret, that takes the form of a multiplicative relaxation. Why this over the additive regret ?
+
+    Relative regret takes better into account the magnitude of the cost function, as the region of acceptability grows with alpha AND Jstar. When the situation is already bad, we don't want to put much effort to stay close to the minimum theta star of u. On the other hand, for Jstar close to 0, 
+  }
+
+  
+  \renewcommand\rmfamily{\sffamily}
+  \begin{center}
+  \resizebox{.6\textwidth}{!}{\input{\manupath Chapter3/img/illustration_region_regret.pgf}}
+\end{center}
+  \begin{itemize}
+  \item Relative regret
+    \begin{itemize}
+    \item $\alpha$-acceptability regions large for flat and bad situations ($J^*(\uu)$ large)
+    \item Conversely, puts high confidence when $J^*(\uu)$ is small
+    \item No units $\rightarrow$ ratio of costs
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+             
+% \begin{frame}
+%   \frametitle{TODO: CHANGER; Choosing a $\alpha$}
+%   \pnote{
+%     Here we have our problem, and we are increasing alpha. The black curve in the bottom plot is gamma alpha of k. By increasing alpha, we increase the probability of being acceptable, and stop when this probability is 1. This can be seen on the top plot, there is a k, always in the acceptable region.
+%     What is interesting is that we have two informations. The value k of the estimation, but also the level alpha, that is controlling in a sense the regret we have relative to the best attainable performance.
+%   }
+%   \begin{center}
+%     \includegraphics<1>[height=.9\textheight, width= \textwidth]{branin0}
+%     \includegraphics<2>[height=.9\textheight, width= \textwidth]{branin1}
+%     \includegraphics<3>[height=.9\textheight, width= \textwidth]{branin2}
+%     \includegraphics<4>[height=.9\textheight, width= \textwidth]{branin3}
+%     \end{center}
+%   \end{frame}
+  
+% \begin{frame}
+%   \frametitle{Computational bottleneck}
+%   \begin{itemize}
+%   \item Require the estimation \emph{and} optimization of a probability or a quantile
+%   \item Require $ J^*(\uu)=\min_{\kk}J(\kk, \uu)$ and $\kk^*(\uu)=\argmin_{\kk}J(\kk, \uu)$
+%   \item Usually the code is expensive to run
+%   \end{itemize}
+% \end{frame}
+
+
+
+\message{ !name(slides_laurent.tex) !offset(412) }
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -35,7 +35,7 @@
 
 \specialchapter{Appendix}
 \pagestyle{appendixStyle}
-
+  \minitoc
 \section{Likelihood ratio test for misspecified nested models}
 \cite{white_maximum_1982}
 The observations $Y$ are following the law with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
@@ -51,7 +51,7 @@ We have a family of distributions $\{p_{Y\mid \KK}\}$.
   \end{align}
 
   \begin{align}
-    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] _\\
+    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right]\\
     B(\kk) &= \Ex\left[\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}^T\right]
   \end{align}
 
@@ -73,10 +73,182 @@ We have a family of distributions $\{p_{Y\mid \KK}\}$.
   then
   \begin{align}
     C_n(\kk) &= A_n(\kk)^{-1} B_n(\kk) A_n(\kk) \\
-    C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk) \\
+    C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk)
   \end{align}
 
-\minitoc
+  \section{Distribution of a ratio of normal random variables}
+  \label{sec:lognorm_ratio}
+\subsection{Lognormal approximation}
+
+Let $T = X/Y$ with
+  \begin{align}
+    X \sim \mathcal{N}(\mu_X, \sigma^2_X) \\
+    Y \sim \mathcal{N}(\mu_Y, \sigma^2_Y) \\
+    \Cov\left[X, Y\right] = \rho \\
+    \begin{bmatrix}
+      X \\ Y
+    \end{bmatrix} \sim \mathcal{N}\left(%
+    \begin{bmatrix}
+      \mu_X \\ \mu_Y
+    \end{bmatrix};%
+    \begin{bmatrix}
+      \sigma^2_X  & \rho \sigma_X \sigma_Y \\
+      \rho\sigma_X \sigma_Y & \sigma^2_Y
+    \end{bmatrix} \right)
+  \end{align}
+  
+  \begin{align}
+    T &= \frac{\mu_X}{\mu_Y}\frac{1 + \frac{X_0}{\mu_X}}{1 + \frac{Y_0}{\mu_Y}} \\
+    \log T &= \log\left(\frac{\mu_X}{\mu_Y}\right) + \log\left(1 + \frac{X_0}{\mu_X}\right) -\log\left(1 + \frac{Y_0}{\mu_Y}\right)
+  \end{align}
+  So if $X_0 / \mu_X$ and $Y_0/ \mu_Y$ are small, i.e.\ if $\mu_X \gg \sigma_X$ and $\mu_Y \gg \sigma_Y$, by Taylor's expansion of the $\log$, we have
+  \begin{align}
+    \log T & \approx \log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{X_0}{\mu_X} - \frac{Y_0}{\mu_Y}
+\\
+    & \sim \mathcal{N}\left(\log\left(\frac{\mu_X}{\mu_Y}\right), \frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)
+  \end{align}
+  \begin{align}
+    \begin{bmatrix}
+      X - \mu_X \\ Y - \mu_Y
+    \end{bmatrix} = 
+    \begin{bmatrix}
+      X_0 \\ Y_0
+    \end{bmatrix} \sim \mathcal{N}\left(%
+    \begin{bmatrix}
+      0 \\ 0
+    \end{bmatrix};%
+    \begin{bmatrix}
+      \sigma^2_X  & \rho \sigma_X \sigma_Y \\
+      \rho\sigma_X \sigma_Y & \sigma^2_Y
+    \end{bmatrix} \right)%
+    \\
+    \begin{bmatrix}
+      \frac{1}{\mu_X} & 0 \\
+      0 & \frac{1}{\mu_Y}
+    \end{bmatrix}
+    \begin{bmatrix}
+      X_0 \\ Y_0
+    \end{bmatrix}=
+    \begin{bmatrix}
+      X_0/\mu_X \\ Y_0/ \mu_Y
+    \end{bmatrix} \sim \mathcal{N}\left(%
+    \begin{bmatrix}
+      0 \\ 0
+    \end{bmatrix};%
+    \begin{bmatrix}
+      \frac{\sigma^2_X}{\mu_X^2}  & \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \\
+      \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y}& \frac{\sigma^2_Y}{\mu_Y^2}
+    \end{bmatrix} \right)%
+  \end{align}
+
+  Thus
+  \begin{equation}
+    \frac{X_0}{\mu_X} - \frac{Y_0}{\mu_Y} \sim \mathcal{N}\left(0;\frac{\sigma^2_X}{\mu_X^2} + \frac{\sigma^2_Y}{\mu_Y^2} - 2 \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \right)
+  \end{equation}
+  
+  A first approximation is then to consider the ratio to be log-normally distributed, and
+  \begin{align}
+    \Ex[T] &= \exp\left(\log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{1}{2}\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2} \right)\right)\\
+           &=\left(\frac{\mu_X}{\mu_Y}\right) \exp\left(\frac{\sigma_X^2}{2\mu_X^2}+\frac{\sigma_Y^2}{2\mu_Y^2}\right) \\
+    \Var[T] &= \left(\exp\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)-1 \right)\Ex[T]^2
+  \end{align}
+
+  \subsection{Transformation}
+  \cite{hayya_note_1975}
+\begin{align}
+  t =\frac{\mu_Y T - \mu_X}{\sqrt{\sigma^2_X - 2T\rho\sigma_Y\sigma_X + T^2\sigma_Y^2}} \sim \mathcal{N}(0, 1)
+\end{align}
+
+Conservative rule of thumb: if $\mu_Y/\sigma_Y \leq 0.09$ and $\mu_X / \sigma_X > 0.19$
+
+
+% \section{Optimisation on the whole control points}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/1/map_163.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/1/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/2/map_163.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/2/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/3/map_111.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/3/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/4/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/4/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/5/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/5/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/6/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/6/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/7/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/7/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/8/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/8/ctrl_plot.png}
+\end{figure}
+\clearpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/9/map_199.png}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/9/ctrl_plot.png}
+\end{figure}
+\clearpage
+
+
+
+
 \pagestyle{appendixStyle}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

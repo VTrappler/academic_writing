@@ -31,19 +31,20 @@ nctarget.close()
 depth_bins = [10., 20, 30, 50, 100, 200, 5000]
 # depth_bins = [0., 30, 100, 5000]
 depth_bins = [0, 60, 100, 200, 5000] # For SA
-
+depth_bins = [0, 30, 60, 100, 5000] # For SA
 
 def map_grid_by_depth(z0bvalues, depth_idx):
     z0barray = np.zeros_like(bathy)
-    print('depth_idx={}'.format(len((depth_idx))))
-    print('z0bvalues={}'.format(len(z0bvalues)))
+    # print('depth_idx={}'.format(len((depth_idx))))
+    # print('z0bvalues={}'.format(len(z0bvalues)))
     if len(depth_idx) != len(z0bvalues):
-        print('TODO: add error message')
+        # print('TODO: add error message')
+        pass
     else:
-        print('ifentered')
+        # print('ifentered')
         for i, z in enumerate(z0bvalues):
-            print(i)
-            print(depth_idx[i])
+        #    print(i)
+        #    print(depth_idx[i])
             z0barray[depth_idx[i]] = z
     return z0barray
 
@@ -73,8 +74,11 @@ def make_grid_by_depth(z0bvalues, depth_bins, plot=False, grd_file_modif=False):
         return z0barray
 
 
+z0bvals = np.array([0, 1, 2, 3])
+print(z0bvals)
 
-z0barray = make_grid_by_depth(range(len(depth_bins) - 1), depth_bins, plot=False)
+z0barray = make_grid_by_depth(z0bvals, depth_bins, plot=True, grd_file_modif=False)
+
 croco_grd = netcdf.Dataset('/home/victor/sandbox/CROCO_FILES_test/croco_grd_gaussian.nc')
     # logdepth = -np.log(croco_grd['h'][:])
 depth = (croco_grd['h'][:])
@@ -97,7 +101,7 @@ fig = plt.figure(figsize=(col_full[0], col_full[1]))
 ax1 = plt.subplot(1, 1, 1, projection=ccrs.PlateCarree())
 plt.subplots_adjust(left=0.1, right=.75)
 cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
-    
+
 
 im1 = ax1.contourf(lon, lat, z0barray, 10, transform=ccrs.PlateCarree(), cmap=cmap)
 resize_colorbar = get_resize_event_function(ax1, cbar_ax)
@@ -114,4 +118,4 @@ plt.tight_layout()
 resize_colorbar(None)
 
 plt.savefig('./img/depth_repartition.pdf')
-plt.close()
+plt.show()
