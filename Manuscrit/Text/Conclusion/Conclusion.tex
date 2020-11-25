@@ -1,4 +1,4 @@
-\documentclass[../../Main.tex]{subfiles}
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
 
 \subfileGlobal{
 \renewcommand{\RootDir}[1]{./Text/Chapter4/#1}
@@ -31,10 +31,10 @@
 
 %% ---- On veut que ce soit le chapitre numéro 3 en notation alphabétique pour avoir un C
 \clearpage
-\setcounter{chapter}{2}
-\renewcommand{\thechapter}{\Alph{chapter}}%
+% \setcounter{chapter}{2}
+% \renewcommand{\thechapter}{\Alph{chapter}}%
 
-\specialchapter{Conclusion and perspectives}
+\chapter*{Conclusion and perspectives}
 \label{chap:Conclusion}
 \pagestyle{conclusionStyle}
 
@@ -43,30 +43,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-This thesis focuses on the modeling of the wrist bones shapes. It is part of a field in which few works were conducted and little suitable data were gathered. Reliable modeling can however have many useful applications such as diagnosis help functions or transplant customization. We propose a method to define relations between carpal bone meshes and attach importance to proving the reliability of our results. Statistical models are computed from the data, which provides the properties required for the intended applications. In this conclusion, we will come back over the work accomplished and explore the prospects and potential applications. 
-
-
-We have developed a method to represent wrists such that they are related by correspondence relations between all instances of a bone. It rests on the definition of common templates, that are deformed to match individual bone shapes. As was illustrated in the existing works review, correspondence between shapes is a powerful property, that is required for many applications in different domains. However it cannot be quantified or validated. It makes it difficult to work with, as its quality cannot be proven by direct measures. In this study indirect properties are used to assess correspondence relations quality, including characteristics of the statistical model generated based on the correspondence. 
-
-We propose various applications of the meshes previously computed, some of them being additionally useful to validate the correspondence relations: two statistical models, one based on a PCA and one on Gaussian Processes, are introduced. The first statistical model is later used for registering the wrists of a second database, extending the number of corresponding wrists available for later studies. A method for transferring systems of coordinates between individual's wrists is proposed, which can be useful for characterizing joint motion. This method is applied in a first attempt of modeling the wrist kinematics with meaningful predictors. The \db* doesn't include enough poses for real applications, but we establish the feasibility as proof of concept. 
-
-
-%The first introductory chapter presents various concepts or domains that are addressed in the thesis. We introduce the human wrist anatomy, since most of the work is about the carpal bones and the bones they articulate with. A short part of the work is about wrist movement, hence wrist biomechanics, mostly the wrist degrees of freedom are described. A study pertinence depends greatly on the data it is based on, in a second part we describe the databases that were used, and how they were acquired. Finally we introduce the concept of 3D meshes, and various properties that are useful for our work: how similarity between 3D shapes are measured, what is correspondence between meshes and how it can be computed. We especially detail existing works about defining dense correspondence for wrist bones, and show that none of them has conscientiously proven their results quality. 
-
-
-We detail a method to obtain correspondence between wrist bones, which is a tricky task due to the complex carpal shapes. It is based on the definition of common reference templates that are non-rigidly registered towards the database meshes. We propose a partial validation of the results by proving that the generated reparameterized shapes at least describe the same 3D objects than the original meshes of the database: the average Hausdorff distance between the original database mesh and its equivalent deformed template is below $0.6$ mm. We justify that all details are preserved and studying the resulting shapes is equivalent to studying the original ones, no shape information is loss. We attach importance to the simplicity and easy reproducibility of the approach. We didn't implement equivalent methods proposed by other authors to compare the results, and very few comparisons between methods have been proposed in general in the literature. An interesting future work would be to implement and compare all these works.
-
-
-We propose some possible applications that require correspondence between shapes. We compute a statistical shape model based on a PCA. It is a quite classical application and all wrist shape models in the literature are either based on a PCA or a derivative method. The registration capacities of the model to new 3D shapes are tested. When its reliability is proven, we register it to a second database, which is in turn reparameterized to be in correspondence with the first one. It doubles the number of wrists available. Considering the limited number of individuals some carpal bone shape studies rest on, it would be interesting to verify that the same conclusions are reached with a wider sample group. In a second part, another statistical model is computed, based on Gaussian Processes, which were never previously applied to carpal bones. We are interested in the registration capacities of this model. It indeed offers multiple advantages over the PCA-based model, such as adaptation to posterior user information, and non-linearity. These two properties were tested separately. However a lack of time didn't permit to thoroughly test the model possibilities, further analysis are required. We would also be very interested in combining the two methods proposed, in a user interactive registration. A third application is intended for biomechanical applications. Resting on the correspondence relations previously defined, we are able to transfer systems of coordinates, and more generally points and directions from a few example to all other individuals. Such systems are used in the analysis of joints motion, and are required to be reproducible, which usually limits the possible definitions to mathematical or anatomical remarkable points. However our method is not restricted to such landmarks, thanks to the correspondence relations previously created, and could be used to define optimal systems for the joints. 
-
- 
-Finally the focus is on modeling of wrist motion. The few existing models in the literature are all PCA-based, and are not interfaced with explicit articular degrees of freedom. We have evaluated a direct application of linear regression to our mesh models, using meaningful parameters such as the wrist and the thumb \fe* angles. The 3D representation of wrist posture can be directly adjusted with these angular positions. However our validations are limited and the approach need to be tested with extended CT scan data to include intermediary poses and more complete finger movements. Our approach is applied to each individual wrist representation and introduces the possibility to study motions with respect to the bone shapes, by comparison of individuals. 
-
-
-This conclusion describes the main lines of the work realized in this thesis. We have proposed various leads to continue what was done. However, more global perspectives could also be considered. To the best of our knowledge, if studies about each carpal bone shape exist, they are always considered separately. Yet these bones are so close to each other, and articulate in such an intricate way, that the shape of a bone necessarily influences its neighbors. It would be interesting to study the carp as a whole. This would mostly be useful for transplants, in order to customize the bone for the individual, so it has the optimal form considering the rest of the wrist. In a second phase, the influence of the bones shapes on the wrist movement could be studied, with the similar idea of customizing a healthy motion model that could be used for diagnosing.
-
-
+To write
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,10 +53,15 @@ This conclusion describes the main lines of the work realized in this thesis. We
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}
-	\bibliography{../../Bibliography}
+        \bibliography{/home/victor/acadwriting/bibzotero}
 }
 \relax
 
 \endgroup
 \end{document}
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

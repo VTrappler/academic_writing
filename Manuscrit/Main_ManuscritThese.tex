@@ -42,10 +42,10 @@
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% Liste des abréviations
-	\input{Abbreviations}
-	\renewcommand{\nomname}{List of Abbreviations}
-	\phantomsection
-	\printnomenclature
+	% \input{Abbreviations}
+	% \renewcommand{\nomname}{List of Abbreviations}
+	% \phantomsection
+	% \printnomenclature
 
 %	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %	%% Liste des todos
@@ -70,8 +70,9 @@
 	\subfile{Text/Chapter3/Chapter3.tex}
 	\subfile{Text/Chapter4/Chapter4.tex}
 	\subfile{Text/Chapter5/Chapter5.tex}
-	
-	% \subfile{Text/Conclusion/Conclusion.tex}
+	\phantomsection
+        \addstarredchapter{Conclusion and Perspectives}
+	\subfile{Text/Conclusion/Conclusion.tex}
 	
 	\subfile{Text/Annexes/Annexes.tex}
 	\pagestyle{appendixStyle}

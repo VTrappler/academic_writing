@@ -24,7 +24,7 @@
 % \dominitoc
 % \faketableofcontents
 % \subfileLocal{\setcounter{chapter}{2}}
-\chapter{Adaptative design enrichment for calibration using Gaussian Processes}
+\chapter{Adaptative strategies for calibration using Gaussian Processes}
 \label{chap:adaptative_design_gp}
 \minitoc
 \newpage
@@ -38,7 +38,7 @@
 
 \section{Introduction}
 
-In the previous chapter, we introduced different notions of robustness for the estimation of a calibration parameter. Those objectives usually require the evaluation of various integrals, and to perform several optimizations. A large number of model evaluations is then needed, but it may bring some practical issues, as numerical models are usually very expensive to run in terms of computational resources. Indeed, for most realistic physical simulations, the programs have to solve systems of PDEs over large discretized domains. Even though the programs are optimized and parallelized to take best advantage of high-performance computers, the time required to compute the quantities of interest may range from a few seconds to days. Because of that, methods requiring a large number of runs of the model for exhaustivity should be avoided.
+In the previous chapter, we introduced different notions of robustness for the estimation of a calibration parameter. Those objectives usually require the evaluation of various integrals, and to perform several optimizations. A large number of model evaluations is then needed, but it may bring some practical issues, as numerical models are usually very expensive to run in terms of computational resources. Indeed, for most realistic physical simulations, systems of PDEs over large discretized domains have to be solved. Even though the programs are optimized and parallelized to take best advantage of high-performance computers, the time required to compute the quantities of interest may range from a few seconds to days. Because of that, methods requiring a large number of runs of the model for exhaustivity should be avoided.
 
 % On the other hand, one other issue commonly encountered is the dimensionality of the parameter spaces. The number of samples required to get the fixed coverage of a space scales exponentially with the number of dimensions: this is the \emph{curse of dimensionality}. This motivates the ongoing research on dimension reduction. Some classical techniques, such as Principal Component analysis (PCA) \cite{jolliffe_principal_2002}, and Singular Value Decomposition (SVD) look . \cite{zahm_certified_2018} look to find the subspaces where the Bayesian update has the most effects.\cite{blanchet-scalliet_specific_2017,ribaud_krigeage_2018}
 
@@ -53,11 +53,11 @@ In the previous chapter, we introduced different notions of robustness for the e
   \end{itemize}
 \end{definition}
 We will focus exclusively on Kriging \cite{krige_statistical_1951,matheron_traite_1962}, or Gaussian Process regression, but other methods can be used to solve such problems. Polynomial Chaos regression for instance \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}.
-In this chapter, after defining the usual kriging equations, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to focus on robust optimization, by splitting the input space in $\Kspace$ and $\Uspace$, and introduce other strategies to take advantage of the nature of the surrogate in~\cref{sec:robust_criteria_gp}, in order to efficiently compute robust estimates introduced before, especially regret-based estimators.
+In this chapter, after defining the usual kriging equations, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to focus on robust optimization, by splitting the input space in $\Kspace$ and $\Uspace$, and introduce other strategies to take advantage of the nature of the surrogate in~\cref{sec:robust_criteria_gp} in order to efficiently compute robust estimates introduced before, especially regret-based estimators.
 
 % Surrogate models are often built using initial evaluations of $f$.
 \section{Gaussian process regression}
-In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and supposedly expensive to evaluate.
+In the following, we will introduce a generic function $f$, that maps a space $\Xspace$ to $\mathbb{R}$. Depending on the application, $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This function is unknown, and  expensive to evaluate.
 
 \subsection{Random processes}
 Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
@@ -68,12 +68,12 @@ Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}
   \end{array}
 \end{align}
 
-This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} = \left\{ (x_i, f(x_i) \right)\}_{1\leq i\leq n}$, called the \emph{initial design}. For notational simplicity, we write $x\in \mathcal{X}$ if $(x, f(x)) \in \mathcal{X}$.
+This function is assumed to have been evaluated on a design of $n$ points, $\mathcal{X} = \left\{ (x_i, f(x_i) \right)\}_{1\leq i\leq n}$, called the \emph{initial design}. For notational simplicity, we write $x\in \mathcal{X}$ if $(x, f(x)) \in \mathcal{X}$, \textit{i.e.} if the point $x$ has been evaluated by $f$.
 As this function is unknown, there is uncertainty on the values outside of the initial design, which can be classified as \emph{epistemic} since it can be reduced by directly evaluating the function.
 We can model this uncertainty on functions by defining random processes:
 \begin{definition}[Random process]
   Let $(\Omega, \mathcal{F}, \Prob)$ be a probability space, and $\Xspace\subset \mathbb{R}^p$.
-  A random process $Z$ is a collection of random variables indexed on $\Xspace$, so for each $x \in \Xspace$, $Z(x)$ is a random variable:
+  A random process $Z$ is a collection of random variables indexed on $\Xspace$, so for each $x \in \Xspace$, $Z(x)$ is a real random variable (\textit{i.e.} a mapping from $\Omega$ to $\mathbb{R}$):
  \begin{equation}
   \begin{array}{rcl}
     Z: \mathbb{X} & \longrightarrow & \left(\Omega \rightarrow \mathbb{R} \right)\\
@@ -87,10 +87,10 @@ From a Bayesian point of view, such a random process can act as a prior on the f
 Evaluating the function at an additional point $x \notin \mathcal{X}$ provides new information on the random process, and we can update our belief on $f$.
 
 
-In this work, we are going to focus exclusively on a specific type of random process, namely, the Gaussian process (abbreviated as GP), but other types of random process can be encountered in the literature: Student t-processes in~\cite{shah_student-t_2014} are introduced as alternatives to GP, or various graphical models such as Gaussian and Markov Random Fields in~\cite{bishop_pattern_2006,li_markov_2009}.
+In this work, we are going to focus exclusively on a specific type of random process, namely the Gaussian process (abbreviated as GP), but other types of random process can be encountered in the literature: Student t-processes in~\cite{shah_student-t_2014} are introduced as alternatives to GP to account for larger tails, or various graphical models such as Gaussian and Markov Random Fields in~\cite{bishop_pattern_2006,li_markov_2009} are used to model images for instance.
 
 \begin{definition}[Gaussian process]
-  Let $Z$ be a random process on $\Xspace$, i.e. a collection of random variables indexed by $\Xspace$. $Z$ is a Gaussian process (GP) if any finite number of those random variables have a multivariate joint Gaussian distribution.  A more thorough description of Gaussian processes and their applications can be found in~\cite{rasmussen_gaussian_2006}.
+  Let $Z$ be a random process on $\Xspace$, \textit{i.e}. a collection of random variables indexed by $\Xspace$. $Z$ is a Gaussian process (GP) if any finite number of those random variables have a multivariate joint Gaussian distribution.  A more thorough description of Gaussian processes and their applications can be found in~\cite{rasmussen_gaussian_2006}.
   In that case, $Z$ is uniquely defined by its mean function $m_Z:\Xspace \rightarrow \mathbb{R}$ and its covariance function $C_Z:\Xspace \times \Xspace \rightarrow \mathbb{R}$:
   \begin{align}
     m_Z(x) &= \Ex\left[Z(x)\right] \\
@@ -168,7 +168,7 @@ From a computational point of view, GP are relatively cheap to handle:
 \item In order to get a sample path from this GP, one need to be able to sample from a multivariate normal distribution, and thus only need to compute the Cholesky decomposition of the conditioned covariance matrix.
 \end{itemize}
 However, if some points of the design are very close to each other, the covariance matrix can be ill-conditioned. In this case,
-for numerical stability, we can add a \emph{nugget} effect to $\mathbf{K}_{\mathcal{X}}$.~\eqref{eq:GP_joint_distrib_nugget} becomes:
+for numerical stability, we can add a \emph{nugget} effect to $\mathbf{K}_{\mathcal{X}}$, and~\eqref{eq:GP_joint_distrib_nugget} becomes:
 \begin{equation}
   \label{eq:GP_joint_distrib_nugget}
   \begin{pmatrix}
@@ -192,13 +192,13 @@ From a probabilistic point of view, we can see the nugget effect as an added Gau
 \label{sec:cov_fun}
 In the previous section, we described the equations to solve to get the surrogate $m_{Z\mid \mathcal{X}}$ of $f$ based on GP.
 The kriging equations are based on the covariance function $C_Z$.
-A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{\dim\Xspace})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$.
+A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{p})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$.
 For multidimensional problems, covariance functions are usually chosen as the product of one dimensional covariance functions:
 \begin{equation}
-  C_Z(h) = s^2\prod_{i=1}^{\dim \Xspace} C_i(h_i;l_i)
+  C_Z(h) = s^2\prod_{i=1}^{p} C_i(h_i;l_i)
 \end{equation}
-These covariance functions introduce an additional parameter $l$ of dimension $\dim \Xspace$, and a variance parameter $s^2$.
-$l$ called the \emph{length scale}, that measure the length of the influence of each variable on its surroundings. If the length scales are all equals, the covariance kernel is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
+These covariance functions introduce an additional parameter $l=(l_1,\dots,l_p)$ of dimension $p=\dim \Xspace$, and a variance parameter $s^2$.
+$l$ is called the \emph{length scale} and quantify the radius of influence of an evaluation along the different input variables. If the length scales are all equals, the covariance kernel is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
 
 A few common stationary $1D$-covariance functions are introduced~\cref{tab:common_cov_fc}.
 
@@ -225,17 +225,17 @@ A few common stationary $1D$-covariance functions are introduced~\cref{tab:commo
 
 \subsection{Initial design and validation}
 
-The $(\dim \Xspace + 1)$ hyperparameters of the covariance: the length scales $(l_1,\dots,l_{\dim \Xspace})$ and the variance parameter of $s$ have to be estimated based on the training set $\mathcal{X}$. This is usually done by MLE~(see for instance~\cite{ribaud_robustness_2019}), or by cross-validation (see~\cite{ginsbourger_note_2009}).
-In order to construct a Gaussian process, or a general metamodel for that matter, the model must first be evaluated on an initial design which should present good space-filling properties. An usual choice is to use Latin Hypercube Sampling (LHS), and an usual rule of thumb for the initial number of points of $\Xspace$ to be evaluated is about $10\cdot\dim \Xspace $. In order to validate the GP, \emph{i.e.} to verify that the GP does not overfit the data, one can use cross-validation as described in~\cite{dubrule_cross_1983}.
-
+The $(p + 1)$ hyperparameters of the covariance: the length scales $(l_1,\dots,l_{p})$ and the variance parameter of $s$ have to be estimated based on the training set $\mathcal{X}$. This is usually done by MLE~(see for instance~\cite{ribaud_robustness_2019}), or by cross-validation (see~\cite{ginsbourger_note_2009}).
+In order to construct a Gaussian process, or a general metamodel for that matter, the model must first be evaluated on an initial design which should present good space-filling properties. An usual choice is to use Latin Hypercube Sampling (LHS), and an usual rule of thumb for the initial number of points of $\Xspace$ to be evaluated is about $10p$. In order to validate the GP, \emph{i.e.} to verify that the GP does not overfit the data, one can use cross-validation as described in~\cite{dubrule_cross_1983}.
 
 
 \section{General enrichment strategies for Gaussian Processes}
 \label{sec:enrichment_strategies}
-We detailed so far the construction of a GP on a unknown function $f$, based on a initial design $\mathcal{X}_0$. However the surrogate is usually not an end in itself. This surrogate is used afterward to replace the original function for expensive procedures.
-By adding points to the design, we can improve the accuracy of the surrogate in some regions of of interest, depending on the application foreseen, such as optimization. In~\cref{sec:robust_criteria_gp}, we will introduce other criteria that focus on the robust estimation, to solve the problems introduced in the previous chapter.
+We detailed so far the construction of a GP on a unknown function $f$, based on a initial design. However the surrogate is usually not an end in itself. This surrogate is used afterward to replace the original function for expensive procedures.
+By adding points to the design, we can improve the accuracy of the surrogate in some regions of interest. In this section, we will introduce a few classical criteria for enrichment of the design, such as exploration, optimization and volume estimation.
+In~\cref{sec:robust_criteria_gp}, we will introduce other criteria that focus on the robust estimation, to solve the problems introduced in the previous chapter.
 
-Choosing the points to add to the design can be done optimally, one by one, as described \cref{ssec:1stepSUR}, or we can look to add a batch of $q$ points each iteration. 
+Choosing the points to add to the design can be done sequentially, by optimizing a specified criterion, as described~\cref{ssec:1stepSUR}, or we can look to add a batch of $K$ points each iteration, as described in~\cref{sec:sampling_based_criterion}.
 
 \subsection{1-step lookahead strategies}
 \label{ssec:1stepSUR}
@@ -457,15 +457,22 @@ The criterion can then be written as
 %
 \subsection{Contour and volume estimation}
 \label{sec:GP_vol_estim}
-In this section, we are interested in the estimation of the inverse image of sets: $\{x \in \Xspace \mid f(x) = T\}=f^{-1}(\{T\})$ for level sets, or $\{x\in\Xspace \mid f(x) \leq T\} = f^{-1}(]-\infty, T])$ called excursion sets. An exemple of this estimation is illustrated \cref{fig:prob_coverage_exemple}, where the focus is on the estimation of the set $f^{-1}(\interval[open left]{-\infty}{T})$. For that, we are going to introduce enrichment strategies which rely on the evalution of the function around the level set $\{f=T\}$.
+In this section, we are interested in the estimation of the inverse image of sets: $\{x \in \Xspace \mid f(x) = T\}=f^{-1}(\{T\})$ for level sets, or $\{x\in\Xspace \mid f(x) \leq T\} = f^{-1}(]-\infty, T])$ called excursion sets. An exemple of this estimation is illustrated \cref{fig:prob_coverage_example}, where the focus is on the estimation of the set $f^{-1}(\interval[open left]{-\infty}{T})$. For that, we are going to introduce enrichment strategies which rely on the evalution of the function around the level set $\{f=T\}$.
 
 \subsubsection{Reduction of the augmented IVPC}
-We can be interested in the estimation of a volume given by an unknown function. Given $\Prob_{X}$ a probability measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute $V=\Prob_{X}\left[f^{-1}(B)\right]$. For $B = \interval[open left]{-\infty}{T}$ is equivalent to compute the volume of the \emph{excursion set} of $f$ below $T$: $V=\Prob_{X}[f(X) \leq T]$.
-
+For a function $f$, let us assume that we are interested in the
+estimation of the set
+$f^{-1}(B) = \{x \in \Xspace \mid f(x) \leq T\}$, with
+$B = ]-\infty, T]$. Given $\Prob_{X}$ a probability
+measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute
+$V=\Prob_{X}\left[f^{-1}(B)\right]$. For
+$B = \interval[open left]{-\infty}{T}$ is equivalent to compute the
+volume of the \emph{excursion set} of $f$ below $T$:
+$V=\Prob_{X}[f(X) \leq T]$. Such an example is illustrated~\cref{fig:prob_coverage_example}.
 \begin{figure}[ht]
   \centering
   \input{\imgpath prob_coverage_exemple.pgf}
-  \caption{\label{fig:prob_coverage_exemple} Estimation of $f^{-1}(\interval[open left]{-\infty}{T})$ using GP and probability of coverage associated}
+  \caption{\label{fig:prob_coverage_example} Estimation of $f^{-1}(\interval[open left]{-\infty}{T})$ using GP and probability of coverage associated}
 \end{figure}
 
 % Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019,heinrich_level_2012,vorobyev_new_2003}). 
@@ -474,7 +481,7 @@ We define $\pi_A$ its probability of coverage:
 \begin{equation}
   \pi_A(x) = \Prob_{Z(x)}\left[x\in A\right] = \Prob_{Z(x)}[Z(x) \in B]
 \end{equation}
-On \cref{fig:prob_coverage_exemple} shows the probability of coverage of the set $A$, the true set $f^{-1}(B)$, and the plugin estimation of this set $m_Z^{-1}(B) = \{x\in\Xspace \mid m_Z(x) \leq T\}$.
+\Cref{fig:prob_coverage_example} shows the probability of coverage of the set $A$, the true set $f^{-1}(B)$, and the plugin estimation of this set: $m_Z^{-1}(B) = \{x\in\Xspace \mid m_Z(x) \leq T\}$.
 For a given $x\in\Xspace$, the event ``$x$ belongs to $A$'' happens with probability $\pi_A(x)$, thus has variance
 \begin{equation}
 \mathscr{V}_A(x)=\pi_A(x)(1 - \pi_A(x))
@@ -494,13 +501,6 @@ Those sets are decreasing (with respect to the inclusion) when $\eta$ increases:
   0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
 \end{equation}
 
-For a function $f$, let us assume that we are interested in the
-estimation of the set
-$f^{-1}(B) = \{x \in \Xspace \mid f(x) \leq T\}$, with
-$B = ]-\infty, T]$.  Let $Z$ be a GP, constructed using an initial
-design $\mathcal{X}_0$ on $\Xspace$ for the function $f$,
-$Z\sim \GP(m_Z, C_Z)$ The inverse image of $B$ through $Z$ gives the
-random set $A = Z^{-1}(B) = \{x \in \Xspace \mid Z(x) \leq T\}$.
 Using the properties of the GP, we can express the probability of
 coverage of the random set $A$ using $F_{Z(x)}$, the cdf of the r.v.\
 $Z(x)$, or $\Phi$, the cdf of the centered standard Gaussian
@@ -534,9 +534,9 @@ close to the level set $T$ (intensification aspect), or if there is a
 large prediction variance (exploration aspect).
 
 
-Alternatively, we can also use the variance of the probability of coverage $\mathscr{V}_A$ as an indication of the uncertainty of the classification problem. As the maximum of variance will be obtained for points having a probability of coverage $\pi_A(x) =0.5$, looking and evaluating the maximizers of this criterion is not really suitable.
+Alternatively, we can also use the variance of the probability of coverage $\mathscr{V}_A$ as an indication of the uncertainty of the classification problem. As the maximum of variance will be obtained for points having a probability of coverage $\pi_A(x) =0.5$, looking and evaluating the maximizers of this criterion is not really relevant.
 
-Instead, by integrating $\mathscr{V}_A$ over the whole space $\Xspace$, we get a measure of the uncertainty in the classification problem associated with the design $\mathcal{X}_n$, as the criteria introduced~\cite{bect_sequential_2012}, and what has been introduced for the $\IMSE$, which we will denote $\mathrm{IVPC}(\mathcal{X}_n)$ (Integrated Variance of the Probability of Coverage)
+Instead, by integrating $\mathscr{V}_A$ over the whole space $\Xspace$, we get a measure of the uncertainty in the classification problem associated with the design $\mathcal{X}_n$, as the criteria introduced~\cite{bect_sequential_2012} and what has been introduced for the $\IMSE$, which we will denote $\mathrm{IVPC}(\mathcal{X}_n)$ (Integrated Variance of the Probability of Coverage)
 \begin{equation}
   \label{eq:IVPC_def}
 \mathrm{IVPC}(\mathcal{X}_n) =  \int_{\Xspace} \mathscr{V}_A(x)\,\mathrm{d}x
@@ -544,7 +544,7 @@ Instead, by integrating $\mathscr{V}_A$ over the whole space $\Xspace$, we get a
 We can finally introduce a criterion based on the augmented design, as done for the $\IMSE$.
 \begin{equation}
   \label{eq:expected_aIVPC}
-  x_{n+1} = \argmin_{\kk \in\Kspace} \Ex_{Z(x)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(x, Z(x) \right)  \})\Big]
+  x_{n+1} = \argmin_{x \in\Xspace} \Ex_{Z(x)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(x, Z(x) \right)  \})\Big]
 \end{equation}
 
 Other criteria have also been developed, such as the use of the theory of random sets~\cite{el_amri_data-driven_2019}, in order to define a measure of uncertainty based on Vorob'ev mean and deviation~\cite{vorobyev_new_2003}.
@@ -566,6 +566,8 @@ The $\eta$-margin of uncertainty $\mathbb{M}_{\eta}$ is defined as the sets of p
 Based on this set, we can construct easily a sampling criterion by using the indicator function of the margin of uncertainty: $\mathbbm{1}_{\mathbb{M}_{\eta}}(x)=\kappa_{\mathbb{M}}(x) = \bar{\kappa}_{\mathbb{M}}(x) \cdot \mathrm{Vol}(\mathbb{M}_{\eta})$.
 
 Evaluating points in this region allows to reduce the uncertainty at $x$ (completely if the GP is interpolant, as $\sigma_Z(x)$ becomes $0$ after evaluating $f(x)$) on the classification of the point $x$.
+The margin of uncertainty, the samples and the centroids obtained with~\cref{alg:sampling_enrichment} are shown~\cref{fig:margin_unc}. We can see that the centroids are located close to the true level-set of the function in this case.
+
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath margin_unc.pdf}
@@ -573,7 +575,6 @@ Evaluating points in this region allows to reduce the uncertainty at $x$ (comple
 \end{figure}
 
 \clearpage
-
 \section{Adaptative strategies for robust optimisation using GP}
 \label{sec:robust_criteria_gp}
 In the previous section, we introduced enrichment strategies to solve different problems for a generic function $f:\Xspace\rightarrow \mathbb{R}$.
@@ -601,9 +602,9 @@ As a GP, for any $(\kk, \uu)\in\Kspace\times\Uspace$, $Z(\kk, \uu)$ is normally 
 
 A surrogate of $J$, constructed using the GP $Z$ is then $m_Z$, which will be used to compute the different estimates. However, the initial design $\mathcal{X}_0$ is probably too sparse to get $m_Z$ accurately enough to compute the wanted estimates. For that purpose, we propose enrichment strategies in order to add \emph{relevant} points to the design $\mathcal{X}_0$.
 
-One main challenge for this problem lies in the distinction of the input space $\Xspace = \Kspace \times \Uspace$. The objective for each of these spaces is different: one need to explore sufficiently the space $\Uspace$ according to the distribution of $\UU$, in order to be able to compute $\Prob_{\UU}$ and $\Ex_{\UU}$, and $\Kspace$ does not need to be explored as much.
+One main challenge for this problem lies in the distinction of the input space $\Xspace = \Kspace \times \Uspace$. The objective for each of these spaces is different: one need to explore sufficiently the space $\Uspace$ according to the distribution of $\UU$, in order to be able to compute $\Prob_{\UU}$ and $\Ex_{\UU}$, while $\Kspace$ does not need to be explored as much because the objective function is supposed to be \emph{optimized} with respect to $\kk$.
 
-In what follows, we are going to focus on the estimation of conditional minimisers $\kk^*: \uu\mapsto \kk^*(\uu)$, which can be used to estimate the $\estimtxt{\kk}{MPE}$, and on the estimators which satisfy properties based on regret.
+In what follows, we are going to focus on the estimation of the conditional minimisers $\kk^*: \uu\mapsto \kk^*(\uu)$, which can be used to estimate the mode of the distribution of the conditional minimisers $\estimtxt{\kk}{MPE}$, and on the estimators which satisfy properties based on regret.
 For that purpose, the methods introduced here will usually involve the computation and the optimization of a criterion on the joint space directly, following the method of~\cref{alg:SUR_strat}, and sampling in regions of large uncertainties, as detailed~\cref{alg:sampling_enrichment}.
 
 For other robust estimators, such as the minimum of the expectation $\estimtxt{\kk}{mean}$, other strategies have been derived, which consist first in removing the dependence on $\uu$. For instance in~\cite{janusevskis_simultaneous_2010}, the authors integrate directly the GP with respect to $\UU$, in order to get another GP, which models the function $\kk\mapsto \Ex_{\UU}\left[J(\kk, \UU)\right]$. This integrated GP will then be used to select a point $\tilde{\kk}$, and then a couple of points $(\kk_{n+1},\uu_{n+1})$ is chosen in order to reduce a measure of uncertainty on the space $\{\tilde{\kk}\}\times \Uspace$.
@@ -665,7 +666,7 @@ and with a set of i.i.d.\ samples $\{\uu_i\}_i$ of $\UU$, use the surrogates to 
 
 \clearpage
 
-\subsection{Gaussian formulation for the relative and additive regret families of estimators}
+\subsection{Gaussian formulations for the relative and additive regret families of estimators}
 \label{ssec:gp_delta_alpha}
 
 We are now going to detail how Gaussian processes can be used to estimate regret-based estimators.
@@ -674,6 +675,10 @@ Recalling the previous chapter, the family of regret-based estimators are:
   \{ \estimtxt{\kk}{AR,\beta} &= \argmax_{\kk\in\Kspace} \Gamma_\beta(\kk) = \argmax_{\kk\in\Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq J^*(\UU) + \beta \right] \mid \beta \geq 0 \} \\
 \{ \estimtxt{\kk}{RR,\alpha} &= \argmax_{\kk\in\Kspace} \Gamma_\alpha(\kk) = \argmax_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right] \mid \alpha \geq 1 \}
 \end{align}
+
+As explained~\cref{sec:rr_family}, in order to get an estimator, two starting points can be considered: either fixing the threshold $\alpha$ (or $\beta$), and computing the associated estimator $\estimtxt{\kk}{RR,\alpha}$ (or $\estimtxt{\kk}{AR,\beta}$), or setting the probability of acceptability targeted to a level $p$, and then compute the associated estimator and threshold. For the first alternative, we are going to focus on improving the estimation of $\Gamma$ using GP in~\cref{sec:evaluation_gamma}, while for the second, we will try to improve the estimation of the quantile of the ratio in~\cref{sec:quantile_rr}.
+
+
 We first need to detail some notations with respect to the conditional minimum and conditional minimizers, and their equivalent for the GP.
 % Let us first consider the conditional minimiser:
 % \begin{align}
@@ -771,8 +776,9 @@ The strategies introduced hereafter can be easily be adapted for the additive-re
 
 
 
-\subsection{Evaluation of the acceptability probability $\Gamma$}
-Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we can first explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plug-in estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
+\subsection{Improving the estimation of $\Gamma_{\alpha}$}
+\label{sec:evaluation_gamma}
+Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we are going to explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plugin estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
 
@@ -809,18 +815,12 @@ For the plug-in approach, the chosen estimator is defined \cref{eq:def_gamma_PI}
 
   In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Z$ of the objective function $J$.
   In this case, we propose to reduce the IMSE of the GP $Z - \alpha Z^*$. The choice of the IMSE (instead of choosing the point of maximal variance for instance) comes from the decomposition of the variance~\cref{eq:variance_delta_GP_ab}.
-  Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrates the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$.
+  Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrates the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$. In the following, a subscript $n$ will indicate a quantity computed with $n$ additional evaluations of the function.
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath IMSE_enrichment.pgf}
   \caption{\label{fig:IMSE_enrichment} Evolution of the $L^2$ and $L^\infty$ error of the estimation of $\Gamma_\alpha$ and IMSE of the successive constructed GP. The points added are chosen by the augmented expected IMSE}
-\end{figure}
-
-\begin{figure}[ht]
-  \centering
-  % \input{\imgpath IMSE_enrichment_dist_to_objective.pgf}
-  \caption{\label{fig:IMSE_enrichment_ptarget} Squared distance between the true value of $\max\Gamma_{\alpha}$ and the estimated maximum using probabilistic $(\pi)$ and plug-in approach $PI$}
 \end{figure}
 
   
@@ -860,7 +860,7 @@ Instead of evaluating this integrated variance, on the current design $\mathcal{
 Finally, we can define a new learning function, which is the expected $\mathrm{IVPC}$ with respect to the random variable $Z(\kk, \uu)$:
 \begin{equation}
   \label{eq:expected_aIVPC}
-  \kappa(\kk, \uu) = \Ex_{Z(\kk, \uu)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(\left(\kk, \uu \right), Z(\kk, \uu) \right)  \}     \Big]
+ (\kk_{n+1},\uu_{n+1}) = \argmin_{(\kk, \uu)\in \Kspace\times\Uspace} \Ex_{Z(\kk, \uu)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(\left(\kk, \uu \right), Z(\kk, \uu) \right)  \} )     \Big]
 \end{equation}
 \Cref{fig:IVPC_enrichment} shows the evolution of the error in the estimation of $\Gamma_{\alpha}$, with respect to the $L^2$ and $L^{\infty}$ norm.
 \begin{figure}[ht]
@@ -944,7 +944,7 @@ On~\cref{fig:AK_MCS_Gamma} is shown the evolution of the norm of the difference 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath AK_MCS_Gamma.pdf}
-  \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the number of added points in the estimation of $\Gamma_{\alpha}$ when selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star}}
+  \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the number of added points in the estimation of $\Gamma_{\alpha}$ when selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star} (TODO;changer $q$ en $K$)}
 \end{figure}
 The added points are shown~\cref{fig:AK_MCS_design}, and the margin of uncertainty $\mathbb{M}_{\eta}$ after the $n=70$ evaluations. We can see that the added point are distributed either toward the conditional minimisers, or toward the frontier of $\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$.
 \begin{figure}[ht]
@@ -979,7 +979,8 @@ The added points are shown~\cref{fig:AK_MCS_design}, and the margin of uncertain
 
 \clearpage
 
-\subsection{Estimation of $\alpha_p$ as a quantile of the relative regret}
+\subsection{Improving the estimation of $\alpha_p$ as a quantile of the relative regret}
+\label{sec:quantile_rr}
 Instead of choosing a fixed threshold $\alpha \geq 0$, we can instead look for a threshold such that $\max \Gamma_{\alpha}$ is large enough.
 Let us recall that given a level of confidence $p$, we define $\alpha_p$ as the smallest threshold giving a maximal probability of acceptability above $p$.
 \begin{equation}
@@ -1067,7 +1068,8 @@ We can then look to improve the prediction error on the log-ratio described \cre
 \end{equation}
 
 meaning that $\sigma_{\Xi}$ is computed using \cref{eq:log_ratio_eq}, and the GP augmented by the couple $\left((\kk, \uu), Z(\kk, \uu)\right)$.
-The result of this adaptative strategy is illustrated~\cref{fig:qPI_aIMSE}. We can see that this method is able to reduce steadily the error on the estimation of the quantile of order $p$. The large discontinuities in the error are probably due to the evaluation points in a region previously unexplored.
+The result of this adaptative strategy is illustrated~\cref{fig:qPI_aIMSE}. Along with $\hat{q}_{p,n}^{\mathrm{PI}}$, we plotted Monte-Carlo estimation of the quantile: $\hat{q}_{p,n}^{\mathrm{MC}}$, which has been obtained as a Monte-Carlo estimation of $\Ex_{Z}\left[Q_{\UU}\left(\frac{Z(\kk, \uu}{Z^*(\uu)};p\right)\right]$ for comparison.
+We can see that this method is able to reduce steadily the error on the estimation of the quantile of order $p$. The large discontinuities in the error are probably due to the evaluation points in a region previously unexplored.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath qPI_aIMSE.pdf}
@@ -1120,18 +1122,18 @@ On~\cref{fig:evol_error_qAK_MCS}, the evolution of the error on the estimation o
 
 An issue that may arise is that when the GP is accurate enough, $q_p^-$ and $q_p^+$ become close, hence the different margin of uncertainties produce centroids close to each others, which may lead to numerical difficulties. A crude way to deal with this technical issue is to discard randomly all but one point when some are close to each other, as done with hierarchical clustering.
 
-\section{Conclusion}
+\section{Partial conclusion}
 
-In this chapter, we introduced Gaussian Processes as surrogates for the expensive-to-evaluate objective function $J$. This metamodel, once constructed using an initial design of points on $\Kspace \times \Uspace$, can then be used to compute the robust estimators introduced~\cref{chap:robust_estimators}.
+In this chapter, we introduced Gaussian Processes as surrogates for the expensive-to-evaluate objective function $J$. This metamodel, once constructed using an initial design of points on $\Kspace \times \Uspace$, can then be used to compute the robust estimators introduced in~\cref{chap:robust_estimators}.
 
 However, due to the limited size of the initial design, and the impossibility to perform exhaustive computations of the objective function, this surrogate can be inaccurate in some regions, leading to a bad estimation, and thus a questionable calibration.
 Using the properties of the GP, we can construct adaptative strategies in order to enrich the design of experiment sequentially, where the points chosen improve significantly the various estimations, and in this thesis, the estimation of the regret-based estimators.
 
-Several improvements can be considered. First, all the methods introduced here focus on the improvement of the estimation of a function, which will be optimized in order to get the estimator. The adaptative strategy does not take into account the subsequent optimization.
+Several improvements can be considered. First, all the methods introduced here focus on the improvement of the estimation of a function, which will be optimized in order to get the estimator. The adaptative strategy does not take into account the subsequent optimization. Similarly as in~\cite{janusevskis_simultaneous_2010}, we could develop strategies in two parts: first, identify the point in $\Kspace$ which has the most potential to be the wanted estimator, and second, find the point in the joint space $\Kspace \times \Uspace$ which reduces the most the uncertainty on the candidate.
 
 Another issue encountered is that Gaussian Processes are suited to approximate functions of a moderate number of variables, because the optimization of the hyperparameters becomes increasingly difficult. In order to apply the algorithms based on GP, the dimension will first have to be reduced. Moreover, we did not take advantage of the gradient information, which may be available through the adjoint method and automatic differentation tools, as has been done in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019,miranda_adjoint-based_2016,pardalos_differentiating_2015}.
 
-In the next chapter, we will study the problem of robust calibration of a realistic numerical model of a coastal region.
+In the next chapter, we will study the problem of robust calibration of a realistic numerical model.
 
 
 % \begin{table}[ht]
