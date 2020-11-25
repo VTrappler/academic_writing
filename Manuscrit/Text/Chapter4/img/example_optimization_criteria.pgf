@@ -6958,7 +6958,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.797317in,y=3.048478in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \kappa_{\mathrm{IAGO}}(x)\)}%
+\pgftext[x=4.797317in,y=3.048478in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \mathrm{IAGO} \)}%\kappa_{\mathrm{IAGO}}(x)\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{0.424029in}{2.231878in}}{\pgfqpoint{5.174003in}{1.254100in}}%
