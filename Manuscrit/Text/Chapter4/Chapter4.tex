@@ -944,7 +944,7 @@ On~\cref{fig:AK_MCS_Gamma} is shown the evolution of the norm of the difference 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath AK_MCS_Gamma.pdf}
-  \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the number of added points in the estimation of $\Gamma_{\alpha}$ when selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star} (TODO;changer $q$ en $K$)}
+  \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the number of added points in the estimation of $\Gamma_{\alpha}$ when selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star}}
 \end{figure}
 The added points are shown~\cref{fig:AK_MCS_design}, and the margin of uncertainty $\mathbb{M}_{\eta}$ after the $n=70$ evaluations. We can see that the added point are distributed either toward the conditional minimisers, or toward the frontier of $\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$.
 \begin{figure}[ht]
@@ -1117,7 +1117,7 @@ On~\cref{fig:evol_error_qAK_MCS}, the evolution of the error on the estimation o
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath evol_error_qAK_MCS.pdf}
-  \caption{\label{fig:evol_error_qAK_MCS} Evolution of the estimation error, depending on the number of added points to the design}
+  \caption{\label{fig:evol_error_qAK_MCS} Evolution of the estimation error as $K=K_qK_{\mathbb{M}}=12$ are added each iterations}
 \end{figure}
 
 An issue that may arise is that when the GP is accurate enough, $q_p^-$ and $q_p^+$ become close, hence the different margin of uncertainties produce centroids close to each others, which may lead to numerical difficulties. A crude way to deal with this technical issue is to discard randomly all but one point when some are close to each other, as done with hierarchical clustering.

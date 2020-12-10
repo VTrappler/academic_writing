@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 import sys
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+import matplotlib.ticker as mticker
 # -> Manuscrit 415.41025
 # -> Notes 418.25368
 
