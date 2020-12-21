@@ -30,12 +30,37 @@
 
 \section{Introduction}
 \label{sec:intro_chap2}
-In this chapter we will first lay the ground for developing the general ideas behind calibration, by introducing the notions of models, and forward and inverse problems in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also a short review of notions of probability theory. Calibration will be defined in \cref{sec:parameter_inference} as the optimization of an objective function: Maximum likelihood estimation in a frequentist setting, or posterior maximization using Bayes' theorem. In practice, for large-scale applications, the optimization is performed using gradient-descent, and the computational cost of gradient computation can be overcome by adjoint method, as described in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going to discuss two aspects related to calibration, namely model selection in \cref{sec:model_selection} and the influence of nuisance parameters and model misspecification in calibration in \cref{sec:model_misspecification}.
+In this chapter we will first lay the ground for developing the
+general ideas behind calibration, by introducing the notions of
+models, and forward and inverse problems
+in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also
+a short review of notions of probability theory. Calibration will be
+defined in \cref{sec:parameter_inference} as the optimization of an
+objective function: Maximum likelihood estimation in a frequentist
+setting, or posterior maximization using Bayes' theorem. In practice,
+for large-scale applications, the optimization is performed using
+gradient-descent, and the computational cost of gradient computation
+can be overcome by adjoint method, as described
+in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going
+to discuss two aspects related to calibration, namely model selection
+in \cref{sec:model_selection} and the influence of nuisance parameters
+and model misspecification in calibration in
+\cref{sec:model_misspecification}.
 
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
-Running a simulation using numerical tools is useful to grasp a better understanding of the physical phenomena, or to forecast them. On the other hand, when observing and comparing the measurements and the output of the numerical simulation, we can quantify the mismatch between the two and tune some parameters involved in the computations. Indeed, these parameters represent different physical quantities or processes that are for example unresolved at the model's scale (such as the modelling of the turbulences)% friction of the ocean bed, or $k-\epsilon$ turbulence models for instance \todo{trop précis, selon si évoqué dans intro générale})
-, or ill-known. A proper estimation of these parameters has to be performed in order to guarantee a meaningful output when evaluating the model.
+Running a simulation using numerical tools is useful to grasp a better
+understanding of the physical phenomena, or to forecast them. On the
+other hand, when observing and comparing the measurements and the
+output of the numerical simulation, we can quantify the mismatch
+between the two and tune some parameters involved in the
+computations. Indeed, these parameters represent different physical
+quantities or processes that are for example unresolved at the model's
+scale (such as the modelling of the
+turbulences)% friction of the ocean bed, or $k-\epsilon$ turbulence models for instance \todo{trop précis, selon si évoqué dans intro générale})
+, or ill-known. A proper estimation of these parameters has to be
+performed in order to guarantee a meaningful output when evaluating
+the model.
 
 Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, we will first review the problem from a probabilistic point of view, in order to define properly some appropriate objective functions and introduce tools from optimal control theory to optimize them.
 

@@ -4,7 +4,7 @@
 
 import matplotlib.path as mpath
 import matplotlib.pyplot as plt
-import matplotlib.colors as colorz
+import matplotlib.colors as matcolor
 import cmocean
 import numpy as np
 from netCDF4 import Dataset
@@ -70,7 +70,7 @@ def main():
 
     im1 = ax1.contourf(lon, lat, depth, 10, transform=ccrs.PlateCarree(), cmap=cmocean.cm.thermal_r)
     im2 = ax2.contourf(lon, lat, depth, 50, levels=[1e1, 3e1, 5e1, 1e2, 5e2, 1e3, 1e4], transform=ccrs.PlateCarree(),
-                       norm=colorz.LogNorm(), cmap=cmocean.cm.thermal_r)
+                       norm=matcolor.LogNorm(), cmap=cmocean.cm.thermal_r)
     cb1 = plt.colorbar(im1, ax=ax1)
     # cb1.ax.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
     # cb1.ax.ticklabel_format(style='sci', axis='y', useOffset=True, scilimits=(0, 0))
@@ -91,22 +91,22 @@ def main():
     
     fig = plt.figure(figsize=(col_full[0], col_full[1]))
     ax1 = plt.subplot(1, 1, 1, projection=ccrs.PlateCarree())
-    im1 = ax1.contourf(lon, lat, depth, 50, levels=[1e1, 3e1, 5e1, 1e2, 5e2, 1e3, 5e3],
+    im1 = ax1.contourf(lon, lat, depth, 50, levels=[10, 30, 50, 100, 200, 4000, 5000],
                        transform=ccrs.PlateCarree(),
-                       norm=colorz.LogNorm(), cmap=cmocean.cm.deep)
+                       norm=matcolor.LogNorm(), cmap=cmocean.cm.deep)
     formatter = mticker.ScalarFormatter(# 10, labelOnlyBase=False
     )
-    cbar = fig.colorbar(im1, ax=ax1, ticks=[10, 30, 50, 100, 500, 1000, 5000], format=formatter)
+    cbar = fig.colorbar(im1, ax=ax1, ticks=[10, 30, 50, 100, 200, 4000, 5000], format=formatter)
+    cbar.set_label(r'Depth (m)', rotation=90)
     # cb1.ax.ticklabel_format(style='sci', axis='y', useOffset=True, scilimits=(0, 0))
     ax1.text(-6, 46, 'Bay of Biscay', color='white')
     ax1.text(-8, 50, 'Celtic Sea', color='white')
     ax1.text(-3, 50, 'English Channel', color='white')
 
-    ax1.set_title('Ocean floor elevation (in $\mathrm{m}$)')
+    ax1.set_title('Bathymetry chart of domain')
     add_all_decorations(ax1)
     plt.tight_layout()
-    plt.savefig('./img/depth_maps_log.png', dpi=300)
-    plt.show()
+    plt.savefig('./img/depth_maps_log.png', dpi=400)
     plt.close()
 
     

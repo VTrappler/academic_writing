@@ -26,6 +26,8 @@
 	\pagestyle{empty} % Disable any style
         
 	\dominitoc
+        \phantomsection % Pour que hyperref pointe sur la page
+	\addstarredchapter{\contentsname}
 	\ForceEmptyStyle{\tableofcontents}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,19 +65,13 @@
 	%% Content
 	
 	\subfile{Text/Introduction/Introduction.tex}
-	
-	%%% Le contenu de la thèse à proprement parler
 	% \adjustmtc % Recaler les minis sommaires
 	\subfile{Text/Chapter2/Chapter2.tex}
 	\subfile{Text/Chapter3/Chapter3.tex}
 	\subfile{Text/Chapter4/Chapter4.tex}
 	\subfile{Text/Chapter5/Chapter5.tex}
-	\phantomsection
-        \addstarredchapter{Conclusion and Perspectives}
 	\subfile{Text/Conclusion/Conclusion.tex}
-	
 	\subfile{Text/Annexes/Annexes.tex}
-	\pagestyle{appendixStyle}
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -83,7 +79,7 @@
 	\pagestyle{empty} % Disable any style
 	\bibliographystyle{alpha}
 	\bibliography{../bibzotero}
-	
+
 	\fullclear
 	\pagestyle{empty} % Disable any style
 	\subfile{Text/Resumes.tex}

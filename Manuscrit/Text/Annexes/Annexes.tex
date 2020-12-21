@@ -5,14 +5,14 @@
 }
 
 % For cross referencing
-\subfileLocal{
-\externaldocument{../../Text/Introduction/build/Introduction}
-\externaldocument{../../Text/Chapter2/build/Chapter2}
-\externaldocument{../../Text/Chapter3/build/Chapter3}
-\externaldocument{../../Text/Chapter4/build/Chapter4}
-\externaldocument{../../Text/Chapter5/build/Chapter5}
-\externaldocument{../../Text/Conclusion/build/Conclusion}
-}
+% \subfileLocal{
+% \externaldocument{../../Text/Introduction/build/Introduction}
+% \externaldocument{../../Text/Chapter2/build/Chapter2}
+% \externaldocument{../../Text/Chapter3/build/Chapter3}
+% \externaldocument{../../Text/Chapter4/build/Chapter4}
+% \externaldocument{../../Text/Chapter5/build/Chapter5}
+% \externaldocument{../../Text/Conclusion/build/Conclusion}
+% }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CHAPTER TITLE
@@ -20,20 +20,21 @@
 
 \begin{document}
 %	
-%\appendix
-\pagestyle{conclusionStyle}
+\appendix
 
 
-\begingroup
+
+% \begingroup
 
 %% Le chapitre est numéroté A
-\setcounter{chapter}{0}
-\renewcommand{\thechapter}{\Alph{chapter}}%
+% \setcounter{chapter}{0}
+% \renewcommand{\thechapter}{\Alph{chapter}}%
 
 %% Le titre doit être entre les traits de la 1ere page du chapitre
 \TitleBtwLines
 
 \specialchapter{Appendix}
+
 \pagestyle{appendixStyle}
   \minitoc
 \section{Likelihood ratio test for misspecified nested models}
@@ -246,6 +247,11 @@ Let $T = X/Y$ with
 \end{figure}
 \clearpage
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
+  \caption{\label{fig:sediments_full} Sediments full}
+\end{figure}
 
 
 
@@ -264,7 +270,7 @@ Let $T = X/Y$ with
 
 }
 
-\endgroup
+% \endgroup
 
 \end{document}
 

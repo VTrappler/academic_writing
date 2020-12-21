@@ -26,85 +26,211 @@
 % \subfileLocal{\dominitoc}
 % \subfileLocal{\setcounter{chapter}{4}}
 % \subfileLocal{\chapter{Application to the numerical coastal model CROCO}}
-\chapter{Application to the numerical coastal model \CROCO}
+\chapter{Application to the numerical coastal model CROCO}
 \label{chap:croco}
 \minitoc
-\newpage
+% \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this chapter, we will study the problem of calibration of a specific model under uncertainties. We will first address the problem of the high dimensionality of the input space by segmentating it in arbitrary way. Then, after applying some of the methods introduced in the previous chapter.
+In this chapter, we will study the problem of calibration of a
+specific model under uncertainties. We will first address the problem
+of the high dimensionality of the input space by segmentating it in
+arbitrary way. Then, after applying some of the methods introduced in
+the previous chapter.
 
 \cite{boutet_estimation_2015}
 
 \section{The ocean modelling system \CROCO}
-\CROCO\footnote{\CROCO and \CROCO\_TOOLS are provided by  \url{https://www.croco-ocean.org}} is a new oceanic modeling system built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under testing), gradually including algorithms from MARS3D (sediments)  and HYCOM (vertical coordinates). An important objective for \CROCO is to resolve very fine scales (especially in the coastal area), and their interactions with larger scales. It is the oceanic component of a complex coupled system including various components, e.g., atmosphere, surface waves, marine sediments, biogeochemistry and ecosystems.
+\CROCO\footnote{\CROCO and CROCO\_TOOLS are provided by
+  \url{https://www.croco-ocean.org}} is a new oceanic modeling system
+built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under
+testing), gradually including algorithms from MARS3D (sediments) and
+HYCOM (vertical coordinates). An important objective for \CROCO is to
+resolve very fine scales (especially in the coastal area), and their
+interactions with larger scales. It is the oceanic component of a
+complex coupled system including various components, e.g., atmosphere,
+surface waves, marine sediments, biogeochemistry and ecosystems.
 \cite{mcwilliams_irreducible_2007,zanna_ocean_2011}
 
 \subsection{Numerical setting of the model}
 \label{sec:geographical_setting}
 
-The model used in this thesis is roughly the same as~\cite{boutet_estimation_2015}. The spatial domain ranges from \ang{9}W to \ang{1}E and from \ang{43}N to \ang{51}N, and spans most of the Bay of Biscay, the English Channel and the eastern part of the Celtic Sea.
-The resolution is \SI{1/14}{\degree}, which leads to a mesh size of about \SI{5.5}{\kilo\metre}. The bathymetry map is shown~\cref{fig:depth_maps}. We can notice roughly two regions based on the depth map: the region near the coasts which correspond to the continental shelf, where the water depth is less than \SI{200}{\meter}, and the offshore region of the Bay of Biscay, where the depth is closer to \SI{5000}{\meter}.
+The model used in this thesis is roughly the same
+as~\cite{boutet_estimation_2015}. The spatial domain ranges from
+\ang{9}W to \ang{1}E and from \ang{43}N to \ang{51}N, and spans most
+of the Bay of Biscay, the English Channel and the eastern part of the
+Celtic Sea.  The resolution is \SI{1/14}{\degree}, which leads to a
+mesh size between \SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The bathymetry map is
+shown~\cref{fig:depth_maps}. We can notice roughly two regions based
+on the depth map: the region near the coasts which correspond to the
+continental shelf, where the water depth is less than
+\SI{200}{\meter}, and the offshore region of the Bay of Biscay, where
+the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps_log.png}
-  \caption{\label{fig:depth_maps} Bathymetry used in \CROCO, and geographical landmarks}
-\end{figure}
-\CROCO can solve 3D fluid motions equations, but in this configuration is used only with one vertical level and thus solves numerically the shallow water equations:
+  \caption{\label{fig:depth_maps} Bathymetry used in \CROCO, and geographical landmarks. The continental shelf correspond roughly to the area with depth less than \SI{200}{\meter} (green hue), while the abyssal plain has a depth larger than \SI{4000}{\meter} (blue hue)}
+\end{figure}.
+\CROCO can solve 3D fluid motions equations, but in this configuration
+is used only with one vertical level and thus solves numerically the
+shallow water equations:
 \begin{align}
   \left\{
   \begin{array}{rcl}
     \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
-       \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
+    \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
   \end{array}
        \right.
 \end{align}
 \subsection{Modelling of the bottom friction}
-In \CROCO, the bottom friction is modelled using a quadratic friction drag coefficient, as described \cref{eq:bottom_stress_tau,eq:quadratic_friction_vonkarman}, expression which can be derived using the depth of the turbulent boundary layer.
+In \CROCO, the bottom friction is modelled using a quadratic friction
+drag coefficient, as described
+\cref{eq:bottom_stress_tau,eq:quadratic_friction_vonkarman},
+expression which can be derived by assuming a logarithmic profile of the velocity
+at the bottom.
 \begin{align}
   \label{eq:bottom_stress_tau}
   \bm{\tau}_b &= C_d \|\mathbf{u}_b\|\mathbf{u}_b \\  
   C_d &= \left(\frac{\kappa}{\log\left(\frac{H}{z_{0,b}}\right)}\right)^2 \text{for } C_d \in [C_d^{\min}, C_d^{\max}]   \label{eq:quadratic_friction_vonkarman}
 \end{align}
-Based on the documentation of the SHOM, the typical size of the sediments is summarized~\cref{tab:size_sediments}, and is illustrated \cref{fig:sediments_full,fig:sediments_reduced}.
-\begin{table}[!ht]
-  \centering
-  \begin{tabular}{rrrl} \toprule
-    Code& Description& Size of the majority of particles & \\ \midrule
-    Roche & Rock  & Larger & \num{5e-2}\\
-    C & Pebble  & $>$\SI{20}{\milli\metre} &  \num{2.5e-2}\\\
-    G & Gravel &  $\interval{\SI{20}{\milli\metre}}{\SI{2}{\milli\metre}}$ & \num{7e-3}\\
-    S & Sand &  $ \interval{\SI{2}{\milli\metre}}{\SI{0.5}{\milli\metre}}$& \num{1e-3}\\
-    SF & Fine Sand &  $ \interval{\SI{0.5}{\milli\metre}}{\SI{0.05}{\milli\metre}}$& \num{1.5e-4}\\
-    Si & Silt &   $ \interval{\SI{0.05}{\milli\metre}}{\SI{0.01}{\milli\metre}}$& \num{2e-5}\\
-    V & Muds & $< \SI{0.05}{\milli\metre}$& \\ \bottomrule
-    %A & Clay &   $< \SI{0.01}{\milli\metre}$& \bottomrule
-  \end{tabular}
-  \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
-\end{table}
-\Cref{fig:sediments_reduced} shows that the largest sediments are rocks but are mostly located in the Bay of Biscay, near the boundary of the continental shelf. Pebbles however are mostly located in the shallow region in the English Channel.
+where $\kappa$ is the Von K\'arm\'an constant, equal to $0.41$.
+
+Based on the documentation of the SHOM, the \cref{fig:sediments_reduced} shows a simplified version of the map of the repartition of tthe different types of sediments. Most of the ocean floor is here composed of sand. There is also very few areas where Siltic soil is listed.    
+
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath sediments_reduced.png}
-  \caption{\label{fig:sediments_reduced} Sediment type on the ocean bed}
+  \caption{\label{fig:sediments_reduced} Repartition of the sediments on the ocean floor.}
 \end{figure}
 
-In~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function of the water column height $H$ and of the length-scale of the roughness $\zob$.
-\begin{figure}[ht]
+
+\begin{table}[!ht]
   \centering
-  \input{\imgpath cd_zob.pgf}
+  \begin{tabular}{rrrl} \toprule
+    Code  & Description & Size of the majority of particles                              & $\zob^{\mathrm{truth}}$ \\ \midrule
+    Roche & Rock        & Larger                                                         & \SI{50}{\milli\meter}       \\
+    C     & Pebble      & $>$\SI{20}{\milli\metre}                                       & \SI{25}{\milli\meter}     \\
+    G     & Gravel      & $\interval{\SI{20}{\milli\metre}}{\SI{2}{\milli\metre}}$       & \SI{7}{\milli\meter}       \\
+    S     & Sand        & $ \interval{\SI{2}{\milli\metre}}{\SI{0.5}{\milli\metre}}$     & \SI{1}{\milli\meter}       \\
+    SF    & Fine Sand   & $ \interval{\SI{0.5}{\milli\metre}}{\SI{0.05}{\milli\metre}}$  & \SI{1.5e-1}{\milli\meter}     \\
+    Si    & Silt        & $ \interval{\SI{0.05}{\milli\metre}}{\SI{0.01}{\milli\metre}}$ & \SI{2e-2}{\milli\meter}       \\
+    V     & Muds        & $< \SI{0.05}{\milli\metre}$                                    & \SI{2e-2}{\milli\meter}       \\ \bottomrule
+    % A   & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
+  \end{tabular}
+  \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
+\end{table}
+\Cref{fig:sediments_reduced} shows that the largest sediments are
+rocks but are mostly located in the Bay of Biscay, near the boundary
+of the continental shelf. Pebbles however are mostly located in the
+shallow region in the English Channel, thus it may be expected that
+controlling the size of pebbles is highly influencal in a calibration
+context.
+
+
+On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
+of the roughness $\zob$ of the ocean floor, for different height of
+the water column $H$.
+\begin{figure}[ht]
+  \centering \input{\imgpath cd_zob.pgf}
   \caption{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of the column water height and the roughness at the bottom}
 \end{figure}
-We can see that the higher the water column height, the less the less variation appears when adjusting the bottom rougness $\zob$.
-Considering the physical properties of the bottom friction and the types of sediments, it can be expected that the English Channel, especially near the the french coast and the islands of Jersey and Guernesey are the most influential for the calibration.
+We can see that the higher the water column height, the less
+variation appears when adjusting the bottom roughness $\zob$.
+Considering the physical properties of the bottom friction and the
+types of sediments, it can be expected that the English Channel, and at a lesser extent the rest of the continental shelf
+are the areas which are the most influential for the calibration.
 
 
+\section{Deterministic calibration of the bottom friction}
+\label{sec:deterministic_calibration_bott}
+\subsection{Twin experiments setup}
+In a twin experiment setup, the observation $y$ are generated using
+the numerical model, and thus can be compared directly 
+\subsection{Cost function definition}
+Let $y \in \mathbb{R}^{N_{\mathrm{mesh}} \cdot N_{\mathrm{time}}}$ be
+the observations, generated using a particular configuration of the
+model.
+We define $J$ as
+\begin{align}
+  J(\kk) &= \sum_{t=1}^{ N_{\mathrm{time}}}\sum_{i=1}^{N_{\mathrm{mesh}}}  \left(\eta_{t,i}(\kk) - y_{t, i}\right)^2 \\
+         &= \|\mathcal{M}(\kk) - y\|_2^2
+\end{align}
+Equivalently, as mentioned~\cref{chap:inverse_problem}, by assuming
+that the distribution of the (random) observation vector is known and
+$Y \mid \kk \sim \mathcal{N}(\mathcal{M}(\kk), I)$ where $I$ is the
+identity matrix, $J$ is proportional to the negative log-likelihood of the data.
+
+\subsection{Optimisation without uncertainties}
+The optimisation is first carried using M1QN3, a version of a
+gradient-descent procedure, as described
+in~\cite{gilbert_numerical_1989}. We can first look to control $\zob$
+at every cell of the mesh: $\kk = (\kk_1,\cdots, \kk_p)$ where
+$\kk_i = \zob^i$ and $p=\num{15684}$. Due to the large number of
+points whose friction can be controlled., a finite difference method
+to get the gradient is unfeasible. Instead,
+Tapenade~\citep{hascoet_tapenade_2013}, an Automatic Differentiation
+tool has been used in order to get the gradient of the cost function
+$J$ using the adjoint method, as
+described~\cref{sec:calibration_adjoint_optimization}. The
+optimisation procedure is stopped after \num{400} iterations, and the
+estimated controlled parameter is
+shown~\cref{fig:optimization_map_399}.
+\Cref{fig:ctrl_true} shows the
+evolution of the cost function and the squared norm of the gradient
+during the optimisation procedure.
+
+ \begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
+  }
+  \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on the whole space using gradient obtained via adjoint method, after $400$ iterations TODO: {Taille et colorbar}}
+\end{figure}
+
+ \begin{figure}[ht]
+  \centering
+  \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}
+  \caption{\label{fig:ctrl_true} Evolution of the cost function and the squared normed of the gradient}
+\end{figure}
+By comparing \cref{fig:optimization_map_399} with
+\cref{fig:sediments_reduced} and \cref{fig:depth_maps}, we can have a
+first overview on the links between sediments type, depth, and
+\emph{identifiability}, which can be understood as the ability of the
+optimisation procedure to retrieve a truth value.
+
+On a first look, we can see that the abyssal plain (the deep region
+off the Bay of Biscay) remains mostly untouched by the optimisation,
+while the continental shelf, except for the English Channel, is
+retrieved. In terms of sediments, the bottom of the continental shelf
+is largely composed of sand.
+On~\cref{fig:optimisation_type_sediments}, we can see that indeed,
+points of the mesh corresponding to sands have seen their $\zob$ value
+shifted toward the truth, while for silts and muds, the procedure has
+not been able to identify their roughness. This is probably due to the
+fact that those sediments lay at great depth, and thus have little
+effect on the circulation per~\cref{eq:quadratic_friction_vonkarman}.
+%
+%
 \begin{figure}[ht]
   \centering
-  \includegraphics{\imgpath sediments_full.png}
-  \caption{\label{fig:sediments_full} Sediments full}
+  \includegraphics{\imgpath optimisation_type_sediments.pdf}
+  \caption{\label{fig:optimisation_type_sediments} Results of the optimisation procedure, depending on the type of sediments. The initial value is \SI{5e-3}{\meter}}
 \end{figure}
+
+In the English Channel, similar conclusions can be drawn: the size of
+the pebbles is well retrieved, but the control variable of points
+mapped to gravel do seem to compensate: on the northern part of the
+channel the size of the gravel is overestimated, while it is
+underestimated on the southern part.  Finally the rocks appear to be
+hard to capture: their assumed size, \emph{i.e.} their truth value is
+significantly larger than the rest of the sediments, and they are
+sparsely distributed.
+%  \begin{figure}[ht]
+%   \centering
+%   \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
+%   \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
+% \end{figure}
+% \clearpage
 
 \subsection{Tidal modelling}
 \cite{egbert_efficient_2002} TPX model of tides
@@ -115,86 +241,92 @@ Considering the physical properties of the bottom friction and the types of sedi
 % "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
 % " 1  2  3  4  5  6  7  8  9 10"
   \begin{tabular}{rrr}\toprule
-    Darwin Symbol & Period (h) & Species \\ \midrule
-    $M_2$& 12.4206 & Principal Lunar Semidiurnal \\
-    $S_2$& 12 & Principal solar Semidiurnal \\
-    $N_2$& 12.65834751& Larger lunar Elliptic Semidiurnal  \\
-    $K_2$& 11.96723606  & Lunisolar Semidiurnal \\
-    $K_1$& 23.93447213  & Lunar Diurnal \\\midrule
-    $O_1$& 25.81933871 & Lunar Diurnal \\ 
-    $P_1$& 24.06588766 & Solar Diurnal\\
-    $Q_1$& 26.868350 & Larger Lunar Elliptic Diurnal \\
-    $M_f$& 13.660830779 & Lunisolar Fortnightly  \\
-    $M_m$& 27.554631896 & Lunar Monthly  \\
+    Darwin Symbol & Period (h)   & Species                           \\ \midrule
+    $M_2$         & 12.4206      & Principal Lunar Semidiurnal       \\
+    $S_2$         & 12           & Principal solar Semidiurnal       \\
+    $N_2$         & 12.65834751  & Larger Lunar Elliptic Semidiurnal \\
+    $K_2$         & 11.96723606  & Lunisolar Semidiurnal             \\
+    $K_1$         & 23.93447213  & Lunar Diurnal                     \\\midrule
+    $O_1$         & 25.81933871  & Lunar Diurnal                     \\ 
+    $P_1$         & 24.06588766  & Solar Diurnal                     \\
+    $Q_1$         & 26.868350    & Larger Lunar Elliptic Diurnal     \\
+    $M_f$         & 13.660830779 & Lunisolar Fortnightly             \\
+    $M_m$         & 27.554631896 & Lunar Monthly                     \\
     \bottomrule
   \end{tabular}
   \caption{Tide components}
   \label{tab:tides_components}
 \end{table}
+The uncertainties in this configuration represent an error on the amplitude of the tide:
+\begin{equation}
+  \tilde{A}_i(\uu_i) = A_i (1 + 0.01(2u - 1))
+\end{equation}
+so $\tilde{A}_i(0) = 0.99A_i$, $\tilde{A}_i(0.5) = A_i$ and $\tilde{A}_i(1) = 1.01A_i$
 
-
-\section{Deterministic calibration of the bottom friction}
-\label{sec:deterministic_calibration_bott}
-\subsection{Twin experiments setup}
-
-
-\subsection{Sensitivity analysis}
+\section{Sensitivity analysis}
 \label{sec:sensitivity-analysis}
+Sensitivity analysis (often abbreviated as \emph{SA}), aims at
+quantififying the effect of the variation of some input variable to
+the output of the model~\cite{iooss_revue_2011,janon_analyse_2012}.
+Intuitively, \emph{SA} ties the variation of the input to the
+variation of the output. It can then be approached at two different
+scales: around a nominal value, using the gradient, and at a global
+scale, by considering the inputs as random variable, and by measuring
+the variance of the output.
 
-Sensitivity analysis (often abbreviated as \emph{SA}), aims at quantififying the effect of the variation of some input variable to the output of the model~\cite{iooss_revue_2011,janon_analyse_2012}.
-
-\paragraph{Local sensitivity analysis}
-
-\paragraph{Global sensitivity analysis}
-
-
-\subsubsection{Sobol' indices}
+\subsection{Methods of Sensitivity analysis}
+\label{sec:methods_SA}
+\subsubsection{Local sensitivity analysis}
+\label{sec:loca_SA}
+Local sensitivity analysis~\cite{morio_global_2011} refers to the
+study of how a small perturbation $\delta \kk$ of a nominal value
+$\kk$ affects the output of the numerical model. As we assume that the
+numerical model is accessible through the cost function $J$, a
+straightforward way to quantify this perturbation is to consider the
+partial derivative of $J$, with respect to each component of the
+control variable $\kk=(\kk_1,\dots,\kk_p)$:
+\begin{equation}
+  \frac{\partial J}{\partial \kk_i}(\kk)
+\end{equation}
+The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
+\begin{equation}
+  \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
+\end{equation}
+\subsubsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 \cite{janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined as 
 \begin{equation}
   S_i = \frac{\Var_{X_i}\left[\Ex_{Y}\left[Y \mid X_i\right]\right]}{\Var_{Y}\left[Y\right]}
 \end{equation}
-where $Y = J(X)$ is the random variable.
-These are computed using replicated method~\cite{gilquin_making_2019,gilquin_echantillonnages_2016}, in order to get bootstrap confidence interval for the first and second order effects, and total effect
+where $Y = J(X)$ is the random variable. These are computed using a
+replicated
+method~\cite{gilquin_making_2019,gilquin_echantillonnages_2016}, in
+order to get bootstrap confidence interval for the first and second
+order effects, and total effects
 \begin{equation}
- ST_i = 1 - \frac{\Var_{X_{-i}}\left[\Ex_{Y}\left[Y \mid X_{-i}\right]\right]}{\Var_{Y}\left[Y\right]}
+ S_{T_i} = 1 - \frac{\Var_{X_{-i}}\left[\Ex_{Y}\left[Y \mid X_{-i}\right]\right]}{\Var_{Y}\left[Y\right]}
 \end{equation}
 where $X_{-i} = (X_1,\dots X_{i-1},X_{i+1},\dots,X_p)$ is random vector of $p-1$ components.
- \begin{figure}[ht]
+
+\subsection{Application to CROCO}
+The bottom friction affects the ocean circulation through two factors,
+as shown \cref{eq:quadratic_friction_vonkarman}, first by the bottom
+roughness, $\zob$, and by the ocean depth. We are first going to
+perfrom a sensitivity analysis, in order to quantify the role of each
+sediment based region, without incorporating the knowledge on the
+typical size of the sediment there.
+
+\subsubsection{SA on the class of sediments}
+
+\subsubsection{SA on the tide components}
+\begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/croco_dahu2/Run/z0b_shallow_bins/map_199.png% /home/victor/optimisation_dahu/optim_true/map_150.png
-  }
-  \caption{\label{fig:optimization_map_126} Optimization of $z_0$ on the whole space using gradient obtained via adjoint method, after $126$ iterations}
+  \input{\imgpath SA_tides.pgf}
+  \caption{\label{fig:SA_tides} Global SA on the different components of the tide }
 \end{figure}
 
- \begin{figure}[ht]
-  \centering
-  \input{/home/victor/optimisation_dahu/optim_true/ctrl_true.pgf}
-  \caption{\label{fig:ctrl_true} Gradient descent procedure}
-\end{figure}
-
- \begin{figure}[ht]
-  \centering
-  \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
-  \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
-\end{figure}
-
-
-\section{Dimension Reduction}
-
-\subsection{Ad-hoc segmentations methods}
-
-% \subsubsection{Segmentation based on the depth}
-
-% \cite{boutet_estimation_2015}
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics{\imgpath depth_repartition.pdf}
-%   \caption{\label{fig:depth_repartition} Segmentation of the parameter space by class of depth}
-% \end{figure}
-
-\subsubsection{Geographical segmentation}
+\cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2 (right), and the total effect indices, along with bootstrap confidence intervals. The variation of the variable associated with the $M_2$ component of the tide has the most impact on the cost function.
 
 
 % \begin{figure}[ht]

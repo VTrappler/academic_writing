@@ -12,6 +12,7 @@
 \externaldocument{../../Text/Chapter2}
 \externaldocument{../../Text/Chapter3}
 \externaldocument{../../Text/Chapter5}
+\externaldocument{../../Text/Annexes}
 \externaldocument{../../Text/Conclusion}
 }
 \newcommand\imgpath{/home/victor/acadwriting/Manuscrit/Text/Chapter4/img/} 
@@ -52,7 +53,7 @@ In the previous chapter, we introduced different notions of robustness for the e
   \item $g$ is cheaper to evaluate than $f$ 
   \end{itemize}
 \end{definition}
-We will focus exclusively on Kriging \cite{krige_statistical_1951,matheron_traite_1962}, or Gaussian Process regression, but other methods can be used to solve such problems. Polynomial Chaos regression for instance \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}.
+We will focus exclusively on Kriging~\cite{krige_statistical_1951,matheron_traite_1962}, or Gaussian Process regression, but other methods can be used to solve such problems. Polynomial Chaos regression for instance \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}. %\todo{motivation choix du krigeage}
 In this chapter, after defining the usual kriging equations, we are going to introduce a few classic and useful criteria in \cref{sec:enrichment_strategies} for global optimization and/or exploration of an unknown function $f$. Afterwards, we are going to focus on robust optimization, by splitting the input space in $\Kspace$ and $\Uspace$, and introduce other strategies to take advantage of the nature of the surrogate in~\cref{sec:robust_criteria_gp} in order to efficiently compute robust estimates introduced before, especially regret-based estimators.
 
 % Surrogate models are often built using initial evaluations of $f$.
@@ -73,7 +74,8 @@ As this function is unknown, there is uncertainty on the values outside of the i
 We can model this uncertainty on functions by defining random processes:
 \begin{definition}[Random process]
   Let $(\Omega, \mathcal{F}, \Prob)$ be a probability space, and $\Xspace\subset \mathbb{R}^p$.
-  A random process $Z$ is a collection of random variables indexed on $\Xspace$, so for each $x \in \Xspace$, $Z(x)$ is a real random variable (\textit{i.e.} a mapping from $\Omega$ to $\mathbb{R}$):
+  A random process $Z$ is a collection of random variables indexed on $\Xspace$, so for each $x \in \Xspace$, $Z(x)$ is a real random variable (\textit{i.e.} a mapping from $\Omega$ to $\mathbb{R}$% \todo{notation?}
+  ):
  \begin{equation}
   \begin{array}{rcl}
     Z: \mathbb{X} & \longrightarrow & \left(\Omega \rightarrow \mathbb{R} \right)\\
@@ -164,7 +166,7 @@ In addition to that interpolation property, for points not in the design, we hav
 
 From a computational point of view, GP are relatively cheap to handle:
 \begin{itemize}
-\item If the covariance function $C_Z$ is known, the most expensive step in the estimation of $m_{Z\mid \mathcal{X}}$ and $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the points $x$ upon which we wish to apply $m_{Z\mid \mathcal{X}}$, thus its inversion need only to be performed once.
+\item If the covariance function $C_Z$ is known, the most expensive step in the estimation of $m_{Z\mid \mathcal{X}}$ and $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the points $x$ upon which we wish to apply $m_{Z\mid \mathcal{X}}$, thus its inversion need only to be performed once.% \todo{ça s'adapte à des pbs de taille moyenne}
 \item In order to get a sample path from this GP, one need to be able to sample from a multivariate normal distribution, and thus only need to compute the Cholesky decomposition of the conditioned covariance matrix.
 \end{itemize}
 However, if some points of the design are very close to each other, the covariance matrix can be ill-conditioned. In this case,
@@ -190,32 +192,50 @@ From a probabilistic point of view, we can see the nugget effect as an added Gau
 
 \subsection{Covariance functions}
 \label{sec:cov_fun}
-In the previous section, we described the equations to solve to get the surrogate $m_{Z\mid \mathcal{X}}$ of $f$ based on GP.
-The kriging equations are based on the covariance function $C_Z$.
-A covariance is said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the covariance of the GP between those two points depends only on the  difference $h = x-x^{\prime}=(h_1,\cdots, h_{p})$. In that case, we will write $C_Z(x, x^{\prime}) = C_Z(h)$.
-For multidimensional problems, covariance functions are usually chosen as the product of one dimensional covariance functions:
+In the previous section, we described the equations to solve to get
+the surrogate $m_{Z\mid \mathcal{X}}$ of $f$ based on GP.  The kriging
+equations are based on the covariance function $C_Z$.  A covariance is
+said to be stationary, if for all $x, x^{\prime} \in \Xspace$, the
+covariance of the GP between those two points depends only on the
+difference $h = x-x^{\prime}=(h_1,\cdots, h_{p})$. In that case, we
+will write $C_Z(x, x^{\prime}) = C_Z(h)$.  For multidimensional
+problems, covariance functions are usually chosen as the product of
+one dimensional covariance functions:
 \begin{equation}
   C_Z(h) = s^2\prod_{i=1}^{p} C_i(h_i;l_i)
 \end{equation}
-These covariance functions introduce an additional parameter $l=(l_1,\dots,l_p)$ of dimension $p=\dim \Xspace$, and a variance parameter $s^2$.
-$l$ is called the \emph{length scale} and quantify the radius of influence of an evaluation along the different input variables. If the length scales are all equals, the covariance kernel is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
+These covariance functions introduce an additional parameter
+$l=(l_1,\dots,l_p)$ of dimension $p=\dim \Xspace$, and a variance
+parameter $s^2$.  $l$ is called the \emph{length scale} and quantify
+the radius of influence of an evaluation along the different input
+variables. If the length scales are all equals, the covariance kernel
+is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
 
 A few common stationary $1D$-covariance functions are introduced~\cref{tab:common_cov_fc}.
 
   \begin{table}[ht]
-    \centering
+    \centering 
     \begin{tabular}{lrc}
       \toprule
-      Name & $C(h;l)$ & Regularity of sample paths\\ \midrule
-      Gaussian & $\exp\left(- \frac{h^2}{2 l^2}\right)$ & $C^{\infty}$\\
-      Exponential &$\exp\left(- \frac{\lvert h \rvert}{l}\right)$ & $C^0$  \\
-      Matérn 3/2 & $\left(1 + \sqrt{3}\frac{h}{l}\right)\exp\left(-\sqrt{3}\frac{h}{l}\right)$ & $C^1$\\
-      Matérn 5/2 & $\left(1+ \sqrt{5}\frac{h}{l} + \frac{5}{3}\frac{h^2}{l^2}\right) \exp\left(-\sqrt{5}\frac{h}{l}\right)$ & $C^2$\\ \bottomrule
+      Name        & $C(h;l)$                                                                                                 & Regularity of sample paths \\ \midrule
+      Gaussian    & $\exp\left(- \frac{h^2}{2 l^2}\right)$                                                                   & $C^{\infty}$               \\
+      Exponential & $\exp\left(- \frac{\lvert h \rvert}{l}\right)$                                                           & $C^0$                      \\
+      Matérn 3/2  & $\left(1 + \sqrt{3}\frac{h}{l}\right)\exp\left(-\sqrt{3}\frac{h}{l}\right)$                              & $C^1$                      \\
+      Matérn 5/2  & $\left(1+ \sqrt{5}\frac{h}{l} + \frac{5}{3}\frac{h^2}{l^2}\right) \exp\left(-\sqrt{5}\frac{h}{l}\right)$ & $C^2$                      \\ \bottomrule
     \end{tabular}
     \caption{\label{tab:common_cov_fc} Common stationary covariance functions}
   \end{table}
 
-  The choice of a particular covariance function is usually motivated by the wanted regularity of the samples paths. For example, if the unknown function $f$ is assumed to be infinitely differentiable, a Gaussian kernel is suited for the modelling. One common choice is the Matérn kernel of order $5/2$, so that the samples paths are twice-differentiable. \Cref{fig:cov_fc_examples} shows the shape of the different covariance functions introduced~\cref{tab:common_cov_fc}, and also a few sample paths of an unconditioned Gaussian Process $Z\sim\GP(0, C(\cdot, \cdot))$ for each of the covariance functions.
+  The choice of a particular covariance function is usually motivated
+  by the wanted regularity of the samples paths. For example, if the
+  unknown function $f$ is assumed to be infinitely differentiable, a
+  Gaussian kernel is suited for the modelling. One common choice is
+  the Matérn kernel of order $5/2$, so that the samples paths are
+  twice-differentiable. \Cref{fig:cov_fc_examples} shows the shape of
+  the different covariance functions
+  introduced~\cref{tab:common_cov_fc}, and also a few sample paths of
+  an unconditioned Gaussian Process $Z\sim\GP(0, C(\cdot, \cdot))$ for
+  each of the covariance functions.
   
 \begin{figure}[ht]
   \centering
@@ -297,7 +317,8 @@ Due to the structure of many computer codes, it may sometimes be beneficial to e
 Instead of adapting 1-step criteria, we can rely on sampling in order to get $q$ points of $\Xspace$ to evaluate.
 This technique, named AK-MCS in~\cite{echard_ak-mcs_2011}, which stands for \emph{Adaptative-Kriging Monte Carlo Sampling} is described in~\cite{dubourg_reliability-based_2011}, and has been applied and refined more recently in~\cite{schobi_rare_2017,razaaly_quantile-based_2020,razaaly_rare_2019} for extreme quantile and small probability estimation.
 
-The main idea behind  is to sample a large number of points from a given density.
+The main idea behind % \todo{anglais ?}
+is to sample a large number of points from a given density.
 Let $\kappa$ be a 1-step criterion, and let $\bar{\kappa}(x) = \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the normalized criterion, so that $\int_{\Xspace} \bar{\kappa}=1$. In this case, $\bar{\kappa}$ can be seen as a density.  Using an appropriate sampler, we can generate $N$ iid samples from this criterion $S=\{x_i\}_{1\leq j \leq N}$. 
   
 However, as $N$ should be large, there is no point in evaluating all the samples in $S$: using statistical reduction of the samples, we can find a reduced number of points, which are the most representative of the $N$ samples. This is usually done by clustering algorithms, especially those who have a fixed number of clusters such as the KMeans algorithm~\cite{macqueen_methods_1967}, in order to select precisely $K$ points, number chosen in compliance with the wanted batch size. For each one of those centroids, we then look for the closest sampled point as the centroid can be located in a region of low or even zero $\bar{\kappa}$.
@@ -430,7 +451,7 @@ Again, a closed form is available to compute the expected improvement, that does
 \begin{equation}
   \mathrm{EI}(x) = \left(f_{\min} - m_Z(x)\right) \Phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right) + \sigma_Z(x) \phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right)
 \end{equation}
-The EI is then quite easy to evaluate and furthermore it is possible to compute the gradient of the EI and used it for the optimization as done in~\cite{pardalos_differentiating_2015}.
+The EI is then quite easy to evaluate and furthermore it is possible to compute the gradient of the EI and use it for the optimization as done in~\cite{pardalos_differentiating_2015}.
 \begin{equation}
   x_{n+1} = \argmax_{x\in \Xspace} \mathrm{EI}(x)
 \end{equation}
@@ -453,7 +474,8 @@ The criterion can then be written as
   \input{\imgpath example_optimization_criteria.pgf}
   \caption[Optimization criteria for GP]{\label{fig:example_optimization_criteria} Example of optimization criteria. At this iteration, $\mathrm{EI}$ and $\mathrm{PI}$ aim toward intensification, while $\mathrm{IAGO}$ and the maximum of variance favorize exploration}
 \end{figure}
-\clearpage
+
+% \clearpage
 %
 \subsection{Contour and volume estimation}
 \label{sec:GP_vol_estim}
@@ -468,11 +490,11 @@ measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute
 $V=\Prob_{X}\left[f^{-1}(B)\right]$. For
 $B = \interval[open left]{-\infty}{T}$ is equivalent to compute the
 volume of the \emph{excursion set} of $f$ below $T$:
-$V=\Prob_{X}[f(X) \leq T]$. Such an example is illustrated~\cref{fig:prob_coverage_example}.
+$V=\Prob_{X}[f(X) \leq T]$. Such an example is illustrated~\cref{fig:prob_coverage_example}.% \todo{GP regression ou prediction}
 \begin{figure}[ht]
   \centering
   \input{\imgpath prob_coverage_exemple.pgf}
-  \caption{\label{fig:prob_coverage_example} Estimation of $f^{-1}(\interval[open left]{-\infty}{T})$ using GP and probability of coverage associated}
+  \caption{\label{fig:prob_coverage_example} Estimation of $f^{-1}(\interval[open left]{-\infty}{T})$ using GP and probability of coverage associated }
 \end{figure}
 
 % Let us start by introducing diverse tools based around Vorob'ev expectation of closed sets (\cite{el_amri_analyse_2019,heinrich_level_2012,vorobyev_new_2003}). 
@@ -482,7 +504,7 @@ We define $\pi_A$ its probability of coverage:
   \pi_A(x) = \Prob_{Z(x)}\left[x\in A\right] = \Prob_{Z(x)}[Z(x) \in B]
 \end{equation}
 \Cref{fig:prob_coverage_example} shows the probability of coverage of the set $A$, the true set $f^{-1}(B)$, and the plugin estimation of this set: $m_Z^{-1}(B) = \{x\in\Xspace \mid m_Z(x) \leq T\}$.
-For a given $x\in\Xspace$, the event ``$x$ belongs to $A$'' happens with probability $\pi_A(x)$, thus has variance
+For a given $x\in\Xspace$, the event ``$x$ belongs to $A$'' happens with probability $\pi_A(x)$, thus has variance %\todo{expliciter Loi de bernoulli}
 \begin{equation}
 \mathscr{V}_A(x)=\pi_A(x)(1 - \pi_A(x))
 \end{equation}
@@ -567,14 +589,14 @@ Based on this set, we can construct easily a sampling criterion by using the ind
 
 Evaluating points in this region allows to reduce the uncertainty at $x$ (completely if the GP is interpolant, as $\sigma_Z(x)$ becomes $0$ after evaluating $f(x)$) on the classification of the point $x$.
 The margin of uncertainty, the samples and the centroids obtained with~\cref{alg:sampling_enrichment} are shown~\cref{fig:margin_unc}. We can see that the centroids are located close to the true level-set of the function in this case.
-
+%\todo{batch + centroids + samples}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath margin_unc.pdf}
   \caption{\label{fig:margin_unc} Margin of uncertainty, with samples and centroids}
 \end{figure}
 
-\clearpage
+% \clearpage
 \section{Adaptative strategies for robust optimisation using GP}
 \label{sec:robust_criteria_gp}
 In the previous section, we introduced enrichment strategies to solve different problems for a generic function $f:\Xspace\rightarrow \mathbb{R}$.
@@ -659,12 +681,12 @@ Once a stopping criterion is met, such as the maximal variance attained at the c
 \end{equation}
 we can construct accurate surrogates of $J^*(\uu)$ and $\kk^*(\uu)$, using the GP in a plug-in approach:
 \begin{equation}
-  \min_{\kk\in\Kspace} m_Z(\kk,\uu) = m_{Z^*}(\uu) \quad \text{ and } \quad \argmin_{\kk\in\Kspace} m_Z(\kk, \uu) = \kk_Z^*(\uu)
+ m_{Z^*}(\uu) = \min_{\kk\in\Kspace} m_Z(\kk,\uu)  \quad \text{ and } \quad \kk_Z^*(\uu) =\argmin_{\kk\in\Kspace} m_Z(\kk, \uu)
 \end{equation}
 and with a set of i.i.d.\ samples $\{\uu_i\}_i$ of $\UU$, use the surrogates to find the MPE, based on the distribution of $\{\kk_Z^*(\uu_i)\}$.
 
 
-\clearpage
+% \clearpage
 
 \subsection{Gaussian formulations for the relative and additive regret families of estimators}
 \label{ssec:gp_delta_alpha}
@@ -716,7 +738,7 @@ This difference $\Delta_{\alpha,\beta}$ is a linear combination of correlated Ga
 \right)
 \end{equation}
 
-Multiplying by the matrix $\begin{pmatrix}1 & -\alpha \end{pmatrix}$ and translating by $-\beta$ yields
+Multiplying by the matrix $\begin{bmatrix}1 & -\alpha \end{bmatrix}$ and translating by $-\beta$ yields
 \begin{align}
   \Delta_{\alpha,\beta}(\kk,\uu) &\sim \mathcal{N}\left(m_{\Delta}(\kk,\uu); \sigma^2_{\Delta}(\kk,\uu)\right)  \label{eq:delta_GP_ab}\\
   m_{\Delta}(\kk,\uu) &= m_Z(\kk,\uu) - \alpha m_{{Z^*}}(\uu) - \beta \label{eq:mu_delta_GP_ab}\\
@@ -729,7 +751,7 @@ We are then interested in the set $\{(\kk, \uu) \mid \Delta_{\alpha, \beta}(\kk,
 \item $(\alpha, \beta) = (\alpha, 0)$ corresponds to the relative regret
 \end{itemize}
 
-
+% \todo{Réfléchir beta role ?}
 
 Decomposing the variance $\sigma^2_{\Delta}$ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
 \begin{itemize}
@@ -778,20 +800,23 @@ The strategies introduced hereafter can be easily be adapted for the additive-re
 
 \subsection{Improving the estimation of $\Gamma_{\alpha}$}
 \label{sec:evaluation_gamma}
-Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we are going to explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plugin estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
+Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we are going to explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plug-in % \todo{definir}
+estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
 
 For a given $\kk\in\Kspace$, the coverage probability of the $\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be $\alpha$-acceptable is
 \begin{align}
-  \Gamma_{\alpha}(\kk) &= \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right] \\
-                              & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
+  \Gamma_{\alpha}(\kk)                          & = \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]                                     \\
+                                                & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
 \end{align}
-As $J$ is not known perfectly, it can be seen as a classification problem.
-This classification problem can be approached with a plug-in approach in~\cref{eq:plugin_indicator}, or a probabilistic one in~\cref{eq:prob_indicator}:
+As $J$ is not known perfectly, it can be seen as a classification
+problem.  This classification problem can be approached with a plug-in
+approach in~\cref{eq:plugin_indicator}, or a probabilistic one
+in~\cref{eq:prob_indicator}:
 \begin{align}
-  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \mathbbm{1}_{m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu)} \label{eq:plugin_indicator} \\
-  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} &\approx   \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
+  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \mathbbm{1}_{m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu)} \label{eq:plugin_indicator} \\
+  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
 \end{align}
 
 Based on those two approximation, we can define two different estimations of $\Gamma_\alpha$, namely $\hat{\Gamma}_\alpha^{\mathrm{PI}}$ with the plug-in approach, and $\hat{\Gamma}_{\alpha}^{\pi}$ for the probabilistic one. Based on those estimations, two strategies emerge:
@@ -801,21 +826,37 @@ Based on those two approximation, we can define two different estimations of $\G
 \end{itemize}
 
 \subsubsection{Reducing the augmented IMSE}
-For the plug-in approach, the chosen estimator is defined \cref{eq:def_gamma_PI}:
+For the plug-in approach, the chosen estimator is defined by:
   \begin{equation}
     \label{eq:def_gamma_PI}
     \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \Prob_U\left[m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu) \right]
   \end{equation}
-  The outer expectation operator is to be computed numerically, using quadrature rule, or Monte-carlo methods. In general, from a set of samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$,
+  The outer expectation operator is to be computed numerically, using
+  quadrature rule, or Monte-carlo methods. In general, from a set of
+  samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$,
   \begin{equation}
     \Gamma_{\alpha}(\kk) \approx \frac{1}{n_{\uu}}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{m_Z(\kk, \uu_i) - \alpha m_{Z^*}(\uu_i)\leq 0}
   \end{equation}
 
-  Due to the fact that the GP surrogate is cheap to evaluate, the computation of the outer expectation with respect to $\UU$ is assumed to be performed without too much problems.
+  Due to the fact that the GP surrogate is cheap to evaluate, the
+  computation of the outer expectation with respect to $\UU$ is
+  assumed to be performed without too much problems.
 
-  In order to improve the accuracy of this estimator, one need to improve the GP prediction $m_Z$ of the objective function $J$.
-  In this case, we propose to reduce the IMSE of the GP $Z - \alpha Z^*$. The choice of the IMSE (instead of choosing the point of maximal variance for instance) comes from the decomposition of the variance~\cref{eq:variance_delta_GP_ab}.
-  Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of $\Gamma_\alpha$, constructed using the Gaussian Process surrogate with $n$ points added, according to the augmented IMSE. \Cref{fig:IMSE_enrichment} illustrates the $L^2$ and $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation $\hat{\Gamma}_{\alpha,n}$. In the following, a subscript $n$ will indicate a quantity computed with $n$ additional evaluations of the function.
+  In order to improve the accuracy of this estimator, one need to
+  improve the GP prediction $m_Z$ of the objective function $J$.
+ % \todo{learning function}
+  In this case, we propose to reduce the IMSE of the GP
+  $Z - \alpha Z^*$. The choice of the IMSE (instead of choosing the
+  point of maximal variance for instance) comes from the decomposition
+  of the variance~\cref{eq:variance_delta_GP_ab}.  Let
+  $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of
+  $\Gamma_\alpha$, constructed using the Gaussian Process surrogate
+  with $n$ points added, according to the augmented
+  IMSE.~\Cref{fig:IMSE_enrichment} illustrates the $L^2$ and
+  $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation
+  $\hat{\Gamma}_{\alpha,n}$. In the following, a subscript $n$ will
+  indicate a quantity computed with $n$ additional evaluations of the
+  function.
 
 \begin{figure}[ht]
   \centering
@@ -871,11 +912,14 @@ Finally, we can define a new learning function, which is the expected $\mathrm{I
 
 \subsubsection{Sampling in the margin of uncertainty}
 
-We can also enrich the design by means of sampling within the margin of uncertainty defined~\cref{sec:margin_of_uncertainty}, introduced in~\cite{echard_ak-mcs_2011,schobi_rare_2017,razaaly_rare_2019}.. In this case, the probability of coverage is defined as
+We can also enrich the design by means of sampling within the margin
+of uncertainty defined~\cref{sec:margin_of_uncertainty}, introduced
+in~\cite{echard_ak-mcs_2011,schobi_rare_2017,razaaly_rare_2019}. % \todo{bof in this case}
+In this case, the probability of coverage is defined as
 \begin{equation}
   \pi_{\alpha}(\kk, \uu) = \Prob_{Z}\left[\Delta_{\alpha} \leq 0\right] = \Phi\left(-\frac{m_{\Delta_\alpha}(\kk, \uu)}{\sigma_{\Delta_\alpha}(\kk, \uu)}\right)
 \end{equation}
-and the margin of uncertainty of level $\eta$ is
+and the margin of uncertainty of level $\eta$ is \todo{recalling}
 \begin{equation}
   \mathbb{M}_{\eta} = \left\{ (\kk, \uu) \mid \frac{\eta}{2} \leq \pi_{\alpha}(\kk, \uu) \leq 1 - \frac{\eta}{2}\right\}
 \end{equation}
@@ -886,9 +930,21 @@ The margin of uncertainty of the random set $\{\Delta_{\alpha} \leq 0\}$ has bee
   \caption{\label{fig:prob_coverage_margin} Probability of coverage and Margin of uncertainty for  $\{\Delta_{\alpha} \leq 0\}$ at level $\eta=0.05$. The variance of the probability of coverage is integrated on $\Uspace$, giving the IVPC at constant $\kk$}
 \end{figure}
 
-Sampling in this margin of uncertainty and evaluating some of those points makes sense if the points selected help reduce the margin of uncertainty.
-Let us assume that the current design used to construct $Z$ comprises $n$ points, and let us assume that we obtained $K$ points which represent statistically the margin of uncertainty: $\tilde{x}_{n+i}$ for $1\leq i\leq K$. Those points being in our case the centroids produced by the KMeans algorithms.
-As mentioned before, the uncertainty on the acceptability of those points to  can be reduced either by evaluating the function at this point (thus reducing $\sigma_Z$), or by improving the knowledge of the conditional minimiser (reducing $\alpha^2 \sigma_{Z^*}$). For each centroid $\tilde{x}_{n+i} = (\tilde{\kk}_{n+i}, \tilde{\uu}_{n+i})$, we can then adjust its position if the uncertainty on the conditional minimiser is large. We introduce then a function to adjust those points in~\cref{eq:adjust_centroid}.
+Sampling in this margin of uncertainty and evaluating some of those
+points makes sense if the points selected help reduce the margin of
+uncertainty.  Let us assume that the current design used to construct
+$Z$ comprises $n$ points, and let us assume that we obtained $K$
+points which represent statistically the margin of uncertainty:
+$\tilde{x}_{n+i}$ for $1\leq i\leq K$. Those points being in our case
+the centroids produced by the KMeans algorithms.  As mentioned before,
+the uncertainty on the acceptability of those points to can be reduced
+either by evaluating the function at this point (thus reducing
+$\sigma_Z$), or by improving the knowledge of the conditional
+minimiser (reducing $\alpha^2 \sigma_{Z^*}$). For each centroid
+$\tilde{x}_{n+i} = (\tilde{\kk}_{n+i}, \tilde{\uu}_{n+i})$, we can
+then adjust its position if the uncertainty on the conditional
+minimiser is large. We introduce then a function to adjust those
+points in~\cref{eq:adjust_centroid}.
 \begin{equation}
   \label{eq:adjust_centroid}
   \mathrm{adjust}(\kk,\uu) =
@@ -901,11 +957,30 @@ where $m_{{Z^*}}(\uu) = \min_{\kk\in\Kspace} m_Z(\kk, \uu)$ as defined~\eqref{eq
 
 
 
-However, as we can see on the left plot of~\cref{fig:adjusted_centroids}, all centroids are adjusted independently, and since only their $\kk$ component is changed, the adjusted centroids may end up very close to each other. The issue is twofold: the evaluation of those points brings redundant information to the problem, and thus we do not take fully advantage of the batch evaluations. Moreover when adding close to each other points to the design, the proximity can lead to an ill-conditioned covariance matrix of the GP and in turn numerical problems in the estimation of its hyperparameters.
+However, as we can see on the left plot
+of~\cref{fig:adjusted_centroids}, all centroids are adjusted
+independently, and since only their $\kk$ component is changed, the
+adjusted centroids may end up very close to each other. The issue is
+twofold: the evaluation of those points brings redundant information
+to the problem, and thus we do not take fully advantage of the batch
+evaluations. Moreover when adding close to each other points to the
+design, the proximity can lead to an ill-conditioned covariance matrix
+of the GP and in turn numerical problems in the estimation of its
+hyperparameters.
 
 
-In order to regroup the nearby points, we can perform once again a clustering procedure such as Hierarchical clustering~\cite{nielsen_hierarchical_2016}, as the number of points to consider is much more limited.
-For each point in each cluster, as they are in close proximity, we can assume their uncertainty on the conditional minimiser $\alpha^2\sigma^2_{Z^*}$ are sensibly the same. So instead, we are going to make the adjustment described \cref{eq:adjust_centroid} only for the point which has the smallest $\sigma^2_Z$. In the end, the points added to the design are the points labeled ``Adjusted centroids 2'' of~\cref{fig:adjusted_centroids}.
+In order to regroup the nearby points, we can perform once
+again% \todo{préciser (classification?)}
+a clustering procedure such as Hierarchical
+clustering~\cite{nielsen_hierarchical_2016}, as the number of points
+to consider is much more limited.  For each point in each cluster, as
+they are in close proximity, we can assume their uncertainty on the
+conditional minimiser $\alpha^2\sigma^2_{Z^*}$ are sensibly the
+same. So instead, we are going to make the adjustment described
+\cref{eq:adjust_centroid} only for the point which has the smallest
+$\sigma^2_Z$. In the end, the points added to the design are the
+points labeled ``Adjusted centroids 2''
+of~\cref{fig:adjusted_centroids}.
 
 
 \begin{figure}[ht]
@@ -977,12 +1052,17 @@ The added points are shown~\cref{fig:AK_MCS_design}, and the margin of uncertain
 % % \tocheck{Compare Vorob'ev deviation with pi(1-pi) ?}
 
 
-\clearpage
+% \clearpage
 
 \subsection{Improving the estimation of $\alpha_p$ as a quantile of the relative regret}
 \label{sec:quantile_rr}
-Instead of choosing a fixed threshold $\alpha \geq 0$, we can instead look for a threshold such that $\max \Gamma_{\alpha}$ is large enough.
-Let us recall that given a level of confidence $p$, we define $\alpha_p$ as the smallest threshold giving a maximal probability of acceptability above $p$.
+Instead of choosing a fixed threshold $\alpha \geq 0$, we can instead
+look for a threshold such that $\max \Gamma_{\alpha}$ is large
+enough. % \todo{Plus de rappels, points d'étapes}
+
+Let us recall that given a level of confidence $p$, we define
+$\alpha_p$ as the smallest threshold giving a maximal probability of
+acceptability above $p$.
 \begin{equation}
   \alpha_p = \inf_{\alpha \geq 1}\{\max_{\kk \in \Kspace}\Gamma_{\alpha}(\kk)\geq p \}
 \end{equation}
@@ -997,9 +1077,13 @@ $\alpha_p$ verifies then
 \alpha_p = \min_{\kk\in\Kspace} q_p(\kk)
 \end{equation}
 
-Given~\cref{eq:alpha_p_min}, we are going to focus on the estimation of the quantiles of order $p$: $q_p(\kk)$ for $\kk \in \Kspace$.
-Let $X$ be a real-valued random variable, and let $x_i \sim X$ be $N$ i.i.d.\ samples.
-A common estimation of the quantile of order $p$ of $X$ is  $x_{(\left[Np\right])}$, where $x_{(i)}$ is the $i$th order statistic of samples (\emph{i.e.} the $i$th smallest value of the set of samples), and $[\cdot]$ is the rounding operator.
+Given~\cref{eq:alpha_p_min}, we are going to focus on the estimation
+of the quantiles of order $p$: $q_p(\kk)$ for $\kk \in \Kspace$.  Let
+$X$ be a real-valued random variable, and let $x_i \sim X$ be $N$
+i.i.d.\ samples.  A common estimation of the quantile of order $p$ of
+$X$ is $x_{(\left[Np\right])}$, where $x_{(i)}$ is the $i$th order
+statistic of samples (\emph{i.e.} the $i$th smallest value of the set
+of samples), and $[\cdot]$ is the rounding operator.
 
 % and 
 % \begin{equation}
@@ -1007,11 +1091,16 @@ A common estimation of the quantile of order $p$ of $X$ is  $x_{(\left[Np\right]
 %   p = \Prob_{\UU}\left[\max_{\kk \in \Kspace}\frac{J(\kk, \UU)}{J^*(\UU)} \leq \alpha_p\right] \iff \alpha_p = Q_{\UU}\left(\max_{\kk\in\Kspace} \frac{J(\kk,\UU)}{J^*(\UU)};p\right)
 %   ????
 % \end{equation}
-As done for $\Delta_{\alpha} = Z - \alpha Z^*$, and the estimation of $\Gamma_{\alpha}$, using the GP $Z$ constructed on $J$, we can approximate the ratio $J/J^*$, in order to have an estimation which depends on the properties of the surrogate $Z$.
+As done for $\Delta_{\alpha} = Z - \alpha Z^*$, and the estimation of
+$\Gamma_{\alpha}$, using the GP $Z$ constructed on $J$, we can
+approximate the ratio $J/J^*$, in order to have an estimation which
+depends on the properties of the surrogate $Z$.
 
 \subsubsection{Lognormal approximation of the ratio}
-Let $\kk\in\Kspace$ and $\uu\in\Uspace$.
-The true value of the ratio $J(\kk,\uu)/J^*(\uu)$ is modelled as the random variable $Z(\kk,\uu)/Z^*(\uu)$, where the joint distribution of $Z(\kk, \uu)$ and $Z^*(\uu)$ is
+Let $\kk\in\Kspace$ and $\uu\in\Uspace$.  The true value of the ratio
+$J(\kk,\uu)/J^*(\uu)$ is modelled as the random variable
+$Z(\kk,\uu)/Z^*(\uu)$, where the joint distribution of $Z(\kk, \uu)$
+and $Z^*(\uu)$ is
 \begin{equation}
   \begin{bmatrix}
     Z(\kk, \uu) \\ Z^*(\uu)
@@ -1028,7 +1117,10 @@ The true value of the ratio $J(\kk,\uu)/J^*(\uu)$ is modelled as the random vari
   \right)
 \end{equation}
 % What we are calling the plug-in approach is to replace the ratio $Z(\kk, \uu)/Z^*(\uu)$, with its mean $\Ex_Z\left[\frac{Z(\kk, \uu)}{Z^*(\uu)}\right]$. 
-Under the condition that  $m_{Z^*}(\uu)/\sigma_{Z^*}(\uu)$ is large, \textit{i.e.} that $Z^*(\uu) \geq 0$ with high probability, we can make the approximation that at each $(\kk, \uu)$, the ratio is lognormally distributed (see \cref{sec:lognorm_ratio}):
+Under the condition that $m_{Z^*}(\uu)/\sigma_{Z^*}(\uu)$ is large,
+\textit{i.e.} that $Z^*(\uu) \geq 0$ with high probability, we can
+make the approximation that at each $(\kk, \uu)$, the ratio is
+lognormally distributed (see \cref{sec:lognorm_ratio}):
 \begin{align}
   \label{eq:log_ratio_eq}
   \frac{Z(\kk, \uu)}{Z^*(\uu)}&\sim \log \mathcal{N}\left(\log\frac{m_Z(\kk, \uu)}{m_{Z}^*(\uu)};\frac{\sigma^2_Z(\kk, \uu)}{m_Z(\kk, \uu)^2}+\frac{\sigma^2_{Z^*}(\uu)}{m_{{Z^*}}(\uu)^2} -  2 \rho \frac{\sigma_Z(\kk,\uu) \sigma_{Z^*}(\uu)}{m_{Z}(\kk, \uu)m_{Z^*}(\uu)}\right) \\
