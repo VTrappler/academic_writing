@@ -98,6 +98,7 @@ def main():
     )
     cbar = fig.colorbar(im1, ax=ax1, ticks=[10, 30, 50, 100, 200, 4000, 5000], format=formatter)
     cbar.set_label(r'Depth (m)', rotation=90)
+    cbar.ax.invert_yaxis()
     # cb1.ax.ticklabel_format(style='sci', axis='y', useOffset=True, scilimits=(0, 0))
     ax1.text(-6, 46, 'Bay of Biscay', color='white')
     ax1.text(-8, 50, 'Celtic Sea', color='white')
@@ -174,21 +175,20 @@ def main():
 def main2():
     von_karman = 0.4
 
-
     def Cb(H, z0b):
         return (von_karman / np.log(H / z0b))**2
     H = 100
     z0b = np.logspace(-6, -1)
     plt.figure(figsize=col_full)
-    plt.plot(z0b, Cb(10, z0b), label=r'$H=\SI{10}{\meter}$')
-    plt.plot(z0b, Cb(100, z0b), label=r'$H=\SI{100}{\meter}$')
-    plt.plot(z0b, Cb(500, z0b), label=r'$H=\SI{500}{\meter}$')
-    plt.plot(z0b, Cb(2000, z0b), label=r'$H=\SI{2000}{\meter}$')
-    plt.plot(z0b, Cb(5000, z0b), label=r'$H=\SI{5000}{\meter}$')
+    plt.plot(z0b, Cb(10, z0b), label=r'$H=10$m')
+    plt.plot(z0b, Cb(100, z0b), label=r'$H=100$m')
+    plt.plot(z0b, Cb(500, z0b), label=r'$H=500$m')
+    plt.plot(z0b, Cb(2000, z0b), label=r'$H=2000$m')
+    plt.plot(z0b, Cb(5000, z0b), label=r'$H=5000$m')
     bounds = [20e-3, 2e-3, 0.5e-3, 0.05e-3, 0.01e-3]
     for bd in bounds:
         plt.axvline(x=bd, color='k', alpha=0.3)
-    plt.text(.8e-6, 0.007, 'Silts and Clay')
+    plt.text(.8e-6, 0.007, 'Silts and Muds')
     plt.text(1.5e-5, 0.0068, 'Fine\nsand')
     plt.text(1e-4, 0.007, 'Sand')
     plt.text(6e-4, 0.007, 'Gravel')
@@ -198,7 +198,7 @@ def main2():
     plt.xscale('log')
     plt.ylabel(r'$C_d$')
     plt.xlabel(r'$z_{0,b}$ (in m)')
-    plt.title('Bottom friction as a function of the roughness\nand the water column')
+    plt.title('Bottom friction as a function of the roughness\nand the water column height')
     plt.legend(loc='center left', fontsize=8)
     plt.tight_layout()
     plt.savefig('/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/cd_zob.pgf')
@@ -207,4 +207,4 @@ def main2():
     
 if __name__ == '__main__':
     main()                      #
-    # main2()
+    main2()

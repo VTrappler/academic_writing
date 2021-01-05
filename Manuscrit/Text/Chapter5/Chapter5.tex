@@ -26,34 +26,76 @@
 % \subfileLocal{\dominitoc}
 % \subfileLocal{\setcounter{chapter}{4}}
 % \subfileLocal{\chapter{Application to the numerical coastal model CROCO}}
-\chapter{Application to the numerical coastal model CROCO}
+\chapter{Application to the numerical coastal model \CROCO}
 \label{chap:croco}
 \minitoc
 % \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this chapter, we will study the problem of calibration of a
-specific model under uncertainties. We will first address the problem
-of the high dimensionality of the input space by segmentating it in
-arbitrary way. Then, after applying some of the methods introduced in
-the previous chapter.
 
-\cite{boutet_estimation_2015}
+\section{Introduction}
+\label{sec:intro_croco}
 
-\section{The ocean modelling system \CROCO}
-\CROCO\footnote{\CROCO and CROCO\_TOOLS are provided by
-  \url{https://www.croco-ocean.org}} is a new oceanic modeling system
-built upon ROMS\_AGRIF and the non-hydrostatic kernel of SNH (under
-testing), gradually including algorithms from MARS3D (sediments) and
-HYCOM (vertical coordinates). An important objective for \CROCO is to
-resolve very fine scales (especially in the coastal area), and their
-interactions with larger scales. It is the oceanic component of a
-complex coupled system including various components, e.g., atmosphere,
-surface waves, marine sediments, biogeochemistry and ecosystems.
-\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}
+% \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
-\subsection{Numerical setting of the model}
+In this chapter, we will study the problem of calibration under
+uncertainties of the friction of the ocean bed of a realistic
+numerical model of the atlantic french coast based on \CROCO. 
+
+The bottom friction depends directly on the size of the asperities on
+the ocean bed, thus it is a subgrid phenomenon: the program will not
+try solve the equations of motions of fluid around those asperities,
+but instead, a parametrization will be introduced in
+
+The bottom friction parameter has been identified as a crucial
+parameter that limits the accuracy of the modelling
+systems~\cite{boutet_estimation_2015,das_variational_1992,das_estimation_1991}.
+We will detail how bottom friction affects the oceanic circulation
+in~\cref{ssec:modelling_bottom}, in order to get a first insight on
+the regions that may influence the most the calibration.
+
+The deterministic problem of calibration will then be addressed in
+\cref{sec:deterministic_calibration_bott}, by first defining the cost
+function and the input space. We will then calibrate the model
+without uncertainties using adjoint-based method.
+
+However for such problems, the large dimension of the input space may
+be problematic, as the parameter may be chosen for each cell of the
+mesh. Instead of carrying the optimisation over the whole space, we
+will segment the geographical input space in different independent
+regions, which are based on the type of sediments listed at the bottom
+of the water. In order to quantify the influence of each of those
+regions, we will carry a sensitivity analysis, in \cref{sec:methods_SA}.
+
+
+Finally, we are going to apply methods introduced in the previous
+chapters, in order to get a robust estimation of the bottom friction,
+using Gaussian processes, as addressed in the previous chapter.
+
+
+
+\section{\CROCO\ and bottom friction modelling}
+\label{sec:croco_bottom_fr}
+\CROCO{}\footnote{\CROCO\ and CROCO\_TOOLS are provided by
+  \url{https://www.croco-ocean.org}} (Coastal and Regional Ocean
+COmmunity model) is a program written in Fortran that describes the
+motion of the ocean by solving the \emph{primitive equations}, which
+are simplified versions of the Navier-Stokes equations, in order to
+take into account the particular scales at play at the surface of the
+Earth. \CROCO{} has been developed upon ROMS\_AGRIF, and is developed
+to be coupled with other modelling systems, such as atmospheric,
+biological or ecosystem models.
+
+% gradually including algorithms from MARS3D (sediments) and
+% HYCOM (vertical coordinates). An important objective for \CROCO\ is to
+% resolve very fine scales (especially in the coastal area), and their
+% interactions with larger scales. It is the oceanic component of a
+% complex coupled system including various components, e.g., atmosphere,
+% surface waves, marine sediments, biogeochemistry and ecosystems.
+
+
+\subsection{Parameters and configuration of the model}
 \label{sec:geographical_setting}
 
 The model used in this thesis is roughly the same
@@ -61,49 +103,98 @@ as~\cite{boutet_estimation_2015}. The spatial domain ranges from
 \ang{9}W to \ang{1}E and from \ang{43}N to \ang{51}N, and spans most
 of the Bay of Biscay, the English Channel and the eastern part of the
 Celtic Sea.  The resolution is \SI{1/14}{\degree}, which leads to a
-mesh size between \SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The bathymetry map is
-shown~\cref{fig:depth_maps}. We can notice roughly two regions based
-on the depth map: the region near the coasts which correspond to the
-continental shelf, where the water depth is less than
-\SI{200}{\meter}, and the offshore region of the Bay of Biscay, where
-the depth is closer to \SI{5000}{\meter}.
+mesh size between \SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The
+bathymetry map is shown~\cref{fig:depth_maps}. We can notice roughly
+two regions based on the depth map: the region near the coasts which
+correspond to the continental shelf, where the water depth is less
+than \SI{200}{\meter}, and the offshore region of the Bay of Biscay,
+where the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps_log.png}
-  \caption{\label{fig:depth_maps} Bathymetry used in \CROCO, and geographical landmarks. The continental shelf correspond roughly to the area with depth less than \SI{200}{\meter} (green hue), while the abyssal plain has a depth larger than \SI{4000}{\meter} (blue hue)}
-\end{figure}.
-\CROCO can solve 3D fluid motions equations, but in this configuration
+  \caption{\label{fig:depth_maps} Bathymetry used in \CROCO, and
+    geographical landmarks. The continental shelf correspond roughly
+    to the area with depth less than \SI{200}{\meter} (green hue),
+    while the abyssal plain has a depth larger than \SI{4000}{\meter}
+    (blue hue)}
+\end{figure}
+\CROCO{} can solve 3D fluid motions equations, but in this configuration
 is used only with one vertical level and thus solves numerically the
 shallow water equations:
+% \begin{align}
+%   \left\{
+%   \begin{array}{rcl}
+%     \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
+%     \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
+%   \end{array}
+%        \right.
+% \end{align}
 \begin{align}
   \left\{
-  \begin{array}{rcl}
-    \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
-    \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
+  \begin{array}{lll}
+     \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} \\
+    \pfrac{H}{t} + \nabla (H \cdot \mathbf{v}) &=& 0
   \end{array}
-       \right.
+   \right.
 \end{align}
+where $\mathbf{v} = (v_x,v_y)$ is the velocity field of the fluid,
+$\bm{\Omega}$ is the rotational angular vector of Earth, $H$ is the
+water column height, $g$ is the gravitational constant, $\rho$ is the
+fluid density, and $\bm{\tau}_b$ is the shear stress at the
+bottom. The bottom friction affects the circulation through
+$\bm{\tau}_b$, and different parameterizations of this stress can be
+derived.
+
 \subsection{Modelling of the bottom friction}
-In \CROCO, the bottom friction is modelled using a quadratic friction
-drag coefficient, as described
-\cref{eq:bottom_stress_tau,eq:quadratic_friction_vonkarman},
-expression which can be derived by assuming a logarithmic profile of the velocity
-at the bottom.
-\begin{align}
-  \label{eq:bottom_stress_tau}
-  \bm{\tau}_b &= C_d \|\mathbf{u}_b\|\mathbf{u}_b \\  
-  C_d &= \left(\frac{\kappa}{\log\left(\frac{H}{z_{0,b}}\right)}\right)^2 \text{for } C_d \in [C_d^{\min}, C_d^{\max}]   \label{eq:quadratic_friction_vonkarman}
-\end{align}
-where $\kappa$ is the Von K\'arm\'an constant, equal to $0.41$.
+\label{ssec:modelling_bottom}
+In \CROCO, the bottom friction is modelled using a quadratic drag
+coefficient $C_d$:
+\begin{equation}
+    \label{eq:bottom_stress_tau}
+    \bm{\tau}_b= -C_d \|\mathbf{v}_b\|\mathbf{v}_b 
+  \end{equation}
+  where $\mathbf{v}_b$ is the velocity at the bottom, so in the case
+  of the Shallow Water equations, $\mathbf{v} = \mathbf{v}_b$.  The
+  drag coefficient can also be formulated as a function of the water
+  column height and and the \emph{bottom roughness} $\zob$ by assuming a
+  logarithmic profile of the velocity at the bottom~\cite{boutet_estimation_2015}
+  \begin{equation}
+    \label{eq:quadratic_friction_vonkarman}
+  C_d = \left(\frac{\kappa}{\log\left(\frac{H}{\zob}\right)}\right)^2% \text{for } C_d \in [C_d^{\min}, C_d^{\max}]
+\end{equation}
+where $\kappa$ is the Von K\'arm\'an constant, that we will take equal
+to $0.41$.  The bottom roughness $\zob$, or \emph{rugosity} in this
+document, can be interpreted as the size of the turbulent layer at the
+bottom, induced by the asperities of the sediments that lie at the
+bottom.
+\cite{boutet_estimation_2015} shows that in a calibration context,
+controlling the rugosity $\zob$ yields better result that controlling
+the drag coefficient $C_d$, thus we are going to directly control $\zob$ or $\log(\zob)$.
 
-Based on the documentation of the SHOM, the \cref{fig:sediments_reduced} shows a simplified version of the map of the repartition of tthe different types of sediments. Most of the ocean floor is here composed of sand. There is also very few areas where Siltic soil is listed.    
 
+On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
+of the roughness $\zob$ of the ocean floor, for different height of
+the water column $H$.
 \begin{figure}[ht]
-  \centering
-  \includegraphics{\imgpath sediments_reduced.png}
-  \caption{\label{fig:sediments_reduced} Repartition of the sediments on the ocean floor.}
+  \centering \input{\imgpath cd_zob.pgf}
+  \caption{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of
+    the column water height and the roughness at the bottom}
 \end{figure}
+We can see that the higher the water column height, the less variation
+appears when adjusting the bottom roughness $\zob$.  Considering the
+physical properties of the bottom friction and the types of sediments,
+it can be expected that the English Channel, and at a lesser extent
+the rest of the continental shelf are the areas which are the most
+influential for the calibration.
 
+
+
+This rugosity is directly linked to the type of sediment found on the
+ocean bed, thus we can first study the type of materials that are
+found near the french coasts. \Cref{tab:size_sediments} a coarse
+classification, along with typical size of the sediments that can be
+found, that will serve as a reference value, or \emph{truth value}
+$\zob^{\mathrm{truth}}$.
 
 \begin{table}[!ht]
   \centering
@@ -120,38 +211,101 @@ Based on the documentation of the SHOM, the \cref{fig:sediments_reduced} shows a
   \end{tabular}
   \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
 \end{table}
-\Cref{fig:sediments_reduced} shows that the largest sediments are
-rocks but are mostly located in the Bay of Biscay, near the boundary
-of the continental shelf. Pebbles however are mostly located in the
-shallow region in the English Channel, thus it may be expected that
-controlling the size of pebbles is highly influencal in a calibration
-context.
 
+Based on the documentation of the SHOM, the
+\cref{fig:sediments_reduced} shows a simplified version of the map of
+the repartition of the different types of sediments. Most of the ocean
+floor in this region is composed of sand. Even though siltic soil is
+listed, it is only scarcely present. The figure also shows that the
+largest sediments are rocks but are mostly located in the Bay of
+Biscay, near the boundary of the continental shelf. Pebbles however
+are mostly located in the shallow region in the English Channel, thus
+it may be expected that controlling the size of pebbles is highly
+influencal in a calibration context.
 
-On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
-of the roughness $\zob$ of the ocean floor, for different height of
-the water column $H$.
 \begin{figure}[ht]
-  \centering \input{\imgpath cd_zob.pgf}
-  \caption{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of the column water height and the roughness at the bottom}
+  \centering
+  \includegraphics{\imgpath sediments_reduced.png}
+  \caption{\label{fig:sediments_reduced} Repartition of the sediments on the ocean floor.}
 \end{figure}
-We can see that the higher the water column height, the less
-variation appears when adjusting the bottom roughness $\zob$.
-Considering the physical properties of the bottom friction and the
-types of sediments, it can be expected that the English Channel, and at a lesser extent the rest of the continental shelf
-are the areas which are the most influential for the calibration.
+
+
+\subsection{Modelling of the uncertainties: tidal amplitude}
+\cite{egbert_efficient_2002} TPX model of tides
+
+\label{sec:tidal_modelling}
+\begin{table}[!h]
+  \centering % % Chose order from the rank in the TPXO file :
+% "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
+% " 1  2  3  4  5  6  7  8  9 10"
+  \begin{tabular}{rrr}\toprule
+    Darwin Symbol & Period (h)   & Species                           \\ \midrule
+    $M_2$         & 12.4206      & Principal Lunar Semidiurnal       \\
+    $S_2$         & 12           & Principal Solar Semidiurnal       \\
+    $N_2$         & 12.65834751  & Larger Lunar Elliptic Semidiurnal \\
+    $K_2$         & 11.96723606  & Lunisolar Semidiurnal             \\
+    $K_1$         & 23.93447213  & Lunar Diurnal                     \\
+    % \midrule
+    % $O_1$         & 25.81933871  & Lunar Diurnal                     \\ 
+    % $P_1$         & 24.06588766  & Solar Diurnal                     \\
+    % $Q_1$         & 26.868350    & Larger Lunar Elliptic Diurnal     \\
+    % $M_f$         & 13.660830779 & Lunisolar Fortnightly             \\
+    % $M_m$         & 27.554631896 & Lunar Monthly                     \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tide components}
+  \label{tab:tides_components}
+\end{table}
+The uncertainties in this configuration represent an error on the amplitude of the tide:
+\begin{equation}
+  \tilde{A}_i(\uu_i) = A_i (1 + 0.01(2u - 1))
+\end{equation}
+so $\tilde{A}_i(0) = 0.99A_i$, $\tilde{A}_i(0.5) = A_i$ and $\tilde{A}_i(1) = 1.01A_i$
 
 
 \section{Deterministic calibration of the bottom friction}
 \label{sec:deterministic_calibration_bott}
-\subsection{Twin experiments setup}
-In a twin experiment setup, the observation $y$ are generated using
-the numerical model, and thus can be compared directly 
+The calibration of the bottom friction will be studied in a twin
+experiment setup. In that setting, the observations
+$y \in \mathbb{R}^{N_{\mathrm{obs}}}$ will be generated using the
+numerical model, and some reference parameters, that will be qualified
+as the \emph{truth}. The output of the model we are going to consider
+is the sea surface height $\eta$ at every point of the mesh, and at every
+time step, so
+$N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
+
+We are going to use the notation
+introduced in~\cref{sec:parameter_inference}, for the model.  Let us
+define $\mathcal{M}$ as the numerical model.
+\begin{equation}
+  \begin{array}{rcl}
+    \mathcal{M}: \Kspace \times \Uspace &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
+    (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{i,t}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
+  \end{array}
+\end{equation}
+
+\subsection{Twin experiment setup}
+In a twin experiment setup, the observation $y$ are
+generated using the numerical model, and a predefined truth value $\kk^{\mathrm{truth}}$.
+This means that the ``physical model'' is defined using the forward operator
+$\mathscr{M}$, based on the forward numerical model, evaluated with a
+certain uncertain parameter $\uu^{\mathrm{truth}}$
+\begin{equation}
+  \label{eq:twin_exp}
+  \begin{array}{rcl}
+    \mathscr{M}: \Kspace &\longrightarrow & \mathbb{R}^{N_{\mathrm{obs}}} \\
+      \kk & \longmapsto & \mathscr{M}(\kk) = \mathcal{M}(\kk, \uu^{\mathrm{truth}})
+  \end{array}
+\end{equation}
+ the observations are generated using $\vartheta=\kk^{\mathrm{truth}}$:
+\begin{equation}
+  y = \mathscr{M}(\vartheta) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
+\end{equation}
+
+
 \subsection{Cost function definition}
-Let $y \in \mathbb{R}^{N_{\mathrm{mesh}} \cdot N_{\mathrm{time}}}$ be
-the observations, generated using a particular configuration of the
-model.
-We define $J$ as
+Once we have access to the observations
+$y \in \mathbb{R}^{N_{\mathrm{mesh}} \cdot N_{\mathrm{time}}}$, we can define a cost function $J$ as
 \begin{align}
   J(\kk) &= \sum_{t=1}^{ N_{\mathrm{time}}}\sum_{i=1}^{N_{\mathrm{mesh}}}  \left(\eta_{t,i}(\kk) - y_{t, i}\right)^2 \\
          &= \|\mathcal{M}(\kk) - y\|_2^2
@@ -162,6 +316,7 @@ $Y \mid \kk \sim \mathcal{N}(\mathcal{M}(\kk), I)$ where $I$ is the
 identity matrix, $J$ is proportional to the negative log-likelihood of the data.
 
 \subsection{Optimisation without uncertainties}
+\label{ssec:optim_gradient}
 The optimisation is first carried using M1QN3, a version of a
 gradient-descent procedure, as described
 in~\cite{gilbert_numerical_1989}. We can first look to control $\zob$
@@ -184,7 +339,9 @@ during the optimisation procedure.
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
   }
-  \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on the whole space using gradient obtained via adjoint method, after $400$ iterations TODO: {Taille et colorbar}}
+  \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
+    the whole space using gradient obtained via adjoint method, after
+    $400$ iterations TODO: {Taille et colorbar} }
 \end{figure}
 
  \begin{figure}[ht]
@@ -232,36 +389,6 @@ sparsely distributed.
 % \end{figure}
 % \clearpage
 
-\subsection{Tidal modelling}
-\cite{egbert_efficient_2002} TPX model of tides
-
-\label{sec:tidal_modelling}
-\begin{table}[!h]
-  \centering % % Chose order from the rank in the TPXO file :
-% "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
-% " 1  2  3  4  5  6  7  8  9 10"
-  \begin{tabular}{rrr}\toprule
-    Darwin Symbol & Period (h)   & Species                           \\ \midrule
-    $M_2$         & 12.4206      & Principal Lunar Semidiurnal       \\
-    $S_2$         & 12           & Principal solar Semidiurnal       \\
-    $N_2$         & 12.65834751  & Larger Lunar Elliptic Semidiurnal \\
-    $K_2$         & 11.96723606  & Lunisolar Semidiurnal             \\
-    $K_1$         & 23.93447213  & Lunar Diurnal                     \\\midrule
-    $O_1$         & 25.81933871  & Lunar Diurnal                     \\ 
-    $P_1$         & 24.06588766  & Solar Diurnal                     \\
-    $Q_1$         & 26.868350    & Larger Lunar Elliptic Diurnal     \\
-    $M_f$         & 13.660830779 & Lunisolar Fortnightly             \\
-    $M_m$         & 27.554631896 & Lunar Monthly                     \\
-    \bottomrule
-  \end{tabular}
-  \caption{Tide components}
-  \label{tab:tides_components}
-\end{table}
-The uncertainties in this configuration represent an error on the amplitude of the tide:
-\begin{equation}
-  \tilde{A}_i(\uu_i) = A_i (1 + 0.01(2u - 1))
-\end{equation}
-so $\tilde{A}_i(0) = 0.99A_i$, $\tilde{A}_i(0.5) = A_i$ and $\tilde{A}_i(1) = 1.01A_i$
 
 \section{Sensitivity analysis}
 \label{sec:sensitivity-analysis}
@@ -274,25 +401,25 @@ scales: around a nominal value, using the gradient, and at a global
 scale, by considering the inputs as random variable, and by measuring
 the variance of the output.
 
-\subsection{Methods of Sensitivity analysis}
-\label{sec:methods_SA}
-\subsubsection{Local sensitivity analysis}
-\label{sec:loca_SA}
-Local sensitivity analysis~\cite{morio_global_2011} refers to the
-study of how a small perturbation $\delta \kk$ of a nominal value
-$\kk$ affects the output of the numerical model. As we assume that the
-numerical model is accessible through the cost function $J$, a
-straightforward way to quantify this perturbation is to consider the
-partial derivative of $J$, with respect to each component of the
-control variable $\kk=(\kk_1,\dots,\kk_p)$:
-\begin{equation}
-  \frac{\partial J}{\partial \kk_i}(\kk)
-\end{equation}
-The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
-\begin{equation}
-  \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
-\end{equation}
-\subsubsection{Global Sensitivity Analysis: Sobol' indices}
+% \subsection{Methods of Sensitivity analysis}
+% \label{sec:methods_SA}
+% \subsubsection{Local sensitivity analysis}
+% \label{sec:loca_SA}
+% Local sensitivity analysis~\cite{morio_global_2011} refers to the
+% study of how a small perturbation $\delta \kk$ of a nominal value
+% $\kk$ affects the output of the numerical model. As we assume that the
+% numerical model is accessible through the cost function $J$, a
+% straightforward way to quantify this perturbation is to consider the
+% partial derivative of $J$, with respect to each component of the
+% control variable $\kk=(\kk_1,\dots,\kk_p)$:
+% \begin{equation}
+%   \frac{\partial J}{\partial \kk_i}(\kk)
+% \end{equation}
+% The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
+% \begin{equation}
+%   \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
+% \end{equation}
+\subsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 \cite{janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined as 
@@ -309,7 +436,7 @@ order effects, and total effects
 \end{equation}
 where $X_{-i} = (X_1,\dots X_{i-1},X_{i+1},\dots,X_p)$ is random vector of $p-1$ components.
 
-\subsection{Application to CROCO}
+% \subsection{Application to CROCO}
 The bottom friction affects the ocean circulation through two factors,
 as shown \cref{eq:quadratic_friction_vonkarman}, first by the bottom
 roughness, $\zob$, and by the ocean depth. We are first going to
@@ -317,17 +444,31 @@ perfrom a sensitivity analysis, in order to quantify the role of each
 sediment based region, without incorporating the knowledge on the
 typical size of the sediment there.
 
-\subsubsection{SA on the class of sediments}
+\subsection{SA on the regions defined by the sediments}
+\label{ssec:SA_sediments}
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath SA_sediments.pgf}
+  \caption{\label{fig:SA_sediments} Global SA on the regions defined by the sediment type}
+\end{figure}
 
-\subsubsection{SA on the tide components}
+
+\subsection{SA on the tide components}
+\label{ssec:SA_tide}
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_tides.pgf}
   \caption{\label{fig:SA_tides} Global SA on the different components of the tide }
 \end{figure}
 
-\cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2 (right), and the total effect indices, along with bootstrap confidence intervals. The variation of the variable associated with the $M_2$ component of the tide has the most impact on the cost function.
+\cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2
+(right), and the total effect indices, along with bootstrap confidence
+intervals. The variation of the variable associated with the $M_2$
+component of the tide has the most impact on the cost function.
 
+
+
+\section{Robust Calibration of the bottom friction}
 
 % \begin{figure}[ht]
 %   \centering

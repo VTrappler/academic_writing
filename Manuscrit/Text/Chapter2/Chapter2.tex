@@ -47,6 +47,7 @@ in \cref{sec:model_selection} and the influence of nuisance parameters
 and model misspecification in calibration in
 \cref{sec:model_misspecification}.
 
+
 \section{Forward, inverse problems and probability theory}
 \label{sec:forward_inverse_problem_proba_theory}
 Running a simulation using numerical tools is useful to grasp a better
@@ -62,12 +63,27 @@ turbulences)% friction of the ocean bed, or $k-\epsilon$ turbulence models for i
 performed in order to guarantee a meaningful output when evaluating
 the model.
 
-Model calibration or parameter estimation has been widely treated in the literature, either from a statistical and probabilistic point of view using likelihood-based methods and Bayesian inference, or from a \emph{variational} point of view by defining proper objective functions. To match those two approaches, we will first review the problem from a probabilistic point of view, in order to define properly some appropriate objective functions and introduce tools from optimal control theory to optimize them.
+Model calibration or parameter estimation has been widely treated in
+the literature, either from a statistical and probabilistic point of
+view using likelihood-based methods and Bayesian inference, or from a
+\emph{variational} point of view by defining proper objective
+functions. To match those two approaches, we will first review the
+problem from a probabilistic point of view, in order to define
+properly some appropriate objective functions and introduce tools from
+optimal control theory to optimize them.
 
  \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
-In order to describe accurately a physical system, we have to define the notion of models, and will be following~\cite{tarantola_inverse_2005} approach to define inverse problems.
- A model represents the link between some parameters and some observable quantities. An example is a model that takes the form of a system of ODEs or PDEs, maybe discretized, while the parameters are the initial conditions and the output is one or several time series, describing the time evolution of a quantity at one or several spatial points. An important point is that a model is not only the \emph{forward operator}, but must also include the parameter space.
+In order to describe accurately a physical system, we have to define
+the notion of models, and will be
+following~\cite{tarantola_inverse_2005} approach to define inverse
+problems.  A model represents the link between some parameters and
+some observable quantities. An example is a model that takes the form
+of a system of ODEs or PDEs, maybe discretized, while the parameters
+are the initial conditions and the output is one or several time
+series, describing the time evolution of a quantity at one or several
+spatial points. An important point is that a model is not only the
+\emph{forward operator}, but must also include the parameter space.
 
 
  \begin{definition}[Model]
@@ -76,9 +92,14 @@ In order to describe accurately a physical system, we have to define the notion 
   \begin{equation}
     \mathfrak{M} = (\mathcal{M}, \Theta)
   \end{equation}
-The forward operator is the mathematical representation of the physical system, while the parameter space is chosen here to be a subset of a finite dimensional space, so usually $\Theta$ will be a subset of $\mathbb{R}^n$.
+  The forwarxd operator is the mathematical representation of the
+  physical system, while the parameter space is chosen here to be a
+  subset of a finite dimensional space, so usually $\Theta$ will be a
+  subset of $\mathbb{R}^n$.
 \end{definition}
-As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$, we can define the dimensionality of the model, based on the number of \emph{degrees of freedom} available for the parameters.
+As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for
+$n\geq 1$, we can define the dimensionality of the model, based on the
+number of \emph{degrees of freedom} available for the parameters.
 
 
 \begin{remark}
@@ -89,22 +110,38 @@ As we will usually choose $\Theta$ as a subset of $\mathbb{R}^n$, for $n\geq 1$,
 \begin{example}
   A model with parameter space $\Theta = \mathbb{R}^2\times \interval{0}{1}$ has dimension $3$, while $\Theta = \mathbb{R}^2 \times \{1\}$ has dimension $2$.
 \end{example}
- Now that we have introduced the forward operator and the parameter space, we will focus on the output of the model.
-Ideally, the data space $\Yspace$ consists in all the physically acceptable results of the physical experiment.
-Then, the forward operator $\mathcal{M}$ maps the parameter space $\Theta \subset \mathbb{R}^{n}$ to the data space $\Yspace$, as one can expect that all models provide physically acceptable outputs.
+Now that we have introduced the forward operator and the parameter
+space, we will focus on the output of the model.  Ideally, the data
+space $\Yspace$ consists in all the physically acceptable results of
+the physical experiment.  Then, the forward operator $\mathcal{M}$
+maps the parameter space $\Theta \subset \mathbb{R}^{n}$ to the data
+space $\Yspace$, as one can expect that all models provide physically
+acceptable outputs.
 
 \subsection{Forward problem}
-Given a model $(\mathcal{M}, \Theta)$, the \emph{forward problem} consists in applying the forward operator to a given $\theta \in \Theta$, in order to get the \emph{model prediction}. The forward problem is then to obtain information on the result of the experiment based on the parameters we chose as input, so deriving a satisfying forward operator $\mathcal{M}$.
+Given a model $(\mathcal{M}, \Theta)$, the \emph{forward problem}
+consists in applying the forward operator to a given
+$\theta \in \Theta$, in order to get the \emph{model prediction}. The
+forward problem is then to obtain information on the result of the
+experiment based on the parameters we chose as input, so deriving a
+satisfying forward operator $\mathcal{M}$.
 \begin{equation}
   \begin{array}{cccc}
     \mathcal{M}:& \Theta &\longrightarrow & \Yspace \\
                 & \theta &\longmapsto     & \mathcal{M}(\theta)
   \end{array}
 \end{equation}
-As said earlier, the forward operator can be a set of ODEs or PDEs, discretized or not. The forward problem is then the attempt to link the causes, i.e.\ the parameters, to the consequences, i.e.\ the output in the data space.
+As said earlier, the forward operator can be a set of ODEs or PDEs,
+discretized or not. The forward problem is then the attempt to link
+the causes, i.e.\ the parameters, to the consequences, i.e.\ the
+output in the data space.
 
 \subsection{Inverse Problem}
-The inverse problem is the counterpart of the forward problem, and consists in trying to gather more information on the parameters, based on: the result of the experiment or the observation of the physical process and on the knowledge of the forward operator, as illustrated \cref{fig:inv_problem_pple}.
+The inverse problem is the counterpart of the forward problem, and
+consists in trying to gather more information on the parameters, based
+on: the result of the experiment or the observation of the physical
+process and on the knowledge of the forward operator, as illustrated
+\cref{fig:inv_problem_pple}.
 
 \begin{figure}[ht]
   \centering
@@ -113,15 +150,29 @@ The inverse problem is the counterpart of the forward problem, and consists in t
   \label{fig:inv_problem_pple}
 \end{figure}
 
-This is done by directly comparing the output of the forward operator, and trying to reduce the mismatch between the observed data and the model prediction.
+This is done by directly comparing the output of the forward operator,
+and trying to reduce the mismatch between the observed data and the
+model prediction.
 
 
 
-However, a purely deterministic approach for the inverse problem is doomed to underperform: as most physical processes are not perfectly known, some uncertainties remain in the whole modelling process. Those uncertainties are ubiquitous: the observations available may be corrupted by a random noise coming from the measurement devices and the model may not represent perfectly the reality, thus introducing a systematic bias for instance. Taking into account those uncertainties is crucial to solve the inverse problem.
+However, a purely deterministic approach for the inverse problem is
+doomed to underperform: as most physical processes are not perfectly
+known, some uncertainties remain in the whole modelling process. Those
+uncertainties are ubiquitous: the observations available may be
+corrupted by a random noise coming from the measurement devices and
+the model may not represent perfectly the reality, thus introducing a
+systematic bias for instance. Taking into account those uncertainties
+is crucial to solve the inverse problem.
 
 
 
-In that perspective we are going to introduce briefly the usual probabilistic framework, along with common notations that we will use throughout this manuscript. Those notions are well established in the scientific literature, and one can read~\cite{billingsley_probability_2008} for a more thorough description.
+In that perspective we are going to introduce briefly the usual
+probabilistic framework, along with common notations that we will use
+throughout this manuscript. Those notions are well established in the
+scientific literature, and one can
+read~\cite{billingsley_probability_2008} for a more thorough
+description.
 
 
 
@@ -134,11 +185,17 @@ We are first going through some usual notions of probability theory.
 Let us consider the usual probabilistic space $(\Omega, \mathcal{F}, \Prob)$.
 \begin{definition}[Event probability and conditioning]
   \label{def:prob_event}
-   We call an outcome of a random experiment $\omega$ an element of the sample space $\Omega$, and an event $A$ is an element of the $\sigma$-algebra $\mathcal{F}$ ($\sigma$-algebra on the set $\Omega$). The probability of an event $A\in \mathcal{F}$ is defined as the Lebesgue integral
+  We call an outcome of a random experiment $\omega$ an element of the
+  sample space $\Omega$, and an event $A$ is an element of the
+  $\sigma$-algebra $\mathcal{F}$ ($\sigma$-algebra on the set
+  $\Omega$). The probability of an event $A\in \mathcal{F}$ is defined
+  as the Lebesgue integral
   \begin{equation}
     \Prob[A] = \int_{A} \,\mathrm{d}\Prob(\omega) = \Prob[\{\omega ; \omega \in A\}]
   \end{equation}
-Observing an event $B \in \mathcal{F}$ can bring information upon another event $A\in \mathcal{F}$. In that sense, we introduce the conditional probability of $A$ given $B$.
+  Observing an event $B \in \mathcal{F}$ can bring information upon
+  another event $A\in \mathcal{F}$. In that sense, we introduce the
+  conditional probability of $A$ given $B$.
 \label{def:cond_proba}
   Let $A$, $B \in \mathcal{F}$.
   The event $A$ given $B$ is written $A \mid B$ and its probability is
@@ -151,7 +208,13 @@ Formally, an event can be seen as an outcome of some uncertain experiment, and i
 Let us now introduce a measurable state (or sample) space $S$, that is the set of all possible outcomes we can observe (and upon which we can assign a probability).
 \begin{definition}[Random Variable, Expectation]
   \label{def:random_variable}
-  A random variable (abbreviated as r.v.) $X$ is a measurable function from $\Omega \longrightarrow S$. A random variable will usually be written with an upper case letter. A realisation or observation $x$ of the r.v. $X$ is the actual image of $\omega\in\Omega$ under $X$: $x = X(\omega)$. If $S$ is countable, the random variable is said to be \emph{discrete}. When $S\subseteq \mathbb{R}^p$ for $p\geq 1$, $X$ is sometimes called a random vector
+  A random variable (abbreviated as r.v.) $X$ is a measurable function
+  from $\Omega \longrightarrow S$. A random variable will usually be
+  written with an upper case letter. A realisation or observation $x$
+  of the r.v. $X$ is the actual image of $\omega\in\Omega$ under $X$:
+  $x = X(\omega)$. If $S$ is countable, the random variable is said to
+  be \emph{discrete}. When $S\subseteq \mathbb{R}^p$ for $p\geq 1$,
+  $X$ is sometimes called a random vector
   
   \label{def:expectation}
   The expectation of a r.v. $X:\Omega \rightarrow S$ is defined as
@@ -176,10 +239,20 @@ Let us now introduce a measurable state (or sample) space $S$, that is the set o
   \end{equation}
 
   
-As we defined the notion of a r.v.\ in \cref{def:random_variable} as a measurable function from $\Omega \to S$, we can now focus on the measurable sets through $X$, by using in a sense the change of variable $x = X(\omega)$. 
+  As we defined the notion of a r.v.\ in \cref{def:random_variable} as
+  a measurable function from $\Omega \to S$, we can now focus on the
+  measurable sets through $X$, by using in a sense the change of
+  variable $x = X(\omega)$.
 \begin{definition}[Image (Pushforward) measure]
   \label{def:image_measure}
-  Let $X:\Omega \rightarrow S$ be a random variable, and $A \subseteq S$. The image measure (also called pushforward measure) of $\Prob$ through $X$ is denoted by $\Prob_X = \Prob \circ X^{-1}$. This notation can differ slightly depending on the community, so one can find also $ \Prob_X = \Prob \circ X^{-1} = X_{\sharp}\Prob$, the latter notation being used in transport theory. The probability, for the r.v. $X$ to be in $A$ is equal to
+  Let $X:\Omega \rightarrow S$ be a random variable, and
+  $A \subseteq S$. The image measure (also called pushforward measure)
+  of $\Prob$ through $X$ is denoted by $\Prob_X = \Prob \circ
+  X^{-1}$. This notation can differ slightly depending on the
+  community, so one can find also
+  $ \Prob_X = \Prob \circ X^{-1} = X_{\sharp}\Prob$, the latter
+  notation being used in transport theory. The probability, for the
+  r.v. $X$ to be in $A$ is equal to
   \begin{equation}
     \Prob[X \in A] = \Prob_X[A] = \int_{A}\,\mathrm{d}\Prob_X(\omega) =  \int_{X^{-1}(A)}\,\mathrm{d}\Prob(\omega) = \Prob[X^{-1}(A)] = \Prob\left[\{\omega\,;\,X(\omega) \in A\}\right]
   \end{equation}
@@ -192,10 +265,14 @@ Similarly, for any measurable function $h$, the expectation taken with respect t
 
 
 
-In most of this thesis, the sample space will be $S\subseteq \mathbb{R}^p$ for $p\geq 1$, so we are going to introduce useful tools and notations to characterize these particular real random variables.
+In most of this thesis, the sample space will be
+$S\subseteq \mathbb{R}^p$ for $p\geq 1$, so we are going to introduce
+useful tools and notations to characterize these particular real
+random variables.
 \subsubsection{Real-valued random variables}
-We are now going to focus on real-valued random variables, so measurable function from $\Omega$ to
-the sample space $S = \mathbb{R}$.
+We are now going to focus on real-valued random variables, so
+measurable function from $\Omega$ to the sample space
+$S = \mathbb{R}$.
 \begin{definition}[Distribution of a real-valued r.v.]
   \label{def:distribution}
   The distribution of a r.v.\ can be characterized by a few functions:
@@ -226,7 +303,12 @@ One can verify that if $F_X$ is derivable, then its derivative is the density of
   \end{itemize}
 \end{definition}
 \begin{remark}
-  When restricting this search to ``classical'' functions, $p_X$ may not exist. However, allowing generalized functions such as the \emph{dirac delta function}, provides a way to consider simultaneously all types of real-valued random variables (continous, discrete, and mixture of both). Dirac's delta function can (in)formally be defined as
+  When restricting this search to ``classical'' functions, $p_X$ may
+  not exist. However, allowing generalized functions such as the
+  \emph{dirac delta function}, provides a way to consider
+  simultaneously all types of real-valued random variables (continous,
+  discrete, and mixture of both). Dirac's delta function can
+  (in)formally be defined as
   \begin{equation}
     \label{eq:def_dirac_delta}
     \delta_{x_0}(x) = 
@@ -258,7 +340,7 @@ One can verify that if $F_X$ is derivable, then its derivative is the density of
 \begin{figure}[!h]
   \centering
   \input{\imgpath cdf_pdf_example.pgf}
-  \caption{Cdf and Pdf of $X$ defined in \cref{ex:X_rv}. The arrow indicates Dirac's delta function}
+  \caption[Example of cdf and of pdf]{Cdf and Pdf of $X$ defined in \cref{ex:X_rv}. The arrow indicates Dirac's delta function}
   \label{fig:example_pdf_cdf}
 \end{figure}
 
@@ -276,7 +358,8 @@ One can verify that if $F_X$ is derivable, then its derivative is the density of
   \end{equation}
 \end{definition}
 
-These definition above hold for real-valued random variables, so 1D r.v., but can be extended for random vectors.
+These definition above hold for real-valued random variables, so 1D
+r.v., but can be extended for random vectors.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \subsubsection{Real-valued random vectors}
@@ -296,7 +379,9 @@ The cdf of $X$ at the point $x=[x_1,\dots x_p]$ is
      F_{X}(x) = F_{X_1,\dots, X_p}(x_1,\dots, x_p) &= \Prob\left[X_1 \leq x_1, \cdots, X_p\leq x_p\right]\\
                                                    &= \Prob\left[\bigcap_{i=1}^p \{\omega;\,X_i(\omega) \leq x_i\}\right] \nonumber
   \end{align}
- Similarly as in the real-valued case, we can define the pdf of the random vector, or \emph{joint pdf} by derivating with respect to the variables:
+  Similarly as in the real-valued case, we can define the pdf of the
+  random vector, or \emph{joint pdf} by derivating with respect to the
+  variables:
   \begin{equation}
     p_{X}(x)= p_{X_1,\dots, X_p}(x_1,\dots, x_p) =\frac{\partial^p F_X}{\partial x_1 \cdots \partial x_p}(x)
   \end{equation}
@@ -334,7 +419,10 @@ and based on this definition, we can extend the notion of variance to vectors. T
 \subsubsection{Bayes' Theorem}
 \label{ssec:bayes_theorem}
 
-The classical Bayes' theorem is directly a consequence of the definition of the conditional probabilities in \cref{def:cond_proba}, and for random variables admitting a density in~\cref{def:joint_marginal_cond_densities}.
+The classical Bayes' theorem is directly a consequence of the
+definition of the conditional probabilities in \cref{def:cond_proba},
+and for random variables admitting a density
+in~\cref{def:joint_marginal_cond_densities}.
 
 \begin{theorem}[Bayes' theorem]
   Let $A, B\in\mathcal{F}$. Bayes' theorem states that
@@ -348,10 +436,20 @@ The classical Bayes' theorem is directly a consequence of the definition of the 
     p_{Y\mid Z}(y \mid z) = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{p_Z(z)} = \frac{p_{Z\mid Y}(z\mid y) p_Y(y)}{\int p_{Z,Y}(z,y) \,\mathrm{d}y}  \propto p_{Z\mid Y}(z\mid y) p_Y(y)
   \end{equation}
 \end{theorem}
-Bayes' theorem is central as it links in a simple way conditional densities. In the inverse problem framework, if $Y$ represents the state of information on the parameter space, while $Z$ represents the information on the data space, $Z\mid Y$ can be seen as the forward problem. Bayes' theorem allow us to ``swap'' the conditioning, and get information on $Y\mid Z$, that can be seen as the inverse problem.
+Bayes' theorem is central as it links in a simple way conditional
+densities. In the inverse problem framework, if $Y$ represents the
+state of information on the parameter space, while $Z$ represents the
+information on the data space, $Z\mid Y$ can be seen as the forward
+problem. Bayes' theorem allow us to ``swap'' the conditioning, and get
+information on $Y\mid Z$, that can be seen as the inverse problem.
 
 
-The influence of one (or a set of) random variable(s) over another can be measured with the conditional probabilities. Indeed, if the state of information on a random variable does not change when observing another one, the observed one carries no information on the other. This notion of dependence (and independence) is first defined on events and extended to random variables
+The influence of one (or a set of) random variable(s) over another can
+be measured with the conditional probabilities. Indeed, if the state
+of information on a random variable does not change when observing
+another one, the observed one carries no information on the
+other. This notion of dependence (and independence) is first defined
+on events and extended to random variables
 \begin{definition}[Independence]
   Let $A,B\in \mathcal{F}$. Those two events are said independent if $\Prob[A \cap B] = \Prob[A]\Prob[B]$.
   Quite similarly, two real-valued random variables $Y$ and $Z$ are said to be independent if $F_{Y,Z}(y,z) = F_Y(y) F_Z(z)$ or equivalently, $p_{Y,Z}(y,z) = p_Y(y) p_Z(z)$.
@@ -359,7 +457,13 @@ The influence of one (or a set of) random variable(s) over another can be measur
   If $Y$ and $Z$ are independent, $\Cov[Y, Z] = 0$. The converse if false in general.
 \end{definition}
 
-We discussed so far the different quantities that characterize random variables. Let us consider now two random variables which share the same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists various way to compare those two random variables, usually by quantifying some measure of distance between their pdf when they exist. One of the most used comparison tool for random variables is the Kullback-Leibler divergence.
+We discussed so far the different quantities that characterize random
+variables. Let us consider now two random variables which share the
+same sample space: $X, X^{\prime}: \Omega \rightarrow S$. There exists
+various way to compare those two random variables, usually by
+quantifying some measure of distance between their pdf when they
+exist. One of the most used comparison tool for random variables is
+the Kullback-Leibler divergence.
 
 \begin{definition}[KL--divergence and entropy]
    \label{def:KL_entropy}
@@ -370,8 +474,15 @@ We discussed so far the different quantities that characterize random variables.
     \DKL{p_X}{p_{X^\prime}} &= \int_{S} p_X(x) \log \frac{p_X(x)}{p_{X^\prime}(x)} \,\mathrm{d}x \\ &= \Ex_X\left[-\log p_{X^\prime}(X)\right] - \Ex_X\left[-\log p_X(X)\right] \\
                                                                                                 &= H\left[X^{\prime}, X\right] - H\left[X\right]
   \end{align}
-  $H[X]$ is called the (differential) entropy of the random variable $X$, and $H[X^{\prime}, X]$ the cross-entropy of $X^{\prime}$ and $X$.
-  Using Jensen's inequality, one can show that for all $X$ and $X^{\prime}$ such that the KL-divergence exists, $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have the same distribution, a desirable property when measuring dissimilarity. However, the KL--divergence is not a distance function, as it is not symmetric in general, and it does not verify the triangle inequality.
+  $H[X]$ is called the (differential) entropy of the random variable
+  $X$, and $H[X^{\prime}, X]$ the cross-entropy of $X^{\prime}$ and
+  $X$.  Using Jensen's inequality, one can show that for all $X$ and
+  $X^{\prime}$ such that the KL-divergence exists,
+  $\DKL{p_X}{p_{X^{\prime}}}\geq 0$ with equality iff they have the
+  same distribution, a desirable property when measuring
+  dissimilarity. However, the KL--divergence is not a distance
+  function, as it is not symmetric in general, and it does not verify
+  the triangle inequality.
 \end{definition}
 
 \subsubsection{Important examples of real random variables}
@@ -389,17 +500,21 @@ In that case, $X\sim \mathcal{N}(\mu, \Sigma)$ the density of the random vector 
 \begin{equation}
     p_X(x) = (2\pi)^{-\frac{p}{2}}\lvert\Sigma\rvert^{-1}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
   \end{equation}
-  where $|\Sigma|$ is the determinant of the matrix $\Sigma$, and $(\cdot)^T$ is the transposition operator.
-  As the covariance matrix appears through its inverse, another encountered parametrization is to use the precision matrix $\Sigma^{-1}$.
-  Examples of pdf of Gaussian normal distributions are displayed~\cref{fig:example_normal}.
+  where $|\Sigma|$ is the determinant of the matrix $\Sigma$, and
+  $(\cdot)^T$ is the transposition operator.  As the covariance matrix
+  appears through its inverse, another encountered parametrization is
+  to use the precision matrix $\Sigma^{-1}$.  Examples of pdf of
+  Gaussian normal distributions are
+  displayed~\cref{fig:example_normal}.
 \end{example}
 \begin{figure}[!h]
   \centering
   \input{\imgpath gaussian_distribution_examples.pgf}
-  \caption[Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of a 2D Gaussian r.v.\ (right)]{Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of $Z$, a 2D Gaussian r.v.\ (right)}
+  \caption[Probability Density functions of 1D and 2D Gaussian r.v.]{Probability Density functions of 1D Gaussian distributed r.v.\ (left), and density of $Z$, a 2D Gaussian r.v.\ (right)}
   \label{fig:example_normal}
 \end{figure}
-When adding independent squared samples of the normal distribution, the resulting random variable follows a $\chi^2$ distribution.
+When adding independent squared samples of the normal distribution,
+the resulting random variable follows a $\chi^2$ distribution.
 \begin{example}[The $\chi^2$ distribution]
   \label{ex:chi2}
   Let $X_1, X_2,\dots,X_{\nu}$ be $\nu$ independent random variables, such that for $1\leq i \leq \nu$, $X_i \sim \mathcal{N}(0,1)$
@@ -417,7 +532,7 @@ When adding independent squared samples of the normal distribution, the resultin
 \begin{figure}[ht]
   \centering
   \input{\imgpath chi2_distribution_examples.pgf}
-  \caption{Probability density functions of $\chi^2_{\nu}$ random variables, for different degrees of freedom}
+  \caption[Probability density functions of $\chi^2$ r.v.]{Probability density functions of $\chi^2_{\nu}$ random variables, for different degrees of freedom}
   \label{fig:chi2_examples}
 \end{figure}
 
@@ -427,11 +542,26 @@ When adding independent squared samples of the normal distribution, the resultin
 \label{sec:parameter_inference}
 \subsection{From the physical experiment to the model}
 \label{ssec:inv_problem}
-We can represent both the reality and the computer simulation as models.
-The physical system (the reality) that is observed can be represented by a model $\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by a forward operator $\mathscr{M}$, and a parameter space $\Theta_{\mathrm{real}}$.
-Observing the physical system means to get access to $y\in \Yspace$ that is the image of an \emph{unknown} parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the forward operator, so $y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
+We can represent both the reality and the computer simulation as
+models.  The physical system (the reality) that is observed can be
+represented by a model
+$\mathfrak{M}=\left(\mathscr{M},\Theta_{\mathrm{real}}\right)$, so by
+a forward operator $\mathscr{M}$, and a parameter space
+$\Theta_{\mathrm{real}}$.  Observing the physical system means to get
+access to $y\in \Yspace$ that is the image of an \emph{unknown}
+parameter value $\vartheta \in \Theta_{\mathrm{real}}$ through the
+forward operator, so
+$y = \mathscr{M}(\vartheta)\in \Yspace \subseteq \mathbb{R}^p$.
 
-On the other hand, let us assume that a numerical model of the reality has been constructed, by successive various assumptions, discretizations and simplifications giving $(\mathcal{M},\Theta)$. The main objective of calibration is to find $\hat{\theta}$ such that the forward operator applied to $\hat{\theta}$: $\mathcal{M}(\hat{\theta})$ represents as accurately as possible the physical system, and thus matches as closely the data $\mathscr{M}(\vartheta)=y$. This is illustrated~\cref{fig:inv_problem}.
+On the other hand, let us assume that a numerical model of the reality
+has been constructed, by successive various assumptions,
+discretizations and simplifications giving $(\mathcal{M},\Theta)$. The
+main objective of calibration is to find $\hat{\theta}$ such that the
+forward operator applied to $\hat{\theta}$:
+$\mathcal{M}(\hat{\theta})$ represents as accurately as possible the
+physical system, and thus matches as closely the data
+$\mathscr{M}(\vartheta)=y$. This is
+illustrated~\cref{fig:inv_problem}.
 
 \begin{figure}[ht]
   \centering
@@ -454,20 +584,40 @@ For the sake of simplicity, let us assume that $\vartheta \in \Theta \subseteq \
     \mathcal{M}(\vartheta) + \epsilon(\vartheta) \in \Yspace \subseteq \mathbb{R}^p
   \end{equation}
  
-  The difference $\epsilon(\vartheta) = \mathscr{M}(\vartheta) - \mathcal{M}(\vartheta)$ is the error between the physical model and the model, called sometimes the misfit, or the residual error.
-  This error is unknown and encompasses different sources of uncertainties, such as measurement errors, or model bias (with respect to the reality). To deal with this unknown, we are going to model it as a sample of a random variable, leading us to treat the obtained data as a random sample as well.
+  The difference
+  $\epsilon(\vartheta) = \mathscr{M}(\vartheta) -
+  \mathcal{M}(\vartheta)$ is the error between the physical model and
+  the model, called sometimes the misfit, or the residual error.  This
+  error is unknown and encompasses different sources of uncertainties,
+  such as measurement errors, or model bias (with respect to the
+  reality). To deal with this unknown, we are going to model it as a
+  sample of a random variable, leading us to treat the obtained data
+  as a random sample as well.
 
-  From the diverse assumptions we can make upon this sampled random variable, we can then treat the calibration procedure as a parameter estimation problem of a random variable.
-  The estimated parameter will be written $\hat{\kk}$, and the subscript will denote additional information on the estimator. 
-  In this thesis, we focus on extremum estimators. Those estimators are defined as the optimizer of a given objective function $J$, $\hat{\kk} = \argmin J$. In the next sections, we will see the probabilistic origins of a few classical objective functions.
+  From the diverse assumptions we can make upon this sampled random
+  variable, we can then treat the calibration procedure as a parameter
+  estimation problem of a random variable.  The estimated parameter
+  will be written $\hat{\kk}$, and the subscript will denote
+  additional information on the estimator.  In this thesis, we focus
+  on extremum estimators. Those estimators are defined as the
+  optimizer of a given objective function $J$,
+  $\hat{\kk} = \argmin J$. In the next sections, we will see the
+  probabilistic origins of a few classical objective functions.
 \subsection{Frequentist inference, MLE}
 \label{sec:frequentist_inference_MLE}
-As mentioned before, we can model the observations as a random variable, say $Y$ (uppercase to highlight its random nature), and assume that this r.v.\ belongs to a family of parametric distributions, whose densities are
+As mentioned before, we can model the observations as a random
+variable, say $Y$ (uppercase to highlight its random nature), and
+assume that this r.v.\ belongs to a family of parametric
+distributions, whose densities are
 \begin{equation}
   \label{eq:family_pdf}
   \left\{y\mapsto p_{Y}(y; \theta) ; \theta\in\Theta \right\}
 \end{equation}
-This choice of notation has been made to keep explicit the dependency on $\theta$. Assuming now that the residual are normally distributed with a given covariance matrix $\Sigma$, and that $\Yspace \subseteq \mathbb{R}^p$, $Y$ is a random vector distributed as
+This choice of notation has been made to keep explicit the dependency
+on $\theta$. Assuming now that the residual are normally distributed
+with a given covariance matrix $\Sigma$, and that
+$\Yspace \subseteq \mathbb{R}^p$, $Y$ is a random vector distributed
+as
 \begin{equation}
   \label{eq:lik_gaussian}
   Y  \sim \mathcal{N}(\mathcal{M}(\theta), \Sigma)
@@ -475,10 +625,17 @@ This choice of notation has been made to keep explicit the dependency on $\theta
 whose one sample is $y=\mathscr{M}(\vartheta)$.
 
 
-Now, instead of looking at the densities of~\cref{eq:family_pdf} as functions taking as arguments the samples in $\Yspace$, we may look at it as a function of $\theta$, as the observations $y\in\Yspace$ do not vary. We can then define the likelihood function and its associated extremum estimator.
+Now, instead of looking at the densities of~\cref{eq:family_pdf} as
+functions taking as arguments the samples in $\Yspace$, we may look at
+it as a function of $\theta$, as the observations $y\in\Yspace$ do not
+vary. We can then define the likelihood function and its associated
+extremum estimator.
 \begin{definition}[Likelihood function, MLE]
   \label{def:mle}
-  The probability density function of the observations for a set of parameters is called the likelihood of those parameters given the observations, and is written $\mathcal{L}$. In the Gaussian case, this can be written as
+  The probability density function of the observations for a set of
+  parameters is called the likelihood of those parameters given the
+  observations, and is written $\mathcal{L}$. In the Gaussian case,
+  this can be written as
   \begin{align}
     \label{eq:likelihood_definition}
     \mathcal{L}(\cdot ;y): \theta \mapsto p_{Y}(y;\theta) &= \mathcal{L}(\theta;y) \\
@@ -635,24 +792,57 @@ One interesting fact about the MAP, is that its evaluation does not require the 
 
 \subsubsection{Choice of a prior distribution}
 \label{sec:choice_prior}
-As seen in the application of Bayes' theorem in~\cref{eq:bayes_posterior}, the prior has a preponderant role in the formulation of the posterior distribution. Indeed, this prior distribution represents the current state of knowledge on the value of the parameter, before any experiment. This comes usually from an expert opinion, or some reasonable assumptions about the nature of $\theta$.
+As seen in the application of Bayes' theorem
+in~\cref{eq:bayes_posterior}, the prior has a preponderant role in the
+formulation of the posterior distribution. Indeed, this prior
+distribution represents the current state of knowledge on the value of
+the parameter, before any experiment. This comes usually from an
+expert opinion, or some reasonable assumptions about the nature of
+$\theta$.
 
-Let us assume for instance that we have a Gaussian prior for $\theta$: $\theta \sim \mathcal{N}(\theta_{b},B)$ where $B$ is called the background covariance error matrix and $\theta_b$ is called the \emph{background value} that acts as a plausible reference value. Assuming a Gaussian form for the errors as well with covariance matrix $\Sigma$, the MAP can be written as
+Let us assume for instance that we have a Gaussian prior for $\theta$:
+$\theta \sim \mathcal{N}(\theta_{b},B)$ where $B$ is called the
+background covariance error matrix and $\theta_b$ is called the
+\emph{background value} that acts as a plausible reference
+value. Assuming a Gaussian form for the errors as well with covariance
+matrix $\Sigma$, the MAP can be written as
 \begin{equation}
   \estimtxt{\theta}{MAP} = \argmin_{\theta \in \Theta} \frac{1}{2}\| \mathcal{M}(\theta) - y\|^2_{\Sigma^{-1}} + \frac{1}{2}\|\theta - \theta_b\|^2_{B^{-1}}
 \end{equation}
-Adding a Gaussian prior for the parameter comes down to adding a $L^2$ regularization term to the optimization problem, also called Tikhonov regularization~\cite{tikhonov_solutions_1977}. This expression is very analoguous to the state estimation in the 3D-Var method in Data assimilation. 
-Other choices of priors lead to other regularizations, such as the lasso regularization~\cite{tibshirani_regression_2011} that is a consequence for choosing $\theta$ that follows a priori a Laplace distribution of mean $0$.
+Adding a Gaussian prior for the parameter comes down to adding a $L^2$
+regularization term to the optimization problem, also called Tikhonov
+regularization~\cite{tikhonov_solutions_1977}. This expression is very
+analoguous to the state estimation in the 3D-Var method in Data
+assimilation.  Other choices of priors lead to other regularizations,
+such as the lasso regularization~\cite{tibshirani_regression_2011}
+that is a consequence for choosing $\theta$ that follows a priori a
+Laplace distribution of mean $0$.
 
-The choice of a prior distribution has an influence on the inference of the parameter and its point estimation. Where there is no knowledge on the parameter beforehand, one can try to choose a non-informative prior in order to try to mitigate its effect. One can for instance choose a ``flat'' prior over the parameter space, but this can lead to \emph{improper prior}, in the sense that they do not integrate to $1$. However, improper priors do not necessarily lead to improper posterior, allowing for the usual Bayesian analysis of the quantity. For instance, if $\Theta=\mathbb{R}^n$, the prior $p_{\theta}(\theta) \propto 1$ is improper, but the MAP estimation is equivalent to the MLE.
+The choice of a prior distribution has an influence on the inference
+of the parameter and its point estimation. Where there is no knowledge
+on the parameter beforehand, one can try to choose a non-informative
+prior in order to try to mitigate its effect. One can for instance
+choose a ``flat'' prior over the parameter space, but this can lead to
+\emph{improper prior}, in the sense that they do not integrate to
+$1$. However, improper priors do not necessarily lead to improper
+posterior, allowing for the usual Bayesian analysis of the
+quantity. For instance, if $\Theta=\mathbb{R}^n$, the prior
+$p_{\theta}(\theta) \propto 1$ is improper, but the MAP estimation is
+equivalent to the MLE.
 
 % If $\Theta = \mathbb{R}^p$, an improper non-informative prior is . In this case, the MAP estimation is equivalent to the MLE, as the prior in~\cref{eq:minimisation_MAP_log} is constant with respect to $\theta^{\prime}$.
 % When $\Theta = \mathbb{R}_+$, the prior distribution should be invariant by multiplication by a positive constant, so $p_{\theta}(\theta) \propto \frac{1}{\theta}\mathbbm{1}_{\theta > 0}$ (i.e.\ flat in the log scale), and that leads to a regularization term of the form $\log(\theta)$.\unsure{garder flat priors?}
 % As mentioned before, the MAP does not require the full knowledge of the posterior distribution $p_{\theta \mid Y}$, as ``only'' an optimization is required.
 
 
-All in all, when looking for the MAP or the MLE, parameter estimation boils down to the minimization of a well chosen objective function, that measures the misfit between the output of the numerical model and the observations. This objective function will be written $J$ in the following, to match the notation of data assimilation. 
-In this context of calibration, we can then summarize the estimation as a minimization problem, where $J$ represents some kind of distance between $\mathcal{M}(\theta)$ and the observations.
+All in all, when looking for the MAP or the MLE, parameter estimation
+boils down to the minimization of a well chosen objective function,
+that measures the misfit between the output of the numerical model and
+the observations. This objective function will be written $J$ in the
+following, to match the notation of data assimilation.  In this
+context of calibration, we can then summarize the estimation as a
+minimization problem, where $J$ represents some kind of distance
+between $\mathcal{M}(\theta)$ and the observations.
 \begin{equation}
   \estimtxt{\theta}{} = \argmin_{\theta\in \Theta} J(\theta)
 \end{equation}
@@ -660,15 +850,46 @@ In this context of calibration, we can then summarize the estimation as a minimi
 
 \section{Calibration using adjoint-based optimization}
 \label{sec:calibration_adjoint_optimization}
-Point estimates in this context take the form of extremum estimators, that is an extremum of some given objective function $J$. This function takes the form of the log-likelihood for the MLE, or the log-posterior for the MAP, but other misfits can be considered, such as optimal transport based metrics. The formulation is then quite simple, but the problem of efficient optimization remains. For differentiable problems, most of minimization instances are solved using gradient based methods, such as gradient descent, quasi-newton methods.
-However, this implies to be able to compute efficiently the gradient of the objective function $J$ with respect to the parameter: $\nabla_{\theta} J$. The straightforward way, is to compute the gradient using finite differences. Let us suppose that $\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its component except the $i$th one which is $1$. The gradient can be approximated by the usual 1st order forward finite-difference scheme, as displayed in \cref{eq:finite_diff}.
+Point estimates in this context take the form of extremum estimators,
+that is an extremum of some given objective function $J$. This
+function takes the form of the log-likelihood for the MLE, or the
+log-posterior for the MAP, but other misfits can be considered, such
+as optimal transport based metrics. The formulation is then quite
+simple, but the problem of efficient optimization remains. For
+differentiable problems, most of minimization instances are solved
+using gradient based methods, such as gradient descent, quasi-newton
+methods.  However, this implies to be able to compute efficiently the
+gradient of the objective function $J$ with respect to the parameter:
+$\nabla_{\theta} J$. The straightforward way, is to compute the
+gradient using finite differences. Let us suppose that
+$\theta = (\theta_1,\cdots \theta_n)$, and $e_i$ is 0 for all its
+component except the $i$th one which is $1$. The gradient can be
+approximated by the usual 1st order forward finite-difference scheme,
+as displayed in \cref{eq:finite_diff}.
 \begin{equation}
   \label{eq:finite_diff}
   \nabla_{\theta} J  \approx \left[\frac{J(\theta + \epsilon e_1) - J(\theta)}{\epsilon}, \frac{J(\theta + \epsilon e_2) - J(\theta)}{ \epsilon},\dots, \frac{J(\theta + \epsilon e_n)- J(\theta)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
 \end{equation}
-In addition to the run of the model at $\theta$, we have to evaluate the model $n$ times, for each one of the coordinate of $\theta$. If this is feasible in practice for low dimensional problems, this is impossible for large problems that cumulate more than hundreds of parameters. Nevertheless, different methods can be used to compute the gradient, at least approximately for optimization purpose: for instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation Stochastic Approximation to approximate the gradient using only one additional run, indepedently on the number of parameters.
+In addition to the run of the model at $\theta$, we have to evaluate
+the model $n$ times, for each one of the coordinate of $\theta$. If
+this is feasible in practice for low dimensional problems, this is
+impossible for large problems that cumulate more than hundreds of
+parameters. Nevertheless, different methods can be used to compute the
+gradient, at least approximately for optimization purpose: for
+instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation
+Stochastic Approximation to approximate the gradient using only one
+additional run, indepedently on the number of parameters.
 
-In geophysical applications, parameter estimation and the subsequent optimization is usually performed by deriving the adjoint equation in order to get the exact gradient for a relatively reasonable cost. This gradient is used afterward in optimization methods such as conjuguate gradient, or BFGS for instance. Adjoint methods are thus very popular in large-scale optimization of Computational Fluid Dynamics codes, as the additional cost of implementation is often worth the gain in the short term. This situation is common in data assimilation, as shown in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013}, or in shape optimization of airfoils in~\cite{huyse_free-form_2001}.
+In geophysical applications, parameter estimation and the subsequent
+optimization is usually performed by deriving the adjoint equation in
+order to get the exact gradient for a relatively reasonable cost. This
+gradient is used afterward in optimization methods such as conjuguate
+gradient, or BFGS for instance. Adjoint methods are thus very popular
+in large-scale optimization of Computational Fluid Dynamics codes, as
+the additional cost of implementation is often worth the gain in the
+short term. This situation is common in data assimilation, as shown
+in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013},
+or in shape optimization of airfoils in~\cite{huyse_free-form_2001}.
 
 To derive the adjoint equations, we will first rewrite the objective function as a function of the forward operator and the parameter: $J(\theta) = J(\mathcal{M}(\theta),\theta)$:
 The estimation of the parameter can be written as the following constrained optimisation problem:
@@ -698,8 +919,12 @@ To treat the constrained optimization in~\cref{eq:def_J_adjoint}, let us introdu
 \begin{equation}
   \min_{\theta,y,\lambda} \mathscr{L}(\theta,y,\lambda)
 \end{equation}
-The first-order condition of optimality for the Lagrangian: $\pfrac{\mathscr{L}}{\theta} = \pfrac{\mathscr{L}}{y} = \pfrac{\mathscr{L}}{\lambda} = 0$ translates into the optimality condition, adjoint equation and the state equation:
-When differentiating with respect to the adjoint variable, we retrieve the state equation:
+The first-order condition of optimality for the Lagrangian:
+$\pfrac{\mathscr{L}}{\theta} = \pfrac{\mathscr{L}}{y} =
+\pfrac{\mathscr{L}}{\lambda} = 0$ translates into the optimality
+condition, adjoint equation and the state equation: When
+differentiating with respect to the adjoint variable, we retrieve the
+state equation:
 \begin{equation}
   \pfrac{\mathscr{L}}{\lambda} = - \mathcal{F}(y,\theta) = 0 \tag{State equation}
 \end{equation}
@@ -716,25 +941,52 @@ Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F
                                = \pfrac{J}{\theta} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\theta}} = 0 \tag{Optimality condition}
 \end{equation}
 
-So, to get $\nabla_\theta J$, as the partial derivatives with respect to the control variable are relatively easy to obtain, the challenge lies in solving the adjoint equation. Albeit tedious, one can derive those equations by writing the tangent linear model of the original model, and implement a dedicated solver for the adjoint variables. A more common and way simpler approach is to derive the adjoint equations directly from the computer code implemented to solve the model, by using Automatic differentiation tools, such as \textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs directly translate the source code into a program that solves the original model equations and the adjoint equations, and outputs the gradient along with the objective function.
+So, to get $\nabla_\theta J$, as the partial derivatives with respect
+to the control variable are relatively easy to obtain, the challenge
+lies in solving the adjoint equation. Albeit tedious, one can derive
+those equations by writing the tangent linear model of the original
+model, and implement a dedicated solver for the adjoint variables. A
+more common and way simpler approach is to derive the adjoint
+equations directly from the computer code implemented to solve the
+model, by using Automatic differentiation tools, such as
+\textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs
+directly translate the source code into a program that solves the
+original model equations and the adjoint equations, and outputs the
+gradient along with the objective function.
 
 
 \section{Model selection}
 \label{sec:model_selection}
-So far, we have discussed the calibration of a specific model $(\mathcal{M}, \Theta)$ given some observations, thus solving an inverse problem and finding $\estimtxt{\theta}{}$ as an extremum of an objective function. But different models may be considered to explain the data. Those models may differ by their forward operator, by their parameter space, or by both at the same time.
+So far, we have discussed the calibration of a specific model
+$(\mathcal{M}, \Theta)$ given some observations, thus solving an
+inverse problem and finding $\estimtxt{\theta}{}$ as an extremum of an
+objective function. But different models may be considered to explain
+the data. Those models may differ by their forward operator, by their
+parameter space, or by both at the same time.
 
 But changing models also means changing the potential ``best'' fit attainable, in terms of minimum reached by the objective function.
 More complex models usually provide a better fit of the model but to the cost of a higher dimension in the parameter space. At the same time, more complex models may exhibit an overfitting behaviour.
 
 \begin{example}
-\Cref{fig:overfitting} shows a curve-fitting problem using polynomial functions, where the $y_i$'s are realisations of $Y_i \sim \mathcal{N}(i, 1)$ for $i=0$ to $10$. The objective function associated is $J(\kk) = \sum_{i=0}^{10}\|P(i;\kk) - y_i\|^2$, where $P$ is a polynomial of degree $\dim \Kspace$, and whose coefficients are given by $\kk = (\kk_1,\dots,\kk_n)$.
-For this problem of curve fitting, increasing the degree of the polynomial used (thus the dimensionality of the model) decreases the minimum value of $J$ reached. However, the increase in the degree leads also to some oscillations between the sampled points, as the fitting procedure looks to account for the deviations due to the random origin of the $y_i$'s
+  \Cref{fig:overfitting} shows a curve-fitting problem using
+  polynomial functions, where the $y_i$'s are realisations of
+  $Y_i \sim \mathcal{N}(i, 1)$ for $i=0$ to $10$. The objective
+  function associated is
+  $J(\kk) = \sum_{i=0}^{10}\|P(i;\kk) - y_i\|^2$, where $P$ is a
+  polynomial of degree $\dim \Kspace$, and whose coefficients are
+  given by $\kk = (\kk_1,\dots,\kk_n)$.  For this problem of curve
+  fitting, increasing the degree of the polynomial used (thus the
+  dimensionality of the model) decreases the minimum value of $J$
+  reached. However, the increase in the degree leads also to some
+  oscillations between the sampled points, as the fitting procedure
+  looks to account for the deviations due to the random origin of the
+  $y_i$'s
 \end{example}
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath overfitting.pgf}
-  \caption{\label{fig:overfitting} Overfitting phenomenon, and reduction of the minimal value of the objective function}
+  \caption[Example of overfitting phenomenon]{\label{fig:overfitting} Overfitting phenomenon, and reduction of the minimal value of the objective function}
 \end{figure}
 
 

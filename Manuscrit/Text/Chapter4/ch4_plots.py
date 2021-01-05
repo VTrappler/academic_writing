@@ -4,6 +4,7 @@
 import matplotlib as mpl
 from matplotlib import cm
 import matplotlib.pyplot as plt
+import matplotlib.patches
 from matplotlib.legend_handler import HandlerLineCollection, HandlerTuple
 import numpy as np
 import scipy.stats
@@ -199,3 +200,103 @@ plt.savefig('/home/victor/acadwriting/Manuscrit/Text/Chapter4/img/prob_coverage_
 # plt.legend()
 # plt.tight_layout()
 # plt.show()
+
+def schema_double_adjustment():
+
+    arr_prop = {'length_includes_head': True,
+                'width': 0.01,
+                'head_width': 0.05,
+                'color': 'k',
+                'alpha': 0.5}
+    
+    fig = plt.figure(figsize=col_full)
+    def cond_min(u):
+        return ((1 - scipy.stats.norm.cdf(u, loc=0.5, scale=0.2)) - 0.5) * 0.6 + 0.4
+    u_ = np.linspace(0, 1, 50)
+    centroids = np.asarray([[.6, .9],
+                            [.1, .5],
+                            [.3, .15],
+                            [.9, .17]])
+    to_adjust_1 = [1, 2, 3]
+    eps = np.random.normal(size=3) * 0.05
+    adj_centroids = np.asarray([[.6, .9],
+                                [cond_min(.5) + eps[0], .5],
+                                [cond_min(.15) + eps[1], .15],
+                                [cond_min(.17) + eps[2], .17]])
+
+    adj_centroids_2 = np.asarray([[.6, .9],
+                                  [cond_min(.5) + eps[0], .5],
+                                  [.3, .15],
+                                  [cond_min(.17) + eps[2], .17]])
+    plt.subplot(2, 2, 1)
+    plt.scatter(centroids[:, 0], centroids[:, 1], marker='x', label='Centroids')
+    plt.plot(cond_min(u_), u_, ':')
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
+    plt.title(r'Computed centroids')
+    plt.subplot(2, 2, 2)
+    plt.scatter(centroids[:, 0], centroids[:, 1], marker='x', label='Centroids')
+    plt.scatter(adj_centroids[:, 0], adj_centroids[:, 1], marker='o', label='Adj. centroids')
+    for i in to_adjust_1:
+        plt.arrow(centroids[i, 0], centroids[i, 1], adj_centroids[i, 0] - centroids[i, 0], 0, **arr_prop)
+    plt.plot(cond_min(u_), u_, ':')
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
+    plt.title(r'Adjustment')
+
+    ax = plt.subplot(2, 2, 3)
+    plt.scatter(centroids[:, 0], centroids[:, 1], marker='x')
+    plt.scatter(adj_centroids[:, 0], adj_centroids[:, 1], marker='o')
+    # for i in to_adjust_1:
+    #     plt.arrow(centroids[i, 0], centroids[i, 1], adj_centroids[i, 0] - centroids[i, 0], 0)
+    plt.plot(cond_min(u_), u_, ':')
+    cluster1 = matplotlib.patches.Ellipse((.6, .9),
+                                          width=.1,
+                                          height=.15, angle=-45,
+                                          fill=False)
+    cluster2 = matplotlib.patches.Ellipse(adj_centroids[1, :],
+                                          width=.1,
+                                          height=.15, angle=45,
+                                          fill=False)
+    cluster3 = matplotlib.patches.Ellipse(np.mean(adj_centroids[2:, :], 0),
+                                          width=.2,
+                                          height=.23, angle=0,
+                                          fill=False)
+    ax.add_artist(cluster1)
+    ax.add_artist(cluster2)
+    ax.add_artist(cluster3)
+    plt.arrow(adj_centroids[2, 0], adj_centroids[2, 1],
+              -adj_centroids[2, 0] + adj_centroids_2[2, 0], 0,
+              **arr_prop)
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
+    plt.title('Hierarchical clustering\n and readjustment')
+
+    ax = plt.subplot(2, 2, 4)
+    plt.scatter(-1, -1, marker='x', c=colors[0],
+                label='Centroids')
+    plt.plot(cond_min(u_), u_, ':', label='$(J^*(u),u)$')
+    plt.scatter(-1, -1, marker='o', c=colors[1],
+                label='Adj. centroids')
+    plt.scatter(adj_centroids_2[:, 0], adj_centroids_2[:, 1], marker='*', c=colors[2],
+                label='Adj. centroids 2')
+
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
+    plt.title(r'Final points to evaluate')
+    ax.legend()
+    # fig.legend(handles, labels, loc='upper center')
+
+    ax.legend(loc='lower right',
+              bbox_to_anchor=[0.5, -0.02],
+              bbox_transform = fig.transFigure, ncol=2, mode='expand',
+              fontsize=8)
+    for ax_ in plt.gcf().axes:
+        ax_.set_xticks([])
+        ax_.set_yticks([])
+        ax_.set_xlabel(r'$\theta$')
+        ax_.set_ylabel(r'$u$')
+        # ax.legend(fontsize=8, frameon=True)
+    plt.tight_layout()
+    plt.savefig('/home/victor/acadwriting/Manuscrit/Text/Chapter4/img/schema_double_adjustment.pgf')
+    plt.show()

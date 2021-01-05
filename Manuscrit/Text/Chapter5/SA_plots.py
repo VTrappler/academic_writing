@@ -9,10 +9,9 @@ import seaborn as sns
 
 exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
 
-variable_name = [r'$M_2$', r'$S_2$', r'$N_2$', r'$K_2$', r'$O_1$']
 
 
-def read_csv_sobolrep(filenames, order = ['1', '2', 'T'], variable_name=variable_name):
+def read_csv_sobolrep(filenames, variable_name, order = ['1', '2', 'T']):
     df_tot = []
     for filen, order_ in zip(filenames, order):
         df = pd.read_csv(filen)
@@ -28,12 +27,9 @@ def read_csv_sobolrep(filenames, order = ['1', '2', 'T'], variable_name=variable
         df_tot.append(df)
     return pd.concat(df_tot)
 
-filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/tides_{}.csv'.format(filen)
-             for filen in ['S', 'S2', 'T']]
 
 
 
-df = read_csv_sobolrep(filenames, variable_name=variable_name)
 # minCI = df['min. c.i.'].values
 # maxCI = df['max. c.i.'].values
 # yerr = np.vstack([minCI, maxCI])
@@ -42,7 +38,7 @@ df = read_csv_sobolrep(filenames, variable_name=variable_name)
 # plt.show()
 
 
-def make_plot_sobol(df, figname=None):
+def make_plot_sobol(df, variable_name, figname=None, dollar=False):
     x = np.arange(len(df[df['order'] == '1']['Variable']))
     width = 0.35
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=col_full)
@@ -58,14 +54,17 @@ def make_plot_sobol(df, figname=None):
     ax1.legend(loc='lower right')
     ax1.set_xlim(left=0)
     ax1.invert_yaxis()
-    x2 = np.arange(2 * len(x))
+    x2 = np.arange( int(len(x) * (len(x) - 1) / 2))
 
     rects2 = ax2.barh(x2, df[df['order'] == '2']['Sobol'], label='Second order',
                       xerr=df[df['order'] == '2']['CI'], color=colors[2])
     ax2.set_xlim([0, 1])
     inde = [(int(xij[1]) - 1, int(xij[2]) - 1)
             for xij in df[df['order'] == '2']['Variable'].values]
-    xt = ['${}\\times {}$'.format(variable_name[i][1:-1], variable_name[j][1:-1]) for i, j in inde]
+    if dollar:
+        xt = ['${}\\times {}$'.format(variable_name[i][1:-1], variable_name[j][1:-1]) for i, j in inde]
+    else:
+        xt = ['{} $\\times$ {}'.format(variable_name[i], variable_name[j]) for i, j in inde]
 
     ax2.set_title(r'Second order indice')
     ax2.set_yticks(x2)
@@ -83,8 +82,19 @@ def make_plot_sobol(df, figname=None):
 
 
 if __name__ == '__main__':
-    pass
+    tides_names = [r'$M_2$', r'$S_2$', r'$N_2$', r'$K_2$', r'$O_1$']
+    filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/tides_{}.csv'.format(filen)
+             for filen in ['S', 'S2', 'T']]
+    df_tides = read_csv_sobolrep(filenames, variable_name=tides_names)
+    make_plot_sobol(df_tides, variable_name=tides_names, dollar=True,
+                    figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_tides.pgf')
 
+    sed_names = ['R', 'C', 'G', 'S', 'SF', 'Si,V']
+    filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/sed_{}.csv'.format(filen)
+                 for filen in ['S', 'S2', 'T']]
+    df_sed = read_csv_sobolrep(filenames, variable_name=sed_names)
+    make_plot_sobol(df_sed, variable_name=sed_names,
+                    figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_sediments.pgf')
 
 
 # EOF ----------------------------------------------------------------------

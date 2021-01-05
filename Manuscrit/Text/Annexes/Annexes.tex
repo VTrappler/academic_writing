@@ -20,28 +20,29 @@
 
 \begin{document}
 %	
-\appendix
 
 
-
-% \begingroup
+\begingroup
 
 %% Le chapitre est numéroté A
 % \setcounter{chapter}{0}
 % \renewcommand{\thechapter}{\Alph{chapter}}%
-
+\appendix
+\setcounter{chapter}{5}
+\renewcommand{\thechapter}{A}
 %% Le titre doit être entre les traits de la 1ere page du chapitre
 \TitleBtwLines
+\chapter{Appendix}
 
-\specialchapter{Appendix}
 
+\label{chap:appendix}
 \pagestyle{appendixStyle}
-  \minitoc
+\minitoc
 \section{Likelihood ratio test for misspecified nested models}
-\cite{white_maximum_1982}
-The observations $Y$ are following the law with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
-We have a family of distributions $\{p_{Y\mid \KK}\}$.
-  The quasi log-likelihood is
+This section follows the proofs of~\cite{white_maximum_1982}. The observations $Y$ are following the law
+with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
+We have a family of distributions $\{p_{Y\mid \KK}\}$.  The quasi
+log-likelihood is
   \begin{equation}
     \mathcal{L}(\kk; y) = \frac{1}{n}\sum_{i=1}^{n} \log p_{Y \mid \KK}(y;\kk)
   \end{equation}
@@ -77,10 +78,8 @@ We have a family of distributions $\{p_{Y\mid \KK}\}$.
     C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk)
   \end{align}
 
-  \section{Distribution of a ratio of normal random variables}
+  \section{Lognormal approximation of the ratio of normal random variables}
   \label{sec:lognorm_ratio}
-\subsection{Lognormal approximation}
-
 Let $T = X/Y$ with
   \begin{align}
     X \sim \mathcal{N}(\mu_X, \sigma^2_X) \\
@@ -162,8 +161,15 @@ Let $T = X/Y$ with
 
 % Conservative rule of thumb: if $\mu_Y/\sigma_Y \leq 0.09$ and $\mu_X / \sigma_X > 0.19$
 
+  \section{Full sediment repartition in the Bay of Biscay and the English Channel}
+  \label{sec:sediments_full}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
+  \caption{\label{fig:sediments_full} Full sediments repartition}
+\end{figure}
 
-% \section{Optimisation on the whole control points}
+\section{Misspecified deterministic calibration}
 \clearpage
 \begin{figure}[ht]
   \centering
@@ -247,11 +253,6 @@ Let $T = X/Y$ with
 \end{figure}
 \clearpage
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
-  \caption{\label{fig:sediments_full} Sediments full}
-\end{figure}
 
 
 
@@ -270,7 +271,7 @@ Let $T = X/Y$ with
 
 }
 
-% \endgroup
+\endgroup
 
 \end{document}
 

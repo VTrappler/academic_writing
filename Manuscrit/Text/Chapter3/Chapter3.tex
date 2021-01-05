@@ -848,7 +848,8 @@ We are now going to focus exclusively on the relative-regret, and the associated
 
    
 \item Set a probability $0< p\leq 1 $ we want to reach, and define $\alpha_p = \inf_{\alpha \geq 1}\{\max_{\kk \in \Kspace}\Gamma_{\alpha}(\kk)\geq p \}$, so the problem can be thought as the estimation and the optimization of quantile of a particular random variable: we can define $\alpha_p$ as the solution of the following chance constrained problem:
- \begin{equation}
+  \begin{equation}
+    \label{eq:opt_alpha_p_formulation}
   \left\{
   \begin{array}{rl}
     \min_{\kk\in\Kspace} &  q(\kk) \\

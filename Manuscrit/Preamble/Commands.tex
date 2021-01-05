@@ -64,11 +64,25 @@
 \newcommand*\cleartoleftpage{%
 	\clearpage
 	\ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
-}
-\newcommand{\specialchapter}[1]{\fullclear\chapter{#1}}
-\newcommand{\specialchapterstar}[1]{\fullclear\chapter*{#1}}
+      }
 
 
+% \renewcommand{\specialchapter}[1]{\fullclear\chapter{#1}}
+% \renewcommand{\specialchapterstar}[1]{\fullclear\chapter*{#1}}
+
+% \makeatletter
+% \let\stdchapter\chapter
+% \renewcommand*\chapter{%
+%   \@ifstar{\starchapter}{\@dblarg\nostarchapter}}
+% \newcommand*\starchapter[1]{\stdchapter*{#1}}
+% \def\nostarchapter[#1]#2{\stdchapter[{#1}]{#2}}
+% \makeatother
+
+\renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
+                    \thispagestyle{plain}%
+                    \global\@topnum\z@
+                    \@afterindentfalse
+                    \secdef\@chapter\@schapter}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Mise en page

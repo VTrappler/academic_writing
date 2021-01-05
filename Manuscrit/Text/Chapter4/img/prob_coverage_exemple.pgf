@@ -1713,7 +1713,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.364180in,y=2.865541in,left,base]{\color{textcolor}\rmfamily\fontsize{8.000000}{9.600000}\selectfont GP regression}%
+\pgftext[x=3.364180in,y=2.865541in,left,base]{\color{textcolor}\rmfamily\fontsize{8.000000}{9.600000}\selectfont GP prediction}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
