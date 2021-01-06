@@ -1,0 +1,119 @@
+\documentclass[../../Main_ManuscritThese.tex]{subfiles}
+
+\subfileGlobal{
+\renewcommand{\RootDir}[1]{./Text/Resumes/#1}
+}
+
+% \subfileLocal{
+% \externaldocument{../../Text/Chapter2/build/Chapter2}
+% \externaldocument{../../Text/Chapter3/build/Chapter3}
+% \externaldocument{../../Text/Chapter4/build/Chapter4}
+% \externaldocument{../../Text/Chapter5/build/Chapter5}
+% \externaldocument{../../Text/Conclusion/build/Conclusion}
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\chapter*{Résumé Français}
+\TitleBtwLines
+
+\phantomsection
+\addstarredchapter{Résumé Français}
+\label{chap:resume_fr}
+%\newpage
+%\minitoc
+\pagestyle{contentStyle}
+
+                                % \subfileLocal{\pagestyle{contentStyle}}
+\subsection*{Présentation générale et contexte}
+De nombreux phénomènes naturels sont modélisés afin de mieux connaître leurs comportements et de pouvoir les prévoir.
+Cependant, lors du processus de modélisation, de nombreuses sources d'erreurs sont introduites. Elles proviennent par exemple des paramétrisations qui rendent compte des phénomènes sous-mailles, ou bien de l'ignorance des conditions environnementales réelles dans lesquelles le phénomène est observé.
+
+De manière plus formelle, on peut distinguer deux types d'incertitudes dans ces modèles, comme évoqué dans~\cite{walker_defining_2003}.
+\begin{itemize}
+\item les incertitudes dites épistémiques, qui proviennent d'un manque de connaissance sur des charactéristiques du phénomène étudié, mais qui pourraient être réduites 
+\item les incertitudes dites aléatoires, qui proviennent directement de la variabilité intrinsèque du phénomène étudié.
+\end{itemize}
+
+Dans le cadre de la thèse, les incertitudes épistémiques prennent la forme de la méconnaissance de la valeur d'un paramètre $\kk \in \Kspace$, que l'on va chercher à calibrer. Les incertitudes aléatoires sont par exemple les conditions environnementales, comme le forçage d'un modèle ou les conditions aux bords. Elles vont être représentées par une variable aléatoire $\UU$, de réalisation $\uu\in \Uspace$.
+Cette calibration est effectuée à l'aide d'une fonction $J$, dite fonction coût. Cette fonction prendra donc en entrée le paramètre à estimer $\kk$, ainsi que la variable environementale $\uu$:
+
+\begin{equation}
+  \label{eq:def_J}
+  \begin{array}{rccc}
+   J: & \Kspace\times\mathbb{U}& \rightarrow& \mathbb{R}_+ \\
+   &(\kk,\uu)& \mapsto& J(\kk,\uu)
+  \end{array}
+\end{equation}
+
+Ne pas prendre en compte les incertitudes aléatoires dans l'estimation de $\kk$ peut amener à compenser de manière artificielle l'erreur aléatoire, et donc amener une situation similaire à du ``sur-apprentissage'' (overfitting). On cherche donc à estimer $\kk$ de manière à ce que $J(\kk, \uu)$ soit acceptable lorsque $\uu$ varie. 
+
+
+Pour chaque valeur de $\kk$, la fonction coût peut être vue comme une variable aléatoire: $J(\kk,\uu)$, que l'on va chercher intuitivement à ``minimiser'' dans un certain sens qui reste à définir.
+Cette problématique porte différents noms, comme l'optimisation robuste, où robuste doit être compris comme l'insensibilité aux variations de $\uu$, optimisation sous incertitudes (Optimisation under Uncertainty ou OUU), ou encore d'optimisation stochastique. 
+
+Un exemple de ce genre de problème est l'estimation de la friction dans les modèles océanographiques. En effet, la friction de fond est dûe à la rugosité du plancher océanique, provoquant de la dissipation d'énergie à cause des turbulences engendrées. L'estimation de la friction de fond est un problème qui a déjà été traité dans un cadre d'assimilation de données avec des méthodes variationelles comme dans~\cite{das_estimation_1991,das_variational_1992} sur un cas simplifié, ou dans un cas plus réaliste dans~\cite{boutet_estimation_2015}, avec une méthode de gradient stochastique, permettant de se passer du calcul du gradient.
+
+
+L'objectif de la thèse est d'établir différents critères de robustesse, et d'appliquer des méthodes adaptées permettant d'estimer un paramètre en présence d'incertitudes. Cette estimation se réalise dans un premier temps dans des cas simples (fonctions analytiques, problèmes simplifiés de faibles dimensions), puis sur des problèmes plus complexes d'estimation de la friction de fond (modèles réalistes coûteux en temps de calcul, dimension élevée).
+
+\subsection*{Critères basés sur le regret additif et relatif}
+
+Un certain nombre des méthodes d'optimisation sous incertitudes se basent sur la minimisation des moments de la variable aléatoire $J(\mathbf{\cdot}, \uu)$ comme dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou bien se basent sur la résolution d'un problème multiobjectifs~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
+
+Une des approches que nous proposons concerne le minimum atteint et le minimiseurs de la fonction coût, en fonction de la réalisation $\uu$ de la variable aléatoire $\uu$, en introduisant les fonctions suivantes, que l'on nomme respectivement minimum conditionnel et minimiseur conditionnel.
+\begin{equation}
+  \label{eq:Jstar}
+  J^*(\uu) = \min_{\kk\in\Kspace} J(\kk,\uu)
+\end{equation}
+\begin{equation}
+  \label{eq:Kstar}
+  \kk^*(\uu) = \argmin_{\kk\in \Kspace}J(\kk,\uu)
+\end{equation}
+
+Ces quantités permettent de définir des critères de robustesse qui prennent en compte la plus petite valeur atteignable pour des conditions environnementales données $\uu$.
+D'un point de vue pratique, ces fonctions peuvent être estimées à l'aide de méta-modèles, comme dans~\cite{ginsbourger_bayesian_2014}.
+ 
+Dans l'article en préparation, nous proposons d'optimiser la probabilité d'être dans un certain intervalle autour du minimum conditionnel, c'est-à-dire $\Prob_{\uu}\left[J(\kk,\uu) \leq \alpha J^*(\uu) \right]$, où $\alpha \geq 1$ est un paramètre bien choisi. Ce critère peut être rapproché de la Value-at-Risk \cite{rockafellar_deviation_2002}, qui est utilisé notamment dans le domaine de la finance.
+
+\subsection*{Optimisation robuste et processus Gaussiens}
+\todo{écrire}
+\subsection*{Application au code de calcul CROCO}
+\todo{écrire}
+
+
+% Pour le futur et la fin de la thèse, plusieurs points sont à considérer:
+% \begin{itemize}
+% \item Des méthodes permettant un contrôle plus fin sur les propriétés recherchées du paramètre (aversion/recherche du risque) sont à explorer, comme le ``horsetail matching''~\cite{cook_horsetail_2018}, en prenant notamment pour cible la distribution des minimums.
+% \item L'application à l'estimation de la friction de fond dans le cadre du modèle CROCO est à envisager. CROCO\footnote{\url{https://www.croco-ocean.org/}} (Coastal and Regional Ocean COmmunity model) est un modèle régional d'océan, notamment conçu pour des applications de modélisation côtières. La région étudiée dans le cadre de la thèse est la façade atlantique de la France. 
+%   \begin{itemize}
+%     \item Premièrement les incertitudes du modèle sont à spécifier. Une première piste envisagée est introduire des incertitudes sur les composantes de marée à ajouter dans le forçage.
+%   \item La friction de fond, que l'on cherche à estimer, est un paramètre variant dans l'espace, et donc peut potentiellement être défini en chaque point du maillage d'un modèle. Ceci force à prendre en compte la possibilité d'une grande dimension de $\Kspace$. On peut donc s'interroger sur la façon dont les méthodes et les critères décrits vont se mettre à l'échelle, et sur la possibilité d'appliquer des procédures de réduction de dimension.
+%   \item En plus de la possible grande dimension du problème, les modèles réalistes sont souvent très coûteux en terme de temps de calcul. Il serait donc intéressant de pouvoir réduire au plus les évaluations du code, en adoptant par exemples des méthodes basées sur l'utilisation de méta-modèles. 
+%   \end{itemize}
+% \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BIB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subfileLocal{
+	\pagestyle{empty}
+	\bibliographystyle{alpha}
+	\bibliography{../../bibzotero}
+}
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Main_ManuscritThese"
+%%% End:

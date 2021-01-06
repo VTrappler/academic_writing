@@ -1065,10 +1065,9 @@ The values of the calibrated parameters in this set generate models that are sta
 For $1$ dimensional models, and the confidence level of $.05$, the threshold of \cref{eq:rel_lik_threshold} is $\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Theta)}(1-\nu)\right) = \exp\left(-\frac{1}{2}\chi^2_{1}(.95)\right) \approx 0.15$, and at a level $.10$, $\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
 
 \begin{figure}[ht]
-  \centering
-  \label{fig:label} 
+  \centering 
   \input{\imgpath relative_likelihood.pgf}
-  \caption{Example of relative likelihood, and associated likelihood interval, for $p=0.15$}
+  \caption{\label{fig:relative_likelihood} Example of relative likelihood, and associated likelihood interval, for $p=0.15$}
 \end{figure}
 
 Due to the likelihood ratio test and the relative likelihood, we can see that even though $\estimtxt{\theta}{MLE}$ is the optimizer of the likelihood function, other values close to it may not be discarded, provided that the value of the log-likelihood does not drop off too much.

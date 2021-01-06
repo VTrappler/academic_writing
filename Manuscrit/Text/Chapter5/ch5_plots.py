@@ -176,7 +176,7 @@ def main2():
     von_karman = 0.4
 
     def Cb(H, z0b):
-        return (von_karman / np.log(H / z0b))**2
+        return (von_karman / (np.log(H / z0b) - 1))**2
     H = 100
     z0b = np.logspace(-6, -1)
     plt.figure(figsize=col_full)

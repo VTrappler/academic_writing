@@ -24,8 +24,12 @@
 	%% Sommaire
 	\cleartoleftpage %% On veut que les pages du sommaires de fassent face
 	\pagestyle{empty} % Disable any style
-        
+
 	\dominitoc
+        \subfile{Text/Resumes/Resume_FR.tex}
+                
+        
+
         \phantomsection % Pour que hyperref pointe sur la page
 	\addstarredchapter{\contentsname}
         \setcounter{tocdepth}{1}
@@ -64,7 +68,6 @@
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% Content
-	
 	\subfile{Text/Introduction/Introduction.tex}
 	% \adjustmtc % Recaler les minis sommaires
 	\subfile{Text/Chapter2/Chapter2.tex}
@@ -83,7 +86,7 @@
 
 	\fullclear
 	\pagestyle{empty} % Disable any style
-	\subfile{Text/Resumes.tex}
+	\subfile{Text/Resumes/Resumes_4thcover.tex}
 	
 \end{document}
 
