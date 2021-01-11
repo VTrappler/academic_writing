@@ -20,11 +20,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+\pagestyle{conclusionStyle}
 
-\relax
+% \relax
 
-\begingroup
-
+% \begingroup
 %% ---- On veut que "conclusion" soit entre les trait au début du chapitre
 
 %% ---- On veut que ce soit le chapitre numéro 3 en notation alphabétique pour avoir un C
@@ -32,25 +32,75 @@
 % \setcounter{chapter}{2}
 % \renewcommand{\thechapter}{\Alph{chapter}}%
 \TitleBtwLines
-
 \chapter*{Conclusion and perspectives}
 \phantomsection
 \addstarredchapter{Conclusion and perspectives}
-
 \label{chap:Conclusion}
-\pagestyle{conclusionStyle}
-\renewcommand{\thesection}{}
+\renewcommand{\thesection}{} % In this thesis, we studied the problem of
+% the calibration of a numerical model under uncertainties, by proposing a new criterion based on the regret, relative or additive
 
-\section{Wrapping-up}
-In~\cref{chap:inverse_problem}, after having detailed the common notions of we introduced the calibration from a probabilistic point of view
-\section{Limitations}
+\paragraph{Summary}
+In~\cref{chap:inverse_problem}, after having detailed common notions
+of probabilities and statistical inference, we presented the
+calibration problem as an optimisation problem, by introducing an
+objective function, which we can see as a \emph{loss} we wish to
+minimise. However, due to the presence of the environmental variable
+in the study, a plain minimisation of the objective function is not
+possible: by taking into account the random nature of the
+\emph{nuisance parameters}, the calibration can be seen as a problem
+of \emph{optimisation under uncertainties}, and specific methods and
+criterion can be defined to treat accordingly this new problem.
 
-\section{Perspectives}
+
+Some classical criteria are first introduced
+in~\cref{chap:robust_estimators}, leading to Bayesian or frequentist
+estimates if we keep an inference framework, or estimates such as the
+minimiser of the mean value of the objective function. In this thesis,
+we introduce a new estimate based on the regret. Instead of comparing
+directly the values of the objective function for different situations
+corresponding to different values of the uncertain variable, the
+regret allows the modeller to compare the value of the objective with
+the best attainable performance given a specific environmental
+variable. This allows to put less emphasis on configurations which
+already lead to bad performances.
+
+Moreover, the user can adjust a
+parameter in order to reflect either a risk-adverse behaviour, by
+favourising a control of the regret with high probability, or a
+risk-seeking one, by favourising an estimate that will yield values of
+the regret closer to its optimum, albeit with lower probability.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \todo{Wrapping up}
+In general, criteria of robust optimisation require a global
+knowledge of the function, since they often involve the evaluation of
+expectations and probabilities with respect to $\UU$. In addition to
+that, regret-based criteria we introduced depend directly on the
+conditional minimum and minimiser. In \cref{chap:robust_estimators},
+we proposed to use Gaussian Processes in order to compute the
+quantities associated with regret-based estimators. More precisely, we
+proposed a few methods which aim at improving this estimation by
+choosing iteratively a new, or a batch of new points to evaluate and
+to add to the design.
+
+Finally in~\cref{chap:croco}, we looked to apply some of the methods
+we proposed previously on an academic problem of calibration of a
+coastal model based on CROCO. After having reduced the input space
+based on the sediment type at the bottom, \todo{finir}
+
+\paragraph{Limitations and perspectives}
+The new criteria introduced in this thesis rely on an additional
+parameter, the maximal threshold or the wanted probability, that
+controls the deviation with respect to the conditional optimal
+value. Setting one of those parameters can lead to an unsatisfactory
+counterpart as mentioned~\cref{chap:robust_estimators}.  In terms of
+numerical methods, Gaussian Processes are not well suited for problems
+of dimension larger than about \num{10}: when too large designs are
+considered, fitting the GP can also be problematic, as large matrices
+need to be inversed, and the optimisation of the hyperparameters is
+difficult.  When looking to apply methods based on GP, a first
+reduction of the input space may then be necessary.
+
+%\todo{Wrapping up}
 % \todo{Limitations}
 % \todo{Perspectives}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,9 +113,9 @@ In~\cref{chap:inverse_problem}, after having detailed the common notions of we i
 	\bibliographystyle{alpha}
         \bibliography{/home/victor/acadwriting/bibzotero}
 }
-\relax
+% \relax
 
-\endgroup
+% \endgroup
 \end{document}
 
 

@@ -38,53 +38,53 @@
 \label{chap:appendix}
 \pagestyle{appendixStyle}
 \minitoc
-\section{Likelihood ratio test for misspecified nested models}
-This section follows the proofs of~\cite{white_maximum_1982}. The observations $Y$ are following the law
-with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
-We have a family of distributions $\{p_{Y\mid \KK}\}$.  The quasi
-log-likelihood is
-  \begin{equation}
-    \mathcal{L}(\kk; y) = \frac{1}{n}\sum_{i=1}^{n} \log p_{Y \mid \KK}(y;\kk)
-  \end{equation}
+% \section{Likelihood ratio test for misspecified nested models}
+% This section follows the proofs of~\cite{white_maximum_1982}. The observations $Y$ are following the law
+% with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
+% We have a family of distributions $\{p_{Y\mid \KK}\}$.  The quasi
+% log-likelihood is
+%   \begin{equation}
+%     \mathcal{L}(\kk; y) = \frac{1}{n}\sum_{i=1}^{n} \log p_{Y \mid \KK}(y;\kk)
+%   \end{equation}
 
-  \begin{align}
-    A_n(\kk) = \frac{1}{n} \sum_{i=0}^n \frac{\partial^2 \log p_{Y \mid \KK}(y\mid\kk)}{\partial \kk_i \partial \kk_j} \\
-    B_n(\kk) = \frac{1}{n} \sum_{i=0}^n \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_i} \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_j}
-  \end{align}
+%   \begin{align}
+%     A_n(\kk) = \frac{1}{n} \sum_{i=0}^n \frac{\partial^2 \log p_{Y \mid \KK}(y\mid\kk)}{\partial \kk_i \partial \kk_j} \\
+%     B_n(\kk) = \frac{1}{n} \sum_{i=0}^n \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_i} \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_j}
+%   \end{align}
 
-  \begin{align}
-    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right]\\
-    B(\kk) &= \Ex\left[\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}^T\right]
-  \end{align}
+%   \begin{align}
+%     A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right]\\
+%     B(\kk) &= \Ex\left[\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}^T\right]
+%   \end{align}
 
-  If the model is well-specified, in other words if there exists $\kk_0$ such that $p_Y = p_{Y\mid \KK}(\cdot \mid\kk_0)$, $A(\kk) = -B(\kk)$:
-  \begin{align}
-    \frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2} &= \pfrac{}{\kk}\left(\frac{1}{p}\pfrac{p}{\kk}\right) \\
-    &= \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \frac{1}{p^2}\left(\pfrac{p}{\kk}\right)^2 = \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \left(\pfrac{\log p}{\kk}\right)^2
-  \end{align}
-  Taking the expectation, we have
-  \begin{align}
-    A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] \\
-           &= -\Ex\left[\left(\pfrac{\log p}{\kk}\right)^2\right] + \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right]
-  \end{align}
-  and the last term is
-  \begin{align}
-     \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right] = \int_{\Yspace} \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} p_{Y}(y) \,\mathrm{d}y
-  \end{align}
-  If the inverse exist,
-  then
-  \begin{align}
-    C_n(\kk) &= A_n(\kk)^{-1} B_n(\kk) A_n(\kk) \\
-    C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk)
-  \end{align}
+%   If the model is well-specified, in other words if there exists $\kk_0$ such that $p_Y = p_{Y\mid \KK}(\cdot \mid\kk_0)$, $A(\kk) = -B(\kk)$:
+%   \begin{align}
+%     \frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2} &= \pfrac{}{\kk}\left(\frac{1}{p}\pfrac{p}{\kk}\right) \\
+%     &= \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \frac{1}{p^2}\left(\pfrac{p}{\kk}\right)^2 = \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \left(\pfrac{\log p}{\kk}\right)^2
+%   \end{align}
+%   Taking the expectation, we have
+%   \begin{align}
+%     A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] \\
+%            &= -\Ex\left[\left(\pfrac{\log p}{\kk}\right)^2\right] + \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right]
+%   \end{align}
+%   and the last term is
+%   \begin{align}
+%      \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right] = \int_{\Yspace} \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} p_{Y}(y) \,\mathrm{d}y
+%   \end{align}
+%   If the inverse exist,
+%   then
+%   \begin{align}
+%     C_n(\kk) &= A_n(\kk)^{-1} B_n(\kk) A_n(\kk) \\
+%     C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk)
+%   \end{align}
 
   \section{Lognormal approximation of the ratio of normal random variables}
   \label{sec:lognorm_ratio}
-Let $T = X/Y$ with
+  Let $X$ and $Y$ be two correlated normal random variables:
   \begin{align}
     X \sim \mathcal{N}(\mu_X, \sigma^2_X) \\
     Y \sim \mathcal{N}(\mu_Y, \sigma^2_Y) \\
-    \Cov\left[X, Y\right] = \rho \\
+    \rho = \frac{\Cov[X,Y]}{\sigma_X \sigma_Y} \\
     \begin{bmatrix}
       X \\ Y
     \end{bmatrix} \sim \mathcal{N}\left(%
@@ -96,7 +96,7 @@ Let $T = X/Y$ with
       \rho\sigma_X \sigma_Y & \sigma^2_Y
     \end{bmatrix} \right)
   \end{align}
-  
+  Let us assume that both random variable are positive with high probability, then the ratio $T=X/Y$ is defined and positive with high probability. We can then consider its logarithm:
   \begin{align}
     T &= \frac{\mu_X}{\mu_Y}\frac{1 + \frac{X_0}{\mu_X}}{1 + \frac{Y_0}{\mu_Y}} \\
     \log T &= \log\left(\frac{\mu_X}{\mu_Y}\right) + \log\left(1 + \frac{X_0}{\mu_X}\right) -\log\left(1 + \frac{Y_0}{\mu_Y}\right)
@@ -104,8 +104,8 @@ Let $T = X/Y$ with
   So if $X_0 / \mu_X$ and $Y_0/ \mu_Y$ are small, i.e.\ if $\mu_X \gg \sigma_X$ and $\mu_Y \gg \sigma_Y$, by Taylor's expansion of the $\log$, we have
   \begin{align}
     \log T & \approx \log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{X_0}{\mu_X} - \frac{Y_0}{\mu_Y}
-\\
-    & \sim \mathcal{N}\left(\log\left(\frac{\mu_X}{\mu_Y}\right), \frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)
+% \\
+%     & \sim \mathcal{N}\left(\log\left(\frac{\mu_X}{\mu_Y}\right), \frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)
   \end{align}
   \begin{align}
     \begin{bmatrix}

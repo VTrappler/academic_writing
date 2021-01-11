@@ -31,8 +31,8 @@
 \minitoc
 % \newpage
 \subfileLocal{\pagestyle{contentStyle}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Introduction}
 \label{sec:intro_croco}
@@ -131,20 +131,20 @@ where the depth is closer to \SI{5000}{\meter}.
 configuration is used only with one vertical level and thus solves
 numerically the shallow water equations:
 % \begin{align}
-%   \left\{
-%   \begin{array}{rcl}
-%     \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
-%     \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
-%   \end{array}
-%        \right.
-% \end{align}
+    %     \left\{
+    %     \begin{array}{rcl}
+    %     \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
+    %     \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
+                                                                                      %   \end{array}
+                                                                                      %                                                                                       \right.
+                                                                                      %   \end{align}
 \begin{align}
   \left\{
   \begin{array}{lll}
-     \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} \\
+    \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} \\
     \pfrac{H}{t} + \nabla (H \cdot \mathbf{v}) &=& 0
   \end{array}
-   \right.
+                                                   \right.
 \end{align}
 where $\mathbf{v} = (v_x,v_y)$ is the velocity field of the fluid,
 $\bm{\Omega}$ is the rotational angular vector of Earth, $H$ is the
@@ -159,16 +159,16 @@ derived.
 In \CROCO, the bottom friction is modelled using a quadratic drag
 coefficient $C_d$:
 \begin{equation}
-    \label{eq:bottom_stress_tau}
-    \bm{\tau}_b= -C_d \|\mathbf{v}_b\|\mathbf{v}_b 
-  \end{equation}
-  where $\mathbf{v}_b$ is the velocity at the bottom, so in the case
-  of the Shallow Water equations, $\mathbf{v} = \mathbf{v}_b$.  The
-  drag coefficient can also be formulated as a function of the water
-  column height and and the \emph{bottom roughness} $\zob$ by assuming a
-  logarithmic profile of the velocity at bottom (a derivation can be found in~\cite{le_bars_amandes_2010} for instance)
-  \begin{equation}
-    \label{eq:quadratic_friction_vonkarman}
+  \label{eq:bottom_stress_tau}
+  \bm{\tau}_b= -C_d \|\mathbf{v}_b\|\mathbf{v}_b 
+\end{equation}
+where $\mathbf{v}_b$ is the velocity at the bottom, so in the case
+of the Shallow Water equations, $\mathbf{v}_b = \mathbf{v}$.  The
+drag coefficient can also be formulated as a function of the water
+column height and and the \emph{bottom roughness} $\zob$ by assuming a
+logarithmic profile of the velocity at bottom (a derivation can be found in~\cite{le_bars_amandes_2010} for instance)
+\begin{equation}
+  \label{eq:quadratic_friction_vonkarman}
   C_d = \left(\frac{\kappa}{\log\left(\frac{H}{\zob}\right) - 1}\right)^2% \text{for } C_d \in [C_d^{\min}, C_d^{\max}]
 \end{equation}
 where $\kappa$ is the Von K\'arm\'an constant, that we will take equal
@@ -177,8 +177,7 @@ document, can be interpreted as the size of the turbulent layer at the
 bottom, induced by the asperities of the sediments that lie at the
 bottom. \cite{boutet_estimation_2015} shows that in a calibration
 context, controlling the rugosity $\zob$ yields better result than
-controlling the drag coefficient $C_d$, thus we are going to directly
-control $\zob$.
+controlling the drag coefficient $C_d$, thus we are going to control $\zob$.
 
 
 On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
@@ -197,15 +196,15 @@ the rest of the continental shelf are the areas which are the most
 influential for the calibration.
 
 
-
-This rugosity is directly linked to the type of sediment found on the
-ocean bed, thus we can first study the type of materials that are
-found near the french coasts. \Cref{tab:size_sediments} presents a
-coarse classification, along with the typical size of the sediments
-that can be found, that will serve as a reference value, or
-\emph{truth value} $\zob^{\mathrm{truth}}$.  We can see that the
-rugosity spans several order of magnitude, hence it may be worth
-considering controlling the logarithm of the rugosity instead of the rugosity itself.
+We are going to make the assumption that the size of the turbulent
+layer at the bottom is equal to the size of the sediment, so the
+rugosity is directly linked to the type of sediment found on the ocean
+bed. \Cref{tab:size_sediments} presents a coarse classification, along
+with the typical size of the sediments that can be found, that will
+serve as a reference value, or \emph{truth value}
+$\zob^{\mathrm{truth}}$.  We can see that the rugosity spans several
+order of magnitude, hence it may be worth considering controlling the
+logarithm of the rugosity instead of the rugosity itself.
 
 \begin{table}[!ht]
   \centering
@@ -218,7 +217,7 @@ considering controlling the logarithm of the rugosity instead of the rugosity it
     SF    & Fine Sand   & $ \interval{\SI{0.5}{\milli\metre}}{\SI{0.05}{\milli\metre}}$  & \SI{1.5e-1}{\milli\meter}     \\
     Si    & Silt        & $ \interval{\SI{0.05}{\milli\metre}}{\SI{0.01}{\milli\metre}}$ & \SI{2e-2}{\milli\meter}       \\
     V     & Muds        & $< \SI{0.05}{\milli\metre}$                                    & \SI{2e-2}{\milli\meter}       \\ \bottomrule
-    % A   & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
+            %             A   & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
   \end{tabular}
   \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
 \end{table}
@@ -254,8 +253,8 @@ described \cref{tab:tides_components}.
 \begin{table}[!h]
   \centering
   % % Chose order from the rank in the TPXO file :
-% "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
-% " 1  2  3  4  5  6  7  8  9 10"
+                                                                                                               %                                                                                                                "M2 S2 N2 K2 K1 O1 P1 Q1 Mf Mm"
+                                                                                                               %                                                                                                                " 1  2  3  4  5  6  7  8  9 10"
   \begin{tabular}{rrr}\toprule
     Darwin Symbol & Period (h)   & Species                           \\ \midrule
     $M_2$         & 12.4206      & Principal Lunar Semidiurnal       \\
@@ -263,12 +262,12 @@ described \cref{tab:tides_components}.
     $N_2$         & 12.65834751  & Larger Lunar Elliptic Semidiurnal \\
     $K_2$         & 11.96723606  & Lunisolar Semidiurnal             \\
     $K_1$         & 23.93447213  & Lunar Diurnal                     \\
-    % \midrule
-    % $O_1$         & 25.81933871  & Lunar Diurnal                     \\ 
-    % $P_1$         & 24.06588766  & Solar Diurnal                     \\
-    % $Q_1$         & 26.868350    & Larger Lunar Elliptic Diurnal     \\
-    % $M_f$         & 13.660830779 & Lunisolar Fortnightly             \\
-    % $M_m$         & 27.554631896 & Lunar Monthly                     \\
+            %             \midrule
+            %             $O_1$         & 25.81933871  & Lunar Diurnal                     \\ 
+            %             $P_1$         & 24.06588766  & Solar Diurnal                     \\
+            %             $Q_1$         & 26.868350    & Larger Lunar Elliptic Diurnal     \\
+            %             $M_f$         & 13.660830779 & Lunisolar Fortnightly             \\
+            %             $M_m$         & 27.554631896 & Lunar Monthly                     \\
     \bottomrule
   \end{tabular}
   \caption{Harmonic constituents used in the configuration}
@@ -284,20 +283,21 @@ perturbated amplitude $\tilde{A}_i$ is defined as
   \label{eq:tide_error}
   \tilde{A}_i(\uu_i) = A_i (1 + 0.01(2\uu_i - 1))
 \end{equation}
-where $\uu_i$ is the $i$th component of the \emph{uncertain
-  variable}. Based on this definition $\tilde{A}_i(0) = 0.99A_i$,
-$\tilde{A}_i(0.5) = A_i$ and $\tilde{A}_i(1) = 1.01A_i$. This choice
-has been made in order to represent some possible uncertainties on the
-external forcing of the model. We also define $\uu^{\mathrm{truth}}$
-as the vector whose all its components are set to \num{0.5}, so when no
-amplitude is perturbated.
+where $\uu_i$ is the $i$th component of the uncertain variable, which
+will be specified later. Based on this definition
+$\tilde{A}_i(0) = 0.99A_i$, $\tilde{A}_i(0.5) = A_i$ and
+$\tilde{A}_i(1) = 1.01A_i$. This choice has been made in order to
+represent some possible uncertainties on the external forcing of the
+model. We also define $\uu^{\mathrm{truth}}$ as the vector whose all
+its components are set to \num{0.5}, so when no amplitude is
+perturbated.
 
 \section{Deterministic calibration of the bottom friction}
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will be first studied without
-uncertainties, which corresponds to a choice of uncertain variable
-$\uu^{\mathrm{truth}}$.
-% $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
+external uncertainties, which corresponds to a choice of uncertain
+variable $\uu^{\mathrm{truth}}$.
+    %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
 We are going to use the notations introduced
 in~\cref{chap:inverse_problem} for the model. Let us define
 $(\mathcal{M}(\cdot,\uu^{\mathrm{truth}}),\Kspace)$, the numerical
@@ -306,10 +306,13 @@ defined by
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace  &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
-     \kk & \longmapsto & \mathcal{M}(\kk, \uu^{\mathrm{truth}}) = \left(\eta_{t,i}(\kk, \uu^{\mathrm{truth}})\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
+    \kk & \longmapsto & \mathcal{M}(\kk, \uu^{\mathrm{truth}}) = \left(\eta_{t,i}(\kk, \uu^{\mathrm{truth}})\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
-where $\eta_{t,i}(\kk,\uu)$ is the free surface height of the ocean at the mesh point $i$, and at the time-step $t$, obtained using the model and the bottom friction associated with $\kk$ and a perturbation on the tide components of $\uu$.
+where $\eta_{t,i}(\kk,\uu)$ is the free surface height of the ocean at
+the mesh point $i$, and at the time-step $t$, obtained using the model
+and the bottom friction associated with $\kk$ and a perturbation on
+the tide components of $\uu$.
 
 \subsection{Twin experiment setup}
 In a twin experiment setup, the observation $y$ are generated using
@@ -317,15 +320,15 @@ the numerical model, and a predefined truth value
 $\kk^{\mathrm{truth}}$.  This means that the ``physical model'' is
 defined using the forward operator $\mathscr{M}$, based on the forward
 numerical model, evaluated with a certain uncertain parameter
-$\uu^{\mathrm{truth}} = (0.5, 0.5)$.
+$\uu^{\mathrm{truth}}$.
 \begin{equation}
   \label{eq:twin_exp}
   \begin{array}{rcl}
     \mathscr{M}: \Kspace &\longrightarrow & \mathbb{R}^{N_{\mathrm{obs}}} \\
-      \kk & \longmapsto &\mathscr{M}(\kk) = \mathcal{M}(\kk, \uu^{\mathrm{truth}})
+    \kk & \longmapsto &\mathscr{M}(\kk) = \mathcal{M}(\kk, \uu^{\mathrm{truth}})
   \end{array}
 \end{equation}
- the observations are generated using $\vartheta=\kk^{\mathrm{truth}}$:
+the observations are generated using $\vartheta=\kk^{\mathrm{truth}}$:
 \begin{equation}
   y = \mathscr{M}(\vartheta) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
@@ -344,9 +347,9 @@ that the distribution of the (random) observation vector is known and
 $Y \mid \kk \sim \mathcal{N}(\mathcal{M}(\kk), I)$ (with $I$ being the
 identity matrix of dimension $p$), $J$ is proportional to the negative log-likelihood of the data.
 
-\subsection{Optimisation without uncertainties}
+\subsection{Gradient-descent optimisation}
 \label{ssec:optim_gradient}
-The optimisation is first carried using M1QN3, a version of a
+The optimisation is carried using M1QN3, a version of a
 gradient-descent procedure, as described
 in~\cite{gilbert_numerical_1989}. We can first look to control $\zob$
 at every cell of the mesh: $\kk = (\kk_1,\cdots, \kk_p)$ where
@@ -362,28 +365,28 @@ optimisation procedure is stopped after \num{400} iterations, and the
 estimated controlled parameter is
 shown~\cref{fig:optimization_map_399}.  \Cref{fig:ctrl_true} shows the
 evolution of the cost function and the squared norm of the gradient
-during the optimisation procedure.  \todo{plutot deviation
-  \cref{fig:optimization_map_399} ou log deviation ?
-  \cref{fig:optimization_map_399_log}}
- \begin{figure}[ht]
-   \centering
-   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
-   }
+during the optimisation procedure. %  \todo{plutot deviation
+%   \cref{fig:optimization_map_399} ou log deviation ?
+%   \cref{fig:optimization_map_399_log}}
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
+%   }
+%   \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
+%     the whole space using gradient obtained via adjoint method, after
+%     $400$ iterations.}
+% \end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
+  }
   \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
     $400$ iterations.}
 \end{figure}
 
- \begin{figure}[ht]
-   \centering
-   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
-   }
-  \caption{\label{fig:optimization_map_399_log} Optimization of $\zob$ on
-    the whole space using gradient obtained via adjoint method, after
-    $400$ iterations.}
-\end{figure}
-
- \begin{figure}[ht]
+\begin{figure}[ht]
   \centering
   \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}
   \caption{\label{fig:ctrl_true} Evolution of the cost function and
@@ -401,7 +404,7 @@ On a first look, we can see that the abyssal plain (the deep region
 off the Bay of Biscay) remains mostly unaffected by the optimisation,
 while the continental shelf, except for the English Channel, is
 well retrieved. % In terms of sediments, the bottom of the continental shelf
-% is largely composed of sand.
+           %            is largely composed of sand.
 
 
 On~\cref{fig:optimisation_type_sediments}, we can see that indeed,
@@ -411,8 +414,8 @@ For silts and muds, the procedure has not been able to identify their
 roughness. This is probably due to the fact that those sediments lay
 at great depth, and thus have little effect on the circulation
 per~\cref{eq:quadratic_friction_vonkarman}.
-%
-%
+           %            
+           %            
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath optimisation_type_sediments.pdf}
@@ -432,21 +435,21 @@ Finally the rocks appear to be hard to capture: there are few areas
 listed as rocks, and their large truth value of rugosity in contrast
 with the other sediments renders them hard to
 control.% , which is probably due
-% to their size, \emph{i.e.} their truth value is significantly
-% larger than the rest of the sediments, and they are sparsely
-% distributed.
+           %            to their size, \emph{i.e.} their truth value is significantly
+           %            larger than the rest of the sediments, and they are sparsely
+           %            distributed.
 
 We are now going to study the influence of each region defined by its
 sediment type on the cost function, and also the effect of the
 uncertainties, which were defined in~\cref{ssec:tidal_modelling}, by
 means of sensitivity analysis.
 
-%  \begin{figure}[ht]
-%   \centering
-%   \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
-%   \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
-% \end{figure}
-% \clearpage
+           %            \begin{figure}[ht]
+           %            \centering
+           %            \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
+           %            \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
+           %            \end{figure}
+           %            \clearpage
 
 
 \section{Sensitivity analysis}
@@ -463,24 +466,24 @@ around a nominal value, using the gradient, and at a global scale, by
 considering the inputs as random variable, and by measuring the
 variance of the output. In this work, we are going to focus
 exclusively on global sensitivity analysis
-% \subsection{Methods of Sensitivity analysis}
-% \label{sec:methods_SA}
-% \subsubsection{Local sensitivity analysis}
-% \label{sec:loca_SA}
-% Local sensitivity analysis~\cite{morio_global_2011} refers to the
-% study of how a small perturbation $\delta \kk$ of a nominal value
-% $\kk$ affects the output of the numerical model. As we assume that the
-% numerical model is accessible through the cost function $J$, a
-% straightforward way to quantify this perturbation is to consider the
-% partial derivative of $J$, with respect to each component of the
-% control variable $\kk=(\kk_1,\dots,\kk_p)$:
-% \begin{equation}
-%   \frac{\partial J}{\partial \kk_i}(\kk)
-% \end{equation}
-% The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
-% \begin{equation}
-%   \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
-% \end{equation}
+           %            \subsection{Methods of Sensitivity analysis}
+           %            \label{sec:methods_SA}
+           %            \subsubsection{Local sensitivity analysis}
+           %            \label{sec:loca_SA}
+           %            Local sensitivity analysis~\cite{morio_global_2011} refers to the
+           %            study of how a small perturbation $\delta \kk$ of a nominal value
+           %            $\kk$ affects the output of the numerical model. As we assume that the
+           %            numerical model is accessible through the cost function $J$, a
+           %            straightforward way to quantify this perturbation is to consider the
+           %            partial derivative of $J$, with respect to each component of the
+           %            control variable $\kk=(\kk_1,\dots,\kk_p)$:
+           %            \begin{equation}
+           %            \frac{\partial J}{\partial \kk_i}(\kk)
+           %            \end{equation}
+           %            The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
+           %            \begin{equation}
+           %            \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
+           %            \end{equation}
 \subsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 As global SA calls for a probabilistic framework, we are going to
@@ -491,7 +494,7 @@ we can introduce $Y$, the real-valued random variable defined
 as $Y=f(X)$.
 
 
-% \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
+           %            \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined
 as~\cite{sobol_sensitivity_1993,sobol_global_2001}
 \begin{equation}
@@ -512,7 +515,7 @@ single input $X_i$ through all its possible interactions,
 order $1$) and the effect of all its interactions (order $2$ and
 above). Those total effect indices can be expressed as
 \begin{equation}
- S_{T_i} = 1 - \frac{\Var_{X_{-i}}\left[\Ex_{Y}\left[Y \mid X_{-i}\right]\right]}{\Var_{Y}\left[Y\right]}
+  S_{T_i} = 1 - \frac{\Var_{X_{-i}}\left[\Ex_{Y}\left[Y \mid X_{-i}\right]\right]}{\Var_{Y}\left[Y\right]}
 \end{equation}
 where $X_{-i} = (X_1,\dots X_{i-1},X_{i+1},\dots,X_p)$ is random vector of $p-1$ components.
 
@@ -593,33 +596,93 @@ amplitude, and $\UU_2$ is the error on the $S_2$ amplitude.
 
 \clearpage
 \section{Robust Calibration of the bottom friction}
-$\kk=\left(\kk_1,\dots,\kk_6\right)$, where $\kk_i = \log(\zob^i)$,
-and $\KK \in \Kspace = \interval{-11}{-3}^6$
-
+Based on the sensitivity analysis carried in the previous section, we
+are going to consider the following setting for robust calibration.
+The control variable is defined as
+\begin{equation}
+  \kk=\left(\kk_1,\dots,\kk_6\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{-11}{-3}^6
+\end{equation}
+and the uncertain variale is defined as
+\begin{equation}
+  \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
+\end{equation}
+The numerical model is defined as previously as
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace \times \Uspace &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
     (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{i,t}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
+and the cost function is defined as
+\begin{equation}
+  \begin{array}{rcl}
+    J: \Kspace \times \Uspace & \longrightarrow & \mathbb{R} \\
+    (\kk, \uu) & \longmapsto & \|\mathcal{M}(\kk, \uu) - y \|^2_2
+  \end{array}
+\end{equation}
 
-\begin{table}[!h]
-  \centering
-  \begin{tabular}{rrr} \toprule
-    Indice & Sediment & Code  \\ \midrule
-    $1$ & Rocks & R \\
-    $2$ & Pebbles & C \\
-    $3$ & Gravel & G \\
-    $4$ & Sand & S \\
-    $5$ & Fine sand & SF \\
-    $6$ & Silts and mud & Si,V \\ \bottomrule
-  \end{tabular}
-\end{table}
-\subsection{Construction of the GP}
-\label{ssec:croco_construction_gp}
-For the purpose of this work, we will build a LHS
+% \begin{table}[!h]
+%   \centering
+%   \begin{tabular}{rrr} \toprule
+%     Indice & Sediment & Code  \\ \midrule
+%     $1$ & Rocks & R \\
+%     $2$ & Pebbles & C \\
+%     $3$ & Gravel & G \\
+%     $4$ & Sand & S \\
+%     $5$ & Fine sand & SF \\
+%     $6$ & Silts and mud & Si,V \\ \bottomrule
+%   \end{tabular}
+% \end{table}
+% \label{ssec:croco_construction_gp}
+ we will first sample a Latin Hypersquare on
+$\Kspace \times \Uspace$ in order to construct first a GP that can be
+used as a surrogate. Using similar notation as in the previous
+chapter, we denote $\mathcal{X}_0$ the initial design, and $Z$ the
+Gaussian Process constructed and fitted using
+$\mathcal{X}_0$.
+We will write
+\begin{equation}
+  Z \sim \GP\left(m_Z, C_Z\right)
+\end{equation}
+whith $C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)$. We have for
+any $(\kk, \uu) \in \Kspace\times\Uspace$,
+\begin{equation}
+  Z((\kk, \uu) \sim \mathcal{N}\left(m_Z(\kk, \uu), \sigma^2_Z(\kk, \uu)\right)
+\end{equation}
+
+
+By definition, for any $\kk\in \Kspace$ and any $\uu \in \Uspace$, we
+have $J(\kk, \uu) \geq 0$.  However, this positivity property is not
+necessarily verified by the surrogate $m_Z$, and thus the notion of
+relative-regret is not defined. Alternatively\todo{réécrire}, this
+violates the assumption of the positivity of $Z^*(\uu)$
+in~\cref{ssec:lognormal_approx}.
+
+To avoid these issues, we are first going to enrich the design near
+the conditional minimisers.
 \subsection{Conditional minimum and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
+In the previous chapter, we defined the conditional minimum as the
+minimum of the objective function given $\uu\in \Uspace$:
+\begin{equation}
+  J^* : \uu\in\Uspace \mapsto J^*(\uu) = \min_{\kk\in\Kspace} J(\kk, \uu)
+\end{equation}
+and the conditional minimiser function as
+\begin{equation}
+  \kk^*:\uu \in \Uspace \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
+\end{equation}
+Since both of these functions require an optimisation of the objective
+function, they are quite expensive to compute. We can use the
+surrogate in order to approximate them:
+\begin{align}
+  m_{Z^*}: \uu\in\Uspace \mapsto &\min_{\kk \in \Kspace} m_Z(\kk, \uu) \\
+  \kk^*_{Z}: \uu \in \Uspace \mapsto &\argmin_{\kk \in \Kspace} m_{Z^*}(\uu)
+\end{align}
+In order to improve the accuracy of those two functions, we are first
+going to enrich the design using the PEI criterion, as detailed
+\cref{sec:PEI_criterion} on \cpageref{sec:PEI_criterion},
+from~\cite{ginsbourger_bayesian_2014}.
+
 \subsection{Relative-regret based estimators}
 
 \section{Partial conclusion}

@@ -743,7 +743,7 @@ $f^{-1}(B) = \{x \in \Xspace \mid f(x) \leq T\}$, with
 $B = ]-\infty, T]$. Given $\Prob_{X}$ a probability
 measure on $\Xspace$, and $B\subset \mathbb{R}$, we can compute
 $V=\Prob_{X}\left[f^{-1}(B)\right]$. For
-$B = \interval[open left]{-\infty}{T}$ is equivalent to compute the
+$B = \interval[open left]{-\infty}{T}$, it is equivalent to compute the
 volume of the \emph{excursion set} of $f$ below $T$:
 $V=\Prob_{X}[f(X) \leq T]$. Such an example is illustrated~\cref{fig:prob_coverage_example}.% \todo{GP regression ou prediction}
 \begin{figure}[ht]
@@ -840,8 +840,9 @@ coverage $\mathscr{V}_A$ as an indication of the uncertainty of the
 classification problem. As the maximum of variance will be obtained
 for points having a probability of coverage $\pi_A(x) =0.5$, looking
 and evaluating the maximizers of this criterion is not really
-relevant.
+relevant.\todo{réécrire par}
 
+\todo{réecrire}
 Instead, by integrating $\mathscr{V}_A$ over the whole space
 $\Xspace$, we get a measure of the uncertainty in the classification
 problem associated with the design $\mathcal{X}_n$, as the criteria
@@ -982,12 +983,13 @@ minimisers $\estimtxt{\kk}{MPE}$, and on the estimators which satisfy
 properties based on regret.  For that purpose, the methods introduced
 here will usually involve the computation and the optimization of a
 criterion on the joint space directly, following the method
-of~\cref{alg:SUR_strat}, and sampling in regions of large
-uncertainties, as detailed~\cref{alg:sampling_enrichment}.
+of~\cref{alg:SUR_strat} on \cpageref{alg:SUR_strat}, and sampling in
+regions of large uncertainties, as detailed
+in~\cref{alg:sampling_enrichment}~\cpageref{alg:sampling_enrichment}.
 
 For other robust estimators, such as the minimum of the expectation
 $\estimtxt{\kk}{mean}$, other strategies have been derived, which
-consist first in removing the dependence on $\uu$. For instance
+consist first in removing the dependence on $\UU$. For instance
 in~\cite{janusevskis_simultaneous_2010}, the authors integrate
 directly the GP with respect to $\UU$, in order to get another GP,
 which models the function
@@ -996,7 +998,7 @@ will then be used to select a point $\tilde{\kk}$, and then a couple
 of points $(\kk_{n+1},\uu_{n+1})$ is chosen in order to reduce a
 measure of uncertainty on the space $\{\tilde{\kk}\}\times \Uspace$.
 Alternatively, when introducing the variance in a multiobjective
-optimisation problem,~\cite{miranda_adjoint-based_2016} introduce a
+optimisation problem,~\cite{miranda_adjoint-based_2016} proposes a
 method based on polynomial chaos expansion in order to get both the
 value and the gradient of the expected value and the variance.
 
@@ -1025,7 +1027,8 @@ value and the gradient of the expected value and the variance.
 
 
 \subsection{PEI for the conditional minimisers}
-In the previous chapter, we introduced the conditional minimum
+\label{sec:PEI_criterion}
+In the previous chapter, we introduced the conditional minimums
 $\uu\mapsto J^*(\uu)$ and the conditional minimizers
 $\uu \mapsto \kk^*(\uu)$. Each evalutation of these functions require
 an optimization procedure, thus can be expensive from a computational
@@ -1038,14 +1041,16 @@ as
   \mathrm{PEI}(\kk, \uu)= \Ex\left[[f_{\min}(\uu) - Z(\kk, \uu)]_+\right] \text{ with } f_{\min} = \max(\min_{x\in\mathcal{X}} f(x), \min_{\kk \in \Kspace} m_Z(\kk, \uu))
 \end{equation}
 
-where a slight abuse of notation $J(\kk, \uu) = f(x)$ with $x=(\kk, \uu)$ and thus $\mathcal{X}_0 = \{(x_i, f(x_i)\}_{1\leq i\leq n_0}$
+where a slight abuse of notation $J(\kk, \uu) = f(x)$ with
+$x=(\kk, \uu)$ and thus
+$\mathcal{X}_0 = \{(x_i, f(x_i)\}_{1\leq i\leq n_0}$
 
 This allows us to see the similarity with the $\mathrm{EI}$
 criterion: instead of having a fixed threshold, the $\mathrm{PEI}$
 introduces a criterion that depends on $\uu$. \Cref{fig:example_PEI}
 shows an example of GP enriched using the $\mathrm{PEI}$ criterion.
 The criterion can then be used in a classical SUR strategy introduced
-\cref{alg:SUR_strat}, where at each iteration, the PEI is maximized
+in~\cref{alg:SUR_strat}, where at each iteration, the PEI is maximized
 over $\Kspace \times \Uspace$:
 \begin{equation}
   \label{eq:PEI_criterion_SUR}
@@ -1058,13 +1063,13 @@ and the maximizer is evaluated by $f$ and added to the design.
   \caption[Illustration of enrichment using the PEI
   criterion]{\label{fig:example_PEI} GP after 30 additional iterations
     chosen using PEI. The GP prediction using the initial design is
-    represented on the top left plot, and the PEI criterion for this
-    GP is evaluated over the whole space is plotted top right. Bottom
+    represented on the top left plot. The PEI criterion for this
+    GP is evaluated over the whole space and plotted top right. Bottom
     left plot is the GP prediction after 30 iterations. Bottom right
     is the surrogate estimation of the conditional minimum. The shaded
     region corresponds to the initial surrogate conditional minimum,
     $\pm$ one standard deviation. After the iterations, the surrogate
-    estimate and the true value coincide}
+    estimate and the true value coincide.}
 \end{figure}
 Once a stopping criterion is met, such as the maximal variance
 attained at the conditional minimum is below a specified threshold
@@ -1171,7 +1176,7 @@ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
 \item $\sigma^2_{Z^*}$ is the variance of the predicted value of the
   minimizer.
 \item Assuming a stationary form of the covariance, the third term is
-  dependent only on the distance between $\kk$ and $\kk^*_Z*(\uu)$. By
+  dependent only on the distance between $\kk$ and $\kk_{Z^*}(\uu)$. By
   separating the $\kk$ and $\uu$ components, the covariance term can
   be written
   $C((\kk,\uu), (\kk^{\prime},\uu^{\prime})) = s
@@ -1180,8 +1185,8 @@ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
   % $C((\kk,\uu), (\kk^*_Z',\uu')) = s \prod_{i\in\mathcal{I}_{\kk}}\rho_{\theta_i}(\|k_i - k'_i\|) \prod_{j\in\mathcal{I}_{\uu}} \rho_{\uu_j}(\|u_j - u'_j\|)$
   substituting $\kk^*_Z(\uu)$ for $\kk^{\prime}$ gives
   \begin{align}
-    C\left((\kk,\uu),(\kk^*_Z*(\uu),\uu)\right) &= s  \mathcal{K}_{\kk}(\|\kk - \kk^*_Z*(\uu)\|) \mathcal{K}_{\uu}(0) \\
-                                                &= s  \mathcal{K}_{\kk}(\|\kk - \kk^*_Z*(\uu)\|)
+    C\left((\kk,\uu),(\kk^*_Z(\uu),\uu)\right) &= s  \mathcal{K}_{\kk}(\|\kk - \kk^*_Z(\uu)\|) \mathcal{K}_{\uu}(0) \\
+                                                &= s  \mathcal{K}_{\kk}(\|\kk - \kk^*_Z(\uu)\|)
   \end{align}
 \end{itemize}
 This decomposition highlights the fact that the prediction error
@@ -1231,15 +1236,22 @@ $\{\Delta_{\alpha=1} \leq \beta \}$.
 
 \subsection{GP-based methods for the estimation of $\Gamma_{\alpha}$}
 \label{sec:evaluation_gamma}
-Let consider $\alpha\geq 1$ fixed. In order to compute $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the function $\Gamma_{\alpha}$. For that purpose, we are going to explore the space to improve the estimation of $\Gamma_{\alpha}$, and once sufficient knowledge is acquired, use the plug-in % \todo{definir}
-estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the wanted estimator.
+Let consider $\alpha\geq 1$ fixed. In order to compute
+$\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the
+function $\Gamma_{\alpha}$. For that purpose, we are going to explore
+the space to improve the estimation of $\Gamma_{\alpha}$, and once
+sufficient knowledge is acquired, use the plug-in % \todo{definir}
+estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the
+wanted estimator.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
 
-For a given $\kk\in\Kspace$, the coverage probability of the $\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be $\alpha$-acceptable is
+For a given $\kk\in\Kspace$, the coverage probability of the
+$\alpha$-acceptable region, i.e.\ the probability for $\kk$ to be
+$\alpha$-acceptable is
 \begin{align}
-  \Gamma_{\alpha}(\kk)                          & = \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]                                     \\
-                                                & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
+  \Gamma_{\alpha}(\kk)  & = \Prob_{U}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right] \\
+                      & =\Ex_{U}\left[\mathbbm{1}_{J(\kk,\UU) \leq \alpha J^*(\UU)}\right]
 \end{align}
 As $J$ is not known perfectly, it can be seen as a classification
 problem.  This classification problem can be approached with a plug-in
@@ -1250,10 +1262,16 @@ in~\cref{eq:prob_indicator}:
   \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
 \end{align}
 
-Based on those two approximation, we can define two different estimations of $\Gamma_\alpha$, namely $\hat{\Gamma}_\alpha^{\mathrm{PI}}$ with the plug-in approach, and $\hat{\Gamma}_{\alpha}^{\pi}$ for the probabilistic one. Based on those estimations, two strategies emerge:
+Based on those two approximation, we can define two different
+estimations of $\Gamma_\alpha$, namely
+$\hat{\Gamma}_\alpha^{\mathrm{PI}}$ with the plug-in approach, and
+$\hat{\Gamma}_{\alpha}^{\pi}$ for the probabilistic one. Based on
+those estimations, two strategies emerge:
 \begin{itemize}
-\item For $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$, we are going to reduce the expected augmented $\IMSE$ of the GP $Z - \alpha Z^*$.
-\item For $\hat{\Gamma}_{\alpha}^{\pi}$, we are going to reduce the expected augmented integrated variance of probability of coverage.
+\item For $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$, we are going to
+  reduce the expected augmented $\IMSE$ of the GP $Z - \alpha Z^*$.
+\item For $\hat{\Gamma}_{\alpha}^{\pi}$, we are going to reduce the
+  expected augmented integrated variance of probability of coverage.
 \end{itemize}
 
 \subsubsection{Reduction of the augmented IMSE}
@@ -1277,7 +1295,8 @@ In order to improve the accuracy of this estimator, one need to
 improve the GP prediction $m_Z$ of the objective function $J$.
 % \todo{learning function}
 In this case, we propose to use the augmented IMSE of the GP
-$Z - \alpha Z^*$ as a learning function. The choice of the IMSE
+$Z - \alpha Z^* = \Delta_{\alpha}$ %,  where at a point $(\kk, \uu)$,$\Delta_{\alpha} \sim \mathcal{N}\left(m_\Delta(\kk, \uu), \sigma^2_{\Delta}(\kk, \uu)\right)$
+as a learning function. The choice of the IMSE
 (instead of choosing the point of maximal variance for instance) comes
 from the decomposition of the variance~\cref{eq:variance_delta_GP_ab}.
 
@@ -1304,7 +1323,9 @@ function.
 
 \subsubsection{Reduction of the augmented IVPC}
 
-Recalling the definition of the probabilistic approach \cref{eq:prob_indicator}, given the GP $Z$, we can write an estimator of $\Gamma_{\alpha}$:
+Recalling the definition of the probabilistic approach
+\cref{eq:prob_indicator}, given the GP $Z$, we can write an estimator
+of $\Gamma_{\alpha}$:
 \begin{align}
   \hat{\Gamma}_{\alpha}^{\pi}(\kk) &= \Ex_U\left[ \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\UU) \leq 0\right]\right] = \Ex_U\left[ \Prob_{Z}\left[ Z(\kk, \UU) - \alpha Z^*(\UU) \leq 0\right]\right] \\
                                    &= \Ex_U\left[\pi_{\alpha}(\kk,\UU)\right]
@@ -1355,7 +1376,9 @@ $\mathrm{IVPC}$ with respect to the random variable $Z(\kk, \uu)$:
   \label{eq:expected_aIVPC}
   (\kk_{n+1},\uu_{n+1}) = \argmin_{(\kk, \uu)\in \Kspace\times\Uspace} \Ex_{Z(\kk, \uu)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(\left(\kk, \uu \right), Z(\kk, \uu) \right)  \} )     \Big]
 \end{equation}
-\Cref{fig:IVPC_enrichment} shows the evolution of the error in the estimation of $\Gamma_{\alpha}$, with respect to the $L^2$ and $L^{\infty}$ norm.
+\Cref{fig:IVPC_enrichment} shows the evolution of the error in the
+estimation of $\Gamma_{\alpha}$, with respect to the $L^2$ and
+$L^{\infty}$ norm.
 \begin{figure}[ht]
   \centering
   \input{\imgpath IVPC_enrichment.pgf}
@@ -1365,7 +1388,8 @@ $\mathrm{IVPC}$ with respect to the random variable $Z(\kk, \uu)$:
 \subsubsection{Sampling in the margin of uncertainty}
 \paragraph{Sampling and translating to the source of uncertainties}
 We can also enrich the design by means of sampling within the margin
-of uncertainty defined~\cref{sec:margin_of_uncertainty}, introduced
+of uncertainty defined~\cref{sec:margin_of_uncertainty}
+\cpageref{sec:margin_of_uncertainty}, introduced
 in~\cite{echard_ak-mcs_2011,schobi_rare_2017,razaaly_rare_2019}. % \todo{bof in this case}
 In this case, the probability of coverage is defined as
 \begin{equation}
@@ -1393,13 +1417,18 @@ points which represent statistically the margin of uncertainty:
 $\tilde{x}_{n+i}$ for $1\leq i\leq K$. Those points being in our case
 the centroids produced by the KMeans algorithms.
 
-As mentioned before, the uncertainty on the acceptability of those
-points can be reduced either by evaluating the function at this point
-(thus reducing $\sigma_Z$), or by improving the knowledge of the
-conditional minimiser (reducing $\alpha^2 \sigma_{Z^*}$). For each
-centroid $\tilde{x}_{n+i} = (\tilde{\kk}_{n+i}, \tilde{\uu}_{n+i})$,
-we can then adjust its position if the uncertainty on the conditional
-minimiser is large, by introducing an adjustment function:
+
+As mentioned before in~\cref{eq:variance_delta_GP_ab}
+on~\cpageref{eq:variance_delta_GP_ab}, the uncertainty on the
+acceptability of those points can be reduced either by evaluating the
+function at this point (thus reducing $\sigma_Z$), or by improving the
+knowledge of the conditional minimiser (reducing
+$\alpha^2 \sigma_{Z^*}$). For each centroid
+$\tilde{x}_{n+i} = (\tilde{\kk}_{n+i}, \tilde{\uu}_{n+i})$, we can
+then adjust its $\kk$-component if the uncertainty on the conditional
+minimiser is large in order to reduce $\alpha^2 \sigma_{Z^*}^2$
+(instead of $\sigma^2$). This is done by introducing an adjustment
+function:
 \begin{equation}
   \label{eq:adjust_centroid}
   \mathrm{adjust}(\kk,\uu) =
@@ -1422,7 +1451,7 @@ twofold: the evaluation of those points brings redundant information
 to the problem, and thus we do not take fully advantage of the batch
 evaluations. Moreover when adding close to each other points to the
 design, the proximity can lead to an ill-conditioned covariance matrix
-of the GP and in turn numerical problems in the estimation of its
+of the GP and in turn to numerical problems in the estimation of its
 hyperparameters.
 
 
@@ -1442,7 +1471,7 @@ going to make the adjustment described \cref{eq:adjust_centroid} only
 for the point which has the smallest $\sigma^2_Z$. In the end, the
 points added to the design are the points labeled ``Adjusted centroids
 2''. This double adjustment is described
-schematically~\cref{fig:schema_double_adj}, and is applicated on the
+schematically~\cref{fig:schema_double_adj}, and is applied on the
 real function~\cref{fig:adjusted_centroids}.
 \begin{figure}[ht]
   \centering
@@ -1470,13 +1499,13 @@ real function~\cref{fig:adjusted_centroids}.
   \caption{Enrichment of the design using sampling to reduce the margin of uncertainty of $\{\Delta_{\alpha}\leq 0\}$}
   \label{alg:sampling_enrichment_star}
 \begin{algorithmic}
-  \REQUIRE Initial design $\mathcal{X}_0$
+  \REQUIRE Initial design $\mathcal{X}_0$, 
   \REQUIRE number of points to evaluate each iterations $K$, number of samples $N$
   \REQUIRE $Z$, a GP using the design $\mathcal{X}_0$
   \REQUIRE Probability of coverage $\pi_{\alpha}$, and sampling pdf $\kappa_{\mathbb{M}} = \mathbbm{1}_{\mathbb{M}_{\eta}}$
 \STATE $n \leftarrow 0$
 \WHILE{Stopping criterion not met \OR max budget evaluation not reached} 
-\STATE Sample $N$ points $S = \{x^s_i\}_{1 \leq i \leq N}$ in $\mathbb{M}_{\eta}$ using $\kappa_{\mathbb{M}}$
+\STATE Sample $N$ points $S = \{x^s_i\}_{1 \leq i \leq N}$ in $\mathbb{M}_{\eta}\subset \Kspace \times \Uspace$ using $\kappa_{\mathbb{M}}$
 \STATE Get the $K$ centroids $\{x_i^{\mathrm{center}}\}_{1 \leq i \leq K}$ using KMeans on $S$
 \FOR{$i=1$ to $K$} % \COMMENT{Find the $N_s$ closest points}
 \STATE $\tilde{x}_{n+i}=(\kk_{n+i},\uu_{n+i})=\argmin_{x \in S \setminus \{\tilde{x}_{n+1}, \dots, \tilde{x}_{n+i-1}\}} \|x - x_i^{\mathrm{center}} \|$
@@ -1484,7 +1513,7 @@ real function~\cref{fig:adjusted_centroids}.
 
 \STATE Hierarchical clustering of $\{\mathrm{adjust}(\tilde{x}_{n+i})\}$ for $1 \leq i \leq K$
 \STATE Define $\{x_{n+i}\}_{1\leq i\leq K}$ as the readjusted clusters using hierarchical clustering
-\STATE Evaluate $f(x_{n+i})$ for $1\leq i \leq K$
+\STATE Evaluate $f(x_{n+i})=J(\kk_{n+i},\uu_{n+i})$ for $1\leq i \leq K$
 \STATE $\mathcal{X}_{n+K} \leftarrow \mathcal{X}_n \cup \left\{\left(x_{n+1}, f(x_{n+1})\right),\dots,  \left(x_{n+K}, f(x_{n+K})\right)\right\}$
 \STATE Condition the GP according to $\mathcal{X}_{n+K}$
 \STATE $n \leftarrow n + K$
@@ -1501,7 +1530,7 @@ $\Gamma_{\alpha}$, when adding simultaneously $K=5$ and $K=10$ points.
   \includegraphics[width=\textwidth]{\imgpath AK_MCS_Gamma.pdf}
   \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the
 number of added points in the estimation of $\Gamma_{\alpha}$ when
-selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star}}
+selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star}. $\pi$ refers to the estimation of $\Gamma$ using a probabilistic approach, while $\mathrm{PI}$ is the estimation using a plug-in approach}
 \end{figure}
 The added points are shown~\cref{fig:AK_MCS_design}, and the margin of
 uncertainty $\mathbb{M}_{\eta}$ after the $n=70$ evaluations. We can
@@ -1555,7 +1584,7 @@ reliability in terms of relative-regret, especially if the threshold
 has been chosen arbitrarily.
 
 
-As evoked in~\cref{sec:choice_threshold} we can instead look to tune
+As mentioned in~\cref{sec:choice_threshold}, we can instead look to tune
 $\alpha$ such that $\max \Gamma_{\alpha}$ is large enough, \emph{i.e.}
 exceeds a specified level of confidence
 $p$. % \todo{Plus de rappels, points d'étapes}
@@ -1573,6 +1602,7 @@ As $J^*(\uu) > 0$ for all $\uu$, we can define $q_{p}(\kk)$ as the quantile of l
   \label{eq:qp_definition}
        q_{p}(\kk)= Q_{\UU}\left(\frac{J(\kk, \UU)}{J^*(\UU)};p\right) \iff  p  = \Prob_{\UU}\left[\frac{J(\kk, \UU)}{J^*(\UU)} \leq q_{p}(\kk)\right] = \Gamma_{q_p(\kk)}(\kk)
 \end{align}
+where $Q_{\UU}(\cdot\,;p)$ is the quantile function of order $p$ with respect to the random variable $\UU$.
 $\alpha_p$ verifies then
 \begin{equation}
   \label{eq:alpha_p_min}
@@ -1618,6 +1648,7 @@ and $Z^*(\uu)$ is
     \end{bmatrix}
   \right)
 \end{equation}
+where $\rho$ is the correlation coefficient $\rho = \frac{\Cov\left(Z(\kk, \uu), Z^*(\uu)\right)}{\sigma_Z(\kk, \uu)\sigma_{Z^*}(\uu)}$.
 % What we are calling the plug-in approach is to replace the ratio $Z(\kk, \uu)/Z^*(\uu)$, with its mean $\Ex_Z\left[\frac{Z(\kk, \uu)}{Z^*(\uu)}\right]$. 
 Under the condition that $m_{Z^*}(\uu)/\sigma_{Z^*}(\uu)$ is large,
 \textit{i.e.} that $Z^*(\uu) \geq 0$ with high probability, we can
@@ -1677,7 +1708,7 @@ $\hat{q}_{p,n}^{\mathrm{PI}}$, we plotted Monte-Carlo estimation of
 the quantile: $\hat{q}_{p,n}^{\mathrm{MC}}$, which has been obtained
 as a Monte-Carlo estimation of
 $\Ex_{Z}\left[Q_{\UU}\left(\frac{Z(\kk,
-      \uu}{Z^*(\uu)};p\right)\right]$ for comparison.  We can see that
+      \uu)}{Z^*(\uu)};p\right)\right]$ for comparison.  We can see that
 this method is able to reduce steadily the error on the estimation of
 the quantile of order $p$. The large discontinuities in the error are
 probably due to the evaluation points in a region previously
@@ -1688,7 +1719,7 @@ unexplored.
   \caption{\label{fig:qPI_aIMSE} Evolution of the error of the estimation when reducing the augmented IMSE of the log-ratio $\Xi$}
 \end{figure}
 
-Every step of this method require the optimization of the expected
+Each step of this method requires the optimization of the expected
 IMSE~\cref{eq:aIMSE_Xi}. We can also define a sampling based method,
 which is based on plausible values of the quantile of order $p$.
 
@@ -1720,7 +1751,7 @@ $\interval{q^-_p(\tilde{\kk})}{q^+_p(\tilde{\kk})}$, we can define
 $\{\mathfrak{q}_l\}$ for $1 \leq l \leq K_q$, with
 $\mathfrak{q}_1 = q^-_p$ and $\mathfrak{q}_{K_q} = q^+_p$. The
 $\{\mathfrak{q}_l\}$ are then expected to cover the plausible range of
-value that the minimal quantile may
+value that the sought quantile $\alpha_p = \min q_p(\kk)$ may
 take. % The set $\{\mathfrak{q}_l\}$ can be considered as plausible
       % values of the wanted quantile $q_p$. \todo{choice of
       % $\tilde{\kk}$, for discretization of quantiles of interest}
@@ -1729,7 +1760,7 @@ For each of those $K_q$ quantiles, we can look to sample
 $K_{\mathbb{M}}$ points in the margin of uncertainty of the log-ratio,
 which is defined as
 \begin{align}
-  \mathbb{M}_{\eta}(\mathfrak{q}_l)  &= \left\{ (\kk, \uu) \mid \frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}< k \land -\frac{m_{\Xi}(\kk, \uu)-\log \mathfrak{q}_l}{\sigma_\Xi(\kk, \uu)}  <  k\right\} \\
+  \mathbb{M}_{\eta}(\mathfrak{q}_l)  &= \left\{ (\kk, \uu) \mid \frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}< k \text{ and } -\frac{m_{\Xi}(\kk, \uu)-\log \mathfrak{q}_l}{\sigma_\Xi(\kk, \uu)}  <  k\right\} \\
                                      &= \{(\kk, \uu) \mid m_{\Xi}(\kk,\uu) - k\sigma_{\Xi}(\kk, \uu) < \log \mathfrak{q}_l < m_{\Xi}(\kk, \uu) + k\sigma_{\Xi}(\kk, \uu)\}
                                      % &= \left\{ (\kk, \uu) \mid m_{\Xi} - k \sigma_{\Xi} < \log \mathfrak{q}_l \land  m_{\Xi} + k \sigma_{\Xi} > \log \mathfrak{q}_l\right\} \\
 \end{align}
@@ -1794,7 +1825,7 @@ thesis, the estimation of the regret-based estimators.
 Several improvements can be considered. First, all the methods
 introduced here focus on the improvement of the estimation of a
 function, which will be optimized in order to get the estimator. The
-adaptative strategy does not take into account the subsequent
+adaptative strategy could be adapted to take into account the subsequent
 optimization. Similarly as in~\cite{janusevskis_simultaneous_2010}, we
 could develop strategies in two parts: first, identify the point in
 $\Kspace$ which has the most potential to be the wanted estimator, and
@@ -1804,7 +1835,7 @@ which reduces the most the uncertainty on the candidate.
 Another issue encountered is that Gaussian Processes are suited to
 approximate functions of a moderate number of variables, because the
 optimization of the hyperparameters becomes increasingly difficult. In
-order to apply the algorithms based on GP, the dimension will first
+order to apply the algorithms based on GP, the dimension may first
 have to be reduced. Moreover, we did not take advantage of the
 gradient information, which may be available through the adjoint
 method and automatic differentation tools, as has been done
