@@ -17,7 +17,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
+\pagestyle{introStyle}
 \chapter*{Introduction}
 \TitleBtwLines
 
@@ -25,21 +25,79 @@
 \addstarredchapter{Introduction}
 \label{chap:Introduction}
 
-\subfileLocal{\pagestyle{introStyle}}
+
 
 % \subfileLocal{\pagestyle{contentStyle}}
 \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
 
+To understand and to be able to forecast natural phenomena is crucial
+for many applications, with high social, environmental and economic
+stakes.  In earth sciences especially, the modelling of the ocean and
+the atmosphere is important for day to day weather forecasts,
+hurricanes tracking, pollutant dispersion, or biological monitoring.
+
+Those natural phenomena are then modelled mathematically, usually by
+modelling the physical reality with the more general equations, and by
+making successive reasonable assumptions and simplifications in order
+to account for the relative scales of the processes involved. Indeed,
+some small scales processes, such as turbulences, are notoriously hard
+to model and a fine knowledge of those may not be completely relevant
+for the foreseen application of the model. Such effects are not
+necessarily completely overlooked, but can be parametrized, \textit{i.e.}
+additional parameters can be introduced.
+
+However, as this modelling is supposed to represent the reality, the
+prediction should be compared with some data acquired through
+observations. This comparison usually takes the form of the definition
+of a misfit function that measures the error between the forecast and
+the reality. This objective function is then minimized with respect to
+some chosen
+parameters~\cite{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
+in order to get a calibrated model.
+
+Those calibrated models are often used to make decisions afterward,
+such as emergency evacuations plans, or optimisation of the position
+of turbines, or for forecasts. However, the parameters introduced are
+not the only source of errors in the modelling.
+
+As mentioned above, models are only a partial representation of the
+reality and can be structurally unstable as they model chaotic
+systems. Some uncertainties cannot be resolved at the model scale.
+To deal with irreducible errors, \emph{i.e.} aleatoric uncertainties, ensemble simulations \cite{mcwilliams_irreducible_2007}. random errors still a \cite{zanna_ocean_2011}
+%  If parameters to be estimated are not the only source of
+% uncertainties, their optimal control is doomed to overfit the data,
+% \emph{e.g} to artificially introduce errors in the controlled
+% parameter to compensate for other sources. If such uncertainties are
+% of aleatoric nature, then the parameter estimation is only optimal for
+% the observed situation, and may be very poor in other configurations,
+% phenomenon coined as \textit{localized optimisation}
+% in~\cite{huyse_free-form_2001}.
+
+% This can be seen as a layer of
+% uncertainties which is added to the modelling.
+
+
+The thesis is organized as follows
+\begin{itemize}
+\item in~\cref{chap:inverse_problem}, we introduce the notions of statistics and probabilities that we will use to define the calibration problem
+\item in~\cref{chap:robust_estimators}, \cite{trappler_robust_2020-1}
+\item in~\cref{chap:adaptative_design_gp}
+\item in \cref{chap:croco} 
+\end{itemize}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Numerical models are widely used to study or forecast natural
-phenomena and improve industrial processes. However, by essence models
+% Numerical models are widely used to study or forecast natural
+% phenomena and improve industrial processes.
+However, by essence models
 only partially represent reality and sources of uncertainties are
 ubiquitous (discretisation errors, missing physical processes, poorly
-known boundary conditions).  Moreover, such uncertainties may be of
-different nature. \cite{walker_defining_2003} proposes to consider two
+known boundary conditions). Moreover, such uncertainties may be of
+different nature.~\cite{walker_defining_2003} proposes to consider two
 categories of uncertainties:
 \begin{itemize}
 \item Aleatoric uncertainties, coming from the inherent variability of
@@ -61,14 +119,7 @@ circulation modeling, is the estimation of ocean bottom friction
 parameters in~\cite{das_estimation_1991}
 and~\cite{boutet_estimation_2015}.
 
-  If parameters to be estimated are not the only source of
-uncertainties, their optimal control is doomed to overfit the data,
-\emph{e.g} to artificially introduce errors in the controlled
-parameter to compensate for other sources. If such uncertainties are
-of aleatoric nature, then the parameter estimation is only optimal for
-the observed situation, and may be very poor in other configurations,
-phenomenon coined as \textit{localized optimisation}
-in~\cite{huyse_free-form_2001}.
+ 
   
   The calibration often takes the form of the minimisation of a
 function $J$, that describes a distance between the output of the
@@ -77,18 +128,18 @@ regularization terms.  In our study, this cost function takes two
 types of arguments: $\kk\in\Kspace$ that represents the parameters to
 calibrate, and $\uu\in\Uspace$, that represents the environmental
 conditions.  We assume that the environmental conditions are uncertain
-by nature, and thus will be modelled with a random variable $U$, to
+by nature, and thus will be modelled with a random variable $\UU$, to
 account for these aleatoric uncertainties.  This is then the random
-variable $J(k,U)$ that we want to minimize ``in some sense'' with
-respect to $k$.
+variable $J(\kk,\UU)$ that we want to minimize ``in some sense'' with
+respect to $\kk$.
 
   Some of the optimisation under uncertainties methods rely on the
-optimisation of the moments of $ k\mapsto J(k,U)$
+optimisation of the moments of $ \kk\mapsto J(\kk,\UU)$
 (in~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}), while
 other methods are based on multiobjective problems, such as
 in~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.  These
 approaches may compensate some bad performances by some very good
-ones, as we are averaging over $\mathbb{U}$.
+ones, as we are averaging with respect to  $\UU$.
 
   
   We propose to compare the value of the objective function to the

@@ -4,7 +4,7 @@
 \renewcommand{\RootDir}[1]{./Text/Chapter5/#1}
 }
 \newcommand{\CROCO}{CROCO}
-\newcommand{\zob}{z_{0,b}}
+\newcommand{\zob}{z_b}
 
 
 \subfileLocal{
@@ -240,7 +240,11 @@ shelf. Pebbles however are mostly located in the shallow region in the
 English Channel, thus it may be expected that controlling the size of
 pebbles is highly influencal in a calibration context.
 
-
+According to \cref{tab:size_sediments}, the rugosity $\zob$ spans
+multiple order of magnitude. We are then going to define the control variable $\kk$ as
+\begin{equation}
+  \kk = \log \zob
+\end{equation}
 
 
 \subsection{Tidal modelling and uncertainties}
@@ -532,20 +536,24 @@ as shown in~\cref{eq:quadratic_friction_vonkarman}, by the bottom
 roughness $\zob$, and by the ocean depth $H$.
 
 We are first going to perform a sensitivity analysis in order to
-quantify the role of each sediment-based region, without incorporating
-the knowledge on the typical size of the sediment there.  The function
-which will be analyzed is the one defined
-\cref{eq:cost_fun_definition}:
-$J(\kk) = \|\mathcal{M}(\kk, \uu^{\mathrm{truth}}) - y \|_2^2$, with
-$\kk =
-(\kk_{\mathrm{R}},\kk_{\mathrm{C}},\kk_{\mathrm{G}},\kk_{\mathrm{S}},
-\kk_{\mathrm{SF}},\kk_{\mathrm{Si,F}})\in\Kspace$, with
-$\Kspace = \interval{-11}{-3}^6$ and $\kk_i = \log \zob^i$.
-
-Considering the similar
-expected size of silts and muds particles
+quantify the role of each sediment-based \emph{region}, without
+incorporating the knowledge on the typical size of the sediment there.
+Considering the similar expected size of silts and muds particles
 in~\cref{tab:size_sediments}, and the limited amount of silts, they
 are considered together, with the code $\mathrm{Si,V}$.
+
+The function which will be analyzed is the one defined
+\cref{eq:cost_fun_definition}:
+\begin{equation}
+\kk \mapsto \|\mathcal{M}(\kk, \uu^{\mathrm{truth}}) - y \|_2^2
+\end{equation}
+with
+\begin{equation}
+\kk = (\kk_{\mathrm{R}},\kk_{\mathrm{C}},\kk_{\mathrm{G}},\kk_{\mathrm{S}},
+\kk_{\mathrm{SF}},\kk_{\mathrm{Si,F}})\in\Kspace, \text{ with }
+\Kspace = \interval{-11}{-3}^6% \text{ and } \kk_i = \log \zob^i
+\end{equation}
+
 
 The first, second and total order effect are
 displayed~\cref{fig:SA_sediments}, where the regions defined by each
@@ -559,10 +567,14 @@ sediment is \cref{fig:sediments_reduced}.
 \end{figure}
 
 We can see that the most influential region is the one defined by the
-pebbles (code: C). More generally, except for the rocks, we can see
-that the shallower the region, the larger impact it has on the cost
-function. The area covered by rocks is quite small compared to other
-sediments, hence its small effect.
+pebbles (with code C). More generally, except for the rocks, we can
+see that the shallower the region, the larger impact it has on the
+cost function. The area covered by rocks is quite small compared to
+other sediments, hence its small effect. Incidentally, we can notice
+the inverse correlation between the size of the sediments, and the
+depth at which they are found.
+
+
 \subsubsection{SA on the tide components}
 \label{ssec:SA_tide}
 
@@ -647,7 +659,7 @@ We will write
 whith $C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)$. We have for
 any $(\kk, \uu) \in \Kspace\times\Uspace$,
 \begin{equation}
-  Z((\kk, \uu) \sim \mathcal{N}\left(m_Z(\kk, \uu), \sigma^2_Z(\kk, \uu)\right)
+  Z(\kk, \uu) \sim \mathcal{N}\left(m_Z(\kk, \uu), \sigma^2_Z(\kk, \uu)\right)
 \end{equation}
 
 
