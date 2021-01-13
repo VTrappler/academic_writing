@@ -23,3 +23,6 @@
 *.synctex.gz
 *.tex~
 *.zip
+*.py~
+**/stats
+**/build
