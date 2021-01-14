@@ -62,7 +62,7 @@ the regions that may influence the most the calibration.
 The deterministic problem of calibration will then be addressed in
 \cref{sec:deterministic_calibration_bott}, by first defining the cost
 function and the input space. We will then calibrate the model
-without uncertainties using adjoint-based method.
+without external uncertainties using adjoint-based method.
 
 However for such problems, the large dimension of the input space may
 be problematic, as the parameter may be spatially distributed over the
@@ -128,8 +128,8 @@ where the depth is closer to \SI{5000}{\meter}.
 
 
 \CROCO{} can solve the fluid motion equations in 3D, but in this
-configuration is used only with one vertical level and thus solves
-numerically the shallow water equations:
+configuration, solves the shallow water equations instead, which are
+obtained by vertically integrating the primitive equations.
 % \begin{align}
     %     \left\{
     %     \begin{array}{rcl}
@@ -174,8 +174,8 @@ logarithmic profile of the velocity at bottom (a derivation can be found in~\cit
 where $\kappa$ is the Von K\'arm\'an constant, that we will take equal
 to $0.41$.  The bottom roughness $\zob$, or \emph{rugosity} in this
 document, can be interpreted as the size of the turbulent layer at the
-bottom, induced by the asperities of the sediments that lie at the
-bottom. \cite{boutet_estimation_2015} shows that in a calibration
+bottom, induced by the asperities of the sediments.
+\cite{boutet_estimation_2015} shows that in a calibration
 context, controlling the rugosity $\zob$ yields better result than
 controlling the drag coefficient $C_d$, thus we are going to control $\zob$.
 
@@ -197,14 +197,14 @@ influential for the calibration.
 
 
 We are going to make the assumption that the size of the turbulent
-layer at the bottom is equal to the size of the sediment, so the
-rugosity is directly linked to the type of sediment found on the ocean
-bed. \Cref{tab:size_sediments} presents a coarse classification, along
-with the typical size of the sediments that can be found, that will
-serve as a reference value, or \emph{truth value}
-$\zob^{\mathrm{truth}}$.  We can see that the rugosity spans several
-order of magnitude, hence it may be worth considering controlling the
-logarithm of the rugosity instead of the rugosity itself.
+layer at the bottom can be set equal to the typical size of the
+sediments, so the rugosity is directly linked to the type of sediment
+found on the ocean bed. \Cref{tab:size_sediments} presents a coarse
+classification, along with the typical size of the sediments that can
+be found, that will serve as a reference value, or \emph{truth value}
+$\zob^{\mathrm{truth}}$.  % We can see that the rugosity spans several
+% order of magnitude, hence it may be worth considering controlling the
+% logarithm of the rugosity instead of the rugosity itself.
 
 \begin{table}[!ht]
   \centering
@@ -222,14 +222,16 @@ logarithm of the rugosity instead of the rugosity itself.
   \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
 \end{table}
 
-Based on the documentation of the SHOM, the
-\cref{fig:sediments_reduced} shows a simplified version of the map of
-the repartition of the different types of sediments.
-
+Based on the documentation of the SHOM\footnote{Service hydrographique
+  et océanographique de la Marine}, the \cref{fig:sediments_reduced}
+shows a simplified version of the map of the repartition of the
+different types of sediments. A more complete chart can be
+found~\cref{fig:sediments_full}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath sediments_reduced.png}
-  \caption{\label{fig:sediments_reduced} Repartition of the sediments on the ocean floor.}
+  \caption{\label{fig:sediments_reduced} Repartition of the sediments
+    on the ocean floor.}
 \end{figure}
 
 Most of the ocean floor in this region is composed of sand. Even
@@ -241,7 +243,8 @@ English Channel, thus it may be expected that controlling the size of
 pebbles is highly influencal in a calibration context.
 
 According to \cref{tab:size_sediments}, the rugosity $\zob$ spans
-multiple order of magnitude. We are then going to define the control variable $\kk$ as
+multiple order of magnitude. We are then going to define the control
+variable $\kk$ as
 \begin{equation}
   \kk = \log \zob
 \end{equation}
@@ -337,7 +340,9 @@ the observations are generated using $\vartheta=\kk^{\mathrm{truth}}$:
   y = \mathscr{M}(\vartheta) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
 
-In the following, if the $\uu$ argument is omitted, it means that the model, or subsequent functions are evaluated with $\uu^{\mathrm{truth}}$.
+In the following, if the $\uu$ argument is omitted, it means that the
+model, or subsequent functions are evaluated with
+$\uu^{\mathrm{truth}}$.
 \subsection{Cost function definition}
 Once the observation $y \in \mathbb{R}^{N_{\mathrm{obs}}}$ have been generated, we can
 define a cost function $J$ by
@@ -349,7 +354,8 @@ define a cost function $J$ by
 Equivalently, as mentioned in~\cref{chap:inverse_problem}, by assuming
 that the distribution of the (random) observation vector is known and
 $Y \mid \kk \sim \mathcal{N}(\mathcal{M}(\kk), I)$ (with $I$ being the
-identity matrix of dimension $p$), $J$ is proportional to the negative log-likelihood of the data.
+identity matrix of dimension $p$), $J$ is proportional to the negative
+log-likelihood of the data.
 
 \subsection{Gradient-descent optimisation}
 \label{ssec:optim_gradient}
@@ -383,7 +389,7 @@ during the optimisation procedure. %  \todo{plutot deviation
 
 \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
+  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
   }
   \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
@@ -456,7 +462,7 @@ means of sensitivity analysis.
            %            \clearpage
 
 
-\section{Sensitivity analysis}
+\section{Sensitivity analysis of the objective function}
 \label{sec:sensitivity-analysis}
 Sensitivity analysis (often abbreviated as \emph{SA}), aims at
 quantifying the effect of the variation of some input variable to the
@@ -531,9 +537,10 @@ order effects.
 
 \subsection{SA of the objective function for the calibration of CROCO}
 \subsubsection{SA on the regions defined by the sediments}
-The bottom friction affects the ocean circulation through two factors
-as shown in~\cref{eq:quadratic_friction_vonkarman}, by the bottom
-roughness $\zob$, and by the ocean depth $H$.
+The drag coefficient, which affects the ocean circulation, is the
+result of two factors as shown
+in~\cref{eq:quadratic_friction_vonkarman}: the bottom roughness
+$\zob$ and the ocean depth $H$.
 
 We are first going to perform a sensitivity analysis in order to
 quantify the role of each sediment-based \emph{region}, without
@@ -608,13 +615,17 @@ amplitude, and $\UU_2$ is the error on the $S_2$ amplitude.
 
 \clearpage
 \section{Robust Calibration of the bottom friction}
+
+\subsection{Objective function definition}
+
 Based on the sensitivity analysis carried in the previous section, we
 are going to consider the following setting for robust calibration.
 The control variable is defined as
 \begin{equation}
-  \kk=\left(\kk_1,\dots,\kk_6\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{-11}{-3}^6
-\end{equation}
-and the uncertain variale is defined as
+  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{-11}{-3}^6
+  \end{equation}
+  where the index $1$ is for the region defined as Pebbles, the index $2$ is for the regions defined as Rocks, Gravel, and Sand, and the index $3$ is for the Silts, Mud, and Fine Sands.
+and the uncertain variable is defined as
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
@@ -656,7 +667,7 @@ We will write
 \begin{equation}
   Z \sim \GP\left(m_Z, C_Z\right)
 \end{equation}
-whith $C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)$. We have for
+with $C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)$. We have for
 any $(\kk, \uu) \in \Kspace\times\Uspace$,
 \begin{equation}
   Z(\kk, \uu) \sim \mathcal{N}\left(m_Z(\kk, \uu), \sigma^2_Z(\kk, \uu)\right)
@@ -666,22 +677,24 @@ any $(\kk, \uu) \in \Kspace\times\Uspace$,
 By definition, for any $\kk\in \Kspace$ and any $\uu \in \Uspace$, we
 have $J(\kk, \uu) \geq 0$.  However, this positivity property is not
 necessarily verified by the surrogate $m_Z$, and thus the notion of
-relative-regret is not defined. Alternatively\todo{réécrire}, this
-violates the assumption of the positivity of $Z^*(\uu)$
-in~\cref{ssec:lognormal_approx}.
+relative-regret is not defined. We have to first ensure that the GP
+$Z$ (and consequently $Z^*$) is positive with large enough
+probability.  To do so, we are first going to enrich the design near
+the conditional minimisers, using the PEI criterion.  Alternatively,
+one could have added points to the design according to the reliability
+index, defined~\cref{eq:reliability_rho}, and thus look to find points
+which have the largest probability of being negative.
 
-To avoid these issues, we are first going to enrich the design near
-the conditional minimisers.
 \subsection{Conditional minimum and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
 In the previous chapter, we defined the conditional minimum as the
 minimum of the objective function given $\uu\in \Uspace$:
 \begin{equation}
-  J^* : \uu\in\Uspace \mapsto J^*(\uu) = \min_{\kk\in\Kspace} J(\kk, \uu)
+  J^* : \uu \mapsto J^*(\uu) = \min_{\kk\in\Kspace} J(\kk, \uu)
 \end{equation}
 and the conditional minimiser function as
 \begin{equation}
-  \kk^*:\uu \in \Uspace \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
+  \kk^*:\uu \Uspace \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
 \end{equation}
 Since both of these functions require an optimisation of the objective
 function, they are quite expensive to compute. We can use the
@@ -694,6 +707,39 @@ In order to improve the accuracy of those two functions, we are first
 going to enrich the design using the PEI criterion, as detailed
 \cref{sec:PEI_criterion} on \cpageref{sec:PEI_criterion},
 from~\cite{ginsbourger_bayesian_2014}.
+
+The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
+and the additional evaluations of due to the PEI criterion is then
+used in order to construct $m_{Z^*}$ and $\kk^*_Z$.  By sampling
+$\uu_i$ from $\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate the distribution of the random variable $\kk^*(\UU)$. The samples $\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed in~\cref{fig:distrib_minimizers_reduced}. Those marginal distributions are bimodal
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
+  \caption{\label{fig:distrib_minimizers_reduced}  Estimated marginal distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$ using KDE. The $y$-axis is the corresponding value of the minimum $m_Z^*(\uu_i)$}
+\end{figure}
+
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{rcl} \toprule
+    $p$ & $\alpha_p$ & $\kk_{\mathrm{RR},p}$ \\ \midrule
+    \num{0.5} & \num{1.027% 9807270764623
+                } &   \\
+    \num{0.7} & \num{1.054% 1171507139304
+                } &  \\
+    \num{0.8} & \num{1.101% 1858035465198
+                } & \\
+    \num{0.9} & \num{1.109% 897062278107
+                } & \\
+    \num{0.95}& \num{1.159% 8372511190105
+                } & \\
+    \num{0.99}& \num{1.198% 4792983910981
+                } & \\
+    \num{1.0} & \num{1.200% 6928687163256
+                } & \\ \bottomrule
+  \end{tabular}
+  \caption{Initial}
+  \label{tab:initial_quantiles}
+\end{table}
 
 \subsection{Relative-regret based estimators}
 
@@ -712,7 +758,7 @@ from~\cite{ginsbourger_bayesian_2014}.
 % \end{figure}
 
 
-
+\clearpage
 
 
 

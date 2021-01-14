@@ -82,12 +82,12 @@
   \label{sec:lognorm_ratio}
   Let $X$ and $Y$ be two correlated normal random variables:
   \begin{align}
-    X \sim \mathcal{N}(\mu_X, \sigma^2_X) \\
-    Y \sim \mathcal{N}(\mu_Y, \sigma^2_Y) \\
-    \rho = \frac{\Cov[X,Y]}{\sigma_X \sigma_Y} \\
+    X &\sim \mathcal{N}(\mu_X, \sigma^2_X) \\
+    Y &\sim \mathcal{N}(\mu_Y, \sigma^2_Y) \\
+    \rho &= \frac{\Cov[X,Y]}{\sigma_X \sigma_Y} \\
     \begin{bmatrix}
       X \\ Y
-    \end{bmatrix} \sim \mathcal{N}\left(%
+    \end{bmatrix} &\sim \mathcal{N}\left(%
     \begin{bmatrix}
       \mu_X \\ \mu_Y
     \end{bmatrix};%
@@ -96,17 +96,22 @@
       \rho\sigma_X \sigma_Y & \sigma^2_Y
     \end{bmatrix} \right)
   \end{align}
-  Let us assume that both random variable are positive with high probability, then the ratio $T=X/Y$ is defined and positive with high probability. We can then consider its logarithm:
-  \begin{align}
-    T &= \frac{\mu_X}{\mu_Y}\frac{1 + \frac{X_0}{\mu_X}}{1 + \frac{Y_0}{\mu_Y}} \\
-    \log T &= \log\left(\frac{\mu_X}{\mu_Y}\right) + \log\left(1 + \frac{X_0}{\mu_X}\right) -\log\left(1 + \frac{Y_0}{\mu_Y}\right)
-  \end{align}
+  Let us assume that both random variable are positive with high probability, then the ratio $T=X/Y$ is defined and positive with high probability. We will first rewrite $T$ using the centered random variables $X_0=X-\mu_X$ and $Y_0 = Y-\mu_Y$:
+  \begin{equation}
+    T = \frac{\mu_X}{\mu_Y}\frac{1 + \frac{X_0}{\mu_X}}{1 + \frac{Y_0}{\mu_Y}}
+  \end{equation}
+  and we can then take its logarithm
+  \begin{equation}
+    \log T = \log\left(\frac{\mu_X}{\mu_Y}\right) + \log\left(1 + \frac{X_0}{\mu_X}\right) -\log\left(1 + \frac{Y_0}{\mu_Y}\right)
+  \end{equation}
+  
   So if $X_0 / \mu_X$ and $Y_0/ \mu_Y$ are small, i.e.\ if $\mu_X \gg \sigma_X$ and $\mu_Y \gg \sigma_Y$, by Taylor's expansion of the $\log$, we have
   \begin{align}
     \log T & \approx \log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{X_0}{\mu_X} - \frac{Y_0}{\mu_Y}
 % \\
 %     & \sim \mathcal{N}\left(\log\left(\frac{\mu_X}{\mu_Y}\right), \frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)
   \end{align}
+  The joint distribution of $X_0$ and $Y_0$ is known:
   \begin{align}
     \begin{bmatrix}
       X - \mu_X \\ Y - \mu_Y
@@ -121,7 +126,9 @@
       \sigma^2_X  & \rho \sigma_X \sigma_Y \\
       \rho\sigma_X \sigma_Y & \sigma^2_Y
     \end{bmatrix} \right)%
-    \\
+  \end{align}
+  and by scaling by $1/\mu_X$ and $1/\mu_Y$, we have
+  \begin{align}
     \begin{bmatrix}
       \frac{1}{\mu_X} & 0 \\
       0 & \frac{1}{\mu_Y}
@@ -147,11 +154,15 @@
   \end{equation}
   
   A first approximation is then to consider the ratio to be log-normally distributed, and
-  \begin{align}
-    \Ex[T] &= \exp\left(\log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{1}{2}\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2} \right)\right)\\
-           &=\left(\frac{\mu_X}{\mu_Y}\right) \exp\left(\frac{\sigma_X^2}{2\mu_X^2}+\frac{\sigma_Y^2}{2\mu_Y^2}\right) \\
-    \Var[T] &= \left(\exp\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)-1 \right)\Ex[T]^2
-  \end{align}
+  \begin{equation}
+    \log T \sim \mathcal{N}\left(\log \frac{\mu_X}{\mu_Y}; \frac{\sigma^2_X}{\mu_X^2} + \frac{\sigma^2_Y}{\mu_Y^2} - 2 \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \right)
+  \end{equation}
+  
+  % \begin{align}
+  %   \Ex[T] &= \exp\left(\log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{1}{2}\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2} \right)\right)\\
+  %          &=\left(\frac{\mu_X}{\mu_Y}\right) \exp\left(\frac{\sigma_X^2}{2\mu_X^2}+\frac{\sigma_Y^2}{2\mu_Y^2}\right) \\
+  %   \Var[T] &= \left(\exp\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)-1 \right)\Ex[T]^2
+  % \end{align}
 
 %   \subsection{Transformation}
 %   \cite{hayya_note_1975}
@@ -160,26 +171,32 @@
 % \end{align}
 
 % Conservative rule of thumb: if $\mu_Y/\sigma_Y \leq 0.09$ and $\mu_X / \sigma_X > 0.19$
-
-  \section{Full sediment repartition in the Bay of Biscay and the English Channel}
-  \label{sec:sediments_full}
+\newpage
+\section{Full sediment repartition in the Bay of Biscay and the English Channel}
+ \label{sec:sediments_full}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
   \caption{\label{fig:sediments_full} Full sediments repartition}
 \end{figure}
-
+\clearpage
 \section{Misspecified deterministic calibration}
 \clearpage
 \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/1/map_163.png}
+  \includegraphics[scale=0.8]{/home/victor/optimisation_dahu/1b/map_log_400.png}
 \end{figure}
 \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/1/ctrl_plot.png}
+  \resizebox{.8\textwidth}{!}{\input{/home/victor/optimisation_dahu/1b/ctrl_true.pgf}}
+\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.7]{/home/victor/optimisation_dahu/1b/optimisation_type_sediments.pdf}
 \end{figure}
 \clearpage
+
+
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/2/map_163.png}

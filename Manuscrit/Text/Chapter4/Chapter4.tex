@@ -818,6 +818,7 @@ $Z(x)\sim\mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right)$.
 $\rho$ (denoted $U$ in its original definition
 \cite{echard_ak-mcs_2011})):
 \begin{equation}
+  \label{eq:reliability_rho}
   \rho(x) = \frac{\lvert m_Z(x) - T \rvert}{\sigma_Z(x)}
 \end{equation}
 
@@ -839,21 +840,25 @@ Alternatively, we can also use the variance of the probability of
 coverage $\mathscr{V}_A$ as an indication of the uncertainty of the
 classification problem. As the maximum of variance will be obtained
 for points having a probability of coverage $\pi_A(x) =0.5$, looking
-and evaluating the maximizers of this criterion is not really
-relevant.\todo{réécrire par}
+and evaluating the maximizer of this criterion is not really relevant:
+any point verifying $m_Z(x)=T$ would be suited, without taking into
+account its prediction error $\sigma^2_Z(x)$, and a point already well
+predicted (\emph{i.e.} close to other points already in the design)
+could be evaluated, incorporating little new knowledge.
 
-\todo{réecrire}
+
 Instead, by integrating $\mathscr{V}_A$ over the whole space
 $\Xspace$, we get a measure of the uncertainty in the classification
-problem associated with the design $\mathcal{X}_n$, as the criteria
-introduced~\cite{bect_sequential_2012} and what has been introduced
-for the $\IMSE$, which we will denote $\mathrm{IVPC}(\mathcal{X}_n)$
-(Integrated Variance of the Probability of Coverage)
+problem associated with the design $\mathcal{X}_n$, which we will
+denote $\mathrm{IVPC}(\mathcal{X}_n)$ (Integrated Variance of the
+Probability of Coverage).
 \begin{equation}
   \label{eq:IVPC_def}
 \mathrm{IVPC}(\mathcal{X}_n) =  \int_{\Xspace} \mathscr{V}_A(x)\,\mathrm{d}x
 \end{equation}
-We can finally introduce a criterion based on the augmented design, as done for the $\IMSE$.
+A similar function has been introduced in~\cite{bect_sequential_2012}.
+We can finally introduce a criterion based on the augmented design, as
+done for the $\IMSE$.
 \begin{equation}
   \label{eq:expected_aIVPC}
   x_{n+1} = \argmin_{x \in\Xspace} \Ex_{Z(x)}\Big[\mathrm{IVPC}(\mathcal{X}_n \cup \{   \left(x, Z(x) \right)  \})\Big]
@@ -1174,11 +1179,11 @@ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
 \item $\sigma^2_{Z}$ is the prediction variance of the GP on $J$, that
   is directly reduced when additional points are evaluated
 \item $\sigma^2_{Z^*}$ is the variance of the predicted value of the
-  minimizer.
+  minimizers.
 \item Assuming a stationary form of the covariance, the third term is
-  dependent only on the distance between $\kk$ and $\kk_{Z^*}(\uu)$. By
-  separating the $\kk$ and $\uu$ components, the covariance term can
-  be written
+  dependent only on the distance between $\kk$ and $\kk_{Z^*}(\uu)$,
+  (the estimated conditional minimiser). By separating the $\kk$ and
+  $\uu$ components, the covariance term can be written
   $C((\kk,\uu), (\kk^{\prime},\uu^{\prime})) = s
   \mathcal{K}_{\kk}(\|\kk - \kk^{\prime}\|) \mathcal{K}_{\uu}(\|\uu -
   \uu^{\prime}\|)$, and
@@ -1271,7 +1276,8 @@ those estimations, two strategies emerge:
 \item For $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$, we are going to
   reduce the expected augmented $\IMSE$ of the GP $Z - \alpha Z^*$.
 \item For $\hat{\Gamma}_{\alpha}^{\pi}$, we are going to reduce the
-  expected augmented integrated variance of probability of coverage.
+  expected augmented integrated variance of probability of coverage
+  $\mathrm{IVPC}$.
 \end{itemize}
 
 \subsubsection{Reduction of the augmented IMSE}
