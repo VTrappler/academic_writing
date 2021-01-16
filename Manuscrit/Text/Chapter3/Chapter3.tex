@@ -70,7 +70,7 @@ Deterministic constraints & Admissible                     & Optimal and admissi
 Uncertain constraints     & Reliable \cellcolor{brewlight} & Optimal and reliable  \cellcolor{brewlight} & Robust and reliable  \cellcolor{brewlight}      \\ \bottomrule
 \end{tabular}%
 }
-\caption{Types of problems, depending on their deterministic nature for the constraints or the objective. Shaded cells correspond to problems comprising an uncertain part. Reproduced from~\cite{lelievre_consideration_2016}}
+\caption[Nomenclature of robustness proposed in~\cite{lelievre_consideration_2016}]{Types of problems, depending on their deterministic nature for the constraints or the objective. Shaded cells correspond to problems comprising an uncertain part. Reproduced from~\cite{lelievre_consideration_2016}}
 \label{tab:lelievre}
 \end{table}
 % \begin{table}[htb]
@@ -708,8 +708,10 @@ As $J$ may not stem from a likelihood, we call $\mathcal{I}_{\beta}(\uu)$ the \e
 
   
   \begin{definition}[Additive-regret family of estimators]
+    \label{def:AR_family}
     For $\beta \geq 0$, we define the family of robust estimators as the maximizers of \cref{eq:def_gamma_additive}:
     \begin{equation}
+      \label{eq:def_AR_family}
       \left\{\estimtxt{\kk}{AR,\beta} = \argmax_{\kk\in\Kspace} \Gamma_{\beta}(\kk) \mid \beta > 0\right\} %= \Prob_U\left[R_{\beta}(\kk)\right]\mid \beta \geq 0\right\}
     \end{equation}
   \end{definition}
@@ -775,11 +777,13 @@ the probability of being $\alpha$-acceptable. Using this function, we can define
 
 
 \begin{definition}[Relative-regret family of estimators]
+  \label{def:RR_family}
   Given $\alpha$, the value of $\kk$ that maximizes the probability of being $\alpha$-acceptable is called the relative-regret (RR) estimator $\hat{\kk}_{\mathrm{RR},\alpha}$.
   
 We define the family of relative regret estimators as the set of those estimators:
 \begin{equation}
-      \left\{\estimtxt{\kk}{RR,\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk)\mid \alpha > 1\right\}
+  \label{eq:def_RR_family}
+    \left\{\estimtxt{\kk}{RR,\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk)\mid \alpha > 1\right\}
     \end{equation}
     For different increasing $\alpha$, the corresponding regions of acceptability are represented~\cref{fig:gamma_alpha_increasing}, along with the functions $\Gamma_{\alpha}$.
   \end{definition}

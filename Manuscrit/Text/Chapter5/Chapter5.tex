@@ -726,7 +726,10 @@ $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
-  \caption{\label{fig:distrib_minimizers_reduced}  Estimated marginal distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$ using KDE. The $y$-axis is the corresponding value of the minimum $m_Z^*(\uu_i)$}
+  \caption{\label{fig:distrib_minimizers_reduced} Estimated marginal
+    distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$
+    using KDE. The $y$-axis is the corresponding value of the minimum
+    $m_Z^*(\uu_i)$}
 \end{figure}
 \todo{regénérer la figure}
 Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
@@ -756,13 +759,30 @@ approximation of the
 % \end{table}
 
 \subsection{Relative-regret based estimators}
+We are going to estimate a member of the family of relative-regret estimators, as defined~\cref{def:RR_family}, on \cpageref{def:RR_family}, for a specific $\alpha\geq 1$.
+\begin{equation}
+  \kk_{\mathrm{RR},\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \argmax_{\kk \in \Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
+\end{equation}
+
 \subsubsection{Optimisation of the probability of exceeding a threshold}
-We will first look to estimate the probability:
+
+We will first look to improve the estimation of the probability:
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
+
+
+
 \subsubsection{Optimisation of the quantile of the relative-regret}
 
+Alternatively, we want 
+We will then look to optimise the quantile of order $p=0.95$ of the ratio defined as
+\begin{equation}
+  {\kk}_{\mathrm{RR},\alpha_p} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha_p}\left(\kk\right)
+\end{equation}
+\begin{equation}
+\max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
+\end{equation}
 
 \section{Partial conclusion}
 

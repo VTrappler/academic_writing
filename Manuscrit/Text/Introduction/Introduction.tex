@@ -38,14 +38,16 @@ the atmosphere is important for day to day weather forecasts,
 hurricanes tracking, pollutant dispersion, or biological monitoring.
 
 Those natural phenomena are then modelled mathematically, usually by
-modelling the physical reality with the more general equations, and by
-making successive reasonable assumptions and simplifications in order
-to account for the relative scales of the processes involved. Indeed,
-some small scales processes, such as turbulences, are notoriously hard
-to model and a fine knowledge of those may not be completely relevant
-for the foreseen application of the model. Such effects are not
-necessarily completely overlooked: they are incorporated in the
-modelling by overly simplifying them and by \emph{parametrization}.
+modelling the physical reality with some general equations
+(Navier-Stokes equations for Computational Fluid Dynamics typically),
+and by making successive reasonable assumptions and simplifications in
+order to account for the relative scales of the processes
+involved. Indeed, some small scales processes, such as turbulences,
+are notoriously hard to model and a fine knowledge of those may not be
+completely relevant for the foreseen application of the model. Such
+effects are not necessarily completely overlooked: they are
+incorporated in the modelling by overly simplifying them and by
+\emph{parametrization}.
 
 However, as this modelling is supposed to represent the reality, the
 prediction should be compared with some data acquired through
@@ -69,17 +71,24 @@ those different scales into
 account~\cite{mcwilliams_irreducible_2007}. Such \emph{intrinsic}
 errors are often subject to variability, and neglecting this can lead
 to further errors. We chose to model this additional source of
-uncontrollable uncertainty with a random variable $\UU$.
-Based on this, the objective function is 
+uncontrollable uncertainty with a random variable $\UU$.  Based on
+this, the objective function is then a function which takes two
+arguments: the parameter that we wish to calibrate $\kk$, and some
+other parameters $\uu$, which are realisations of the random variable
+$\UU$, that we shall call \emph{environmental} parameters.
 
+\todo{what does robustness means}
 
-The thesis is organized as follows
+The thesis is organized as follows:
 \begin{itemize}
-\item in~\cref{chap:inverse_problem}, we introduce the notions of
+\item in~\cref{chap:inverse_problem}, we introduce notions of
   statistics and probabilities that we will use to define the
-  calibration problem. More specifically, the inference problem will
-  be discussed, and some aspects of nested model selection using the
-  likelihood ratio test.
+  calibration problem. More specifically, the statistical and Bayesian
+  inference problems will be broached, as well as some aspects of
+  nested model selection using the likelihood ratio test, while
+  emphasizing the link between probabilistic formulations of the
+  inference problem, and variational approach, based on the
+  optimisation of a specified objective function.
 \item in~\cref{chap:robust_estimators}, we are going to discuss some
   of the notions of robustness that can be found in the literature,
   either from a probabilistic inference aspect, or by the field of
@@ -92,17 +101,35 @@ The thesis is organized as follows
   approaches may compensate some bad performances by some very good
   ones, as we are averaging with respect to $\UU$.
 
-  We propose especially a new
-  criterion of optimisation, which is based on the comparison between
-  the objective function and its optimal value for the same
-  environmental variable. This work has led to the publication of an
-  article~\cite{trappler_robust_2020-1}.
-\item in~\cref{chap:adaptative_design_gp}
-\item in \cref{chap:croco} 
+  We propose especially a new criterion of optimisation, which is
+  based on the comparison between the objective function at a couple
+  $(\kk,\uu)$ and its optimal value for the same environmental
+  variable. This notion of regret, either relative or additive, is
+  then optimised in the sense of minimizing the probability of
+  exceeding a specified threshold, or to minimize one of its
+  quantile. This work has led to the publication of an
+  article~\cite{trappler_robust_2020}.
+  
+\item The family of criteria introduced in
+  \cref{chap:robust_estimators} can be quite expensive to evaluate,
+  that is why in~\cref{chap:adaptative_design_gp}, we will discuss the
+  use of metamodels, Gaussian Processes especially, in order to choose
+  iteratively the new points to evaluate. The process of selection,
+  called \emph{SUR} method~\cite{bect_sequential_2012} (Stepwise
+  Uncertainty Reduction) will depend on the type of robust estimation
+  we wish to carry. Different methods will be proposed, which differ
+  by the measure of uncertainty on the function we wish to
+  optimize. We will also introduce methods in order to select a batch
+  of points, in order to take advantage of parallelism when available.
+
+\item Finally, in~\cref{chap:croco}, we will study the calibration of
+  an regional coastal model, based on CROCO\@. We will first define an
+  objective function for this problem, and optimize it using an
+  gradient-descent algorithm. After having 
 \end{itemize}
 
 
-
+\etoile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           PREVIOUSLY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,7 +193,6 @@ performances, transcribing a risk-averse or a risk-seeking behaviour
 from the user.
  
 
-\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BIB
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
