@@ -47,7 +47,7 @@ Since the bottom friction depends directly on the size of the
 asperities on the ocean bed, it is a subgrid phenomenon, meaning that
 the program does not solve the equations of motions of the fluid
 around those asperities. Instead, the dissipation coming from this
-rugosity is parametrized at the at every point of the mesh.
+rugosity is parametrized at every point of the mesh.
 
 The bottom friction has been identified as a crucial
 parameter that limits the accuracy of the modelling
@@ -66,14 +66,16 @@ without external uncertainties using adjoint-based method.
 
 However for such problems, the large dimension of the input space may
 be problematic, as the parameter may be spatially distributed over the
-mesh. In consequence, instead of carrying the optimisation over the whole space, we
-will segment the geographical input space in different independent
-regions, which are based on the type of sediments listed at the bottom
-of the water.
+mesh. In consequence, instead of carrying the optimisation over the
+whole space, we will segment the geographical input space in different
+independent regions, which are based on the type of sediments listed
+at the bottom of the water.
 
-In order to quantify the influence of each of those
-regions, we will carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
+In order to quantify the influence of each of those regions, we will
+carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
 
+We are also going to introduce uncertainties on some environmental
+variables that parametrize the amplitude of some tidal components. \todo{finir intro}
 
 Finally, we are going to apply methods introduced in the previous
 chapters, in order to get a robust estimation of the bottom friction,
@@ -165,7 +167,7 @@ coefficient $C_d$:
 where $\mathbf{v}_b$ is the velocity at the bottom, so in the case
 of the Shallow Water equations, $\mathbf{v}_b = \mathbf{v}$.  The
 drag coefficient can also be formulated as a function of the water
-column height and and the \emph{bottom roughness} $\zob$ by assuming a
+column height and the \emph{bottom roughness} $\zob$ by assuming a
 logarithmic profile of the velocity at bottom (a derivation can be found in~\cite{le_bars_amandes_2010} for instance)
 \begin{equation}
   \label{eq:quadratic_friction_vonkarman}
@@ -181,7 +183,7 @@ controlling the drag coefficient $C_d$, thus we are going to control $\zob$.
 
 
 On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
-of the roughness $\zob$ of the ocean floor, for different height of
+of the roughness $\zob$ of the ocean floor, for different heights of
 the water column $H$.
 \begin{figure}[ht]
   \centering \input{\imgpath cd_zob.pgf}
@@ -208,16 +210,17 @@ $\zob^{\mathrm{truth}}$.  % We can see that the rugosity spans several
 
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{rrrl} \toprule
-    Code  & Description & Size of the majority of particles                              & $\zob^{\mathrm{truth}}$ \\ \midrule
-    Roche & Rock        & Larger                                                         & \SI{50}{\milli\meter}       \\
-    C     & Pebble      & $>$\SI{20}{\milli\metre}                                       & \SI{25}{\milli\meter}     \\
-    G     & Gravel      & $\interval{\SI{20}{\milli\metre}}{\SI{2}{\milli\metre}}$       & \SI{7}{\milli\meter}       \\
-    S     & Sand        & $ \interval{\SI{2}{\milli\metre}}{\SI{0.5}{\milli\metre}}$     & \SI{1}{\milli\meter}       \\
-    SF    & Fine Sand   & $ \interval{\SI{0.5}{\milli\metre}}{\SI{0.05}{\milli\metre}}$  & \SI{1.5e-1}{\milli\meter}     \\
-    Si    & Silt        & $ \interval{\SI{0.05}{\milli\metre}}{\SI{0.01}{\milli\metre}}$ & \SI{2e-2}{\milli\meter}       \\
-    V     & Muds        & $< \SI{0.05}{\milli\metre}$                                    & \SI{2e-2}{\milli\meter}       \\ \bottomrule
-            %             A   & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
+  \begin{tabular}{rrrl} \toprule Code & Description & Size of the
+    majority of particles             & $\zob^{\mathrm{truth}}$                                                                                  \\ \midrule
+    R                                 & Rock        & Larger                                                         & \SI{50}{\milli\meter}     \\
+    C                                 & Pebble      & $>$\SI{20}{\milli\metre}                                       & \SI{25}{\milli\meter}     \\
+    G                                 & Gravel      & $\interval{\SI{20}{\milli\metre}}{\SI{2}{\milli\metre}}$       & \SI{7}{\milli\meter}      \\
+    S                                 & Sand        & $ \interval{\SI{2}{\milli\metre}}{\SI{0.5}{\milli\metre}}$     & \SI{1}{\milli\meter}      \\
+    SF                                & Fine Sand   & $ \interval{\SI{0.5}{\milli\metre}}{\SI{0.05}{\milli\metre}}$  & \SI{1.5e-1}{\milli\meter} \\
+    Si                                & Silt        & $ \interval{\SI{0.05}{\milli\metre}}{\SI{0.01}{\milli\metre}}$ & \SI{2e-2}{\milli\meter}   \\
+    V                                 & Muds        & $< \SI{0.05}{\milli\metre}$                                    & \SI{2e-2}{\milli\meter}
+                                                                                                                                                 \\ \bottomrule
+            %             A           & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
   \end{tabular}
   \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
 \end{table}
@@ -243,7 +246,7 @@ English Channel, thus it may be expected that controlling the size of
 pebbles is highly influencal in a calibration context.
 
 According to \cref{tab:size_sediments}, the rugosity $\zob$ spans
-multiple order of magnitude. We are then going to define the control
+multiple orders of magnitude. We are then going to define the control
 variable $\kk$ as
 \begin{equation}
   \kk = \log \zob
@@ -284,16 +287,16 @@ By perturbating some properties of those tide components, we can
 introduce new variables that will act as \emph{uncertain variables} in
 our numerical model.  In this work, we chose to add a small
 multiplicative error on the amplitude on the different components of
-the tide. Let $A_i$ be the amplitude of the $i$th component. The
-perturbated amplitude $\tilde{A}_i$ is defined as
+the tide. Let $A_k$ be the amplitude of the $k$th component. The
+perturbated amplitude $\tilde{A}_k$ is defined as
 \begin{equation}
   \label{eq:tide_error}
-  \tilde{A}_i(\uu_i) = A_i (1 + 0.01(2\uu_i - 1))
+  \tilde{A}_k(\uu_k) = A_k (1 + 0.01(2\uu_k - 1))
 \end{equation}
-where $\uu_i$ is the $i$th component of the uncertain variable, which
-will be specified later. Based on this definition
-$\tilde{A}_i(0) = 0.99A_i$, $\tilde{A}_i(0.5) = A_i$ and
-$\tilde{A}_i(1) = 1.01A_i$. This choice has been made in order to
+where $\uu_k$ is the $k$th component of the uncertain variable. Each
+individual $\uu_k$ belongs in $\interval{0}{1}$. Based on this
+definition $\tilde{A}_k(0) = 0.99A_k$, $\tilde{A}_k(0.5) = A_i$ and
+$\tilde{A}_k(1) = 1.01A_k$. This choice has been made in order to
 represent some possible uncertainties on the external forcing of the
 model. We also define $\uu^{\mathrm{truth}}$ as the vector whose all
 its components are set to \num{0.5}, so when no amplitude is
@@ -335,9 +338,9 @@ $\uu^{\mathrm{truth}}$.
     \kk & \longmapsto &\mathscr{M}(\kk) = \mathcal{M}(\kk, \uu^{\mathrm{truth}})
   \end{array}
 \end{equation}
-the observations are generated using $\vartheta=\kk^{\mathrm{truth}}$:
+the observations are generated using $\kk^{\mathrm{truth}}$:
 \begin{equation}
-  y = \mathscr{M}(\vartheta) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
+  y = \mathscr{M}(\kk^{\mathrm{truth}} = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
 
 In the following, if the $\uu$ argument is omitted, it means that the
@@ -400,7 +403,7 @@ during the optimisation procedure. %  \todo{plutot deviation
   \centering
   \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}
   \caption{\label{fig:ctrl_true} Evolution of the cost function and
-    the squared normed of the gradient}
+    the squared norm of the gradient}
 \end{figure}
 By comparing the result of the
 optimization~\cref{fig:optimization_map_399} with the sediments
@@ -408,7 +411,7 @@ charts~\cref{fig:sediments_reduced} and the bathymetry
 map~\cref{fig:depth_maps}, we can have a first overview on the links
 between sediments type, depth, and \emph{identifiability}, which can
 be understood as the ability of the optimisation procedure to retrieve
-a truth value.
+a truth value. \todo{dvp}
 
 On a first look, we can see that the abyssal plain (the deep region
 off the Bay of Biscay) remains mostly unaffected by the optimisation,
@@ -497,9 +500,9 @@ exclusively on global sensitivity analysis
 \subsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 As global SA calls for a probabilistic framework, we are going to
-consider a real-valued random vector $X=(X_1,\cdots X_n)$ which
+consider a real-valued random vector $X=(X_1,\cdots X_p)$ which
 represents the inputs of a real function
-$f: \mathbb{R}^n \rightarrow \mathbb{R}$.  As $X$ is a random vecor,
+$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vecor,
 we can introduce $Y$, the real-valued random variable defined
 as $Y=f(X)$.
 
@@ -545,9 +548,9 @@ $\zob$ and the ocean depth $H$.
 We are first going to perform a sensitivity analysis in order to
 quantify the role of each sediment-based \emph{region}, without
 incorporating the knowledge on the typical size of the sediment there.
-Considering the similar expected size of silts and muds particles
-in~\cref{tab:size_sediments}, and the limited amount of silts, they
-are considered together, with the code $\mathrm{Si,V}$.
+Considering the similar expected size of silts (Si) and muds particles
+(V) in~\cref{tab:size_sediments}, and the limited amount of silts,
+they are considered together, with the code $\mathrm{Si,V}$.
 
 The function which will be analyzed is the one defined
 \cref{eq:cost_fun_definition}:
@@ -556,9 +559,9 @@ The function which will be analyzed is the one defined
 \end{equation}
 with
 \begin{equation}
-\kk = (\kk_{\mathrm{R}},\kk_{\mathrm{C}},\kk_{\mathrm{G}},\kk_{\mathrm{S}},
-\kk_{\mathrm{SF}},\kk_{\mathrm{Si,F}})\in\Kspace, \text{ with }
-\Kspace = \interval{-11}{-3}^6% \text{ and } \kk_i = \log \zob^i
+  \kk = (\kk_{\mathrm{R}},\kk_{\mathrm{C}},\kk_{\mathrm{G}},\kk_{\mathrm{S}},
+  \kk_{\mathrm{SF}},\kk_{\mathrm{Si,V}})\in\Kspace, \text{ with }
+  \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^6
 \end{equation}
 
 
@@ -570,7 +573,7 @@ sediment is \cref{fig:sediments_reduced}.
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_sediments.pgf}
-  \caption{\label{fig:SA_sediments} Global SA on the regions defined by the sediment type}
+  \caption{\label{fig:SA_sediments} Global SA on the regions defined by the sediment type, and bootstrap confidence intervals}
 \end{figure}
 
 We can see that the most influential region is the one defined by the
@@ -603,7 +606,7 @@ intervals.
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_tides.pgf}
-  \caption{\label{fig:SA_tides} Global SA on the different components of the tide }
+  \caption{\label{fig:SA_tides} Global SA on the different components of the tide, and boostrap confidence intervals}
 \end{figure}
 
 We can see that the error on the amplitude of the $M_2$ component of
@@ -624,8 +627,10 @@ The control variable is defined as
 \begin{equation}
   \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{-11}{-3}^6
   \end{equation}
-  where the index $1$ is for the region defined as Pebbles, the index $2$ is for the regions defined as Rocks, Gravel, and Sand, and the index $3$ is for the Silts, Mud, and Fine Sands.
-and the uncertain variable is defined as
+  where the index $1$ is for the region defined as Pebbles, the index
+  $2$ is for the regions defined as Rocks, Gravel, and Sand, and the
+  index $3$ is for the Silts, Mud, and Fine Sands.  and the uncertain
+  variable is defined as
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
@@ -657,7 +662,7 @@ and the cost function is defined as
 %   \end{tabular}
 % \end{table}
 % \label{ssec:croco_construction_gp}
- we will first sample a Latin Hypersquare on
+We will first sample a Latin Hypersquare on
 $\Kspace \times \Uspace$ in order to construct first a GP that can be
 used as a surrogate. Using similar notation as in the previous
 chapter, we denote $\mathcal{X}_0$ the initial design, and $Z$ the
@@ -709,39 +714,55 @@ going to enrich the design using the PEI criterion, as detailed
 from~\cite{ginsbourger_bayesian_2014}.
 
 The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
-and the additional evaluations of due to the PEI criterion is then
-used in order to construct $m_{Z^*}$ and $\kk^*_Z$.  By sampling
-$\uu_i$ from $\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate the distribution of the random variable $\kk^*(\UU)$. The samples $\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed in~\cref{fig:distrib_minimizers_reduced}. Those marginal distributions are bimodal
+and the additional evaluations due to the PEI criterion is then used
+in order to construct $m_{Z^*}$ and $\kk^*_Z$. This new design will be
+denoted as $\mathcal{X}_0^{\mathrm{PEI}}$. By sampling $\uu_i$ from
+$\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate
+the distribution of the random variable $\kk^*(\UU)$. The samples
+$\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed
+in~\cref{fig:distrib_minimizers_reduced}. Those estimated marginal
+distributions are bimodal, and we can notice two different points
+$\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
   \caption{\label{fig:distrib_minimizers_reduced}  Estimated marginal distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$ using KDE. The $y$-axis is the corresponding value of the minimum $m_Z^*(\uu_i)$}
 \end{figure}
+\todo{regénérer la figure}
+Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
+approximation of the
 
-\begin{table}[!ht]
-  \centering
-  \begin{tabular}{rcl} \toprule
-    $p$ & $\alpha_p$ & $\kk_{\mathrm{RR},p}$ \\ \midrule
-    \num{0.5} & \num{1.027% 9807270764623
-                } &   \\
-    \num{0.7} & \num{1.054% 1171507139304
-                } &  \\
-    \num{0.8} & \num{1.101% 1858035465198
-                } & \\
-    \num{0.9} & \num{1.109% 897062278107
-                } & \\
-    \num{0.95}& \num{1.159% 8372511190105
-                } & \\
-    \num{0.99}& \num{1.198% 4792983910981
-                } & \\
-    \num{1.0} & \num{1.200% 6928687163256
-                } & \\ \bottomrule
-  \end{tabular}
-  \caption{Initial}
-  \label{tab:initial_quantiles}
-\end{table}
+% \begin{table}[!ht]
+%   \centering
+%   \begin{tabular}{rcl} \toprule
+%     $p$ & $\alpha_p$ & $\kk_{\mathrm{RR},p}$ \\ \midrule
+%     \num{0.5} & \num{1.027% 9807270764623
+%                 } &   \\
+%     \num{0.7} & \num{1.054% 1171507139304
+%                 } &  \\
+%     \num{0.8} & \num{1.101% 1858035465198
+%                 } & \\
+%     \num{0.9} & \num{1.109% 897062278107
+%                 } & \\
+%     \num{0.95}& \num{1.159% 8372511190105
+%                 } & \\
+%     \num{0.99}& \num{1.198% 4792983910981
+%                 } & \\
+%     \num{1.0} & \num{1.200% 6928687163256
+%                 } & \\ \bottomrule
+%   \end{tabular}
+%   \caption{Initial}
+%   \label{tab:initial_quantiles}
+% \end{table}
 
 \subsection{Relative-regret based estimators}
+\subsubsection{Optimisation of the probability of exceeding a threshold}
+We will first look to estimate the probability:
+\begin{equation}
+  \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
+\end{equation}
+\subsubsection{Optimisation of the quantile of the relative-regret}
+
 
 \section{Partial conclusion}
 
@@ -774,6 +795,8 @@ $\uu_i$ from $\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate
 	\bibliography{../../Bibliography}
 }
 \end{document}
+
+
 
 %%% Local Variables:
 %%% mode: latex
