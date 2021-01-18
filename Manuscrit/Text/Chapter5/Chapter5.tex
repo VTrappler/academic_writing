@@ -49,11 +49,11 @@ the program does not solve the equations of motions of the fluid
 around those asperities. Instead, the dissipation coming from this
 rugosity is parametrized at every point of the mesh.
 
-The bottom friction has been identified as a crucial
-parameter that limits the accuracy of the modelling
-systems~\cite{sinha_principal_1997,kreitmair_effect_2019}, especially in shallow water
-regions; consequently, there has been an effort to control this
-parameter in various
+The bottom friction has been identified as a crucial parameter that
+limits the accuracy of the modelling
+systems~\cite{sinha_principal_1997,kreitmair_effect_2019}, especially
+in shallow water regions; consequently, there has been an effort to
+control this parameter in various
 studies~\cite{das_variational_1992,das_estimation_1991,boutet_estimation_2015}.
 We will detail how bottom friction affects the oceanic circulation
 in~\cref{ssec:modelling_bottom}, in order to get a first insight on
@@ -73,6 +73,7 @@ at the bottom of the water.
 
 In order to quantify the influence of each of those regions, we will
 carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
+
 
 We are also going to introduce uncertainties on some environmental
 variables that parametrize the amplitude of some tidal components. \todo{finir intro}
@@ -295,7 +296,7 @@ perturbated amplitude $\tilde{A}_k$ is defined as
 \end{equation}
 where $\uu_k$ is the $k$th component of the uncertain variable. Each
 individual $\uu_k$ belongs in $\interval{0}{1}$. Based on this
-definition $\tilde{A}_k(0) = 0.99A_k$, $\tilde{A}_k(0.5) = A_i$ and
+definition $\tilde{A}_k(0) = 0.99A_k$, $\tilde{A}_k(0.5) = A_k$ and
 $\tilde{A}_k(1) = 1.01A_k$. This choice has been made in order to
 represent some possible uncertainties on the external forcing of the
 model. We also define $\uu^{\mathrm{truth}}$ as the vector whose all
@@ -340,7 +341,7 @@ $\uu^{\mathrm{truth}}$.
 \end{equation}
 the observations are generated using $\kk^{\mathrm{truth}}$:
 \begin{equation}
-  y = \mathscr{M}(\kk^{\mathrm{truth}} = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
+  y = \mathscr{M}(\kk^{\mathrm{truth}}) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
 
 In the following, if the $\uu$ argument is omitted, it means that the
@@ -479,35 +480,34 @@ around a nominal value, using the gradient, and at a global scale, by
 considering the inputs as random variable, and by measuring the
 variance of the output. In this work, we are going to focus
 exclusively on global sensitivity analysis
-           %            \subsection{Methods of Sensitivity analysis}
-           %            \label{sec:methods_SA}
-           %            \subsubsection{Local sensitivity analysis}
-           %            \label{sec:loca_SA}
-           %            Local sensitivity analysis~\cite{morio_global_2011} refers to the
-           %            study of how a small perturbation $\delta \kk$ of a nominal value
-           %            $\kk$ affects the output of the numerical model. As we assume that the
-           %            numerical model is accessible through the cost function $J$, a
-           %            straightforward way to quantify this perturbation is to consider the
-           %            partial derivative of $J$, with respect to each component of the
-           %            control variable $\kk=(\kk_1,\dots,\kk_p)$:
-           %            \begin{equation}
-           %            \frac{\partial J}{\partial \kk_i}(\kk)
-           %            \end{equation}
-           %            The normalized local sensitivity at $\kk$  associated with the $i$-th component is then 
-           %            \begin{equation}
-           %            \frac{{\Delta J}/{J}}{{\Delta \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial \kk_i}
-           %            \end{equation}
+% \subsection{Methods of Sensitivity analysis}
+% \label{sec:methods_SA}
+% \subsubsection{Local sensitivity analysis}
+% \label{sec:loca_SA} Local sensitivity
+% analysis~\cite{morio_global_2011} refers to the study of how a small
+% perturbation $\delta \kk$ of a nominal value $\kk$ affects the output
+% of the numerical model. As we assume that the numerical model is
+% accessible through the cost function $J$, a straightforward way to
+% quantify this perturbation is to consider the partial derivative of
+% $J$, with respect to each component of the control variable
+% $\kk=(\kk_1,\dots,\kk_p)$:
+% \begin{equation} \frac{\partial J}{\partial \kk_i}(\kk)
+% \end{equation} The normalized local sensitivity
+% at $\kk$ associated with the $i$-th component is then
+% \begin{equation} \frac{{\Delta J}/{J}}{{\Delta
+%       \kk_i}/{\kk_i}} = \frac{\kk_i}{J(\kk)} \frac{\partial J}{\partial\kk_i}
+% \end{equation}
+
 \subsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 As global SA calls for a probabilistic framework, we are going to
 consider a real-valued random vector $X=(X_1,\cdots X_p)$ which
 represents the inputs of a real function
-$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vecor,
-we can introduce $Y$, the real-valued random variable defined
-as $Y=f(X)$.
+$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vecor, we
+can introduce $Y$, the real-valued random variable defined as
+$Y=f(X)$.
 
-
-           %            \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
+ % \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined
 as~\cite{sobol_sensitivity_1993,sobol_global_2001}
 \begin{equation}
@@ -551,7 +551,6 @@ incorporating the knowledge on the typical size of the sediment there.
 Considering the similar expected size of silts (Si) and muds particles
 (V) in~\cref{tab:size_sediments}, and the limited amount of silts,
 they are considered together, with the code $\mathrm{Si,V}$.
-
 The function which will be analyzed is the one defined
 \cref{eq:cost_fun_definition}:
 \begin{equation}
@@ -564,10 +563,10 @@ with
   \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^6
 \end{equation}
 
-
 The first, second and total order effect are
 displayed~\cref{fig:SA_sediments}, where the regions defined by each
-sediment is \cref{fig:sediments_reduced}. 
+sediment is \cref{fig:sediments_reduced}. The experimental design used
+here is comprised of \num{7888} points.
 
 \label{ssec:SA_sediments}
 \begin{figure}[ht]
@@ -579,25 +578,21 @@ sediment is \cref{fig:sediments_reduced}.
 We can see that the most influential region is the one defined by the
 pebbles (with code C). More generally, except for the rocks, we can
 see that the shallower the region, the larger impact it has on the
-cost function. The area covered by rocks is quite small compared to
-other sediments, hence its small effect. Incidentally, we can notice
-the inverse correlation between the size of the sediments, and the
-depth at which they are found.
+objective function. The area covered by rocks is quite small compared
+to other sediments, hence its small effect. Incidentally, we can
+notice the inverse correlation between the size of the sediments, and
+the depth at which they are found.
 
 
 \subsubsection{SA on the tide components}
 \label{ssec:SA_tide}
-
-Since \CROCO{} incorporates different tides components introduced
-in~\cref{ssec:tidal_modelling}, we performed also a sensitivity
-analysis on those. More precisely, we are looking to quantify the
-effect of the error on the amplitude of each tide component, as
-defined in~\cref{eq:tide_error}, on the cost
-function, defined as
+As introduced~\cref{ssec:tidal_modelling}, \CROCO{} incorporates
+different tides constituents and we performed a sensitivity analysis
+on the variable which controls the perturbation of their amplitude, as
+defined in~\cref{eq:tide_error}. The SA is performed on the objective function, whose control parameter $\kk$ is set to its truth value:
 \begin{equation}
   \uu \mapsto  \| \mathcal{M}(\kk^{\mathrm{truth}}, \uu) - y \|_2^2
 \end{equation}
-
 for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$
 
 \cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2
@@ -606,15 +601,25 @@ intervals.
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_tides.pgf}
-  \caption{\label{fig:SA_tides} Global SA on the different components of the tide, and boostrap confidence intervals}
+  \caption{\label{fig:SA_tides} Global SA on the different components
+    of the tide, and boostrap confidence intervals}
 \end{figure}
 
-We can see that the error on the amplitude of the $M_2$ component of
-the tide has the most impact on the cost function, and the $S_2$
-component seem to have a non negligible effect as well. This
-sensitivity analysis can then be used to define the uncertain variable
-$\UU = (\UU_1, \UU_2)$ where $\UU_1$ is the error on the $M_2$
-amplitude, and $\UU_2$ is the error on the $S_2$ amplitude.
+We can see that the component of the vector affecting the amplitude of
+the $M_2$ component of the tide has the most impact on the cost
+function, and the $S_2$ component seems to have a non negligible
+effect as well. For the other tide constituents, the SA reveals that
+perturbating their amplitude has little to no-effect in this
+configuration, and thus those variable will be discarded in further
+analysis. The uncertain variable can then be redefined as
+\begin{align}
+  \UU = (\UU_1, \UU_2)%  \\
+  % \UU_1 \text{ and } \UU_2 \text{i.i.d.} \\
+  % \UU_i \sim \mathcal{U}\left(\interval{0}{1}\right) \text{ i=1,2}\\
+\end{align}
+
+where $\UU_1$ is the error on the $M_2$ amplitude, and $\UU_2$ is the
+error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent and identically distributed, and $\UU \sim \mathcal{U}\left(\Uspace\right)$ with $\Uspace = \interval{0}{1}^2$.
 
 \clearpage
 \section{Robust Calibration of the bottom friction}
@@ -625,12 +630,14 @@ Based on the sensitivity analysis carried in the previous section, we
 are going to consider the following setting for robust calibration.
 The control variable is defined as
 \begin{equation}
-  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{-11}{-3}^6
+  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{\log \zob^{\min}}{\log\zob^{\max}}^6
   \end{equation}
   where the index $1$ is for the region defined as Pebbles, the index
   $2$ is for the regions defined as Rocks, Gravel, and Sand, and the
-  index $3$ is for the Silts, Mud, and Fine Sands.  and the uncertain
-  variable is defined as
+  index $3$ is for the Silts, Mud, and Fine Sands. $\log\zob^{\max} = \log\num{5e-2} \approx -3$ and $\log \zob^{\min} = \log \approx \num{1e-5} \approx -11.5$
+
+  Following the SA on the tide constituents, the uncertain variable is
+  defined we are going to consider is
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
@@ -716,7 +723,7 @@ from~\cite{ginsbourger_bayesian_2014}.
 The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
 and the additional evaluations due to the PEI criterion is then used
 in order to construct $m_{Z^*}$ and $\kk^*_Z$. This new design will be
-denoted as $\mathcal{X}_0^{\mathrm{PEI}}$. By sampling $\uu_i$ from
+denoted as $\mathcal{X}_0$. By sampling $\uu_i$ from
 $\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate
 the distribution of the random variable $\kk^*(\UU)$. The samples
 $\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed
@@ -766,11 +773,18 @@ We are going to estimate a member of the family of relative-regret estimators, a
 
 \subsubsection{Optimisation of the probability of exceeding a threshold}
 
-We will first look to improve the estimation of the probability:
+We will first look to improve the estimation of $\Gamma_{\alpha}$, defined as the probability:
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
-
+Using $Z$, the GP constructed on $\mathcal{X}_0$. We are going to reduce the augmented IMSE of the random process $\Delta_\alpha=Z - \alpha Z^*$, defined as
+\begin{equation}
+  \IMSE(\mathcal{X}) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
+\end{equation}
+and
+\begin{equation}
+  x_{n+1} = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X})| \mathcal{X}_n \cup (\kk, \uu))\right]
+\end{equation}
 
 
 \subsubsection{Optimisation of the quantile of the relative-regret}

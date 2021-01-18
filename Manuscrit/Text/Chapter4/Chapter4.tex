@@ -1462,26 +1462,16 @@ hyperparameters.
 
 
 In order to identify the nearby points, we can perform once
-again% \todo{préciser (classification?)}
+again % \todo{préciser (classification?)}
 a clustering procedure such as Hierarchical
 clustering~\cite{nielsen_hierarchical_2016}, as the number of points
 to consider is much more limited. In contrast with the KMeans
 algorithm, we are using Hierarchical clustering to group together the
 adjusted centroids depending on their distance, and generate clusters
 that partition the set of adjusted centroids.
-
-For each point in each cluster, as they are in close proximity, we can
-assume their uncertainty on the conditional minimiser
-$\alpha^2\sigma^2_{Z^*}$ are sensibly the same. So instead, we are
-going to make the adjustment described \cref{eq:adjust_centroid} only
-for the point which has the smallest $\sigma^2_Z$. In the end, the
-points added to the design are the points labeled ``Adjusted centroids
-2''. This double adjustment is described
-schematically~\cref{fig:schema_double_adj}, and is applied on the
-real function~\cref{fig:adjusted_centroids}.
 \begin{figure}[ht]
   \centering
-  \input{\imgpath schema_double_adjustment.pgf}
+  \resizebox{0.9\textwidth}{!}{\input{\imgpath schema_double_adjustment.pgf}}
   \caption[Principle of the two consecutive adjustments for batch
   selection]{\label{fig:schema_double_adj} Principle of the two
     consecutive adjustments: The first adjustment is done in order to
@@ -1489,17 +1479,17 @@ real function~\cref{fig:adjusted_centroids}.
     which are far enough from each other}
 \end{figure}
 
+For each point in each cluster, as they are in close proximity, we can
+assume their uncertainty on the conditional minimiser
+$\alpha^2\sigma^2_{Z^*}$ are sensibly the same. So instead, we are
+going to make the adjustment described \cref{eq:adjust_centroid} only
+for the point which presnts the smallest $\sigma^2_Z$.  The whole
+algorithm is described~\cref{alg:sampling_enrichment_star}, and the
+double adjustment is described schematically
+in~\cref{fig:schema_double_adj}. In the end, the points added to the
+design are the points labeled ``Adjusted centroids 2''.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{\imgpath adjusted_centroids.pdf}
-  \caption[Full batch iteration with double
-  adjustment]{\label{fig:adjusted_centroids} Sampling in the margin of
-    uncertainty, and adjustment of centroids. The centroids of the
-    KMeans algorithm are in red, the adjusted centroids are in blue,
-    and the adjusted centroids after the hierarchical clustering step
-    are in magenta}
-\end{figure}
+
 
 \begin{algorithm}
   \caption{Enrichment of the design using sampling to reduce the margin of uncertainty of $\{\Delta_{\alpha}\leq 0\}$}
@@ -1526,6 +1516,25 @@ real function~\cref{fig:adjusted_centroids}.
 \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
+
+We apply an iteration of this method on the real function,
+in~\cref{fig:adjusted_centroids}. At first, the $K=10$ centroids
+obtained by KMeans are represented with the red stars. As the measured
+uncertainty is due to the conditional minimisers, all the centroids
+are adjusted, yielding the blue stars near the locus of the conditional minimisers. At
+$\uu \approx \num{0.6}$, $\uu\approx\num{0.4}$ and $\uu\approx \num{0.15}$, the hierarchical clustering
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{\imgpath adjusted_centroids.pdf}
+  \caption[Full batch iteration with double
+  adjustment]{\label{fig:adjusted_centroids} Sampling in the margin of
+    uncertainty, and adjustment of centroids. The centroids of the
+    KMeans algorithm are in red, the adjusted centroids are in blue,
+    and the adjusted centroids after the hierarchical clustering step
+    are in magenta}
+\end{figure}
+
 On~\cref{fig:AK_MCS_Gamma} is shown the evolution of the norm of the
 difference between the estimated $\hat{\Gamma}_{n,\alpha}$ (after
 having added $n$ points to the design) and the true value
@@ -1575,7 +1584,7 @@ $\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$.
 % % \tocheck{Compare Vorob'ev deviation with pi(1-pi) ?}
 
 
-% \clearpage
+\clearpage
 
 \subsection{Optimisation of the quantile of the relative regret}
 \label{sec:quantile_rr}
@@ -1614,6 +1623,12 @@ $\alpha_p$ verifies then
   \label{eq:alpha_p_min}
 \alpha_p = \min_{\kk\in\Kspace} q_p(\kk)
 \end{equation}
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath q_p_illustration.pgf}
+  \caption{\label{fig:q_p_illu}}
+\end{figure}
 
 Given~\cref{eq:alpha_p_min}, we are going to focus on the estimation
 of the quantiles of order $p$ of the ratio $J/J^*$

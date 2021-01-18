@@ -20,66 +20,93 @@
 \pagestyle{introStyle}
 \chapter*{Introduction}
 \TitleBtwLines
-
 \phantomsection
 \addstarredchapter{Introduction}
 \label{chap:Introduction}
-
-
-
 % \subfileLocal{\pagestyle{contentStyle}}
-\todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
-
-
+% \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 To understand and to be able to forecast natural phenomena is crucial
-for many applications, with high social, environmental and economic
+for many applications with high social, environmental and economic
 stakes.  In earth sciences especially, the modelling of the ocean and
 the atmosphere is important for day to day weather forecasts,
 hurricanes tracking, pollutant dispersion, or biological monitoring.
 
 Those natural phenomena are then modelled mathematically, usually by
-modelling the physical reality with some general equations
-(Navier-Stokes equations for Computational Fluid Dynamics typically),
-and by making successive reasonable assumptions and simplifications in
-order to account for the relative scales of the processes
-involved. Indeed, some small scales processes, such as turbulences,
-are notoriously hard to model and a fine knowledge of those may not be
-completely relevant for the foreseen application of the model. Such
-effects are not necessarily completely overlooked: they are
-incorporated in the modelling by overly simplifying them and by
-\emph{parametrization}.
+representing the physical reality with some general equations
+(Navier-Stokes equations for Computational Fluid Dynamics for
+instance), and by making successive reasonable assumptions and
+simplifications in order to account for the relative scales of the
+processes involved.
+%Indeed, some small scale processes, such as
+% turbulences, are notoriously hard to model.
+% and a fine knowledge of
+% those may not be completely relevant for the foreseen application of
+% the model.
 
-However, as this modelling is supposed to represent the reality, the
-prediction should be compared with some data acquired through
-observations. This comparison usually takes the form of the definition
-of a misfit function $J$ that measures the error between the forecast
-and the reality. This objective function is then minimized with
-respect to some chosen parameters
+Models are then only a partial representation of the reality, which
+aim at representing complex processes that occur across a large range
+of scales, which interact with each other. For computational reasons,
+no modelling system would be able to take all those different scales
+into account, but instead, their effect are incorporated in the
+modelling by overly simplifying them and by \emph{parametrization}.
+
+In ocean modelling, and especially in coastal regions, a telling
+example of this is the parametrization of the bottom friction. This
+phenomenon occurs as the asperities of the ocean bed dissipates energy
+through turbulences, and thus affects the circulation at the
+surface. Since this happens at a subgrid level, \emph{i.e.} at a scale
+usually several order of magnitudes below the scale of the domain
+studied, modelling all those turbulences is completely unfeasible in
+practice: the knowledge of the ocean bed is too limited for such
+applications and the computational power required would be
+unthinkable. Instead, the effect of the bottom friction is accounted
+for through parametrization, so by introducing a new parameter which
+is defined at every mesh point.
+
+As this modelling is supposed to represent the reality, the prediction
+should be compared with some data acquired through observations. This
+comparison usually takes the form of the definition of a misfit
+function $J$ that measures the error between the forecast and the
+reality. This objective function is then minimized with respect to
+some chosen parameters
 $\kk$~\cite{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
-in order to get a calibrated model.
+in order to get a calibrated model. Those parameters will be called
+the \emph{control parameters}.
 
-Those calibrated models are often used to make decisions afterward,
-such as emergency evacuations plans, or optimisation of the position
-of turbines, or for forecasts. However, the parameters introduced are
-not the only source of errors in the modelling.
+% Those calibrated models are often used to make decisions afterward,
+% such as emergency evacuations plans, or optimisation of the position
+% of turbines, or for forecasts. 
+However, the parameters introduced are not the only source of errors
+in the modelling.  % Garder ?
+For such complex systems, some additional inputs are subject to
+unrepresented statistical fluctuations~\cite{zanna_ocean_2011},
+manifesting themselves at the boundary conditions, or in the forcing
+of the model for instance.  Such
+\emph{intrinsic}~\cite{mcwilliams_irreducible_2007} errors are often
+subject to variability, and neglecting this can lead to further
+errors. We chose to model this additional source of uncontrollable
+uncertainty with a random variable $\UU$.  Based on this, the
+objective function is then a function which takes two arguments: the
+parameter that we wish to calibrate $\kk$, and some other parameters
+$\uu$, which are realisations of the random variable $\UU$, that we
+shall call \emph{environmental} parameters.
 
-As mentioned above, models are only a partial representation of the
-reality: they aim at representing complex processes that occur across
-a large range of scales, which interact with each other. For
-computational reasons, no modelling system would be able to take all
-those different scales into
-account~\cite{mcwilliams_irreducible_2007}. Such \emph{intrinsic}
-errors are often subject to variability, and neglecting this can lead
-to further errors. We chose to model this additional source of
-uncontrollable uncertainty with a random variable $\UU$.  Based on
-this, the objective function is then a function which takes two
-arguments: the parameter that we wish to calibrate $\kk$, and some
-other parameters $\uu$, which are realisations of the random variable
-$\UU$, that we shall call \emph{environmental} parameters.
+Due to the presence of this random source of uncertainty, we wish to
+calibrate the model, \emph{i.e.} to select a value of the control
+parameter $\kk$, in a manner that guarantees that the model represents
+accurately enough the reality, as often as possible given the value of
+the environmental parameters. In other words, as the objective
+function is a first glimpse on the quality of the calibration, we are
+looking for this function to exhibit small enough, \emph{acceptable}
+values as often as possible. This defines intuitively the underlying
+notion of \emph{robustness} with respect to the variability of the
+uncertain variable.
 
-\todo{what does robustness means}
-
-The thesis is organized as follows:
+In this thesis, we will study an aspect of the calibration of a
+numerical model under uncertainty, by discussing the notion of
+robustness, and by proposing a new criterion of robustness.  Specific
+methods will also be introduced, and applied to the calibration of a
+numerical model of the ocean. The thesis is organized as follows:
 \begin{itemize}
 \item in~\cref{chap:inverse_problem}, we introduce notions of
   statistics and probabilities that we will use to define the
@@ -94,7 +121,7 @@ The thesis is organized as follows:
   either from a probabilistic inference aspect, or by the field of
   optimisation under uncertainties.  Some of the optimisation under
   uncertainties methods rely on the optimisation of the moments of
-  $ \kk\mapsto J(\kk,\UU)$
+  $\kk\mapsto J(\kk,\UU)$
   (in~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}),
   while other methods are based on multiobjective problems, such as
   in~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}. These
@@ -136,61 +163,61 @@ The thesis is organized as follows:
 
 % Numerical models are widely used to study or forecast natural
 % phenomena and improve industrial processes.
-However, by essence models
-only partially represent reality and sources of uncertainties are
-ubiquitous (discretisation errors, missing physical processes, poorly
-known boundary conditions). Moreover, such uncertainties may be of
-different nature.~\cite{walker_defining_2003} proposes to consider two
-categories of uncertainties:
-\begin{itemize}
-\item Aleatoric uncertainties, coming from the inherent variability of
-a phenomenon, \emph{e.g.} intrinsic randomness of some environmental
-variables
-\item Epistemic uncertainties coming from a lack of knowledge about
-the properties and conditions of the phenomenon underlying the
-behaviour of the system under study
-\end{itemize} The latter can be accounted for through the introduction
-of ad-hoc correcting terms in the numerical model, that need to be
-properly estimated. Thus, reducing the epistemic uncertainty can be
-done through parameters estimation approaches. This is usually done
-using optimal control techniques, leading to an optimisation of a well
-chosen cost function which is typically built as a comparison with
-reference observations.
-  %
-  An application of such an approach, in the context of ocean
-circulation modeling, is the estimation of ocean bottom friction
-parameters in~\cite{das_estimation_1991}
-and~\cite{boutet_estimation_2015}.
+% However, by essence models
+% only partially represent reality and sources of uncertainties are
+% ubiquitous (discretisation errors, missing physical processes, poorly
+% known boundary conditions). Moreover, such uncertainties may be of
+% different nature.~\cite{walker_defining_2003} proposes to consider two
+% categories of uncertainties:
+% \begin{itemize}
+% \item Aleatoric uncertainties, coming from the inherent variability of
+% a phenomenon, \emph{e.g.} intrinsic randomness of some environmental
+% variables
+% \item Epistemic uncertainties coming from a lack of knowledge about
+% the properties and conditions of the phenomenon underlying the
+% behaviour of the system under study
+% \end{itemize} The latter can be accounted for through the introduction
+% of ad-hoc correcting terms in the numerical model, that need to be
+% properly estimated. Thus, reducing the epistemic uncertainty can be
+% done through parameters estimation approaches. This is usually done
+% using optimal control techniques, leading to an optimisation of a well
+% chosen cost function which is typically built as a comparison with
+% reference observations.
+%   %
+%   An application of such an approach, in the context of ocean
+% circulation modeling, is the estimation of ocean bottom friction
+% parameters in~\cite{das_estimation_1991}
+% and~\cite{boutet_estimation_2015}.
 
  
   
-  The calibration often takes the form of the minimisation of a
-function $J$, that describes a distance between the output of the
-numerical model and some given observed data, plus generally some
-regularization terms.  In our study, this cost function takes two
-types of arguments: $\kk\in\Kspace$ that represents the parameters to
-calibrate, and $\uu\in\Uspace$, that represents the environmental
-conditions.  We assume that the environmental conditions are uncertain
-by nature, and thus will be modelled with a random variable $\UU$, to
-account for these aleatoric uncertainties.  This is then the random
-variable $J(\kk,\UU)$ that we want to minimize ``in some sense'' with
-respect to $\kk$.
+%   The calibration often takes the form of the minimisation of a
+% function $J$, that describes a distance between the output of the
+% numerical model and some given observed data, plus generally some
+% regularization terms.  In our study, this cost function takes two
+% types of arguments: $\kk\in\Kspace$ that represents the parameters to
+% calibrate, and $\uu\in\Uspace$, that represents the environmental
+% conditions.  We assume that the environmental conditions are uncertain
+% by nature, and thus will be modelled with a random variable $\UU$, to
+% account for these aleatoric uncertainties.  This is then the random
+% variable $J(\kk,\UU)$ that we want to minimize ``in some sense'' with
+% respect to $\kk$.
 
 
 
   
-  We propose to compare the value of the objective function to the
-best value attainable given the environmemtal conditions at this
-point, with the idea that we want to be as close as possible, and as
-often as possible, to this optimal value. Introducing the relative
-regret, that is the ratio of the objective function by its conditional
-optimum, we can define a new family of robust estimators.
+%   We propose to compare the value of the objective function to the
+% best value attainable given the environmemtal conditions at this
+% point, with the idea that we want to be as close as possible, and as
+% often as possible, to this optimal value. Introducing the relative
+% regret, that is the ratio of the objective function by its conditional
+% optimum, we can define a new family of robust estimators.
 
-  Within this family, choosing an estimator consists in favouring
-either its robustness, \emph{e.g} its ability to perform well under
-all circumstances, or on the contrary favour near-optimal
-performances, transcribing a risk-averse or a risk-seeking behaviour
-from the user.
+%   Within this family, choosing an estimator consists in favouring
+% either its robustness, \emph{e.g} its ability to perform well under
+% all circumstances, or on the contrary favour near-optimal
+% performances, transcribing a risk-averse or a risk-seeking behaviour
+% from the user.
  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

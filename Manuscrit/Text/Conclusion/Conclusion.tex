@@ -100,6 +100,17 @@ need to be inversed, and the optimisation of the hyperparameters is
 difficult.  When looking to apply methods based on GP, a first
 reduction of the input space may then be necessary.
 
+Horsetail matching~\cite{cook_extending_2017,cook_horsetail_2018}
+allows for a finer tuning of the properties of the distribution of the
+calibrated model $J(\hat{\kk},\UU)$, by comparing it to a target
+distribution. Following this idea, as the distribution of the
+conditional minimum $J^*(\UU)$ can be seen as an ideal distribution
+(\emph{i.e.} the distribution that one could get if the calibrated
+parameter had always been chosen optimally for all realisations of the
+uncertain variable), the minimisation of a measure of misfit between
+the distribution of $J^*(\UU)$ and of $J(\hat{\kk},\UU)$ may be worth
+exploring.
+
 %\todo{Wrapping up}
 % \todo{Limitations}
 % \todo{Perspectives}
