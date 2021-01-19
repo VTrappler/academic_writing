@@ -1270,8 +1270,9 @@ in~\cref{eq:prob_indicator}:
 Based on those two approximation, we can define two different
 estimations of $\Gamma_\alpha$, namely
 $\hat{\Gamma}_\alpha^{\mathrm{PI}}$ with the plug-in approach, and
-$\hat{\Gamma}_{\alpha}^{\pi}$ for the probabilistic one. Based on
-those estimations, two strategies emerge:
+$\hat{\Gamma}_{\alpha}^{\pi}$ for the probabilistic one, that we will
+detail shortly after. Based on those estimations, two strategies
+emerge:
 \begin{itemize}
 \item For $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$, we are going to
   reduce the expected augmented $\IMSE$ of the GP $Z - \alpha Z^*$.
@@ -1284,13 +1285,14 @@ those estimations, two strategies emerge:
 For the plug-in approach, the chosen estimator is defined by:
 \begin{equation}
   \label{eq:def_gamma_PI}
-  \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \Prob_U\left[m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu) \right]
+  \Gamma_{\alpha}^{\mathrm{PI}}(\kk) = \Prob_U\left[m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu) \right]
 \end{equation}
 The outer expectation operator is to be computed numerically, using
 quadrature rule, or Monte-carlo methods. In general, from a set of
-samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$,
+samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$ i.i.d. sampled from $\UU$, we define
 \begin{equation}
-  \Gamma_{\alpha}(\kk) \approx \frac{1}{n_{\uu}}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{m_Z(\kk, \uu_i) - \alpha m_{Z^*}(\uu_i)\leq 0}
+    \label{eq:def_hatgamma_PI}
+  \hat{\Gamma}_{\alpha}(\kk) = \frac{1}{n_{\uu}}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{m_Z(\kk, \uu_i) - \alpha m_{Z^*}(\uu_i)\leq 0}
 \end{equation}
 
 Due to the fact that the GP surrogate is cheap to evaluate, the
@@ -1307,14 +1309,18 @@ as a learning function. The choice of the IMSE
 from the decomposition of the variance~\cref{eq:variance_delta_GP_ab}.
 
 
-Let $\hat{\Gamma}_{\alpha,n}$ be the plug-in approximation of
-$\Gamma_\alpha$, constructed using the Gaussian Process surrogate with
-$n$ points added, according to the augmented
-IMSE.~\Cref{fig:IMSE_enrichment} illustrates the $L^2$ and
+Let $\hat{\Gamma}^{\mathrm{PI}}_{\alpha,n}$ be the plug-in
+approximation of $\Gamma_\alpha$, constructed using the Gaussian
+Process surrogate with $n$ points added according to the augmented
+IMSE criterion.~\Cref{fig:IMSE_enrichment} illustrates the $L^2$ and
 $L^{\infty}$ between the truth $\Gamma_\alpha$ and the estimation
-$\hat{\Gamma}_{\alpha,n}$. In the following, a subscript $n$ will
-indicate a quantity computed with $n$ additional evaluations of the
-function.
+$\hat{\Gamma}_{\alpha,n}$. In this figure, and in what follows, the
+error of two different estimations of $\Gamma_{\alpha}$ are
+considered: the plug-in estimate of \cref{eq:def_hatgamma_PI} with the
+label $\mathrm{PI}$, and the probabilistic one with the label $\pi$,
+which will be introduced in the next section.  Finally, the subscript
+$n$ will indicate a quantity computed with $n$ \emph{additional}
+evaluations of the function.
 
 \begin{figure}[ht]
   \centering
@@ -1323,7 +1329,10 @@ function.
   $\Gamma_{\alpha}$]{\label{fig:IMSE_enrichment} Evolution of the
     $L^2$ and $L^\infty$ error of the estimation of $\Gamma_\alpha$
     and IMSE of the successive constructed GP. The points added are
-    chosen by the augmented expected IMSE}
+    chosen by the augmented expected IMSE. The curve labelled
+    $\mathrm{PI}$ refers to the plug-in estimation of
+    \cref{eq:def_hatgamma_PI}, while the one labelled $\pi$ refers to
+    the probabilistic estimation, defined later in~\cref{eq:def_hatgamma_prob}}
 \end{figure}
 
 
@@ -1333,9 +1342,19 @@ Recalling the definition of the probabilistic approach
 \cref{eq:prob_indicator}, given the GP $Z$, we can write an estimator
 of $\Gamma_{\alpha}$:
 \begin{align}
-  \hat{\Gamma}_{\alpha}^{\pi}(\kk) &= \Ex_U\left[ \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\UU) \leq 0\right]\right] = \Ex_U\left[ \Prob_{Z}\left[ Z(\kk, \UU) - \alpha Z^*(\UU) \leq 0\right]\right] \\
+  \label{eq:def_gamma_prob}
+  \Gamma_{\alpha}^{\pi}(\kk) &= \Ex_U\left[ \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\UU) \leq 0\right]\right] = \Ex_U\left[ \Prob_{Z}\left[ Z(\kk, \UU) - \alpha Z^*(\UU) \leq 0\right]\right] \\
                                    &= \Ex_U\left[\pi_{\alpha}(\kk,\UU)\right]
 \end{align}
+
+The outer expectation can be computed in a similar fashion as
+in~\cref{eq:def_hatgamma_PI}; given a set of i.i.d.\ samples
+$\{\uu_i\}_{1\leq i\leq n_{\uu}}$ from $\UU$, we define the
+probabilistic estimation of $\Gamma_{\alpha}$ as
+\begin{equation}
+  \label{eq:def_hatgamma_prob}
+  \hat{\Gamma}_{\alpha}^{\pi}(\kk) = \frac{1}{n_{\uu}}\sum_{i=1}^{n_{\uu}} \pi_{\alpha}(\kk, \uu_i)
+\end{equation}
 
 
 The set $\{(\kk, \uu) \mid Z(\kk, \uu) - \alpha Z^*(\uu)\leq 0\}$ has
@@ -1536,22 +1555,27 @@ $\uu \approx \num{0.6}$, $\uu\approx\num{0.4}$ and $\uu\approx \num{0.15}$, the 
 \end{figure}
 
 On~\cref{fig:AK_MCS_Gamma} is shown the evolution of the norm of the
-difference between the estimated $\hat{\Gamma}_{n,\alpha}$ (after
+difference between the estimated $\hat{\Gamma}_{\alpha,n}$ (after
 having added $n$ points to the design) and the true value
 $\Gamma_{\alpha}$, when adding simultaneously $K=5$ and $K=10$ points.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath AK_MCS_Gamma.pdf}
-  \caption{\label{fig:AK_MCS_Gamma} Evolution of the error with the
-number of added points in the estimation of $\Gamma_{\alpha}$ when
-selecting points using the sampling based methods described \cref{alg:sampling_enrichment_star}. $\pi$ refers to the estimation of $\Gamma$ using a probabilistic approach, while $\mathrm{PI}$ is the estimation using a plug-in approach}
+  \caption[Error in the estimation of $\Gamma_{\alpha}$ using a
+  sampling-based method]{\label{fig:AK_MCS_Gamma} Evolution of the
+    error with the number of added points in the estimation of
+    $\Gamma_{\alpha}$ when selecting points using the sampling based
+    methods described \cref{alg:sampling_enrichment_star}. $\pi$
+    refers to the estimation of $\Gamma$ using a probabilistic
+    approach, while $\mathrm{PI}$ is the estimation using a plug-in
+    approach}
 \end{figure}
 The added points are shown~\cref{fig:AK_MCS_design}, and the margin of
 uncertainty $\mathbb{M}_{\eta}$ after the $n=70$ evaluations. We can
 see that the added point are distributed either toward the conditional
 minimisers, or toward the frontier of
-$\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$.
+$\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$, as expected.
 \begin{figure}[ht]
   \centering
   \includegraphics[width = \textwidth]{\imgpath AK_MCS_design.pdf}
@@ -1627,7 +1651,7 @@ $\alpha_p$ verifies then
 \begin{figure}[ht]
   \centering
   \input{\imgpath q_p_illustration.pgf}
-  \caption{\label{fig:q_p_illu}}
+  \caption{\label{fig:q_p_illu} Relation between the probability $\Gamma_{\alpha}$ and its maximum and the quantile function of the ratio}
 \end{figure}
 
 Given~\cref{eq:alpha_p_min}, we are going to focus on the estimation
@@ -1646,7 +1670,9 @@ $\Gamma_{\alpha}$, using the GP $Z$ constructed on $J$, we are going
 to approximate the ratio $J/J^*$, in order to have an estimation which
 depends on the properties of the surrogate $Z$.
 In~\cref{ssec:lognormal_approx}, we are going to derive some
-properties of the ratio $Z/Z^*$, before introducing a $1$-step criterion in \cref{ssec:reduction_imse_quantile}, and a sampling method in \cref{ssec:quantile_qeakmcs}.
+properties of the ratio $Z/Z^*$, before introducing a $1$-step
+criterion in \cref{ssec:reduction_imse_quantile}, and a sampling
+method in \cref{ssec:quantile_qeakmcs}.
 
 \subsubsection{Lognormal approximation of the ratio}
 \label{ssec:lognormal_approx}
@@ -1702,11 +1728,12 @@ order $p$:
 % Additionally, to clear any confusion, the ratio $m_Z(\kk, \uu)/m_{Z^*}(\uu)$ is the median of the lognormally distribued random variable $Z(\kk, \uu)/Z^*(\uu)$.
 
 We can use directly the Gaussian formulation of $\Xi$ in order to
-derive strategies of enrichment.
+derive strategies of enrichment. In the following, we will set the
+confidence level to $p=0.95$.
   
   \subsubsection{Reduction of the IMSE}
   \label{ssec:reduction_imse_quantile}
-  As previously done for the random variable $Z - \alpha Z^*$, we can
+  As previously done for the random process $Z - \alpha Z^*$, we can
   look to reduce at each iteration the integrated prediction variance
   of the ratio, which is $\sigma^2_{\Xi}$ by defining the IMSE
 \begin{equation}

@@ -619,7 +619,10 @@ analysis. The uncertain variable can then be redefined as
 \end{align}
 
 where $\UU_1$ is the error on the $M_2$ amplitude, and $\UU_2$ is the
-error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent and identically distributed, and $\UU \sim \mathcal{U}\left(\Uspace\right)$ with $\Uspace = \interval{0}{1}^2$.
+error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent and
+identically distributed, and
+$\UU \sim \mathcal{U}\left(\Uspace\right)$ with
+$\Uspace = \interval{0}{1}^2$.
 
 \clearpage
 \section{Robust Calibration of the bottom friction}
@@ -738,10 +741,9 @@ $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
     using KDE. The $y$-axis is the corresponding value of the minimum
     $m_Z^*(\uu_i)$}
 \end{figure}
-\todo{regénérer la figure}
-Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
-approximation of the
-
+% Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
+% approximation of the repartition of the minimisers.
+\todo{transition minimiseurs à regrets based}
 % \begin{table}[!ht]
 %   \centering
 %   \begin{tabular}{rcl} \toprule
@@ -766,24 +768,50 @@ approximation of the
 % \end{table}
 
 \subsection{Relative-regret based estimators}
-We are going to estimate a member of the family of relative-regret estimators, as defined~\cref{def:RR_family}, on \cpageref{def:RR_family}, for a specific $\alpha\geq 1$.
+We are going to estimate a member of the family of relative-regret
+estimators, as defined~\cref{def:RR_family}, on
+\cpageref{def:RR_family}, for a specific $\alpha\geq 1$.
 \begin{equation}
   \kk_{\mathrm{RR},\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \argmax_{\kk \in \Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
 
 \subsubsection{Optimisation of the probability of exceeding a threshold}
 
-We will first look to improve the estimation of $\Gamma_{\alpha}$, defined as the probability:
+We will first look to improve the estimation of $\Gamma_{\alpha}$,
+defined as the following probability:
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
-Using $Z$, the GP constructed on $\mathcal{X}_0$. We are going to reduce the augmented IMSE of the random process $\Delta_\alpha=Z - \alpha Z^*$, defined as
+This function is the probability at which the objective function stays
+below $\alpha$ times its minimal attainable value.
+
+We are going to use a plug-in approach (see~\cref{def:plugin}) in
+order to approximate the probability $\Gamma_{\alpha}$. As defined
+in~\cref{eq:def_hatgamma_PI}, given the GP $Z$, constructed upon
+evaluations of $J$, and a set $\{\uu_i\}_{1\leq i\leq n_{\uu}}$ of
+i.i.d.\ samples from $\UU$, the plug-in approximation of
+$\Gamma_{\alpha}$ is
+\begin{align}
+  \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=0}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}} \\
+                                           &= \frac{1}{n_\uu}\sum_{i=0}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
+\end{align}
+where
+$\Delta_{\alpha} = Z - \alpha Z^* \sim \GP(m_{\Delta_{\alpha}},
+C_{\Delta_\alpha})$ is a GP, as defined in the previous chapter. We
+define the prediction variance, or mean square error, as
+$\sigma^2_{\Delta_{\alpha}}: (\kk, \uu) \mapsto
+C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$.
+
+We are going to reduce the augmented IMSE of the random process
+defined as The $\mathrm{IMSE}$ associated with the GP
+$\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
+$\mathcal{X}_n$ is defined as
 \begin{equation}
   \IMSE(\mathcal{X}) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
 \end{equation}
-and
+and we select a new point to evaluate as:
 \begin{equation}
-  x_{n+1} = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X})| \mathcal{X}_n \cup (\kk, \uu))\right]
+  (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right]
 \end{equation}
 
 

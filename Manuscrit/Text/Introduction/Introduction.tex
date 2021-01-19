@@ -36,7 +36,8 @@ representing the physical reality with some general equations
 (Navier-Stokes equations for Computational Fluid Dynamics for
 instance), and by making successive reasonable assumptions and
 simplifications in order to account for the relative scales of the
-processes involved.
+processes involved, and discretizations, in order to be able to
+implement appropriate solvers.
 %Indeed, some small scale processes, such as
 % turbulences, are notoriously hard to model.
 % and a fine knowledge of
@@ -81,26 +82,25 @@ in the modelling.  % Garder ?
 For such complex systems, some additional inputs are subject to
 unrepresented statistical fluctuations~\cite{zanna_ocean_2011},
 manifesting themselves at the boundary conditions, or in the forcing
-of the model for instance.  Such
-\emph{intrinsic}~\cite{mcwilliams_irreducible_2007} errors are often
-subject to variability, and neglecting this can lead to further
-errors. We chose to model this additional source of uncontrollable
-uncertainty with a random variable $\UU$.  Based on this, the
-objective function is then a function which takes two arguments: the
-parameter that we wish to calibrate $\kk$, and some other parameters
-$\uu$, which are realisations of the random variable $\UU$, that we
-shall call \emph{environmental} parameters.
+of the model for instance. Such \emph{intrinsic} uncertainties are
+often subject to variability, and neglecting this can lead to further
+errors~\cite{mcwilliams_irreducible_2007}. We chose to model this additional
+source of uncontrollable uncertainty with a random variable $\UU$.
+Based on this, the objective function is then a function which takes
+two arguments: the parameter that we wish to calibrate $\kk$, and some
+other parameter $\uu$, which can be thought as a realisation of the random variable
+$\UU$, that we shall call \emph{environmental} parameter.
 
 Due to the presence of this random source of uncertainty, we wish to
 calibrate the model, \emph{i.e.} to select a value of the control
 parameter $\kk$, in a manner that guarantees that the model represents
 accurately enough the reality, as often as possible given the value of
 the environmental parameters. In other words, as the objective
-function is a first glimpse on the quality of the calibration, we are
-looking for this function to exhibit small enough, \emph{acceptable}
-values as often as possible. This defines intuitively the underlying
+function is a first glimpse at the quality of the calibration, we wish
+that this function exhibits \emph{acceptable} values as often as
+possible, when $\kk$ is fixed. This defines intuitively the underlying
 notion of \emph{robustness} with respect to the variability of the
-uncertain variable.
+uncertain variable. Omitting this can lead to \emph{localized optimization}~\cite{huyse_probabilistic_2002}, which is the 
 
 In this thesis, we will study an aspect of the calibration of a
 numerical model under uncertainty, by discussing the notion of

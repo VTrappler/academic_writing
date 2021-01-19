@@ -29,7 +29,7 @@
 \pagestyle{resumeStyle}
 
                                 % \subfileLocal{\pagestyle{contentStyle}}
-\subsection*{Présentation générale et contexte}
+\subsection*{Présentation générale et calibration de modèles}
 De nombreux phénomènes naturels sont modélisés afin de mieux connaître
 leurs comportements et de pouvoir les prévoir.  Cependant, lors du
 processus de modélisation, de nombreuses sources d'erreurs sont
@@ -48,16 +48,42 @@ dans ces modèles, comme évoqué dans~\cite{walker_defining_2003}.
   directement de la variabilité intrinsèque du phénomène étudié.
 \end{itemize}
 
-Dans le cadre de la thèse, les incertitudes épistémiques prennent la
-forme de la méconnaissance de la valeur d'un paramètre
-$\kk \in \Kspace$, que l'on va chercher à calibrer. Les incertitudes
-aléatoires sont par exemple les conditions environnementales, comme le
-forçage d'un modèle ou les conditions aux bords. Elles vont être
-représentées par une variable aléatoire $\UU$, de réalisation
-$\uu\in \Uspace$.  Cette calibration est effectuée à l'aide d'une
-fonction $J$, dite fonction coût. Cette fonction prendra donc en
-entrée le paramètre à estimer $\kk$, ainsi que la variable
-environementale $\uu$:
+Dans le cadre de cette thèse, les incertitudes épistémiques prennent
+la forme de la méconnaissance de la valeur d'un paramètre
+$\kk \in \Kspace$, que l'on va chercher à calibrer.  Un exemple de ce
+genre de problème est l'estimation de la friction dans les modèles
+océaniques.  En effet, la friction de fond est dûe à la rugosité du
+plancher océanique, provoquant de la dissipation d'énergie à cause des
+turbulences engendrées. L'estimation de la friction de fond est un
+problème à fort enjeu, notamment dans les régions côtières, du fait de
+son influence sur les courants et de son interaction avec la
+marée~\cite{sinha_principal_1997,boutet_estimation_2015}.
+
+Cette estimation qui a déjà été traité dans un cadre
+d'assimilation de données avec des méthodes variationelles comme
+dans~\cite{das_estimation_1991,das_variational_1992} sur un cas
+simplifié, ou dans un cas plus réaliste
+dans~\cite{boutet_estimation_2015}, avec une méthode de gradient
+stochastique, permettant de se passer du calcul du gradient.
+
+
+Les incertitudes aléatoires, quant à elles, représentent des
+conditions environnementales, comme le forçage d'un modèle ou les
+conditions aux bords. Ces conditions ne sont pas directement
+contrôlées par le modèle, donc l'on subit leurs fluctuations, ou leur
+imprécision.
+
+Ces variables environnementales vont être modélisées par une variable
+aléatoire $\UU$, de réalisation $\uu\in \Uspace$.
+
+Comme le modèle que l'on cherche à calibrer vise à représenter la
+réalité, il est souhaitable que les predictions du modèle soient le
+plus similaire possible aux observations dont on dispose. Cette notion
+de distance est retranscrite en définissant une fonction $J$, dite
+fonction coût ou fonction objectif qui mesure l'écart entre la sortie
+du modèle et les observations disponible. Cette fonction prendra donc
+en entrée le paramètre à estimer $\kk$, que l'on nommera paramètre de
+contrôle, ainsi que $\uu$, le paramètre environnemental:
 
 \begin{equation}
   \label{eq:def_J}
@@ -67,12 +93,23 @@ environementale $\uu$:
   \end{array}
 \end{equation}
 
+La définition de la fonction coût dans un problème de calibration sera abordé dans le Chapitre~\ref{chap:inverse_problem}.
+
+\subsection*{Notions de robustesse}
+
 Ne pas prendre en compte les incertitudes aléatoires dans l'estimation
 de $\kk$ peut amener à compenser de manière artificielle l'erreur
 aléatoire, et donc amener une situation similaire à du
-\emph{sur-apprentissage} (overfitting). On cherche donc à définir une
-valeur de $\kk$, notée $\hat{\kk}$ de manière à ce que
-$J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque $\uu$ varie.
+\emph{sur-apprentissage} (overfitting), ou \emph{optimisation
+  localisée}~\cite{huyse_probabilistic_2002}. Cela peut amener à des
+situations où le paramètre estimé n'est optimal que pour la valeur de
+$\uu$ supposée, et que pour une autre réalisation de la variable
+aléatoire sous-jacente, le modèle ainsi calibré donne des prédictions
+potentiellement aberrantes~\cite{kuczera_there_2010}.
+
+On cherche donc à définir une valeur de $\kk$, notée $\hat{\kk}$ de
+manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable}, lorsque
+l'on prend en compte le caractère aléatoire de $\uu$.
 
 
 En prenant en compte le caractère aléatoire de la variable
@@ -89,16 +126,7 @@ nomenclature prenant en compte les différences notamment sur les
 contraintes potentiellement présentes peut être trouvé
 dans~\cite{lelievre_consideration_2016}
 
-Un exemple de ce genre de problème est l'estimation de la friction
-dans les modèles océaniques.  En effet, la friction de fond est dûe à
-la rugosité du plancher océanique, provoquant de la dissipation
-d'énergie à cause des turbulences engendrées. L'estimation de la
-friction de fond est un problème qui a déjà été traité dans un cadre
-d'assimilation de données avec des méthodes variationelles comme
-dans~\cite{das_estimation_1991,das_variational_1992} sur un cas
-simplifié, ou dans un cas plus réaliste
-dans~\cite{boutet_estimation_2015}, avec une méthode de gradient
-stochastique, permettant de se passer du calcul du gradient.
+
 
 
 L'objectif de la thèse est d'établir différents critères de
