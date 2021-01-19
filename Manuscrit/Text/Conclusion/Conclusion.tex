@@ -62,13 +62,14 @@ corresponding to different values of the uncertain variable, the
 regret allows the modeller to compare the value of the objective with
 the best attainable performance given a specific environmental
 variable. This allows to put less emphasis on configurations which
-already lead to bad performances.
+already lead to bad performances, and to focus more on salveagable
+situations.
 
-Moreover, the user can adjust a
-parameter in order to reflect either a risk-adverse behaviour, by
-favourising a control of the regret with high probability, or a
-risk-seeking one, by favourising an estimate that will yield values of
-the regret closer to its optimum, albeit with lower probability.
+Moreover, the user can adjust a parameter in order to reflect either a
+risk-adverse behaviour, by favourising a control of the regret with
+high probability, or a risk-seeking one, by favourising an estimate
+that will yield values of the regret closer to its optimum, albeit
+with lower probability.
 
 
 In general, criteria of robust optimisation require a global
@@ -100,6 +101,7 @@ need to be inversed, and the optimisation of the hyperparameters is
 difficult.  When looking to apply methods based on GP, a first
 reduction of the input space may then be necessary.
 
+
 Horsetail matching~\cite{cook_extending_2017,cook_horsetail_2018}
 allows for a finer tuning of the properties of the distribution of the
 calibrated model $J(\hat{\kk},\UU)$, by comparing it to a target
@@ -113,6 +115,7 @@ exploring.
 
 
 \todo{Bayesian approach}
+\todo{Enrichment of the design with 2 stages for focused optimisation}
 %\todo{Wrapping up}
 % \todo{Limitations}
 % \todo{Perspectives}

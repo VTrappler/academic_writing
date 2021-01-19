@@ -49,11 +49,11 @@ the program does not solve the equations of motions of the fluid
 around those asperities. Instead, the dissipation coming from this
 rugosity is parametrized at every point of the mesh.
 
-The bottom friction has been identified as a crucial parameter that
-limits the accuracy of the modelling
-systems~\cite{sinha_principal_1997,kreitmair_effect_2019}, especially
-in shallow water regions; consequently, there has been an effort to
-control this parameter in various
+The bottom friction has been identified as a crucial parameter that,
+if ill-specified, limits the accuracy of the
+predictions~\cite{sinha_principal_1997,kreitmair_effect_2019},
+especially in shallow water regions; consequently, there has been an
+effort to control this parameter in various
 studies~\cite{das_variational_1992,das_estimation_1991,boutet_estimation_2015}.
 We will detail how bottom friction affects the oceanic circulation
 in~\cref{ssec:modelling_bottom}, in order to get a first insight on
@@ -62,17 +62,22 @@ the regions that may influence the most the calibration.
 The deterministic problem of calibration will then be addressed in
 \cref{sec:deterministic_calibration_bott}, by first defining the cost
 function and the input space. We will then calibrate the model
-without external uncertainties using adjoint-based method.
+without external uncertainties using adjoint-based method, in high-dimension ($\sim$\num{15000}).
 
-However for such problems, the large dimension of the input space may
-be problematic, as the parameter may be spatially distributed over the
-mesh. In consequence, instead of carrying the optimisation over the
-whole space, we will segment the geographical input space in different
-independent regions, which are based on the type of sediments listed
-at the bottom of the water.
+However for such problems, as the parameter may be spatially
+distributed and thus high-dimensional, any procedure may become
+quickly expensive.  In consequence, instead of considering each grid
+point individually, we will segment the geographical input space in
+different independent regions, which are based on the type of
+sediments listed at the bottom of the water.
 
-In order to quantify the influence of each of those regions, we will
-carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
+The uncertainties in this problem of calibration will take the form of
+an environmental parameter, which perturbates the amplitude of some
+tidal constituents.
+
+In order to quantify the influence of each of the sediments-based
+regions, and each of the components of the environmental variable, we
+will carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
 
 
 We are also going to introduce uncertainties on some environmental
@@ -122,7 +127,7 @@ where the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps_log.png}
-  \caption{\label{fig:depth_maps} Bathymetry used in \CROCO, and
+  \caption[Bathymetry chart of the domain modelled]{\label{fig:depth_maps} Bathymetry used in \CROCO, and
     geographical landmarks. The continental shelf correspond roughly
     to the area with depth less than \SI{200}{\meter} (green hue),
     while the abyssal plain has a depth larger than \SI{4000}{\meter}
@@ -144,7 +149,7 @@ obtained by vertically integrating the primitive equations.
 \begin{align}
   \left\{
   \begin{array}{lll}
-    \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} \\
+    \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} + F\\
     \pfrac{H}{t} + \nabla (H \cdot \mathbf{v}) &=& 0
   \end{array}
                                                    \right.
@@ -153,9 +158,10 @@ where $\mathbf{v} = (v_x,v_y)$ is the velocity field of the fluid,
 $\bm{\Omega}$ is the rotational angular vector of Earth, $H$ is the
 water column height, $g$ is the gravitational constant, $\rho$ is the
 fluid density, and $\bm{\tau}_b$ is the shear stress at the
-bottom. The bottom friction affects the circulation through
-$\bm{\tau}_b$, and different parameterizations of this stress can be
-derived.
+bottom. Finally, $F$ represents the forcing of the model, in this case
+the influence of the tides.  The bottom friction affects the
+circulation through $\bm{\tau}_b$, and different parameterizations of
+this stress can be derived.
 
 \subsection{Modelling of the bottom friction}
 \label{ssec:modelling_bottom}
@@ -188,7 +194,7 @@ of the roughness $\zob$ of the ocean floor, for different heights of
 the water column $H$.
 \begin{figure}[ht]
   \centering \input{\imgpath cd_zob.pgf}
-  \caption{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of
+  \caption[Drag coefficient $C_d$ as a function of the height and the roughness]{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of
     the column water height and the roughness at the bottom}
 \end{figure}
 We can see that the higher the water column height, the less variation
@@ -395,7 +401,7 @@ during the optimisation procedure. %  \todo{plutot deviation
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
   }
-  \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
+  \caption[Optimization of $\zob$ on the whole space]{\label{fig:optimization_map_399} Optimization of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
     $400$ iterations.}
 \end{figure}
@@ -433,7 +439,7 @@ per~\cref{eq:quadratic_friction_vonkarman}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath optimisation_type_sediments.pdf}
-  \caption{\label{fig:optimisation_type_sediments} Results of the
+  \caption[Final values of the optimisation procedure, based on the sediment type]{\label{fig:optimisation_type_sediments} Results of the
     optimisation procedure, depending on the type of sediments. The
     initial value is \SI{5e-3}{\meter}}
 \end{figure}
@@ -709,7 +715,7 @@ minimum of the objective function given $\uu\in \Uspace$:
 \end{equation}
 and the conditional minimiser function as
 \begin{equation}
-  \kk^*:\uu \Uspace \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
+  \kk^*:\uu  \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
 \end{equation}
 Since both of these functions require an optimisation of the objective
 function, they are quite expensive to compute. We can use the
@@ -825,6 +831,21 @@ We will then look to optimise the quantile of order $p=0.95$ of the ratio define
 \begin{equation}
 \max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
 \end{equation}
+In \cref{chap:adaptative_design_gp}, we defined the quantile function of the ratio, at the order $p$:
+\begin{equation}
+  q_p(\kk) = Q_{\UU}\left(r(\kk, \UU);p \right)
+\end{equation}
+where $r(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
+relative-regret, that we introduce for notational convenience.
+As $r$ is unknown directly, we will apply the plug-in approach, and define
+\begin{equation}
+  r^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
+\end{equation}
+where $\Xi$ is the lognormal approximation as defined in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is done using a set of i.i.d.\ samples of $\UU$: $\{\uu_i\}_{1\leq i \leq n_{\uu}}$
+\begin{equation}
+  \hat{q}_p^{\mathrm{PI}}(\kk) = {r}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
+\end{equation}
+where the subscript indicates the order statistic, \emph{i.e.} the $\left[n_{\uu}p\right]$ smallest value of $r^\mathrm{PI}(\kk,\uu_i)$ (with $[\,\cdot]$ as the rounding operator).
 
 \section{Partial conclusion}
 
@@ -841,7 +862,9 @@ We will then look to optimise the quantile of order $p=0.95$ of the ratio define
 % \end{figure}
 
 
-\clearpage
+\vfill
+\etoile
+\vfill
 
 
 

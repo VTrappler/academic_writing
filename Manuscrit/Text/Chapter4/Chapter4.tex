@@ -1714,16 +1714,20 @@ is a normally distributed random variable, $\Xi(\kk, \uu)$:
 \end{equation}
 
 The mean value of the lognormally distributed random variable is used
-as an estimate of the ratio
+as an estimate of the ratio:
 \begin{equation}
   \label{eq:mean_ratio_logn}
 \Ex_Z\left[\frac{Z(\kk, \uu)}{Z^*(\uu)}\right] = \frac{m_Z(\kk, \uu)}{m_{Z^*}(\uu)}\exp\left(\frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right) 
 \end{equation}
-and then we can estimate the plug-in estimation of the quantile of
-order $p$:
+and then the plug-in estimation of the quantile of
+order $p$ is:
 \begin{align}
-  \hat{q}^{\mathrm{PI}}_p(\kk) &= Q_{\UU}\left(\frac{m_Z(\kk, \UU)}{m_{Z^*}(\UU)}\exp\left(\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right),p \right)\\ &= Q_{\UU}\left(\exp\left(m_{\Xi}(\kk, \uu)+\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right),p \right)
+  {q}^{\mathrm{PI}}_p(\kk) &= Q_{\UU}\left(\frac{m_Z(\kk, \UU)}{m_{Z^*}(\UU)}\exp\left(\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right),p \right)\\ &= Q_{\UU}\left(\exp\left(m_{\Xi}(\kk, \uu)+\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right),p \right)
 \end{align}
+And based on a set of samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$, the estimated quantile becomes
+\begin{equation}
+  \hat{q}^{\mathrm{PI}}_p(\kk) = {\left(\exp\left(m_{\Xi}(\kk, \uu)+\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right)\right)}_{\left(\left[n_{\uu}p\right]\right)}
+\end{equation}
 
 % Additionally, to clear any confusion, the ratio $m_Z(\kk, \uu)/m_{Z^*}(\uu)$ is the median of the lognormally distribued random variable $Z(\kk, \uu)/Z^*(\uu)$.
 
@@ -1756,11 +1760,12 @@ $\hat{q}_{p,n}^{\mathrm{PI}}$, we plotted Monte-Carlo estimation of
 the quantile: $\hat{q}_{p,n}^{\mathrm{MC}}$, which has been obtained
 as a Monte-Carlo estimation of
 $\Ex_{Z}\left[Q_{\UU}\left(\frac{Z(\kk,
-      \uu)}{Z^*(\uu)};p\right)\right]$ for comparison.  We can see that
-this method is able to reduce steadily the error on the estimation of
-the quantile of order $p$. The large discontinuities in the error are
-probably due to the evaluation points in a region previously
-unexplored.
+      \uu)}{Z^*(\uu)};p\right)\right]$ for comparison.  We can see
+that this method is able to reduce steadily the error on the
+estimation of the quantile of order $p=0.95$ int this case. The large
+discontinuities in the error are probably due to the evaluation points
+in a region previously unexplored, and/or the effect of a consequent
+change in the hyperparameters of the GP.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath qPI_aIMSE.pdf}
@@ -1768,8 +1773,9 @@ unexplored.
 \end{figure}
 
 Each step of this method requires the optimization of the expected
-IMSE~\cref{eq:aIMSE_Xi}. We can also define a sampling based method,
-which is based on plausible values of the quantile of order $p$.
+IMSE~\cref{eq:aIMSE_Xi}, which can become expensive. We can also
+define a sampling based method, which is based on plausible values of
+the quantile of order $p$.
 
 \subsubsection{Sampling-based method, adaptation of the QeAK-MCS}
 \label{ssec:quantile_qeakmcs}
@@ -1838,7 +1844,7 @@ minimum. This procedure is illustrated~\cref{fig:QAK_MCS}.
 On~\cref{fig:evol_error_qAK_MCS}, the evolution of the error on the
 estimation of $q_p$ is shown. We can see that we can reduce globally
 the estimation error, but it seems slower than the augmented IMSE, as
-shown~\cref{fig:qPI_aIMSE}.
+shown~\cref{fig:qPI_aIMSE}.\todo{refaire figures}
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath evol_error_qAK_MCS.pdf}
@@ -1890,7 +1896,8 @@ method and automatic differentation tools, as has been done
 in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019,miranda_adjoint-based_2016,pardalos_differentiating_2015}.
 
 In the next chapter, we will study the problem of robust calibration
-of a realistic numerical model, using some of the methods we introduced in this chapter.
+of a realistic numerical model, using some of the methods we
+introduced in this chapter.
 
 
 % \begin{table}[ht]
@@ -1909,7 +1916,9 @@ of a realistic numerical model, using some of the methods we introduced in this 
 %   \end{tabular}
 %   \caption{Summary of single objective robust estimators}
 % \end{table}
-
+\vfill
+\etoile
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

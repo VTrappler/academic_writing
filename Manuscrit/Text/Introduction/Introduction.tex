@@ -29,15 +29,16 @@ To understand and to be able to forecast natural phenomena is crucial
 for many applications with high social, environmental and economic
 stakes.  In earth sciences especially, the modelling of the ocean and
 the atmosphere is important for day to day weather forecasts,
-hurricanes tracking, pollutant dispersion, or biological monitoring.
+hurricanes tracking, or pollutant dispersion for instance. %, or biological monitoring.
 
 Those natural phenomena are then modelled mathematically, usually by
 representing the physical reality with some general equations
-(Navier-Stokes equations for Computational Fluid Dynamics for
-instance), and by making successive reasonable assumptions and
-simplifications in order to account for the relative scales of the
-processes involved, and discretizations, in order to be able to
-implement appropriate solvers.
+(Navier-Stokes equations in Computational Fluid Dynamics typically),
+and by making successive reasonable assumptions, simplifications and
+discretisations in order to be able to implement appropriate
+solvers.%in
+% order to account for the relative scales of the processes involved,
+% and discretizations, 
 %Indeed, some small scale processes, such as
 % turbulences, are notoriously hard to model.
 % and a fine knowledge of
@@ -46,10 +47,10 @@ implement appropriate solvers.
 
 Models are then only a partial representation of the reality, which
 aim at representing complex processes that occur across a large range
-of scales, which interact with each other. For computational reasons,
-no modelling system would be able to take all those different scales
-into account, but instead, their effect are incorporated in the
-modelling by overly simplifying them and by \emph{parametrization}.
+of scales, scales that interact with each other. For computational
+reasons, no modelling system would be able to take all of those into
+account but instead, their effect are incorporated in the modelling by
+overly simplifying them and by {parametrizing} them.
 
 In ocean modelling, and especially in coastal regions, a telling
 example of this is the parametrization of the bottom friction. This
@@ -68,7 +69,7 @@ As this modelling is supposed to represent the reality, the prediction
 should be compared with some data acquired through observations. This
 comparison usually takes the form of the definition of a misfit
 function $J$ that measures the error between the forecast and the
-reality. This objective function is then minimized with respect to
+reality. This objective function is then minimised with respect to
 some chosen parameters
 $\kk$~\cite{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
 in order to get a calibrated model. Those parameters will be called
@@ -84,27 +85,30 @@ unrepresented statistical fluctuations~\cite{zanna_ocean_2011},
 manifesting themselves at the boundary conditions, or in the forcing
 of the model for instance. Such \emph{intrinsic} uncertainties are
 often subject to variability, and neglecting this can lead to further
-errors~\cite{mcwilliams_irreducible_2007}. We chose to model this additional
-source of uncontrollable uncertainty with a random variable $\UU$.
-Based on this, the objective function is then a function which takes
-two arguments: the parameter that we wish to calibrate $\kk$, and some
-other parameter $\uu$, which can be thought as a realisation of the random variable
-$\UU$, that we shall call \emph{environmental} parameter.
+errors~\cite{mcwilliams_irreducible_2007}, or aberrant
+predictions~\cite{kuczera_there_2010}.
+We chose to model this
+additional source of uncontrollable uncertainty with a random variable
+$\UU$.  Because of this, the objective function is then a function which
+takes two arguments: the parameter to calibrate $\kk$,
+and some other parameter $\uu$, which can be thought as a realisation
+of the random variable $\UU$, that we shall call \emph{environmental}
+parameter.
 
 Due to the presence of this random source of uncertainty, we wish to
 calibrate the model, \emph{i.e.} to select a value of the control
 parameter $\kk$, in a manner that guarantees that the model represents
-accurately enough the reality, as often as possible given the value of
-the environmental parameters. In other words, as the objective
-function is a first glimpse at the quality of the calibration, we wish
-that this function exhibits \emph{acceptable} values as often as
-possible, when $\kk$ is fixed. This defines intuitively the underlying
-notion of \emph{robustness} with respect to the variability of the
-uncertain variable. Omitting this can lead to \emph{localized optimization}~\cite{huyse_probabilistic_2002}, which is the 
+accurately enough the reality, ``as often as possible'' given the
+random nature of the value of the environmental parameter. In other
+words, as the objective function measures in some sense the quality of
+the calibration, we wish that this function exhibits \emph{acceptable}
+values as often as possible, when $\kk$ is fixed. This defines
+intuitively the underlying notion of \emph{robustness} with respect to
+the variability of the uncertain variable.
 
 In this thesis, we will study an aspect of the calibration of a
-numerical model under uncertainty, by discussing the notion of
-robustness, and by proposing a new criterion of robustness.  Specific
+numerical model under uncertainty, by discussing the notions of
+robustness, and by proposing a new family of criteria.  Specific
 methods will also be introduced, and applied to the calibration of a
 numerical model of the ocean. The thesis is organized as follows:
 \begin{itemize}
@@ -112,30 +116,30 @@ numerical model of the ocean. The thesis is organized as follows:
   statistics and probabilities that we will use to define the
   calibration problem. More specifically, the statistical and Bayesian
   inference problems will be broached, as well as some aspects of
-  nested model selection using the likelihood ratio test, while
-  emphasizing the link between probabilistic formulations of the
-  inference problem, and variational approach, based on the
-  optimisation of a specified objective function.
+  nested model selection using the likelihood ratio test. The link
+  between probabilistic formulations of the inference problem, and
+  variational approach based on the optimisation of a specified
+  objective function will be emphasized.
+  
 \item in~\cref{chap:robust_estimators}, we are going to discuss some
   of the notions of robustness that can be found in the literature,
-  either from a probabilistic inference aspect, or by the field of
-  optimisation under uncertainties.  Some of the optimisation under
-  uncertainties methods rely on the optimisation of the moments of
-  $\kk\mapsto J(\kk,\UU)$
+  either from a probabilistic inference aspect, or throught the prism
+  of optimisation under uncertainties. Most existing methods rely on
+  the optimisation of the moments of $\kk\mapsto J(\kk,\UU)$
   (in~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}),
   while other methods are based on multiobjective problems, such as
-  in~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}. These
-  approaches may compensate some bad performances by some very good
-  ones, as we are averaging with respect to $\UU$.
+  in~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.% These
+  % approaches may compensate some bad performances by some very good
+  % ones, as we are averaging with respect to $\UU$.
 
-  We propose especially a new criterion of optimisation, which is
-  based on the comparison between the objective function at a couple
-  $(\kk,\uu)$ and its optimal value for the same environmental
-  variable. This notion of regret, either relative or additive, is
-  then optimised in the sense of minimizing the probability of
-  exceeding a specified threshold, or to minimize one of its
-  quantile. This work has led to the publication of an
-  article~\cite{trappler_robust_2020}.
+  We propose a new family of criteria, which are based on the
+  comparison between the objective function at a couple $(\kk,\uu)$
+  and its optimal value given the same environmental variable. This
+  notion of regret, either relative or additive, is then optimised in
+  the sense of minimising the probability of exceeding a specified
+  threshold, or to minimise one of its quantile, in order to control
+  with high enough probability its variations. This work has led to
+  the publication of an article~\cite{trappler_robust_2020}.
   
 \item The family of criteria introduced in
   \cref{chap:robust_estimators} can be quite expensive to evaluate,
@@ -144,19 +148,32 @@ numerical model of the ocean. The thesis is organized as follows:
   iteratively the new points to evaluate. The process of selection,
   called \emph{SUR} method~\cite{bect_sequential_2012} (Stepwise
   Uncertainty Reduction) will depend on the type of robust estimation
-  we wish to carry. Different methods will be proposed, which differ
-  by the measure of uncertainty on the function we wish to
-  optimize. We will also introduce methods in order to select a batch
-  of points, in order to take advantage of parallelism when available.
+  we wish to carry. Different methods will be proposed in order to
+  estimate members of the regret-based family of robust
+  estimators. These approaches differ by the measure of uncertainty on
+  the function we wish to optimise. We will also introduce methods in
+  order to select a batch of points, in order to take advantage of
+  parallelism when available.
 
 \item Finally, in~\cref{chap:croco}, we will study the calibration of
-  an regional coastal model, based on CROCO\@. We will first define an
-  objective function for this problem, and optimize it using an
-  gradient-descent algorithm. After having 
+  a regional coastal model based on
+  CROCO\footnote{\url{https://www.croco-ocean.org/}}. This study will
+  focus on the estimation of the bottom friction parameter, where some
+  uncertainties are introduced in the form of small perturbations of
+  the amplitude of some tidal constituents, that force the model.
+  This problem will be treated using twin experiments, where the
+  observations will in fact be generated using the model.
+  
+  The definition of the problem will require first to segment the
+  input space, and to quantify the influence of each input variable,
+  using \emph{global sensitivity
+    analysis}~\cite{iooss_revue_2011}. Based on this analysis, The
+  input space will be reduced, in order to carry a tractable robust estimation, using some of the methods proposed in~\cref{chap:adaptative_design_gp}.
 \end{itemize}
 
-
+\vfill
 \etoile
+\vfill
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           PREVIOUSLY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,7 +217,7 @@ numerical model of the ocean. The thesis is organized as follows:
 % conditions.  We assume that the environmental conditions are uncertain
 % by nature, and thus will be modelled with a random variable $\UU$, to
 % account for these aleatoric uncertainties.  This is then the random
-% variable $J(\kk,\UU)$ that we want to minimize ``in some sense'' with
+% variable $J(\kk,\UU)$ that we want to minimise ``in some sense'' with
 % respect to $\kk$.
 
 
