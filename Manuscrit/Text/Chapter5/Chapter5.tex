@@ -71,21 +71,19 @@ point individually, we will segment the geographical input space in
 different independent regions, which are based on the type of
 sediments listed at the bottom of the water.
 
-The uncertainties in this problem of calibration will take the form of
-an environmental parameter, which perturbates the amplitude of some
-tidal constituents.
+The uncertainties in this problem of calibration will be assumed take
+the form of an environmental parameter, which perturbates the
+amplitude of some tidal constituents.
 
 In order to quantify the influence of each of the sediments-based
 regions, and each of the components of the environmental variable, we
-will carry a sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
+will carry global sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
 
-
-We are also going to introduce uncertainties on some environmental
-variables that parametrize the amplitude of some tidal components. \todo{finir intro}
-
-Finally, we are going to apply methods introduced in the previous
-chapters, in order to get a robust estimation of the bottom friction,
-using Gaussian processes, as addressed in the previous chapter.
+Finally, based on this study, we will reduce significantly the input
+space, in order to be able to carry robust calibration
+procedures. Indeed, we are going to apply some of the methods proposed
+in the previous chapter, in order to get a robust estimation of the
+bottom friction using Gaussian processes.
 
 
 
@@ -149,8 +147,8 @@ obtained by vertically integrating the primitive equations.
 \begin{align}
   \left\{
   \begin{array}{lll}
-    \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} &=& -g\nabla H + \frac{\bm{\tau}_b}{\rho H} + F\\
-    \pfrac{H}{t} + \nabla (H \cdot \mathbf{v}) &=& 0
+    \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} & = & -g\nabla H + \frac{\bm{\tau}_b}{\rho H} + F \\
+    \pfrac{H}{t} + \nabla (H \cdot \mathbf{v})                                                     & = & 0
   \end{array}
                                                    \right.
 \end{align}
@@ -180,15 +178,14 @@ logarithmic profile of the velocity at bottom (a derivation can be found in~\cit
   \label{eq:quadratic_friction_vonkarman}
   C_d = \left(\frac{\kappa}{\log\left(\frac{H}{\zob}\right) - 1}\right)^2% \text{for } C_d \in [C_d^{\min}, C_d^{\max}]
 \end{equation}
-where $\kappa$ is the Von K\'arm\'an constant, that we will take equal
-to $0.41$.  The bottom roughness $\zob$, or \emph{rugosity} in this
+where $\kappa$ is the Von K\'arm\'an constant, usually taken equal to
+$0.41$.  The bottom roughness $\zob$, or \emph{rugosity} in this
 document, can be interpreted as the size of the turbulent layer at the
 bottom, induced by the asperities of the sediments.
-\cite{boutet_estimation_2015} shows that in a calibration
-context, controlling the rugosity $\zob$ yields better result than
-controlling the drag coefficient $C_d$, thus we are going to control $\zob$.
-
-
+\cite{boutet_estimation_2015} shows that in a calibration context,
+controlling the rugosity $\zob$ yields better result than controlling
+the drag coefficient $C_d$ due the influence of the water column
+height $H$.
 On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
 of the roughness $\zob$ of the ocean floor, for different heights of
 the water column $H$.
@@ -197,6 +194,8 @@ the water column $H$.
   \caption[Drag coefficient $C_d$ as a function of the height and the roughness]{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of
     the column water height and the roughness at the bottom}
 \end{figure}
+
+
 We can see that the higher the water column height, the less variation
 appears when adjusting the bottom roughness $\zob$.  Considering the
 physical properties of the bottom friction and the types of sediments,
@@ -249,16 +248,18 @@ though siltic soil is listed, it is only scarcely present. The figure
 also shows that the largest sediments are rocks but are mostly located
 in the Bay of Biscay, near the boundary of the continental
 shelf. Pebbles however are mostly located in the shallow region in the
-English Channel, thus it may be expected that controlling the size of
-pebbles is highly influencal in a calibration context.
+English Channel, thus it may be expected that controlling the
+roughness in the regions listed as pebbles will affects significantly
+water circulation, and thus the sea surface height.
 
-According to \cref{tab:size_sediments}, the rugosity $\zob$ spans
-multiple orders of magnitude. We are then going to define the control
+According to~\cref{tab:size_sediments}, the rugosity $\zob$ spans
+multiple orders of magnitude, so we are then going to define the control
 variable $\kk$ as
 \begin{equation}
-  \kk = \log \zob
+  \kk = \log \zob \in \Kspace = \interval{\log(10^{-5})}{\log (5\cdot 10^{-2})}^p \approx \interval{-11.5}{-3}^p
 \end{equation}
-
+The dimension of $\Kspace$ is written $p$, and will be specified
+depending on the chosen segmentation.
 
 \subsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
@@ -416,9 +417,9 @@ By comparing the result of the
 optimization~\cref{fig:optimization_map_399} with the sediments
 charts~\cref{fig:sediments_reduced} and the bathymetry
 map~\cref{fig:depth_maps}, we can have a first overview on the links
-between sediments type, depth, and \emph{identifiability}, which can
+between sediments type, depth, and a certain idea of \emph{identifiability}, which can
 be understood as the ability of the optimisation procedure to retrieve
-a truth value. \todo{dvp}
+the truth value.
 
 On a first look, we can see that the abyssal plain (the deep region
 off the Bay of Biscay) remains mostly unaffected by the optimisation,
@@ -808,6 +809,7 @@ define the prediction variance, or mean square error, as
 $\sigma^2_{\Delta_{\alpha}}: (\kk, \uu) \mapsto
 C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$.
 
+\paragraph{Stepwise reduction of the augmented IMSE}
 We are going to reduce the augmented IMSE of the random process
 defined as The $\mathrm{IMSE}$ associated with the GP
 $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
@@ -820,7 +822,24 @@ and we select a new point to evaluate as:
   (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right]
 \end{equation}
 
-
+\paragraph{Sampling in the margin of uncertainty}
+In the previous chapter, we defined the probability of coverage of the
+random set $\{\Delta_\alpha \leq 0\}$ to be
+\begin{equation}
+  \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}}{\sigma_{\Delta_\alpha}}\right)
+  \end{equation}
+  and the margin of uncertainty at the level $\eta$ to be $\mathbb{M}_{\eta}$:
+  \begin{equation}
+    \mathbb{M}_{\eta} = \left\{(\kk, \uu)\in \Kspace \times \Uspace \mid \frac{\eta}{2} \leq \pi_{\alpha}(\kk, \uu) \leq 1-\frac{\eta}{2}\right\}
+  \end{equation}
+  We can then sample points in this margin, find $K$ centroids that
+  represent statistically those samples, and adjust them in order to
+  reduce the most the uncertainty, as explained
+  in~\cref{alg:sampling_enrichment_star}.  As the margin
+  $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
+  to the design (as it is easier to classify points either \emph{in}
+  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$, the sampling step
+  can become difficult,\todo{finir}  
 \subsubsection{Optimisation of the quantile of the relative-regret}
 
 Alternatively, we want 
