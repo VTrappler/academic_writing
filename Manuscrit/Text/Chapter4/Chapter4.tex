@@ -25,7 +25,7 @@
 % \dominitoc
 % \faketableofcontents
 % \subfileLocal{\setcounter{chapter}{2}}
-\chapter{Adaptative strategies for calibration using Gaussian Processes}
+\chapter{Adaptive strategies for calibration using Gaussian Processes}
 \label{chap:adaptative_design_gp}
 \minitoc
 \newpage
@@ -401,7 +401,7 @@ The GP is updated according to the new evaluation which is added to the design. 
 % This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
 
 \begin{algorithm}
-  \caption{\label{alg:SUR_strat} SUR strategy: adaptative enrichment using a 1-step criterion}
+  \caption{\label{alg:SUR_strat} SUR strategy: adaptive enrichment using a 1-step criterion}
 \begin{algorithmic}
 \REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
 \STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
@@ -465,7 +465,7 @@ able to select $K$ points that will be evaluated by the true function.
 Instead of adapting a 1-step criterion, we can rely on sampling in order
 to get $K$ points of $\Xspace$ to evaluate.  This technique, named
 AK-MCS in~\cite{echard_ak-mcs_2011}, which stands for
-\emph{Adaptative-Kriging Monte Carlo Sampling} is described
+\emph{Adaptive-Kriging Monte Carlo Sampling} is described
 in~\cite{dubourg_reliability-based_2011}, and has been applied and
 refined more recently
 in~\cite{schobi_rare_2017,razaaly_quantile-based_2020,razaaly_rare_2019}
@@ -577,11 +577,13 @@ subset $\mathfrak{X}\subset \mathcal{X}_n$ that yields
 \begin{equation}
   \IMSE_{\mathfrak{X}}\left(Z \mid \mathcal{X}_n \right) = \int_{\Xspace} \sigma^2_{Z\mid \mathcal{X}_n}(x)  \mathbbm{1}_{\mathfrak{X}}(x)\,\mathrm{d}x = \int_{\mathfrak{X}} \sigma^2_{Z\mid \mathcal{X}_n}(x)\,\mathrm{d}x
 \end{equation}
-
-Unfortunately, exact evaluation of this integral is impossible, so it
-needs to be approximated using numerical integration, such as
-Monte-carlo or quadrature rules such as Gaussian, or Hermite rule to
-cite a few.% that take the form
+For notational convenience, when the GP considered is clear from the
+context, only the design used to fit it will be an argument:
+$\IMSE(Z \mid \mathcal{X}_n) = \IMSE(\mathcal{X_n}$.  Unfortunatley, 
+exact evaluation of this integral is impossible, so it needs to be
+approximated using numerical integration, such as Monte-carlo or
+quadrature rules such as Gaussian, or Hermite rule to cite a
+few.% that take the form
 % \begin{equation}
 %   \IMSE(Z\mid \mathcal{X}_n) \approx \sum_{i=1}^{n_{\mathrm{quad}}} w_i \sigma^2_{Z\mid\mathcal{X}_n}(x_i)
 % \end{equation}
@@ -592,14 +594,14 @@ For a given $x\in \Xspace$ and an outcome $z=f(x)\in \mathbb{R}$, the
 augmented design is defined as
 $\mathcal{X}_n \cup \left\{(x, z)\right\}$, and the IMSE of the
 augmented design is
-$\IMSE\left(Z \mid \mathcal{X}_n \cup \left\{(x, z)\right\} \right)$.
+$\IMSE\left(\mathcal{X}_n \cup \left\{(x, z)\right\} \right)$.
 Before the actual experiment though, $z$ is unknown, but we can model
 it by its distribution given by the GP (per~\cref{eq:ZgivenXGP}). So
 for a given candidate $x$, the IMSE when evaluating the point $x$ will
 be on average
 \begin{equation}
   \label{eq:IMSE_augmented}
-  \Ex_{Z(x)}\Big[\IMSE\big(Z \mid \mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
+  \Ex_{Z(x)}\Big[\IMSE\big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
 where the expectation is to be taken with respect to the random
 variable $Z(x)$. As each scenario requires to fit a GP, and to compute
@@ -614,7 +616,7 @@ The hyperparameters of the GP should not be reevaluated when augmenting the desi
 
 Finally, we can maximize a criterion which is the opposite of the expression in~\cref{eq:IMSE_augmented} to enrich the design:
 \begin{equation}
-  x_{n+1} = \argmax_{x\in \Xspace}-\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(Z \mid \mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
+  x_{n+1} = \argmax_{x\in \Xspace}-\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
 
 % \tocheck{Et si au lieu d'estimer l'espérance, on choisit un échantillon. Stochastic simulation ?}
@@ -696,14 +698,15 @@ done in~\cite{pardalos_differentiating_2015}.
 \end{equation}
 
 \paragraph{IAGO}
-\label{ssec:IAGO} Another criterion worth mentioning is a criterion
-based on the distribution of the
-minimizers~\cite{villemonteix_informational_2006,hennig_entropy_2011}.
-Let $z_i$ be a sample path of $Z$, and let $x_i^*$ the global
-minimizer of $z_i$.  We denote then $X^*$ the random variable
-corresponding to the global minimizer of $Z$.  We consider the
-differential entropy of $X^*$ introduced \cref{def:KL_entropy}, given
-the augmented design
+\label{ssec:IAGO}
+Another criterion worth mentioning is a criterion based on the
+distribution of the
+minimizers~\cite{villemonteix_informational_2006,hennig_entropy_2011},
+called IAGO (\emph{Informational Approach to Global Optimisation}) Let
+$z_i$ be a sample path of $Z$, and let $x_i^*$ the global minimizer of
+$z_i$.  We denote then $X^*$ the random variable corresponding to the
+global minimizer of $Z$.  We consider the differential entropy of
+$X^*$ introduced \cref{def:KL_entropy}, given the augmented design
 $\mathcal{X}_n \cup \left\{\left(x,Z(x)\right)\right\}$:
 $H[X^*\mid \mathcal{X}_n \cup \left\{(x, Z(x))\right\}]$.  So at each
 step, we choose the point that gives the smallest expected uncertainty
@@ -921,7 +924,7 @@ We can see that the centroids are located close to the true level-set of the fun
 \end{figure}
 
 % \clearpage
-\section{Adaptative strategies for robust optimisation using GP}
+\section{Adaptive strategies for robust optimisation using GP}
 \label{sec:robust_criteria_gp}
 In the previous section, we introduced enrichment strategies to solve
 different problems for a generic function
@@ -1728,7 +1731,7 @@ order $p$ is:
 \end{align}
 And based on a set of samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$, the estimated quantile becomes
 \begin{equation}
-  \hat{q}^{\mathrm{PI}}_p(\kk) = {\left(\exp\left(m_{\Xi}(\kk, \uu)+\frac{1}{2}\sigma^2_{\Xi}(\kk, \UU)\right)\right)}_{\left(\left[n_{\uu}p\right]\right)}
+  \hat{q}^{\mathrm{PI}}_p(\kk) = {\left(\exp\left(m_{\Xi}(\kk, \uu)+\frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right)\right)}_{\left(\left[n_{\uu}p\right]\right)}
 \end{equation}
 
 % Additionally, to clear any confusion, the ratio $m_Z(\kk, \uu)/m_{Z^*}(\uu)$ is the median of the lognormally distribued random variable $Z(\kk, \uu)/Z^*(\uu)$.
@@ -1756,7 +1759,7 @@ described \cref{eq:log_ratio}, by minimizing the augmented IMSE:
 
 meaning that $\sigma_{\Xi}$ is computed using \cref{eq:log_ratio_eq},
 and the GP augmented by the couple
-$\left((\kk, \uu), Z(\kk, \uu)\right)$.  The result of this adaptative
+$\left((\kk, \uu), Z(\kk, \uu)\right)$.  The result of this adaptive
 strategy is illustrated~\cref{fig:qPI_aIMSE}. Along with
 $\hat{q}_{p,n}^{\mathrm{PI}}$, we plotted Monte-Carlo estimation of
 the quantile: $\hat{q}_{p,n}^{\mathrm{MC}}$, which has been obtained
@@ -1873,7 +1876,7 @@ However, due to the limited size of the initial design, and the
 impossibility to perform exhaustive computations of the objective
 function, this surrogate can be inaccurate in some regions, leading to
 a bad estimation, and thus a questionable calibration.  Using the
-properties of the GP, we can construct adaptative strategies in order
+properties of the GP, we can construct adaptive strategies in order
 to enrich the design of experiment sequentially, where the points
 chosen improve significantly the various estimations, and in this
 thesis, the estimation of the regret-based estimators.
@@ -1881,7 +1884,7 @@ thesis, the estimation of the regret-based estimators.
 Several improvements can be considered. First, all the methods
 introduced here focus on the improvement of the estimation of a
 function, which will be optimized in order to get the estimator. The
-adaptative strategy could be adapted to take into account the subsequent
+adaptive strategy could be adapted to take into account the subsequent
 optimization. Similarly as in~\cite{janusevskis_simultaneous_2010}, we
 could develop strategies in two parts: first, identify the point in
 $\Kspace$ which has the most potential to be the wanted estimator, and

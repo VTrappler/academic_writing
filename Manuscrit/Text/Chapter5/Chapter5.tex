@@ -250,7 +250,9 @@ in the Bay of Biscay, near the boundary of the continental
 shelf. Pebbles however are mostly located in the shallow region in the
 English Channel, thus it may be expected that controlling the
 roughness in the regions listed as pebbles will affects significantly
-water circulation, and thus the sea surface height.
+water circulation, and thus the sea surface height. Incidentally, we
+can notice the inverse correlation between the size of the sediments,
+and the depth at which they are found.
 
 According to~\cref{tab:size_sediments}, the rugosity $\zob$ spans
 multiple orders of magnitude, so we are then going to define the control
@@ -264,10 +266,11 @@ depending on the chosen segmentation.
 \subsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
 The ocean, especially near the English Channel is driven by tidal
-forces that produce current at the surface. In \CROCO, this forcing comes
-from the TPXO model of tides~\cite{egbert_efficient_2002}. The 5
-primary harmonic constituents, that are used in the modelling are
-described \cref{tab:tides_components}.
+forces that produce current at the surface. As a periodic signal, the
+tidal forcing is analysed harmonically, in order to separate its
+influence by frequency. In \CROCO, this forcing comes from the TPXO
+model of tides~\cite{egbert_efficient_2002}, and the configuration uses the 5
+primary harmonic constituents as described \cref{tab:tides_components}.
 \begin{table}[!h]
   \centering
   % % Chose order from the rank in the TPXO file :
@@ -291,31 +294,36 @@ described \cref{tab:tides_components}.
   \caption{Harmonic constituents used in the configuration}
   \label{tab:tides_components}
 \end{table}
+
 By perturbating some properties of those tide components, we can
-introduce new variables that will act as \emph{uncertain variables} in
-our numerical model.  In this work, we chose to add a small
-multiplicative error on the amplitude on the different components of
-the tide. Let $A_k$ be the amplitude of the $k$th component. The
-perturbated amplitude $\tilde{A}_k$ is defined as
+introduce a new variable that will act as \emph{uncertain variables} in
+our numerical model.
+
+In this work, we chose to add a small multiplicative error on the
+amplitude on the different components of the tide.  Let
+$\uu = (\uu_1,\dots,\uu_5)\in \Uspace = \interval{0}{1}^5$. Let $A_k$
+be the amplitude of the $k$th component of the tide. The perturbated
+amplitude $\tilde{A}_k$ is defined as
 \begin{equation}
   \label{eq:tide_error}
   \tilde{A}_k(\uu_k) = A_k (1 + 0.01(2\uu_k - 1))
 \end{equation}
-where $\uu_k$ is the $k$th component of the uncertain variable. Each
-individual $\uu_k$ belongs in $\interval{0}{1}$. Based on this
-definition $\tilde{A}_k(0) = 0.99A_k$, $\tilde{A}_k(0.5) = A_k$ and
-$\tilde{A}_k(1) = 1.01A_k$. This choice has been made in order to
-represent some possible uncertainties on the external forcing of the
-model. We also define $\uu^{\mathrm{truth}}$ as the vector whose all
-its components are set to \num{0.5}, so when no amplitude is
-perturbated.
+where $\uu_k$ is the $k$th component of the uncertain variable $\uu$.
+Based on this definition $\tilde{A}_k(0) = 0.99A_k$,
+$\tilde{A}_k(0.5) = A_k$ and $\tilde{A}_k(1) = 1.01A_k$. This choice
+has been made in order to represent some possible uncertainties on the
+external forcing of the model. We also define $\uu^{\mathrm{truth}}$
+as the vector whose all its components are set to \num{0.5}, so when
+no amplitude is perturbated.
 
 \section{Deterministic calibration of the bottom friction}
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will be first studied without
-external uncertainties, which corresponds to a choice of uncertain
-variable $\uu^{\mathrm{truth}}$.
+external uncertainties, which corresponds to an unperturbated tidal
+forcing. In terms of the environmental variable, it is equivalent to
+$\uu^{\mathrm{truth}}$.
     %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
+
 We are going to use the notations introduced
 in~\cref{chap:inverse_problem} for the model. Let us define
 $(\mathcal{M}(\cdot,\uu^{\mathrm{truth}}),\Kspace)$, the numerical
@@ -346,7 +354,8 @@ $\uu^{\mathrm{truth}}$.
     \kk & \longmapsto &\mathscr{M}(\kk) = \mathcal{M}(\kk, \uu^{\mathrm{truth}})
   \end{array}
 \end{equation}
-the observations are generated using $\kk^{\mathrm{truth}}$:
+
+Based on the forward operator $\mathscr{M}$, we can generate the observations $y\in \Yspace = \mathbb{R}^{N_{\mathrm{obs}}}$ using a truth value $\kk^{\mathrm{truth}}$:
 \begin{equation}
   y = \mathscr{M}(\kk^{\mathrm{truth}}) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
@@ -416,27 +425,15 @@ during the optimisation procedure. %  \todo{plutot deviation
 By comparing the result of the
 optimization~\cref{fig:optimization_map_399} with the sediments
 charts~\cref{fig:sediments_reduced} and the bathymetry
-map~\cref{fig:depth_maps}, we can have a first overview on the links
-between sediments type, depth, and a certain idea of \emph{identifiability}, which can
-be understood as the ability of the optimisation procedure to retrieve
-the truth value.
+map~\cref{fig:depth_maps}, we can have a first overview on which
+regions of the domain are properly estimated (\emph{i.e.} where the
+the estimation is close to the truth value).
 
 On a first look, we can see that the abyssal plain (the deep region
 off the Bay of Biscay) remains mostly unaffected by the optimisation,
-while the continental shelf, except for the English Channel, is
-well retrieved. % In terms of sediments, the bottom of the continental shelf
-           %            is largely composed of sand.
+while the continental shelf, except for some parts of the English
+Channel, is well retrieved.
 
-
-On~\cref{fig:optimisation_type_sediments}, we can see that indeed,
-points of the mesh corresponding to sand, \emph{i.e.} most of the
-continental shelf, have their rugosity value shifted toward the truth.
-For silts and muds, the procedure has not been able to identify their
-roughness. This is probably due to the fact that those sediments lay
-at great depth, and thus have little effect on the circulation
-per~\cref{eq:quadratic_friction_vonkarman}.
-           %            
-           %            
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath optimisation_type_sediments.pdf}
@@ -445,32 +442,33 @@ per~\cref{eq:quadratic_friction_vonkarman}.
     initial value is \SI{5e-3}{\meter}}
 \end{figure}
 
-In the English Channel, similar conclusions can be drawn: the size of
-the pebbles is quite well retrieved albeit a bit
-underestimated, but the points mapped to gravel do
-seem to compensate: on the northern part of the channel the size of
-the gravel is overestimated, while it is underestimated on the
-southern part.
+On~\cref{fig:optimisation_type_sediments}, we can see that indeed,
+points of the mesh corresponding to sand, \emph{i.e.} most of the
+continental shelf, tends to get closer to the truth value $\zob$.  For
+silts and muds however, the procedure did not change significantly
+their roughness, and thus stays close to the initial value. This can
+be probably explained by the great depth at which those sediments lay,
+and thus it mitigates their influence on the drag coefficient
+per~\cref{eq:quadratic_friction_vonkarman}.  In the English Channel,
+the size of the pebbles is quite well retrieved albeit a bit
+underestimated, but the points mapped to gravel do seem to compensate:
+on the northern part of the channel the size of the gravel is
+overestimated, while it is underestimated on the southern part.
+Finally the rocks appear to be hard to estimate properly: only about
+3\% of the domain is listed as rocks, and their corresponding $\zob$
+is quite large in contrast to the other sediments.
 
-Finally the rocks appear to be hard to capture: there are few areas
-listed as rocks, and their large truth value of rugosity in contrast
-with the other sediments renders them hard to
-control.% , which is probably due
-           %            to their size, \emph{i.e.} their truth value is significantly
-           %            larger than the rest of the sediments, and they are sparsely
-           %            distributed.
+This optimisation showed that all the regions defined are not crucial
+for a significant reduction of the values of the cost function. In
+terms of objective function, In order to quantify those difference in
+\todo{finir}
 
-We are now going to study the influence of each region defined by its
-sediment type on the cost function, and also the effect of the
-uncertainties, which were defined in~\cref{ssec:tidal_modelling}, by
-means of sensitivity analysis.
-
-           %            \begin{figure}[ht]
-           %            \centering
-           %            \input{/home/victor/optimisation_dahu/optim_0_001/ctrl_0_001.pgf}
-           %            \caption{\label{fig:ctrl_0_001} Gradient descent procedure in misspecified case}
-           %            \end{figure}
-           %            \clearpage
+We are now going to study the influence of the different inputs of the
+objective function. More specifically, we are going to quantify the
+influence of each region defined by its sediment type, and quantify
+the influence of the uncertainties define
+in~\cref{ssec:tidal_modelling} on the output of the objective
+function, by means of sensitivity analysis.
 
 
 \section{Sensitivity analysis of the objective function}
@@ -478,15 +476,28 @@ means of sensitivity analysis.
 Sensitivity analysis (often abbreviated as \emph{SA}), aims at
 quantifying the effect of the variation of some input variable to the
 output of the model~\cite{iooss_revue_2011,janon_analyse_2012}.
-Intuitively, \emph{SA} ties the variation the inputs to
-the variation of the output, in order to compare the respective
-influence of each individual input.
+Intuitively, a \emph{SA} aims at understanding how much the variations
+of each input or combinations of inputs explain the variations of the
+output.
 
 It can then be approached at two different scales:
 around a nominal value, using the gradient, and at a global scale, by
 considering the inputs as random variable, and by measuring the
 variance of the output. In this work, we are going to focus
-exclusively on global sensitivity analysis
+exclusively on global sensitivity analysis.
+
+Here, sensitivity analysis is performed as a dimension reduction
+method, because it will be used to reduce the input space, based on
+prior assumption that the friction $\zob$ is considered constant for
+each regions. Indeed, we will make the link between \emph{sensitivity}
+and \emph{identifiability}~\cite{dobre_global_2010}, as
+non-sensitivity implies non-identifiability. In other words, if a
+parameter shows a very small influence on the output of the objective
+function, any choice for its value will yield sensibly the same output
+of the objective, provided that the other input parameters are the
+same.
+
+
 % \subsection{Methods of Sensitivity analysis}
 % \label{sec:methods_SA}
 % \subsubsection{Local sensitivity analysis}
@@ -585,10 +596,7 @@ here is comprised of \num{7888} points.
 We can see that the most influential region is the one defined by the
 pebbles (with code C). More generally, except for the rocks, we can
 see that the shallower the region, the larger impact it has on the
-objective function. The area covered by rocks is quite small compared
-to other sediments, hence its small effect. Incidentally, we can
-notice the inverse correlation between the size of the sediments, and
-the depth at which they are found.
+objective function. 
 
 
 \subsubsection{SA on the tide components}
@@ -602,7 +610,7 @@ defined in~\cref{eq:tide_error}. The SA is performed on the objective function, 
 \end{equation}
 for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$
 
-\cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2
+\Cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2
 (right), and the total effect indices, along with bootstrap confidence
 intervals.
 \begin{figure}[ht]
@@ -640,14 +648,13 @@ Based on the sensitivity analysis carried in the previous section, we
 are going to consider the following setting for robust calibration.
 The control variable is defined as
 \begin{equation}
-  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{\log \zob^{\min}}{\log\zob^{\max}}^6
+  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^3
   \end{equation}
   where the index $1$ is for the region defined as Pebbles, the index
   $2$ is for the regions defined as Rocks, Gravel, and Sand, and the
-  index $3$ is for the Silts, Mud, and Fine Sands. $\log\zob^{\max} = \log\num{5e-2} \approx -3$ and $\log \zob^{\min} = \log \approx \num{1e-5} \approx -11.5$
-
-  Following the SA on the tide constituents, the uncertain variable is
-  defined we are going to consider is
+  index $3$ is for the Silts, Mud, and Fine Sands.  Following the SA
+  on the tide constituents, the uncertain variable is defined we are
+  going to consider is
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
@@ -748,6 +755,7 @@ $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
     using KDE. The $y$-axis is the corresponding value of the minimum
     $m_Z^*(\uu_i)$}
 \end{figure}
+\todo{refaire figure} 
 % Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
 % approximation of the repartition of the minimisers.
 \todo{transition minimiseurs à regrets based}
@@ -826,7 +834,7 @@ and we select a new point to evaluate as:
 In the previous chapter, we defined the probability of coverage of the
 random set $\{\Delta_\alpha \leq 0\}$ to be
 \begin{equation}
-  \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}}{\sigma_{\Delta_\alpha}}\right)
+  \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}(\kk, \uu)}{\sigma_{\Delta_\alpha}(\kk, \uu)}\right)
   \end{equation}
   and the margin of uncertainty at the level $\eta$ to be $\mathbb{M}_{\eta}$:
   \begin{equation}
@@ -852,19 +860,19 @@ We will then look to optimise the quantile of order $p=0.95$ of the ratio define
 \end{equation}
 In \cref{chap:adaptative_design_gp}, we defined the quantile function of the ratio, at the order $p$:
 \begin{equation}
-  q_p(\kk) = Q_{\UU}\left(r(\kk, \UU);p \right)
+  q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
 \end{equation}
-where $r(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
+where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
 relative-regret, that we introduce for notational convenience.
-As $r$ is unknown directly, we will apply the plug-in approach, and define
+As $\mathrm{RR}$ is unknown directly, we will apply the plug-in approach, and define
 \begin{equation}
-  r^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
+  \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
 \end{equation}
 where $\Xi$ is the lognormal approximation as defined in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is done using a set of i.i.d.\ samples of $\UU$: $\{\uu_i\}_{1\leq i \leq n_{\uu}}$
 \begin{equation}
-  \hat{q}_p^{\mathrm{PI}}(\kk) = {r}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
+  \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
 \end{equation}
-where the subscript indicates the order statistic, \emph{i.e.} the $\left[n_{\uu}p\right]$ smallest value of $r^\mathrm{PI}(\kk,\uu_i)$ (with $[\,\cdot]$ as the rounding operator).
+where the subscript indicates the order statistic, \emph{i.e.} the $\left[n_{\uu}p\right]$ smallest value of $\mathrm{RR}^\mathrm{PI}(\kk,\uu_i)$ (with $[\cdot]$ as the rounding operator).
 
 \section{Partial conclusion}
 

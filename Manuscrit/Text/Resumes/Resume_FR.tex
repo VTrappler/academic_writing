@@ -4,6 +4,8 @@
 \renewcommand{\RootDir}[1]{./Text/Resumes/#1}
 }
 
+\newcommand{\frchap}[1]{\hyperref[#1]{Chapitre}~\ref{#1}}
+
 % \subfileLocal{
 % \externaldocument{../../Text/Chapter2/build/Chapter2}
 % \externaldocument{../../Text/Chapter3/build/Chapter3}
@@ -93,40 +95,34 @@ contrôle, ainsi que $\uu$, le paramètre environnemental:
   \end{array}
 \end{equation}
 
-La définition de la fonction coût dans un problème de calibration sera abordé dans le Chapitre~\ref{chap:inverse_problem}.
+La définition de la fonction coût dans un problème de calibration sera abordé dans le~\frchap{chap:inverse_problem}.
 
 \subsection*{Notions de robustesse}
 
 Ne pas prendre en compte les incertitudes aléatoires dans l'estimation
 de $\kk$ peut amener à compenser de manière artificielle l'erreur
-aléatoire, et donc amener une situation similaire à du
+aléatoire, et donc amener à un comportement analogue au
 \emph{sur-apprentissage} (overfitting), ou \emph{optimisation
   localisée}~\cite{huyse_probabilistic_2002}. Cela peut amener à des
 situations où le paramètre estimé n'est optimal que pour la valeur de
-$\uu$ supposée, et que pour une autre réalisation de la variable
-aléatoire sous-jacente, le modèle ainsi calibré donne des prédictions
+$\uu$ supposée, et pour une autre réalisation de la variable aléatoire
+sous-jacente, le modèle ainsi calibré donne des prédictions
 potentiellement aberrantes~\cite{kuczera_there_2010}.
 
 On cherche donc à définir une valeur de $\kk$, notée $\hat{\kk}$ de
 manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable}, lorsque
-l'on prend en compte le caractère aléatoire de $\uu$.
-
-
+l'on prend en compte la variabilité intrinsèque de $\uu$.
 En prenant en compte le caractère aléatoire de la variable
 environnementale, pour un $\kk$ donné, la fonction coût peut être vue
 comme une variable aléatoire: $J(\kk,\UU)$, que l'on va chercher
 intuitivement à ``minimiser'' dans un certain sens qui reste à
-définir.
-
-Cette problématique porte différents noms, comme l'optimisation
-robuste, où robuste doit être compris comme l'insensibilité aux
-variations de $\UU$, optimisation sous incertitudes (Optimisation
-under Uncertainty ou OUU), ou encore d'optimisation stochastique. Une
-nomenclature prenant en compte les différences notamment sur les
-contraintes potentiellement présentes peut être trouvé
-dans~\cite{lelievre_consideration_2016}
-
-
+définir.  Cette problématique porte différents noms, comme
+l'optimisation robuste, où robuste doit être compris comme
+l'insensibilité aux variations de $\UU$, optimisation sous
+incertitudes (\emph{Optimisation under Uncertainty} ou \emph{OUU}), ou encore
+d'optimisation stochastique. Une nomenclature prenant en compte les
+différences notamment sur les contraintes potentiellement présentes
+peut être trouvé dans~\cite{lelievre_consideration_2016}
 
 
 L'objectif de la thèse est d'établir différents critères de
@@ -138,45 +134,60 @@ plus complexes d'estimation de la friction de fond (modèles réalistes
 coûteux en temps de calcul, dimension élevée).
 
 \subsection*{Critères basés sur le regret additif et relatif}
-
-Un certain nombre des méthodes d'optimisation sous incertitudes se
-basent sur la minimisation des moments de la variable aléatoire
-$J(\mathbf{\cdot}, \UU)$ comme
+Dans le \frchap{chap:robust_estimators}, nous abordons le problème de
+calibration 
+Un certain nombre des méthodes
+d'optimisation sous incertitudes se basent sur la minimisation des
+moments de la variable aléatoire $J(\mathbf{\cdot}, \UU)$ comme
 dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou
 bien se basent sur la résolution d'un problème
 multiobjectifs~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
 
 Dans le cadre de cette thèse, nous proposons une approche basée sur le
 regret, qui consiste à comparer les valeurs de la fonction $J$ avec le
-\emph{minimum conditionel}, qui est le minimum de la fonction
+\emph{minimum conditionnel}, qui est le minimum de la fonction
 $J(\cdot, \uu)$, où $\uu$ est une réalisation de la variable aléatoire
-$\UU$. Le minimum conditionel est donc défini par
+$\UU$. Le minimum conditionnel est donc défini par
 \begin{equation}
   \label{eq:Jstar}
   J^*(\uu) = \min_{\kk\in\Kspace} J(\kk,\uu)
 \end{equation}
-et le \emph{minimiseur conditionel} associé est
+et le \emph{minimiseur conditionnel} associé est
 \begin{equation}
   \label{eq:Kstar}
   \kk^*(\uu) = \argmin_{\kk\in \Kspace}J(\kk,\uu)
 \end{equation}
+Ceci permet de définir le regret additif: $J - J^*$. Étant donné la
+strict positivité de $J$, nous pouvons définir aussi le regret relatif
+$J/J^*$. Ceci nous permet d'introduire une notion
+d'\emph{acceptabilité}, à entendre dans le sens d'écart par rapport au
+minimum conditionnel, c'est-à-dire de comparer le regret à un certain
+seuil.  Nous définissons ainsi deux fonctions:
+\begin{equation*}
+\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
+\end{equation*}
+et
+\begin{equation}
+  q_p(\kk) = Q(
+\end{equation}
+, où
 
-\cite{trappler_robust_2020}
-Ces quantités permettent de définir des critères de robustesse qui
-prennent en compte la plus petite valeur atteignable pour des
-conditions environnementales données $\uu$.  D'un point de vue
-pratique, ces fonctions peuvent être estimées à l'aide de
-méta-modèles, comme dans~\cite{ginsbourger_bayesian_2014}.
- 
-
-$\Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]$, où
+Ce travail a mené à la publication d'un article~\cite{trappler_robust_2020}.
 $\alpha \geq 1$ est un paramètre bien choisi. Ce critère peut être
 rapproché de la Value-at-Risk~\cite{rockafellar_deviation_2002}, qui
 est utilisé notamment dans le domaine de la finance.
 
 \subsection*{Optimisation robuste et processus Gaussiens}
-\todo{écrire}
+\frchap{chap:adaptative_design_gp} D'un point de vue pratique, ces
+notions de minimiseur conditionnel et de minimum conditionnel peuvent
+s'avérer difficiles et chères à calculer, car nécessitant une
+procédure d'optimisation.
+
+Nouces fonctions peuvent être estimées à l'aide
+de méta-modèles, comme \todo{écrire}
+dans~\cite{ginsbourger_bayesian_2014}.
 \subsection*{Application au code de calcul CROCO}
+Dans le \frchap{chap:croco}
 \todo{écrire}
 
 
