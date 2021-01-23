@@ -161,33 +161,80 @@ Ceci permet de définir le regret additif: $J - J^*$. Étant donné la
 strict positivité de $J$, nous pouvons définir aussi le regret relatif
 $J/J^*$. Ceci nous permet d'introduire une notion
 d'\emph{acceptabilité}, à entendre dans le sens d'écart par rapport au
-minimum conditionnel, c'est-à-dire de comparer le regret à un certain
-seuil.  Nous définissons ainsi deux fonctions:
+minimum conditionnel.
+
+Pour un $\uu\in\Uspace$ donné, $\kk\in\Kspace$ est dit
+$\beta$-acceptable si $J(\kk, \uu) \leq J^*(\uu) + \beta$, pour $\beta \geq 0$. La notion
+de $\beta$-acceptabilité est donc associée au regret additif: 
+$J(\kk, \uu) - J^*(\uu)$.  Similairement, on définit la notion de
+$\alpha$-acceptabilité: $\kk$ est dit $\alpha$-acceptable si
+$J(\kk, \uu) \leq \alpha J^*(\uu)$, pour $\alpha > 1$
+
+Nous nous intéresserons plus particulièrement au regret relatif, qui
+permet de mieux prendre en compte les variations de magnitude de la
+fonction objectif, mais les définitions suivantes peuvent être adaptée
+au regret additif. En prenant en compte le caractère aléatoire de
+$\UU$, nous pouvons donc étudier la probabilité pour un point $\kk$, d'être acceptable:
 \begin{equation*}
 \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
 \end{equation*}
-et
+Cette probabilité peut donc être optimisée, pour donner
 \begin{equation}
-  q_p(\kk) = Q(
+  \kk_{\mathrm{RR},\alpha} = \argmax_{\kk \in\Kspace} \Gamma_\alpha(\kk)
 \end{equation}
-, où
+L'optimum atteint est donc la probabilité maximale avec laquelle le
+regret-relatif est borné par $\alpha$.
 
-Ce travail a mené à la publication d'un article~\cite{trappler_robust_2020}.
-$\alpha \geq 1$ est un paramètre bien choisi. Ce critère peut être
+
+  De manière opposée\todo{bof}, nous pouvons définir la
+fonction quantile du regret relatif comme
+\begin{equation}
+  q_p(\kk) = Q_{\UU}\left(\frac{J(\kk,\UU)}{J^*(\UU)};p\right)
+\end{equation}
+où $Q_{\UU}(\cdot;p)$ est la fonction quantile à l'ordre $p$ de la
+variable aléatoire en argument. $q_p(\kk)$ qui représente donc la valeur qui
+borne le regret au point $\kk$ avec une probabilité donnée $p$.
+
+Nous pouvons donc chercher à maximiser la probabilité
+$\Gamma_{\alpha}$ pour $\alpha > 1$ bien choisi, ou à minimiser le
+quantile $q_p$, au niveau de confiance $p$.
+
+Ce travail a mené à la publication d'un
+article~\cite{trappler_robust_2020}. Ce type de critères peuvent être
 rapproché de la Value-at-Risk~\cite{rockafellar_deviation_2002}, qui
 est utilisé notamment dans le domaine de la finance.
 
 \subsection*{Optimisation robuste et processus Gaussiens}
-\frchap{chap:adaptative_design_gp} D'un point de vue pratique, ces
-notions de minimiseur conditionnel et de minimum conditionnel peuvent
-s'avérer difficiles et chères à calculer, car nécessitant une
-procédure d'optimisation.
+D'un point de vue pratique, ces notions de minimiseur conditionnel et
+de minimum conditionnel peuvent s'avérer difficiles et chères à
+calculer, car nécessitant une procédure d'optimisation. De plus, la
+connaissance de la fonction objectif doit être suffisante afin de
+calculer assez précisemment les quantités $\Gamma_{\alpha}$ et $q_p$.
+Dans le \frchap{chap:adaptative_design_gp}, nous proposons d'utiliser
+des processus Gaussiens (GP), afin de créer un modèle de substitution
+permettant de se passer d'une connaissance exhaustive de la fonction
+$J$.
 
-Nouces fonctions peuvent être estimées à l'aide
-de méta-modèles, comme \todo{écrire}
-dans~\cite{ginsbourger_bayesian_2014}.
+Les propriétés des GP nous permettrons aussi d'établir des stratégies
+d'enrichissement. En effet, des méthodes existantes dites
+\emph{adaptatives} permettent d'améliorer l'estimation de diverses
+quantités, comme la probabilité de défaillance
+\cite{razaaly_rare_2019,moustapha_quantile-based_2016,bect_sequential_2012},
+ou les minimiseurs et minimums conditionnels
+dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
+méthodes SUR (\emph{Stepwise Uncertainty reduction}, réduction
+d'incertitude séquentielle) sont basées sur la définition d'un
+\emph{critère}, dont le minimiseur va être évalué par la fonction
+originale. Ce critère va donc représenter une mesure de l'incertitude
+sur l'estimation, que l'on va chercher à réduire. Nous allons ainsi
+proposer plusieurs méthodes permettant d'améliorer l'estimation de
+$\Gamma_{\alpha}$ et de $q_p$.
+
+
 \subsection*{Application au code de calcul CROCO}
-Dans le \frchap{chap:croco}
+Dans le \frchap{chap:croco}, nous nous intéressons à la calibration
+robuste d'un modèle réaliste d'océan, basé sur le code de calcul CROCO.
+
 \todo{écrire}
 
 
