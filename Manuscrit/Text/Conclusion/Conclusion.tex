@@ -112,29 +112,54 @@ uncertain variable), the minimisation of a measure of misfit between
 the distribution of $J^*(\UU)$ and of $J(\hat{\kk},\UU)$ may be worth
 exploring, and minimised.
 
-A Bayesian method could be performed in order to estimate the
-posterior distribution of the parameter $\kk$ given the
-observations. This task could be performed using the gradient
-information.
-
 
 The new criteria introduced in this thesis rely on an additional
-parameter, the maximal threshold or the wanted probability, that
-controls the deviation with respect to the conditional optimal
-value. Setting one of those parameters can lead to an unsatisfactory
-counterpart as mentioned in~\cref{chap:robust_estimators}. In terms of
-numerical methods, Gaussian Processes are not well suited for problems
-of dimension larger than about \num{10}: when too large designs are
-considered, fitting the GP can also be problematic, as large matrices
-need to be inversed, and the optimisation of the hyperparameters is
-difficult.  When looking to apply methods based on GP, a first
-reduction of the input space may then be necessary.  The segmentation
-we performed is rather coarse, and based on external information. A
-finer dimension reduction method could be done, without prior
-information, using the gradient for
-instance~\cite{benameur_refinement_2002,zahm_certified_2018}.
+parameter, the maximal threshold or alternatively, the targeted level
+of confidence, that controls the deviation with respect to the
+conditional optimal value. Setting one of those parameters can lead to
+an unsatisfactory counterpart as mentioned
+in~\cref{chap:robust_estimators}. In terms of numerical methods,
+Gaussian Processes are not well suited for problems of dimension
+larger than about \num{10}: when the designs considered are too large,
+fitting the GP can also be problematic, as large matrices need to be
+inverted, and the optimisation of the hyperparameters can become difficult.
+
+In most applications, and thus also when looking to apply methods
+based on GP, a first reduction of the input space may be
+necessary. The segmentation performed in~\cref{chap:croco} for instance is
+rather coarse, and based on external information. A finer dimension
+reduction method could be done, without prior information, using the
+gradient for instance, as done in~\cite{benameur_refinement_2002} or
+in~\cite{zahm_certified_2018}.
+
+Using the GP, we developed criteria which aim improving the
+estimations of the functions $\Gamma_\alpha$ and $q_p$. In order to
+get estimators, those functions had to be optimised, in a sample
+average approximation (SAA) fashion. We could instead develop methods
+which aim at optimising directly those functions, along with their
+estimations. This could for instance be done in a $2$-stage enrichment
+strategy. First, a $\tilde{\kk}$ is chosen, with a ``high'' potential to be
+the optimiser (quite similarly as the EI criterion), and then the
+couple $(\kk_{n+1}, \uu_{n+1})$ to evaluate is chosen in order to
+reduce a measure of uncertainty associated with the space
+$\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over this
+space). This would focus the enrichment in regions of interest, and
+also reduce the dimension of the integral to evaluate.
 
 
+More generally, we did not use the gradient of the objective function:
+GP predictions can be improved using the gradient:
+\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}
+
+
+We focused in this thesis on the variational
+formulation of the calibration problem, \emph{i.e.} by defining an
+objective function, akin to the negative log-likelihood, that is then
+optimised. A Bayesian method could be performed in order to estimate
+the posterior distribution of the parameter $\kk$ given the
+observations. Moreover, this task could be performed using adapted
+sampling schemes, such as Hamiltonian Monte-Carlo
+\cite{betancourt_conceptual_2017} for instance.
 
 
 \todo{Bayesian approach}
@@ -151,7 +176,7 @@ instance~\cite{benameur_refinement_2002,zahm_certified_2018}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BIB
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\vfill
+
 \etoile
 \vfill
 

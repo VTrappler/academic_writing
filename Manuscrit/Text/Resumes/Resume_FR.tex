@@ -164,17 +164,19 @@ d'\emph{acceptabilité}, à entendre dans le sens d'écart par rapport au
 minimum conditionnel.
 
 Pour un $\uu\in\Uspace$ donné, $\kk\in\Kspace$ est dit
-$\beta$-acceptable si $J(\kk, \uu) \leq J^*(\uu) + \beta$, pour $\beta \geq 0$. La notion
-de $\beta$-acceptabilité est donc associée au regret additif: 
-$J(\kk, \uu) - J^*(\uu)$.  Similairement, on définit la notion de
-$\alpha$-acceptabilité: $\kk$ est dit $\alpha$-acceptable si
-$J(\kk, \uu) \leq \alpha J^*(\uu)$, pour $\alpha > 1$
+$\beta$-acceptable si $J(\kk, \uu) \leq J^*(\uu) + \beta$, pour
+$\beta \geq 0$. La notion de $\beta$-acceptabilité est donc associée
+au regret additif: $J(\kk, \uu) - J^*(\uu)$.  Similairement, on
+définit la notion de $\alpha$-acceptabilité: $\kk$ est dit
+$\alpha$-acceptable si $J(\kk, \uu) \leq \alpha J^*(\uu)$, pour
+$\alpha > 1$ Dans la suite, sous nous intéresserons plus
+particulièrement au regret relatif, qui permet de mieux prendre en
+compte les variations de magnitude de la fonction objectif, mais les
+définitions suivantes peuvent être adaptée au regret additif.
 
-Nous nous intéresserons plus particulièrement au regret relatif, qui
-permet de mieux prendre en compte les variations de magnitude de la
-fonction objectif, mais les définitions suivantes peuvent être adaptée
-au regret additif. En prenant en compte le caractère aléatoire de
-$\UU$, nous pouvons donc étudier la probabilité pour un point $\kk$, d'être acceptable:
+
+En prenant en compte le caractère aléatoire de $\UU$, nous pouvons
+donc étudier la probabilité pour un point $\kk$, d'être acceptable:
 \begin{equation*}
 \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
 \end{equation*}
@@ -186,24 +188,39 @@ L'optimum atteint est donc la probabilité maximale avec laquelle le
 regret-relatif est borné par $\alpha$.
 
 
-  De manière opposée\todo{bof}, nous pouvons définir la
-fonction quantile du regret relatif comme
+Si, au lieu de choisir un seuil $\alpha$ pour la minimisation, nous
+cherchons plutôt à atteindre une certaine probabilité d'acceptabilité
+$p$, nous pouvons définir la fonction quantile du regret relatif comme
 \begin{equation}
   q_p(\kk) = Q_{\UU}\left(\frac{J(\kk,\UU)}{J^*(\UU)};p\right)
 \end{equation}
 où $Q_{\UU}(\cdot;p)$ est la fonction quantile à l'ordre $p$ de la
 variable aléatoire en argument. $q_p(\kk)$ qui représente donc la valeur qui
 borne le regret au point $\kk$ avec une probabilité donnée $p$.
+Ce quantile peut aussi être minimisé, donnant
+\begin{equation}
+  \kk_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} q_p(\kk)
+\end{equation}
+et le minimum atteint est par conséquent $\alpha_p$, qui vérifie
+$\Gamma_{\alpha_p}(\kk_{\mathrm{RR},\alpha_p}) = p$.
+  
+D'après ces deux formulations nous pouvons donc soit: chercher à
+maximiser la probabilité $\Gamma_{\alpha}$ pour $\alpha > 1$ bien
+choisi, soit chercher à minimiser le quantile $q_p$, au niveau de
+confiance $p$.
 
-Nous pouvons donc chercher à maximiser la probabilité
-$\Gamma_{\alpha}$ pour $\alpha > 1$ bien choisi, ou à minimiser le
-quantile $q_p$, au niveau de confiance $p$.
-
-Ce travail a mené à la publication d'un
-article~\cite{trappler_robust_2020}. Ce type de critères peuvent être
-rapproché de la Value-at-Risk~\cite{rockafellar_deviation_2002}, qui
-est utilisé notamment dans le domaine de la finance.
-
+Ces critères dépendent donc d'un paramètre additionel, $\alpha$, ou
+$p$ selon la formulation choisie, qui va permettre d'ajuster le
+caractère \emph{conservatif} de la solution. En effet, choisir une
+grande valeur de $\alpha$ (ou $p$ très proche de $1$) permet de se
+prévenir des hautes déviations avec un grande probabilité. Si à
+l'inverse, $\alpha$ est choisi plus faible, on favorisera les
+solutions qui donnent des valeurs de la fonction objectif proches du
+minmum atteignable, mais potentiellement avec une probabilité plus
+faible.
+  
+Ce travail a mené à la publication de~\cite{trappler_robust_2020}.
+  
 \subsection*{Optimisation robuste et processus Gaussiens}
 D'un point de vue pratique, ces notions de minimiseur conditionnel et
 de minimum conditionnel peuvent s'avérer difficiles et chères à
@@ -215,6 +232,11 @@ des processus Gaussiens (GP), afin de créer un modèle de substitution
 permettant de se passer d'une connaissance exhaustive de la fonction
 $J$.
 
+Soit $Z$ le GP construit avec un plan d'expérience
+$\mathcal{X}=\{(\kk_i, \uu_i), J(\kk_i, \uu_i)\}_{1\leq i \leq N}$. Le
+métamodèle associé à $Z$ et construit d'après $\mathcal{X}$ sera noté
+$m_Z:\Kspace\times \Uspace \rightarrow \mathbb{R}$.
+
 Les propriétés des GP nous permettrons aussi d'établir des stratégies
 d'enrichissement. En effet, des méthodes existantes dites
 \emph{adaptatives} permettent d'améliorer l'estimation de diverses
@@ -224,21 +246,62 @@ ou les minimiseurs et minimums conditionnels
 dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
 méthodes SUR (\emph{Stepwise Uncertainty reduction}, réduction
 d'incertitude séquentielle) sont basées sur la définition d'un
-\emph{critère}, dont le minimiseur va être évalué par la fonction
-originale. Ce critère va donc représenter une mesure de l'incertitude
-sur l'estimation, que l'on va chercher à réduire. Nous allons ainsi
-proposer plusieurs méthodes permettant d'améliorer l'estimation de
-$\Gamma_{\alpha}$ et de $q_p$.
+\emph{critère} $\kappa$, dont le maximiseur va être évalué par la fonction
+originale:
+\begin{equation}
+  (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa(\kk, \uu; Z)
+\end{equation}
+Puis le plan d'expérience est enrichi:
+$\mathcal{X}_{n+1} = \mathcal{X}_n \cup \{(\kk_{n+1}, \uu_{n+1}),
+J(\kk_{n+1}, \uu_{n+1})\}$, et $Z$ est mis à jour avec le nouveau plan
+d'expérience $\mathcal{X}_{n+1}$.  Ce critère va donc représenter une
+mesure de l'incertitude sur l'estimation, que l'on va chercher à
+réduire. Nous allons ainsi proposer plusieurs méthodes permettant
+d'améliorer l'estimation de $\Gamma_{\alpha}$ ou de $q_p$. Ceci sera fait en définissant notamment
+\begin{equation}
+  \Delta_{\alpha} = Z - Z^*
+\end{equation}
+
+Nous proposons aussi des méthodes basées sur l'échantillonage d'une
+variable aléatoire, qui représente des points à forte incertitudes par
+rapport à l'objectif final, comme
+dans~\cite{echard_ak-mcs_2011,razaaly_rare_2019}. Après une procédure
+de réduction statistique, comme le partitionnement (ou
+\emph{clustering} en anglais), on peut donc évaluer et ajouter au plan
+d'expérience un \emph{lot} de points, et ainsi prendre avantage du
+parallélisme quand une telle architecture est disponible.
 
 
 \subsection*{Application au code de calcul CROCO}
 Dans le \frchap{chap:croco}, nous nous intéressons à la calibration
-robuste d'un modèle réaliste d'océan, basé sur le code de calcul CROCO.
+robuste d'un modèle réaliste d'océan, basé sur le code de
+calcul.
 
-\todo{écrire}
+Comme mentionné plus tôt, nous cherchons à estimer un paramètre
+régissant la friction de fond. Cette étude sera effectuée dans un
+cadre d'expériences jumelles, c'est-à-dire que les observations seront
+obtenues grâce au code de calcul.
+
+Nous effectuerons tout d'abord une optimisation de la fonction
+objectif, sans introduire d'incertitudes. Ensuite, dans le but de
+réduire la dimension du problème, nous segmenterons le domaine
+océanique étudié, selon le type de sédiments qui se trouve au
+fond. Afin de quantifier l'influence de chacune des régions délimitée
+par la classe de sédiments, une analyse de sensibilité globale sera
+effectuée, afin de calculer les indices de Sobol'
+correspondants~\cite{sobol_global_2001,iooss_revue_2011}. Une étude
+similaire sera menée pour les différentes composantes du paramètre
+représentant les incertitudes $\uu$.
+
+Enfin, une fois la dimension du problème de calibration réduite
+significativement, nous appliquerons des méthodes présentées au
+chapitre précédent.
 
 
-\vfill
+
+\todo{fini ?}
+
+
 \etoile
 \vfill
 
