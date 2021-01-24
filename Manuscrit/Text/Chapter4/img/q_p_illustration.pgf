@@ -118,7 +118,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=0.102980in,y=2.323152in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle p^+ = \max\Gamma_{\alpha_{p^-}} > p\)}%
+\pgftext[x=0.106837in,y=2.323152in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle p^+ = \max\Gamma_{\alpha_{p^+}} > p\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{1.434725in}{0.328551in}}{\pgfqpoint{1.847788in}{2.151146in}}%
@@ -399,15 +399,15 @@
 \definecolor{currentstroke}{rgb}{0.298039,0.447059,0.690196}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{1.559725in}{0.990601in}}%
-\pgfpathlineto{\pgfqpoint{1.837503in}{0.990601in}}%
+\pgfpathmoveto{\pgfqpoint{1.559725in}{1.035508in}}%
+\pgfpathlineto{\pgfqpoint{1.837503in}{1.035508in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.948614in,y=0.941989in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha_p}\)}%
+\pgftext[x=1.948614in,y=0.986897in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha_p}\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetroundcap%
@@ -416,15 +416,15 @@
 \definecolor{currentstroke}{rgb}{0.768627,0.305882,0.321569}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{1.559725in}{0.767408in}}%
-\pgfpathlineto{\pgfqpoint{1.837503in}{0.767408in}}%
+\pgfpathmoveto{\pgfqpoint{1.559725in}{0.812315in}}%
+\pgfpathlineto{\pgfqpoint{1.837503in}{0.812315in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.948614in,y=0.718797in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha},\alpha_{p^+} > \alpha_p\)}%
+\pgftext[x=1.948614in,y=0.763704in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha_{p^+}}\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetroundcap%
@@ -433,15 +433,15 @@
 \definecolor{currentstroke}{rgb}{0.333333,0.658824,0.407843}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{1.559725in}{0.547301in}}%
-\pgfpathlineto{\pgfqpoint{1.837503in}{0.547301in}}%
+\pgfpathmoveto{\pgfqpoint{1.559725in}{0.569755in}}%
+\pgfpathlineto{\pgfqpoint{1.837503in}{0.569755in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.948614in,y=0.498690in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha}, \alpha_{p^-} < \alpha_p\)}%
+\pgftext[x=1.948614in,y=0.521144in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \Gamma_{\alpha_{p^-}}\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%

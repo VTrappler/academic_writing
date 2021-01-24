@@ -87,13 +87,13 @@ du modèle et les observations disponible. Cette fonction prendra donc
 en entrée le paramètre à estimer $\kk$, que l'on nommera paramètre de
 contrôle, ainsi que $\uu$, le paramètre environnemental:
 
-\begin{equation}
+\begin{equation*}
   \label{eq:def_J}
   \begin{array}{rccc}
    J: & \Kspace\times\mathbb{U}& \rightarrow& \mathbb{R}_+ \\
    &(\kk,\uu)& \mapsto& J(\kk,\uu)
   \end{array}
-\end{equation}
+\end{equation*}
 
 La définition de la fonction coût dans un problème de calibration sera abordé dans le~\frchap{chap:inverse_problem}.
 
@@ -148,15 +148,15 @@ regret, qui consiste à comparer les valeurs de la fonction $J$ avec le
 \emph{minimum conditionnel}, qui est le minimum de la fonction
 $J(\cdot, \uu)$, où $\uu$ est une réalisation de la variable aléatoire
 $\UU$. Le minimum conditionnel est donc défini par
-\begin{equation}
+\begin{equation*}
   \label{eq:Jstar}
   J^*(\uu) = \min_{\kk\in\Kspace} J(\kk,\uu)
-\end{equation}
+\end{equation*}
 et le \emph{minimiseur conditionnel} associé est
-\begin{equation}
+\begin{equation*}
   \label{eq:Kstar}
   \kk^*(\uu) = \argmin_{\kk\in \Kspace}J(\kk,\uu)
-\end{equation}
+\end{equation*}
 Ceci permet de définir le regret additif: $J - J^*$. Étant donné la
 strict positivité de $J$, nous pouvons définir aussi le regret relatif
 $J/J^*$. Ceci nous permet d'introduire une notion
@@ -181,9 +181,9 @@ donc étudier la probabilité pour un point $\kk$, d'être acceptable:
 \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
 \end{equation*}
 Cette probabilité peut donc être optimisée, pour donner
-\begin{equation}
+\begin{equation*}
   \kk_{\mathrm{RR},\alpha} = \argmax_{\kk \in\Kspace} \Gamma_\alpha(\kk)
-\end{equation}
+\end{equation*}
 L'optimum atteint est donc la probabilité maximale avec laquelle le
 regret-relatif est borné par $\alpha$.
 
@@ -191,16 +191,16 @@ regret-relatif est borné par $\alpha$.
 Si, au lieu de choisir un seuil $\alpha$ pour la minimisation, nous
 cherchons plutôt à atteindre une certaine probabilité d'acceptabilité
 $p$, nous pouvons définir la fonction quantile du regret relatif comme
-\begin{equation}
+\begin{equation*}
   q_p(\kk) = Q_{\UU}\left(\frac{J(\kk,\UU)}{J^*(\UU)};p\right)
-\end{equation}
+\end{equation*}
 où $Q_{\UU}(\cdot;p)$ est la fonction quantile à l'ordre $p$ de la
 variable aléatoire en argument. $q_p(\kk)$ qui représente donc la valeur qui
 borne le regret au point $\kk$ avec une probabilité donnée $p$.
 Ce quantile peut aussi être minimisé, donnant
-\begin{equation}
+\begin{equation*}
   \kk_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} q_p(\kk)
-\end{equation}
+\end{equation*}
 et le minimum atteint est par conséquent $\alpha_p$, qui vérifie
 $\Gamma_{\alpha_p}(\kk_{\mathrm{RR},\alpha_p}) = p$.
   
@@ -228,14 +228,17 @@ calculer, car nécessitant une procédure d'optimisation. De plus, la
 connaissance de la fonction objectif doit être suffisante afin de
 calculer assez précisemment les quantités $\Gamma_{\alpha}$ et $q_p$.
 Dans le \frchap{chap:adaptative_design_gp}, nous proposons d'utiliser
-des processus Gaussiens (GP), afin de créer un modèle de substitution
-permettant de se passer d'une connaissance exhaustive de la fonction
-$J$.
+des processus Gaussiens (GP), afin de créer un modèle de substitution,
+bien moins coûteux à évaluer, permettant de se passer d'une
+connaissance exhaustive de la fonction $J$.
 
 Soit $Z$ le GP construit avec un plan d'expérience
-$\mathcal{X}=\{(\kk_i, \uu_i), J(\kk_i, \uu_i)\}_{1\leq i \leq N}$. Le
-métamodèle associé à $Z$ et construit d'après $\mathcal{X}$ sera noté
-$m_Z:\Kspace\times \Uspace \rightarrow \mathbb{R}$.
+$\mathcal{X}=\{(\kk_i, \uu_i), J(\kk_i, \uu_i)\}_{1\leq i \leq n}$,
+comprenant donc $n$ points.  Le métamodèle associé à $Z$ et construit
+d'après $\mathcal{X}$ sera noté
+$m_Z:\Kspace\times \Uspace \rightarrow \mathbb{R}$, et utilisé en lieu
+et en place de $J$ pour estimer $\Gamma_{\alpha}$ ou $q_p$, dans un
+approche dite \emph{plug-in}.
 
 Les propriétés des GP nous permettrons aussi d'établir des stratégies
 d'enrichissement. En effet, des méthodes existantes dites
@@ -248,21 +251,17 @@ méthodes SUR (\emph{Stepwise Uncertainty reduction}, réduction
 d'incertitude séquentielle) sont basées sur la définition d'un
 \emph{critère} $\kappa$, dont le maximiseur va être évalué par la fonction
 originale:
-\begin{equation}
-  (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa(\kk, \uu; Z)
-\end{equation}
+\begin{equation*}
+  (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa\left((\kk, \uu); Z\right)
+\end{equation*}
 Puis le plan d'expérience est enrichi:
 $\mathcal{X}_{n+1} = \mathcal{X}_n \cup \{(\kk_{n+1}, \uu_{n+1}),
 J(\kk_{n+1}, \uu_{n+1})\}$, et $Z$ est mis à jour avec le nouveau plan
 d'expérience $\mathcal{X}_{n+1}$.  Ce critère va donc représenter une
 mesure de l'incertitude sur l'estimation, que l'on va chercher à
 réduire. Nous allons ainsi proposer plusieurs méthodes permettant
-d'améliorer l'estimation de $\Gamma_{\alpha}$ ou de $q_p$. Ceci sera fait en définissant notamment
-\begin{equation}
-  \Delta_{\alpha} = Z - Z^*
-\end{equation}
-
-Nous proposons aussi des méthodes basées sur l'échantillonage d'une
+d'améliorer l'estimation de $\Gamma_{\alpha}$ ou de $q_p$.  Nous
+proposons aussi des méthodes basées sur l'échantillonage d'une
 variable aléatoire, qui représente des points à forte incertitudes par
 rapport à l'objectif final, comme
 dans~\cite{echard_ak-mcs_2011,razaaly_rare_2019}. Après une procédure
@@ -271,11 +270,26 @@ de réduction statistique, comme le partitionnement (ou
 d'expérience un \emph{lot} de points, et ainsi prendre avantage du
 parallélisme quand une telle architecture est disponible.
 
+Ceci sera fait en définissant notamment
+$Z^*(\uu) = Z(\kk^*(\uu),\uu)$, et
+\begin{equation*}
+  \Delta_{\alpha,\beta}(\kk, \uu) = Z(\kk, \uu - \alpha Z^*(\uu) - \beta
+\end{equation*}
+et
+\begin{equation*}
+  \Xi(\kk, \uu) = \log\left(\frac{Z(\kk, \uu)}{Z^*(\uu)}\right)
+\end{equation*}
+qui sont deux processus stochastiques dont les distributions, exactes
+sinon approchées, pourront être déduites à partir de la loi de $Z$.
+Nous pourrons donc établir des stratégies d'enrichissement de plans
+d'expériences par rapport à ces deux processus.
+
 
 \subsection*{Application au code de calcul CROCO}
 Dans le \frchap{chap:croco}, nous nous intéressons à la calibration
-robuste d'un modèle réaliste d'océan, basé sur le code de
-calcul.
+robuste d'un modèle réaliste d'océan, basé sur le code de calcul
+CROCO. Les incertitudes introduites dans ce cadre portent sur
+l'amplitude de différentes composantes de marée.
 
 Comme mentionné plus tôt, nous cherchons à estimer un paramètre
 régissant la friction de fond. Cette étude sera effectuée dans un
@@ -285,7 +299,7 @@ obtenues grâce au code de calcul.
 Nous effectuerons tout d'abord une optimisation de la fonction
 objectif, sans introduire d'incertitudes. Ensuite, dans le but de
 réduire la dimension du problème, nous segmenterons le domaine
-océanique étudié, selon le type de sédiments qui se trouve au
+océanique étudié selon le type de sédiments qui se trouve au
 fond. Afin de quantifier l'influence de chacune des régions délimitée
 par la classe de sédiments, une analyse de sensibilité globale sera
 effectuée, afin de calculer les indices de Sobol'
@@ -295,34 +309,18 @@ représentant les incertitudes $\uu$.
 
 Enfin, une fois la dimension du problème de calibration réduite
 significativement, nous appliquerons des méthodes présentées au
-chapitre précédent.
-
-
-
-\todo{fini ?}
+chapitre précédent, afin d'estimer de manière robuste le paramètre de
+friction fond dans ce problème académique.
 
 
 \etoile
 \vfill
 
-% Pour le futur et la fin de la thèse, plusieurs points sont à considérer:
-% \begin{itemize}
-% \item Des méthodes permettant un contrôle plus fin sur les propriétés recherchées du paramètre (aversion/recherche du risque) sont à explorer, comme le ``horsetail matching''~\cite{cook_horsetail_2018}, en prenant notamment pour cible la distribution des minimums.
-% \item L'application à l'estimation de la friction de fond dans le cadre du modèle CROCO est à envisager. CROCO\footnote{\url{https://www.croco-ocean.org/}} (Coastal and Regional Ocean COmmunity model) est un modèle régional d'océan, notamment conçu pour des applications de modélisation côtières. La région étudiée dans le cadre de la thèse est la façade atlantique de la France. 
-%   \begin{itemize}
-%     \item Premièrement les incertitudes du modèle sont à spécifier. Une première piste envisagée est introduire des incertitudes sur les composantes de marée à ajouter dans le forçage.
-%   \item La friction de fond, que l'on cherche à estimer, est un paramètre variant dans l'espace, et donc peut potentiellement être défini en chaque point du maillage d'un modèle. Ceci force à prendre en compte la possibilité d'une grande dimension de $\Kspace$. On peut donc s'interroger sur la façon dont les méthodes et les critères décrits vont se mettre à l'échelle, et sur la possibilité d'appliquer des procédures de réduction de dimension.
-%   \item En plus de la possible grande dimension du problème, les modèles réalistes sont souvent très coûteux en terme de temps de calcul. Il serait donc intéressant de pouvoir réduire au plus les évaluations du code, en adoptant par exemples des méthodes basées sur l'utilisation de méta-modèles. 
-%   \end{itemize}
-% \end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% BIB
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}

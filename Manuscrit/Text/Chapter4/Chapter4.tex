@@ -1263,10 +1263,12 @@ $\alpha$-acceptable is
 \end{align}
 As $J$ is not known perfectly, it can be seen as a classification
 problem.  This classification problem can be approached with a plug-in
-approach in~\cref{eq:plugin_indicator}, or a probabilistic one
-in~\cref{eq:prob_indicator}:
+approach, that is to consider $m_Z$ instead of $J$:
 \begin{align}
-  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \mathbbm{1}_{m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu)} \label{eq:plugin_indicator} \\
+  \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \mathbbm{1}_{m_Z(\kk,\uu) \leq \alpha m_{{Z^*}}(\uu)} \label{eq:plugin_indicator}
+\end{align}
+or to consider the probability of the random variable $\Delta$ to be less than $0$:
+\begin{align}
   \mathbbm{1}_{J(\kk,\uu) \leq \alpha J^*(\uu)} & \approx   \Prob_{Z}\left[ \Delta_{\alpha}(\kk,\uu) \leq 0 \right] = \pi_{\alpha}(\kk,\uu) \label{eq:prob_indicator}
 \end{align}
 
@@ -1811,9 +1813,7 @@ $\{\mathfrak{q}_l\}$ for $1 \leq l \leq K_q$, with
 $\mathfrak{q}_1 = q^-_p$ and $\mathfrak{q}_{K_q} = q^+_p$. The
 $\{\mathfrak{q}_l\}$ are then expected to cover the plausible range of
 value that the sought quantile $\alpha_p = \min q_p(\kk)$ may
-take. % The set $\{\mathfrak{q}_l\}$ can be considered as plausible
-      % values of the wanted quantile $q_p$. \todo{choice of
-      % $\tilde{\kk}$, for discretization of quantiles of interest}
+take.
 
 For each of those $K_q$ quantiles, we can look to sample
 $K_{\mathbb{M}}$ points in the margin of uncertainty of the log-ratio,
@@ -1849,7 +1849,7 @@ minimum. This procedure is illustrated~\cref{fig:QAK_MCS}.
 On~\cref{fig:evol_error_qAK_MCS}, the evolution of the error on the
 estimation of $q_p$ is shown. We can see that we can reduce globally
 the estimation error, but it seems slower than the augmented IMSE, as
-shown~\cref{fig:qPI_aIMSE}.\todo{refaire figures}
+shown~\cref{fig:qPI_aIMSE}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath evol_error_qAK_MCS.pdf}

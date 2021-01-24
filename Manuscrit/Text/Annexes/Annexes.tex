@@ -179,10 +179,21 @@
   \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
   \caption{\label{fig:sediments_full} Full sediments repartition}
 \end{figure}
-\clearpage
 \section{Misspecified deterministic calibration}
+In the next pages are shown the results of different optimisation on
+the whole domain, similarly as in~\cref{ssec:optim_gradient},. However, the optimisation will be carried using the cost
+function defined as
+\begin{equation}
+  J(\kk) = \|\mathcal{M}(\kk, \uu^b) - y \|^2_2 = \|\mathcal{M}(\kk, \uu^b) - \mathcal{M}(\kk^{\mathrm{truth}},\uu^{\mathrm{truth}})\|_2^2
+\end{equation}
+and on \num{200} iterations. $\uu^b\in \interval{0}{1}^2$ represents
+the environmental conditions, while $\uu^{\mathrm{truth}}=(0.5, 0.5)$ is the value used for the observations.% . On
+% \cpageref{sec:appendix_truth_optim}, is shown the result of the
+% optimisation when $\uu^b=\uu^{\mathrm {truth}}$, as
+% in~\cref{ssec:optim_gradient}
+
 \clearpage
-\subsection*{$\uu=(0, 0)$}
+\subsection*{$\uu^b=(0, 0)$}
 \begin{figure}[ht]
   \centering
   \includegraphics[scale=1.]{/home/victor/optimisation_dahu/1b/map_log_200.png}
@@ -196,18 +207,17 @@
 %   \includegraphics[scale=0.7]{/home/victor/optimisation_dahu/1b/optimisation_type_sediments.pdf}
 % \end{figure}
 \clearpage
-
-\subsection*{$\uu=(0, 0.5)$}
+\subsection*{$\uu^b=(0, 0.5)$}
 \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/2b/map_log_400.png}
+  \includegraphics{/home/victor/optimisation_dahu/2b/map_log_200.png}
 \end{figure}
 \begin{figure}[ht]
   \centering
     \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/2b/ctrl_true.pgf}}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(0, 1)$}
+\subsection*{$\uu^b=(0, 1)$}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/3b/map_log_200.png}
@@ -217,7 +227,7 @@
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/3b/ctrl_true.pgf}}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(0.5, 0)$}
+\subsection*{$\uu^b=(0.5, 0)$}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/4b/map_log_200.png}
@@ -227,17 +237,19 @@
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/4b/ctrl_true.pgf}}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(0.5, 0.5) = \uu^{\mathrm{truth}}$}
+\subsection*{$\uu^b=(0.5, 0.5) = \uu^{\mathrm{truth}}$}
+\label{sec:appendix_truth_optim}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_200.png}
 \end{figure}
 \begin{figure}[ht]
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/5/ctrl_plot.png}
+    \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}}
+  % \includegraphics{/home/victor/optimisation_dahu/5b/ctrl_plot.png}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(0.5, 1)$}
+\subsection*{$\uu^b=(0.5, 1)$}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/6b/map_log_200.png}
@@ -247,7 +259,7 @@
     \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/6b/ctrl_true.pgf}}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(1, 0)$}
+\subsection*{$\uu^b=(1, 0)$}
 
 \begin{figure}[ht]
   \centering
@@ -258,7 +270,7 @@
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/7b/ctrl_true.pgf}}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(1, 0.5)$}
+\subsection*{$\uu^b=(1, 0.5)$}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/8b/map_log_200.png}
@@ -269,7 +281,7 @@
   % \includegraphics{/home/victor/optimisation_dahu/8b/ctrl_plot.png}
 \end{figure}
 \clearpage
-\subsection*{$\uu=(1, 1)$}
+\subsection*{$\uu^b=(1, 1)$}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/9b/map_log_200.png}

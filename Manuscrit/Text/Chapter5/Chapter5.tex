@@ -258,10 +258,12 @@ According to~\cref{tab:size_sediments}, the rugosity $\zob$ spans
 multiple orders of magnitude, so we are then going to define the control
 variable $\kk$ as
 \begin{equation}
-  \kk = \log \zob \in \Kspace = \interval{\log(10^{-5})}{\log (5\cdot 10^{-2})}^p \approx \interval{-11.5}{-3}^p
+  \kk = \log \zob \in \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^p
 \end{equation}
-The dimension of $\Kspace$ is written $p$, and will be specified
-depending on the chosen segmentation.
+where $\kk_{\min} = \log(10^{-5}) \approx -11.5$, and
+$\kk_{\max} = \log(5\cdot 10^{-2}) \approx -3$.  The dimension of
+$\Kspace$ will be written $p$, and will be specified depending on the
+chosen segmentation.
 
 \subsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
@@ -449,7 +451,7 @@ silts and muds however, the procedure did not change significantly
 their roughness, and thus stays close to the initial value. This can
 be probably explained by the great depth at which those sediments lay,
 and thus it mitigates their influence on the drag coefficient
-per~\cref{eq:quadratic_friction_vonkarman}.  In the English Channel,
+per~\cref{eq:quadratic_friction_vonkarman}. In the English Channel,
 the size of the pebbles is quite well retrieved albeit a bit
 underestimated, but the points mapped to gravel do seem to compensate:
 on the northern part of the channel the size of the gravel is
@@ -458,11 +460,8 @@ Finally the rocks appear to be hard to estimate properly: only about
 3\% of the domain is listed as rocks, and their corresponding $\zob$
 is quite large in contrast to the other sediments.
 
-This optimisation showed that all the regions defined are not crucial
-for a significant reduction of the values of the cost function. In
-terms of objective function, In order to quantify those difference in
-\todo{finir}
-
+This optimisation showed that all the regions are not crucial for a
+significant reduction of the values of the objective function.
 We are now going to study the influence of the different inputs of the
 objective function. More specifically, we are going to quantify the
 influence of each region defined by its sediment type, and quantify

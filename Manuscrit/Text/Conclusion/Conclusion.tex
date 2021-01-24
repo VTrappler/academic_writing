@@ -41,29 +41,38 @@
 
 \paragraph{Summary}
 In~\cref{chap:inverse_problem}, after having detailed common notions
-of probabilities and statistical inference, we presented the
-calibration problem as an optimisation problem, by introducing an
-objective function, which we can see as a \emph{loss} we wish to
-minimise. However, due to the presence of the environmental variable
-in the study, a plain minimisation of the objective function is not
-possible: by taking into account the random nature of the
-\emph{nuisance parameters}, the calibration can be seen as a problem
-of \emph{optimisation under uncertainties}, and specific methods and
-criterion can be defined to treat accordingly this new problem.
+of probabilities and aspects of statistical inference, we presented
+the calibration problem as an optimisation problem, by introducing an
+objective function, that we wish to minimise with resepct to the
+control parameter $\kk$.
+
+However, due to the presence of some random environmental variables in
+the study $\UU$, a plain minimisation of the objective function is not
+completely relevant, as it will depend on the realisation of this
+random variable.
+
+By taking into account the random nature of the {environmental
+  parameters}, the calibration can be seen as a problem of
+\emph{optimisation under uncertainties}, and many specific methods and
+criteria can be defined to treat accordingly this new problem of
+\emph{robust} calibration.
 
 
 Some classical criteria are first introduced
 in~\cref{chap:robust_estimators}, leading to Bayesian or frequentist
-estimates if we keep an inference framework, or estimates such as the
-minimiser of the mean value of the objective function. In this thesis,
-we introduce a new estimate based on the regret. Instead of comparing
-directly the values of the objective function for different situations
-corresponding to different values of the uncertain variable, the
-regret allows the modeller to compare the value of the objective with
-the best attainable performance given a specific environmental
-variable. This allows to put less emphasis on configurations which
-already lead to bad performances, and to focus more on salveagable
-situations.
+estimates when keeping an probabilistic inference framework, or
+estimates such as the minimiser of the mean value of the objective
+function, the minimiser of what is sometimes called the \emph{expected loss} for instance.
+
+In this thesis, we focused on estimates based on a notion of regret:
+instead of comparing directly the values taken by the objective
+function for different configurations given by $\uu$ sampled from
+$\UU$, the regret allows the modeller to compare the value of the
+objective with the best attainable performance given this specific
+environmental variable.
+
+This allows to put less emphasis on configurations which already lead
+to bad performances, and to focus more on ``salveagable'' situations.
 
 Moreover, the user can adjust a parameter in order to reflect either a
 risk-adverse behaviour, by favourising a control of the regret with
@@ -72,66 +81,91 @@ that will yield values of the regret closer to its optimum, albeit
 with lower probability.
 
 
-In general, criteria of robust optimisation require a global
-knowledge of the function, since they often involve the evaluation of
+In general, criteria of robust optimisation require a global knowledge
+of the function, since they often involve several evaluations of
 expectations and probabilities with respect to $\UU$. In addition to
-that, regret-based criteria we introduced depend directly on the
-conditional minimum and minimiser. In~\cref{chap:adaptative_design_gp},
-we proposed to use Gaussian Processes in order to compute the
-quantities associated with regret-based estimators. More precisely, we
-proposed a few methods which aim at improving this estimation by
-choosing iteratively a new, or a batch of new points to evaluate and
-to add to the design.
+that, The family of regret-based estimates we introduced depends
+directly on the conditional minimum and
+minimiser. In~\cref{chap:adaptative_design_gp}, we proposed to use
+Gaussian Processes (GP) in order to compute the quantities associated with
+regret-based estimators. More precisely, we proposed a few methods
+which aim at improving this estimation by choosing iteratively a new,
+or a batch of new points to evaluate and to add to the design.
 
 Finally in~\cref{chap:croco}, we studied an academic problem of
-calibration of a coastal model based on CROCO. After having reduced
-the input space based on the sediment type at the bottom, we enriched
-the design in order to improve the estimation of the functions, which
-are then optimised.
+calibration of a coastal model based on CROCO.\@ After having reduced
+the dimension of the input space based on the sediment type at the
+bottom, we enriched the design in order to improve the estimation of
+the functions that define the regret-based estimates, which are then
+optimised.
 
 \paragraph{Limitations and perspectives}
 
-In this thesis, we focused on a variational approach, which is based
-on the optimisation of an objective function. Based on this function,
-we. However, we do not control the values of the function, when
-exceeding this threshold. A similar approach could be developed based
-on the CVaR (Conditional Value at Risk), also called \emph{expected
-  shortfall}, in order to take into account the expected loss when
-this happens.
 
-We also did not focus on the moments of the objective
-function.  Horsetail
-matching~\cite{cook_extending_2017,cook_horsetail_2018} allows for a
-finer tuning of the properties of the distribution of the calibrated
-model $J(\hat{\kk},\UU)$, by comparing it to a target
-distribution. Following this idea, as the distribution of the
-conditional minimum $J^*(\UU)$ can be seen as an ideal distribution
-(\emph{i.e.} the distribution that one could get if the calibrated
-parameter had always been chosen optimally for all realisations of the
-uncertain variable), the minimisation of a measure of misfit between
-the distribution of $J^*(\UU)$ and of $J(\hat{\kk},\UU)$ may be worth
-exploring, and minimised.
+% Calibration using a Bayesian approach
+In this thesis we focused on the variational formulation of the
+calibration problem, \emph{i.e.} by defining an objective function,
+akin to the negative log-likelihood, that is then optimised. A
+Bayesian method could be performed in order to estimate the posterior
+distribution of the parameter $\kk$ given the observations. Moreover,
+this task could be performed using adapted sampling schemes, such as
+Hamiltonian Monte-Carlo~\cite{betancourt_conceptual_2017}, in order to
+use the gradient that may be available using adjoint method.
+
+More generally, we did not take much advantage of the potential
+availability of the gradient with respect to the control parameter: We
+can incorporate this additional knowledge in the mdoelling of the GP,
+so that the predictions are improved, as done
+in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}.
+However, GP are flexible and useful tools but are not well suited for
+modelling problems with dimensions higher than about 10: when the
+designs considered are too large, fitting the GP can also be
+problematic, as large matrices have to be inverted, and the
+optimisation of the hyperparameters can become difficult. Reducing the
+dimension of the input spaces is then often necessary.
+
+The segmentation we performed in~\cref{chap:croco} for instance is
+rather coarse and based on external information. A finer dimension
+reduction method could be done, without prior information, using the
+gradient for instance, as done in~\cite{benameur_refinement_2002} or
+in~\cite{zahm_certified_2018}.
 
 
+
+% Choice of quantile ? to remove maybe
+In this thesis, we proposed a family of criteria that depends on the
+probability of exceedance. However, we do not control the values of
+the function, when exceeding this threshold. A similar approach could
+be developed analogous to the CVaR (Conditional Value at
+Risk)~\cite{rockafellar_conditional_2002}., also called \emph{expected
+  shortfall}, in order to control the values of the objective function
+when they do exceed the threshold.
+
+% Horsetail matching, comparison J*(U) and J(k, U)
+We introduced the random variable that corresponds to the conditional
+minimum and the conditional minimisers. The distribution of the
+conditional minimum $J^*(\UU)$ can be seen as a distribution for the
+objective (\emph{i.e.} the distribution that one could get if the
+calibrated parameter had always been chosen optimally for all
+realisations of the uncertain variable). The minimisation of a measure
+of misfit between the distribution of $J^*(\UU)$ and the distribution
+of $J(\hat{\kk},\UU)$ (the objective function of the model calibrated
+with $\hat{\kk}$) may be worth exploring. Horsetail matching for
+instance~\cite{cook_extending_2017,cook_horsetail_2018} could be
+used so that the a metric between cdf of the two distribution is minimised.
+
+% Choice of alpha or p
 The new criteria introduced in this thesis rely on an additional
 parameter, the maximal threshold or alternatively, the targeted level
 of confidence, that controls the deviation with respect to the
 conditional optimal value. Setting one of those parameters can lead to
 an unsatisfactory counterpart as mentioned
-in~\cref{chap:robust_estimators}. In terms of numerical methods,
-Gaussian Processes are not well suited for problems of dimension
-larger than about \num{10}: when the designs considered are too large,
-fitting the GP can also be problematic, as large matrices need to be
-inverted, and the optimisation of the hyperparameters can become difficult.
+in~\cref{chap:robust_estimators}.
 
-In most applications, and thus also when looking to apply methods
-based on GP, a first reduction of the input space may be
-necessary. The segmentation performed in~\cref{chap:croco} for instance is
-rather coarse, and based on external information. A finer dimension
-reduction method could be done, without prior information, using the
-gradient for instance, as done in~\cite{benameur_refinement_2002} or
-in~\cite{zahm_certified_2018}.
 
+
+
+% 2-stage enrichment strategies
 Using the GP, we developed criteria which aim improving the
 estimations of the functions $\Gamma_\alpha$ and $q_p$. In order to
 get estimators, those functions had to be optimised, in a sample
@@ -146,36 +180,14 @@ $\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over this
 space). This would focus the enrichment in regions of interest, and
 also reduce the dimension of the integral to evaluate.
 
-
+% Gradient enhanced kriging
 More generally, we did not use the gradient of the objective function:
-GP predictions can be improved using the gradient:
-\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}
 
 
-We focused in this thesis on the variational
-formulation of the calibration problem, \emph{i.e.} by defining an
-objective function, akin to the negative log-likelihood, that is then
-optimised. A Bayesian method could be performed in order to estimate
-the posterior distribution of the parameter $\kk$ given the
-observations. Moreover, this task could be performed using adapted
-sampling schemes, such as Hamiltonian Monte-Carlo
-\cite{betancourt_conceptual_2017} for instance.
 
 
-\todo{Bayesian approach}
-\todo{Using gradient informations for kriging}
-\todo{Enrichment of the design with 2 stages for focused optimisation}
-\todo{Better sampling scheme for margins of uncertainties}
+% Sampling problem in AK-MCS
 
-\todo{Gradient info for dimension reduction}
-%\todo{Wrapping up}
-% \todo{Limitations}
-% \todo{Perspectives}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% BIB
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \etoile
 \vfill

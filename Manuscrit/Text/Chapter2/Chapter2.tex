@@ -1148,19 +1148,40 @@ However, the calibration will depend on the chosen $\uu_0$: $\estimtxt{\theta}{}
 
 $\uu_0$ and $\uu_1$ are close to each other, but ${\kk}(\uu_0)$ and ${\kk}(\uu_1)$ are not. However, as the objective function shows similar values at those points, choosing either one would lead to a satisfactory outcome given $\UU = \uu_0$ or $\UU=\uu_1$. If $\UU = \uu_2$ is considered as well, the modeller may have a preference and choose $\estimtxt{\kk}{}(\uu_1)$ as the final estimator.
 
-In terms of model selection, the asymptotic distribution of the likelihood ratio statistic defined~\cref{sec:likelihood_ratio_test} is also slightly different. Instead of following a $\chi^2_{r}$ distribution, where $r$ is the number of dimensions for the test, $-2\log \Lambda$ will asymptotically have the same distribution as a weighted sum of $r$ random variables, where every one have a $\chi^2_1$ distribution and whose weights are the eigenvalues of a matrix involving the Jacobian and the Hessian of the log-likelihood~\cite{kent_robust_1982}.
+In terms of model selection, the asymptotic distribution of the
+likelihood ratio statistic defined~\cref{sec:likelihood_ratio_test} is
+also slightly different. Instead of following a $\chi^2_{r}$
+distribution, where $r$ is the number of dimensions for the test,
+$-2\log \Lambda$ will asymptotically have the same distribution as a
+weighted sum of $r$ random variables, where each one have a $\chi^2_1$
+distribution and whose weights are the eigenvalues of a matrix
+involving the Jacobian and the Hessian of the
+log-likelihood~\cite{kent_robust_1982}.
 
 
- This random misspecification leads to some issues in the calibration of the model, and it asks for a notion of robustness with respect to the environmental parameters. 
+This random misspecification leads to some issues in the calibration
+of the model, and it asks for a notion of robustness with respect to
+the environmental parameters.
 
 \section{Partial conclusion}
 \label{sec:chap2_partial}
 
-In this chapter, starting from a probabilistic point of view, we established the usual tools encountered in model calibration: the misfit between the data and the numerical model is measured by an objective function $J$, that can be minimized using for instance gradient descent. From this optimization, we can define a ``acceptable'' region for the estimate. In other words, values in this set yield an misfit that is not different enough to be completely discarded.
+In this chapter, starting from a probabilistic point of view, we
+established the usual tools encountered in model calibration: the
+misfit between the data and the numerical model is measured by an
+objective function $J$, that can be minimized using for instance
+gradient descent. From this optimization, we can define a
+``acceptable'' region for the estimate. In other words, values in this
+set yield an misfit that is not different enough to be completely
+discarded.
 
-Adding an environmental variable as a random parameter introduces a random parametric misspecification to the model: each realization of this underlying random variable will yield a different estimation. In \cref{chap:robust_estimators}, we will discuss the notion of robustness under this random misspecification, and introduce a family of robust estimators, inspired by model selection. 
+Adding an environmental variable as a random parameter introduces a
+random parametric misspecification to the model: each realization of
+this underlying random variable will yield a different estimation. In
+\cref{chap:robust_estimators}, we will discuss the notion of
+robustness under this random misspecification, and introduce a family
+of robust estimators, inspired by model selection.
 
-\vfill
 \etoile
 \vfill
 
