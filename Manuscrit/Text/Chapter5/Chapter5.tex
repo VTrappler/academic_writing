@@ -61,29 +61,27 @@ the regions that may influence the most the calibration.
 
 The deterministic problem of calibration will then be addressed in
 \cref{sec:deterministic_calibration_bott}, by first defining the cost
-function and the input space. We will then calibrate the model
-without external uncertainties using adjoint-based method, in high-dimension ($\sim$\num{15000}).
+function and the input space. We will then calibrate the model without
+external uncertainties using adjoint-based method, in high-dimension
+($\sim$\num{15000}).
 
 However for such problems, as the parameter may be spatially
 distributed and thus high-dimensional, any procedure may become
 quickly expensive.  In consequence, instead of considering each grid
 point individually, we will segment the geographical input space in
 different independent regions, which are based on the type of
-sediments listed at the bottom of the water.
+sediments listed at the bottom of the water. In this problem of
+calibration we will assume that the uncertainties take the form of an
+environmental parameter which perturbates the amplitude of some tidal
+constituents.  In order to quantify the influence of each of the
+sediments-based regions, and each of the components of the
+environmental variable, we will carry global sensitivity analysis,
+in~\cref{sec:sensitivity-analysis}.
 
-The uncertainties in this problem of calibration will be assumed take
-the form of an environmental parameter, which perturbates the
-amplitude of some tidal constituents.
-
-In order to quantify the influence of each of the sediments-based
-regions, and each of the components of the environmental variable, we
-will carry global sensitivity analysis, in~\cref{sec:sensitivity-analysis}.
-
-Finally, based on this study, we will reduce significantly the input
-space, in order to be able to carry robust calibration
-procedures. Indeed, we are going to apply some of the methods proposed
-in the previous chapter, in order to get a robust estimation of the
-bottom friction using Gaussian processes.
+Finally, after this study that we will use to reduce significantly the
+input space, we are going to apply some of the methods proposed in the
+previous chapter, in order to get a robust estimation of the bottom
+friction using Gaussian processes.
 
 
 
@@ -357,7 +355,10 @@ $\uu^{\mathrm{truth}}$.
   \end{array}
 \end{equation}
 
-Based on the forward operator $\mathscr{M}$, we can generate the observations $y\in \Yspace = \mathbb{R}^{N_{\mathrm{obs}}}$ using a truth value $\kk^{\mathrm{truth}}$:
+Based on the forward operator $\mathscr{M}$, we can generate the
+observations $y\in \Yspace = \mathbb{R}^{N_{\mathrm{obs}}}$ using the
+truth value $\kk^{\mathrm{truth}}=\log \zob^{\mathrm{truth}}$, as
+defined \cref{tab:size_sediments}:
 \begin{equation}
   y = \mathscr{M}(\kk^{\mathrm{truth}}) = \mathcal{M}(\kk^{\mathrm{truth}}, \uu^{\mathrm{truth}})
 \end{equation}
@@ -420,7 +421,7 @@ during the optimisation procedure. %  \todo{plutot deviation
 
 \begin{figure}[ht]
   \centering
-  \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}
+  \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true400.pgf}
   \caption{\label{fig:ctrl_true} Evolution of the cost function and
     the squared norm of the gradient}
 \end{figure}
@@ -520,7 +521,7 @@ same.
 As global SA calls for a probabilistic framework, we are going to
 consider a real-valued random vector $X=(X_1,\cdots X_p)$ which
 represents the inputs of a real function
-$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vecor, we
+$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vector, we
 can introduce $Y$, the real-valued random variable defined as
 $Y=f(X)$.
 
@@ -638,7 +639,6 @@ identically distributed, and
 $\UU \sim \mathcal{U}\left(\Uspace\right)$ with
 $\Uspace = \interval{0}{1}^2$.
 
-\clearpage
 \section{Robust Calibration of the bottom friction}
 
 \subsection{Objective function definition}
@@ -845,7 +845,7 @@ random set $\{\Delta_\alpha \leq 0\}$ to be
   in~\cref{alg:sampling_enrichment_star}.  As the margin
   $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
   to the design (as it is easier to classify points either \emph{in}
-  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$, the sampling step can
+  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step can
   become difficult,\todo{finir}
 \subsubsection{Optimisation of the quantile of the relative-regret}
 

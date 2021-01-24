@@ -49,12 +49,10 @@ control parameter $\kk$.
 However, due to the presence of some random environmental variables in
 the study $\UU$, a plain minimisation of the objective function is not
 completely relevant, as it will depend on the realisation of this
-random variable.
-
-By taking into account the random nature of the {environmental
-  parameters}, the calibration can be seen as a problem of
-\emph{optimisation under uncertainties}, and many specific methods and
-criteria can be defined to treat accordingly this new problem of
+random variable.  By taking into account the random nature of the
+{environmental parameters}, the calibration can be seen as a problem
+of \emph{optimisation under uncertainties}, and many specific methods
+and criteria can be defined to treat accordingly this new problem of
 \emph{robust} calibration.
 
 
@@ -70,7 +68,6 @@ function for different configurations given by $\uu$ sampled from
 $\UU$, the regret allows the modeller to compare the value of the
 objective with the best attainable performance given this specific
 environmental variable.
-
 This allows to put less emphasis on configurations which already lead
 to bad performances, and to focus more on ``salveagable'' situations.
 
@@ -100,6 +97,30 @@ the functions that define the regret-based estimates, which are then
 optimised.
 
 \paragraph{Limitations and perspectives}
+
+% 2-stage enrichment strategies
+Using the GP, we developed criteria which aim at improving the
+estimations of the functions $\Gamma_\alpha$ and $q_p$. In order to
+get estimators, those functions had to be optimised, in a sample
+average approximation (SAA) fashion. We could instead develop methods
+which aim at optimising directly those functions, along with their
+estimations. This could for instance be done in a $2$-stage enrichment
+strategy. First, a $\tilde{\kk}$ is chosen, with a ``high'' potential
+to be the optimiser (quite similarly as the EI criterion), and then
+the couple $(\kk_{n+1}, \uu_{n+1})$ to evaluate is chosen in order to
+reduce a measure of uncertainty associated with the space
+$\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over
+this space). This would focus the enrichment in regions of interest,
+and also reduce the dimension of the integral to evaluate.  When
+introduced also a few sampling-based methods, that rely on efficient
+sampling in different margin of uncertainties. Depending on the
+problem, this task can reveal itself quite challenging: the more
+accurate the GP is, the less prediction variance it shows, and thus
+the margin of uncertainty can become very thin. Simple sampling
+schemes such as the acceptance-rejection method can become
+inefficient, even more so when the dimension of the problem
+increases. Refinement such as importance sampling can be considered
+such as in~\cite{razaaly_rare_2019}.
 
 
 % Calibration using a Bayesian approach
@@ -131,62 +152,29 @@ gradient for instance, as done in~\cite{benameur_refinement_2002} or
 in~\cite{zahm_certified_2018}.
 
 
-
 % Choice of quantile ? to remove maybe
-In this thesis, we proposed a family of criteria that depends on the
-probability of exceedance. However, we do not control the values of
-the function, when exceeding this threshold. A similar approach could
-be developed analogous to the CVaR (Conditional Value at
-Risk)~\cite{rockafellar_conditional_2002}., also called \emph{expected
+In this thesis, we proposed a regret-based family of estimates that
+depends on the probability of exceeding a specified
+threshold. However, we do not control the values of the function when
+exceeding this threshold. A similar approach could be developed
+analogous to the CVaR (Conditional Value at
+Risk)~\cite{rockafellar_conditional_2002}, also called \emph{expected
   shortfall}, in order to control the values of the objective function
 when they do exceed the threshold.
-
 % Horsetail matching, comparison J*(U) and J(k, U)
-We introduced the random variable that corresponds to the conditional
-minimum and the conditional minimisers. The distribution of the
-conditional minimum $J^*(\UU)$ can be seen as a distribution for the
-objective (\emph{i.e.} the distribution that one could get if the
-calibrated parameter had always been chosen optimally for all
-realisations of the uncertain variable). The minimisation of a measure
-of misfit between the distribution of $J^*(\UU)$ and the distribution
-of $J(\hat{\kk},\UU)$ (the objective function of the model calibrated
-with $\hat{\kk}$) may be worth exploring. Horsetail matching for
-instance~\cite{cook_extending_2017,cook_horsetail_2018} could be
-used so that the a metric between cdf of the two distribution is minimised.
+In order to introduce this family, we introduced the random variable
+that corresponds to the conditional minimum and the conditional
+minimisers. The distribution of the conditional minimum $J^*(\UU)$ can
+be seen as an ``ideal'' distribution for the objective (\emph{i.e.} the
+distribution that one could get if the calibrated parameter had always
+been chosen optimally for all realisations of the uncertain
+variable). The minimisation of a measure of misfit between the
+distribution of $J^*(\UU)$ and the distribution of $J(\hat{\kk},\UU)$
+(the objective function of the model calibrated with $\hat{\kk}$) may
+be worth exploring. Horsetail matching for
+instance~\cite{cook_extending_2017,cook_horsetail_2018} could be used
+so that the a metric between cdf of the two distribution is minimised.
 
-% Choice of alpha or p
-The new criteria introduced in this thesis rely on an additional
-parameter, the maximal threshold or alternatively, the targeted level
-of confidence, that controls the deviation with respect to the
-conditional optimal value. Setting one of those parameters can lead to
-an unsatisfactory counterpart as mentioned
-in~\cref{chap:robust_estimators}.
-
-
-
-
-% 2-stage enrichment strategies
-Using the GP, we developed criteria which aim improving the
-estimations of the functions $\Gamma_\alpha$ and $q_p$. In order to
-get estimators, those functions had to be optimised, in a sample
-average approximation (SAA) fashion. We could instead develop methods
-which aim at optimising directly those functions, along with their
-estimations. This could for instance be done in a $2$-stage enrichment
-strategy. First, a $\tilde{\kk}$ is chosen, with a ``high'' potential to be
-the optimiser (quite similarly as the EI criterion), and then the
-couple $(\kk_{n+1}, \uu_{n+1})$ to evaluate is chosen in order to
-reduce a measure of uncertainty associated with the space
-$\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over this
-space). This would focus the enrichment in regions of interest, and
-also reduce the dimension of the integral to evaluate.
-
-% Gradient enhanced kriging
-More generally, we did not use the gradient of the objective function:
-
-
-
-
-% Sampling problem in AK-MCS
 
 
 \etoile

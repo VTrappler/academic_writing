@@ -35,10 +35,10 @@ general ideas behind calibration, by introducing the notions of
 models, and forward and inverse problems
 in~\cref{sec:forward_inverse_problem_proba_theory}. This implies also
 a short review of notions of probability theory. Calibration will be
-defined in \cref{sec:parameter_inference} as the optimization of an
+defined in \cref{sec:parameter_inference} as the optimisation of an
 objective function: Maximum likelihood estimation in a frequentist
-setting, or posterior maximization using Bayes' theorem. In practice,
-for large-scale applications, the optimization is performed using
+setting, or posterior maximisation using Bayes' theorem. In practice,
+for large-scale applications, the optimisation is performed using
 gradient-descent, and the computational cost of gradient computation
 can be overcome by adjoint method, as described
 in~\cref{sec:calibration_adjoint_optimization}. Finally, we are going
@@ -70,7 +70,7 @@ view using likelihood-based methods and Bayesian inference, or from a
 functions. To match those two approaches, we will first review the
 problem from a probabilistic point of view, in order to define
 properly some appropriate objective functions and introduce tools from
-optimal control theory to optimize them.
+optimal control theory to optimise them.
 
  \subsection{Model space data space and forward problem}
 \label{sec:model_space_data_space}
@@ -600,7 +600,7 @@ For the sake of simplicity, let us assume that $\vartheta \in \Theta \subseteq \
   will be written $\hat{\kk}$, and the subscript will denote
   additional information on the estimator.  In this thesis, we focus
   on extremum estimators. Those estimators are defined as the
-  optimizer of a given objective function $J$,
+  optimiser of a given objective function $J$,
   $\hat{\kk} = \argmin J$. In the next sections, we will see the
   probabilistic origins of a few classical objective functions.
 \subsection{Frequentist inference, MLE}
@@ -647,14 +647,14 @@ extremum estimator.
                           &= \prod_{i=1}^p\frac{1}{\sqrt{2\pi}\sigma_i}\exp\left(-\frac{(\mathcal{M}(\theta)_i - y_i)^2}{2\sigma^2_i}\right)
   \end{align}
   with $y = [y_1, \dots, y_p]$ and $\mathcal{M}(\theta) = [\mathcal{M}(\theta)_1,\dots \mathcal{M}(\theta)_p]$.
-  Based on the likelihood function, we can define the \emph{Maximum Likelihood Estimator}, or \emph{MLE}, that maximizes the likelihood defined above:
+  Based on the likelihood function, we can define the \emph{Maximum Likelihood Estimator}, or \emph{MLE}, that maximises the likelihood defined above:
   \begin{equation}
     \label{eq:def_MLE}
     \estimtxt{\theta}{MLE} = \argmax_{\theta\in\Theta}\mathcal{L}(\theta;y)
   \end{equation}
 
 \end{definition}
-  For practical and numerical reasons, the maximization of the likelihood is often replaced by the minimization of the negative log-likelihood:
+  For practical and numerical reasons, the maximisation of the likelihood is often replaced by the minimization of the negative log-likelihood:
   \begin{equation}
     \label{eq:MLE_iid}
     \estimtxt{\theta}{MLE} = \argmin_{\theta \in \Theta} -\log \mathcal{L}(\theta;y)= \argmin_{\theta \in \Theta} -\sum_{i=1}^p\log p_{Y_i\mid \theta}(y_i \mid \theta) 
@@ -665,7 +665,7 @@ extremum estimator.
   \end{equation}
   % More generally, we can show that the MLE is also the minimizer of the KL-divergence between the sampling distribution:
 
-As the optimization is performed on $\theta$, we can remove the constant terms of the objective function, and rewrite the objective function as a $L^2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
+As the optimisation is performed on $\theta$, we can remove the constant terms of the objective function, and rewrite the objective function as a $L^2$ norm in~\cref{eq:MLE_L2norm}.  % By optimizing with respect to $\theta$, we can omit the constant terms, and
   \begin{align}
     \estimtxt{\theta}{MLE} &= \argmin_{\theta \in \Theta}\frac{1}{2}(\mathcal{M}(\theta) - y)^T\Sigma^{-1}(\mathcal{M}(\theta) - y) \nonumber\\
                            &= \argmin_{\theta \in \Theta}\frac12 \| \mathcal{M}(\theta) - y \|^2_{\Sigma^{-1}} \label{eq:MLE_L2norm}
@@ -1103,7 +1103,7 @@ Another approach is to marginalize the likelihood with respect to the prior dist
 % Quite similarly to the BIC and AIC, the logarithm of the Bayes' factor
 % Again, it is usually compared to specific values, allowing us to conclude roughly on how strong does the data favor $\mathfrak{M}_1$. 
 Again, the logarithm of Bayes' factor is compared with specified thresholds~\cite{kass_bayes_1995,burnham_multimodel_2004}.
-% Given a model, a criterion is derived either by maximization (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
+% Given a model, a criterion is derived either by maximisation (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
 % In both cases, the preference toward one or another model is directly linked to the difference on the logarithms of the densities.
 
 \section{Parametric model misspecification}
@@ -1170,7 +1170,7 @@ In this chapter, starting from a probabilistic point of view, we
 established the usual tools encountered in model calibration: the
 misfit between the data and the numerical model is measured by an
 objective function $J$, that can be minimized using for instance
-gradient descent. From this optimization, we can define a
+gradient descent. From this optimisation, we can define a
 ``acceptable'' region for the estimate. In other words, values in this
 set yield an misfit that is not different enough to be completely
 discarded.

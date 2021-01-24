@@ -53,15 +53,15 @@ dans ces modèles, comme évoqué dans~\cite{walker_defining_2003}.
 Dans le cadre de cette thèse, les incertitudes épistémiques prennent
 la forme de la méconnaissance de la valeur d'un paramètre
 $\kk \in \Kspace$, que l'on va chercher à calibrer.  Un exemple de ce
-genre de problème est l'estimation de la friction dans les modèles
-océaniques.  En effet, la friction de fond est dûe à la rugosité du
+genre de problèmes est l'estimation de la friction dans les modèles
+d'océans.  En effet, la friction de fond est dûe à la rugosité du
 plancher océanique, provoquant de la dissipation d'énergie à cause des
 turbulences engendrées. L'estimation de la friction de fond est un
-problème à fort enjeu, notamment dans les régions côtières, du fait de
+problème à forts enjeux, notamment dans les régions côtières, du fait de
 son influence sur les courants et de son interaction avec la
 marée~\cite{sinha_principal_1997,boutet_estimation_2015}.
 
-Cette estimation qui a déjà été traité dans un cadre
+Cette estimation peut être traitée dans un cadre
 d'assimilation de données avec des méthodes variationelles comme
 dans~\cite{das_estimation_1991,das_variational_1992} sur un cas
 simplifié, ou dans un cas plus réaliste
@@ -73,17 +73,16 @@ Les incertitudes aléatoires, quant à elles, représentent des
 conditions environnementales, comme le forçage d'un modèle ou les
 conditions aux bords. Ces conditions ne sont pas directement
 contrôlées par le modèle, donc l'on subit leurs fluctuations, ou leur
-imprécision.
-
-Ces variables environnementales vont être modélisées par une variable
-aléatoire $\UU$, de réalisation $\uu\in \Uspace$.
+imprécision.  Ces variables environnementales vont être modélisées à
+l'aide d'une variable aléatoire $\UU$, de réalisation
+$\uu\in \Uspace$.
 
 Comme le modèle que l'on cherche à calibrer vise à représenter la
 réalité, il est souhaitable que les predictions du modèle soient le
 plus similaire possible aux observations dont on dispose. Cette notion
 de distance est retranscrite en définissant une fonction $J$, dite
 fonction coût ou fonction objectif qui mesure l'écart entre la sortie
-du modèle et les observations disponible. Cette fonction prendra donc
+du modèle et les observations disponibles. Cette fonction prendra donc
 en entrée le paramètre à estimer $\kk$, que l'on nommera paramètre de
 contrôle, ainsi que $\uu$, le paramètre environnemental:
 
@@ -95,50 +94,49 @@ contrôle, ainsi que $\uu$, le paramètre environnemental:
   \end{array}
 \end{equation*}
 
-La définition de la fonction coût dans un problème de calibration sera abordé dans le~\frchap{chap:inverse_problem}.
+La définition de la fonction coût dans un problème de calibration sera
+abordé dans le~\frchap{chap:inverse_problem}.
 
 \subsection*{Notions de robustesse}
 
 Ne pas prendre en compte les incertitudes aléatoires dans l'estimation
-de $\kk$ peut amener à compenser de manière artificielle l'erreur
-aléatoire, et donc amener à un comportement analogue au
-\emph{sur-apprentissage} (overfitting), ou \emph{optimisation
-  localisée}~\cite{huyse_probabilistic_2002}. Cela peut amener à des
-situations où le paramètre estimé n'est optimal que pour la valeur de
-$\uu$ supposée, et pour une autre réalisation de la variable aléatoire
-sous-jacente, le modèle ainsi calibré donne des prédictions
-potentiellement aberrantes~\cite{kuczera_there_2010}.
+de $\kk$ peut amener à compenser de manière artificielle certains
+aspects physiques dûs à la variable environnementale, et donc amener à
+un comportement analogue au \emph{sur-apprentissage} (overfitting), ou
+\emph{optimisation localisée}~\cite{huyse_probabilistic_2002}. Cela
+peut amener à des situations où le paramètre estimé n'est optimal que
+pour la valeur de $\uu$ supposée, et pour une autre réalisation de la
+variable aléatoire sous-jacente, le modèle ainsi calibré donne des
+prédictions potentiellement aberrantes~\cite{kuczera_there_2010}.
 
 On cherche donc à définir une valeur de $\kk$, notée $\hat{\kk}$ de
-manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable}, lorsque
-l'on prend en compte la variabilité intrinsèque de $\uu$.
-En prenant en compte le caractère aléatoire de la variable
-environnementale, pour un $\kk$ donné, la fonction coût peut être vue
-comme une variable aléatoire: $J(\kk,\UU)$, que l'on va chercher
-intuitivement à ``minimiser'' dans un certain sens qui reste à
-définir.  Cette problématique porte différents noms, comme
-l'optimisation robuste, où robuste doit être compris comme
-l'insensibilité aux variations de $\UU$, optimisation sous
-incertitudes (\emph{Optimisation under Uncertainty} ou \emph{OUU}), ou encore
-d'optimisation stochastique. Une nomenclature prenant en compte les
-différences notamment sur les contraintes potentiellement présentes
-peut être trouvé dans~\cite{lelievre_consideration_2016}
+manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque
+l'on prend en compte la variabilité intrinsèque de $\uu$.  En prenant
+en compte le caractère aléatoire de la variable environnementale, pour
+un $\kk$ donné, la fonction coût peut être vue comme une variable
+aléatoire: $J(\kk,\UU)$, que l'on va chercher intuitivement à
+``minimiser'' dans un certain sens qui reste à définir.  Cette
+problématique porte différents noms, comme l'optimisation robuste, où
+cette robustesse doit être comprise comme l'insensibilité aux
+variations de $\UU$. Ceci se rapproche de l'optimisation sous
+incertitudes (\emph{Optimisation under Uncertainty} ou \emph{OUU}), ou
+encore d'optimisation stochastique. Une nomenclature prenant en compte
+les différences, notamment sur les contraintes potentiellement
+présentes, peut être trouvé dans~\cite{lelievre_consideration_2016}
 
 
-L'objectif de la thèse est d'établir différents critères de
+L'objectif de la thèse est donc de proposer différents critères de
 robustesse, et d'appliquer des méthodes adaptées permettant d'estimer
 un paramètre en présence d'incertitudes. Cette estimation se réalise
 dans un premier temps dans des cas simples (fonctions analytiques,
 problèmes simplifiés de faibles dimensions), puis sur des problèmes
-plus complexes d'estimation de la friction de fond (modèles réalistes
-coûteux en temps de calcul, dimension élevée).
+plus complexes d'estimation de la friction de fond.
 
 \subsection*{Critères basés sur le regret additif et relatif}
 Dans le \frchap{chap:robust_estimators}, nous abordons le problème de
-calibration 
-Un certain nombre des méthodes
-d'optimisation sous incertitudes se basent sur la minimisation des
-moments de la variable aléatoire $J(\mathbf{\cdot}, \UU)$ comme
+calibration en présence d'incertitdes. Un certain nombre des méthodes d'optimisation sous
+incertitudes se basent sur la minimisation des moments de la variable
+aléatoire $J(\mathbf{\cdot}, \UU)$ comme
 dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou
 bien se basent sur la résolution d'un problème
 multiobjectifs~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
@@ -288,7 +286,7 @@ d'expériences par rapport à ces deux processus.
 \subsection*{Application au code de calcul CROCO}
 Dans le \frchap{chap:croco}, nous nous intéressons à la calibration
 robuste d'un modèle réaliste d'océan, basé sur le code de calcul
-CROCO. Les incertitudes introduites dans ce cadre portent sur
+CROCO.\@ Les incertitudes introduites dans ce cadre portent sur
 l'amplitude de différentes composantes de marée.
 
 Comme mentionné plus tôt, nous cherchons à estimer un paramètre
@@ -306,12 +304,10 @@ effectuée, afin de calculer les indices de Sobol'
 correspondants~\cite{sobol_global_2001,iooss_revue_2011}. Une étude
 similaire sera menée pour les différentes composantes du paramètre
 représentant les incertitudes $\uu$.
-
 Enfin, une fois la dimension du problème de calibration réduite
 significativement, nous appliquerons des méthodes présentées au
 chapitre précédent, afin d'estimer de manière robuste le paramètre de
-friction fond dans ce problème académique.
-
+friction de fond dans ce problème académique.
 
 \etoile
 \vfill
