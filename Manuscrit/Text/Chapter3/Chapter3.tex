@@ -201,7 +201,8 @@ Assuming that we are able to get i.i.d.\ samples $\{(\kk_i, \uu_i)\}_{1\leq i \l
 \end{example}
 \begin{figure}[ht]
   \centering
-  \input{\imgpath profile_integrated_lik.pgf}
+  % \input{\imgpath profile_integrated_lik.pgf}
+  \includegraphics{\imgpath profile_integrated_lik.png}
   \caption[Joint likelihood and posterior distribution]{\label{fig:profile_integrated_lik} Joint likelihood and posterior (left). Profile and integrated likelihood for an uniform nuisance parameter and marginal posterior distribution (right)}
 \end{figure}
 Those three estimators appear quite naturally in the probabilistic
@@ -829,7 +830,8 @@ A more telling illustration of the differences between relative and additive reg
 The regions of acceptability of an objective function $J$ have been plotted, along with an interval $\mathcal{I}(\uu)$ and the region $R$ for a given $\kk$ for both regrets.
 \begin{figure}[ht]
   \centering
-  \input{\imgpath illustration_region_regret.pgf}
+  % \input{\imgpath illustration_region_regret.pgf}
+  \includegraphics{\imgpath illustration_region_regret.png}
   \caption{\label{fig:illustration_region_regret} Comparison of the regions of acceptability for additive and relative regret}
 \end{figure}
 For $\uu$ around $0$, $J$ is quite flat, but also has very low values. In this case, the interval $\mathcal{I}_{\beta}(\uu)$ is also large. But for $\uu$ around $1$, the objective function presents higher values, and a sharper minimum (\emph{i.e.} a higher curvature). Additive regret in this case puts stronger confidence on the value of the parameter as indicated by the smaller interval of acceptability.

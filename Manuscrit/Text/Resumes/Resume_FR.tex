@@ -248,13 +248,15 @@ dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
 méthodes SUR (\emph{Stepwise Uncertainty reduction}, réduction
 d'incertitude séquentielle) sont basées sur la définition d'un
 \emph{critère} $\kappa$, dont le maximiseur va être évalué par la fonction
-originale:
+originale: 
 \begin{equation*}
   (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa\left((\kk, \uu); Z\right)
 \end{equation*}
-Puis le plan d'expérience est enrichi:
-$\mathcal{X}_{n+1} = \mathcal{X}_n \cup \{(\kk_{n+1}, \uu_{n+1}),
-J(\kk_{n+1}, \uu_{n+1})\}$, et $Z$ est mis à jour avec le nouveau plan
+et le plan d'expérience est enrichi avec ce nouveau point:
+\begin{equation}
+\mathcal{X}_{n+1} = \mathcal{X}_n \cup \{(\kk_{n+1}, \uu_{n+1}), J(\kk_{n+1}, \uu_{n+1})\}
+\end{equation}
+et enfin, $Z$ est mis à jour avec le nouveau plan
 d'expérience $\mathcal{X}_{n+1}$.  Ce critère va donc représenter une
 mesure de l'incertitude sur l'estimation, que l'on va chercher à
 réduire. Nous allons ainsi proposer plusieurs méthodes permettant
@@ -271,7 +273,7 @@ parallélisme quand une telle architecture est disponible.
 Ceci sera fait en définissant notamment
 $Z^*(\uu) = Z(\kk^*(\uu),\uu)$, et
 \begin{equation*}
-  \Delta_{\alpha,\beta}(\kk, \uu) = Z(\kk, \uu - \alpha Z^*(\uu) - \beta
+  \Delta_{\alpha,\beta}(\kk, \uu) = Z(\kk, \uu) - \alpha Z^*(\uu) - \beta
 \end{equation*}
 et
 \begin{equation*}

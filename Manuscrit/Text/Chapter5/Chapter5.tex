@@ -519,11 +519,11 @@ same.
 \subsection{Global Sensitivity Analysis: Sobol' indices}
 \label{sec:sobol-indices}
 As global SA calls for a probabilistic framework, we are going to
-consider a real-valued random vector $X=(X_1,\cdots X_p)$ which
-represents the inputs of a real function
-$f: \mathbb{R}^p\rightarrow \mathbb{R}$.  As $X$ is a random vector, we
-can introduce $Y$, the real-valued random variable defined as
-$Y=f(X)$.
+consider a real-valued random vector $X=(X_1,\cdots X_p)$ whose
+components are independent, which represents the inputs of a real
+function $f: \mathbb{R}^p\rightarrow \mathbb{R}$. As $X$ is a random
+vector, we can introduce $Y$, the real-valued random variable defined
+as $Y=f(X)$.
 
  % \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined
@@ -648,7 +648,8 @@ are going to consider the following setting for robust calibration.
 The control variable is defined as
 \begin{equation}
   \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^3
-  \end{equation}
+\end{equation}
+\todo{to check}
   where the index $1$ is for the region defined as Pebbles, the index
   $2$ is for the regions defined as Rocks, Gravel, and Sand, and the
   index $3$ is for the Silts, Mud, and Fine Sands.  Following the SA
@@ -672,6 +673,31 @@ and the cost function is defined as
   \end{array}
 \end{equation}
 
+
+
+
+
+We also optimised the original function $J$ over
+$\Kspace\times\Uspace$:
+\begin{equation}
+  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = \num{29.749}
+\end{equation}
+for
+\begin{align}
+  \kk &= (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442}) \\\uu&= (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
+\end{align}
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{rrrr}\toprule
+   Component & $\kk^{\mathrm{truth}}$ &Component & $\hat{\kk}_{\mathrm{opt}}$\\ \midrule
+    $\kk_{\mathrm{C}}$  & \num[round-mode=places,round-precision=4]{-3.68887} & $\kk_1$ & \num[round-mode=places,round-precision=4]{-3.5161661} \\
+    $\kk_{\mathrm{G}}$  & \num[round-mode=places,round-precision=4]{-4.96184} & $\kk_2$ & \num[round-mode=places,round-precision=4]{-5.07764701} \\
+    $\kk_{\mathrm{R}}$  & \num[round-mode=places,round-precision=4]{-2.99573} & \multirow{4}{*}{$\kk_3$} & \multirow{4}{*}{\num[round-mode=places,round-precision=4]{-6.34588442}}\\
+    $\kk_{\mathrm{S}}$  & \num[round-mode=places,round-precision=4]{-6.907755} & &\\
+    $\kk_{\mathrm{SF}}$ &\num[round-mode=places,round-precision=4]{-8.804875} & &\\
+    $\kk_{\mathrm{Si,V}}$&\num[round-mode=places,round-precision=4]{-10.81977} &  &\\ \bottomrule
+  \end{tabular}
+\end{table}
 % \begin{table}[!h]
 %   \centering
 %   \begin{tabular}{rrr} \toprule
@@ -684,14 +710,14 @@ and the cost function is defined as
 %     $6$ & Silts and mud & Si,V \\ \bottomrule
 %   \end{tabular}
 % \end{table}
-% \label{ssec:croco_construction_gp}
-We will first sample a Latin Hypersquare on
-$\Kspace \times \Uspace$ in order to construct first a GP that can be
-used as a surrogate. Using similar notation as in the previous
-chapter, we denote $\mathcal{X}_0$ the initial design, and $Z$ the
-Gaussian Process constructed and fitted using
-$\mathcal{X}_0$.
-We will write
+    %     \label{ssec:croco_construction_gp}
+
+In order to construct GP, we will first define the initial design: we
+will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in order
+to construct first a GP that can be used as a surrogate. Using similar
+notation as in the previous chapter, we denote $\mathcal{X}_0$ the
+initial design, and $Z$ the Gaussian Process constructed and fitted
+using $\mathcal{X}_0$.  We will write
 \begin{equation}
   Z \sim \GP\left(m_Z, C_Z\right)
 \end{equation}
@@ -713,8 +739,10 @@ one could have added points to the design according to the reliability
 index, defined~\cref{eq:reliability_rho}, and thus look to find points
 which have the largest probability of being negative.
 
-\subsection{Conditional minimum and conditional minimisers}
+\subsection{Global minimum, Conditional minimums and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
+
+
 In the previous chapter, we defined the conditional minimum as the
 minimum of the objective function given $\uu\in \Uspace$:
 \begin{equation}
