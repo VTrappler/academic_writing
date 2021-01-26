@@ -918,7 +918,7 @@ We can see that the centroids are located close to the true level-set of the fun
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath margin_unc.pdf}
-  \caption{\label{fig:margin_unc} Margin of uncertainty, and
+  \caption[Samples in the margin of uncertainties and centroids]{\label{fig:margin_unc} Margin of uncertainty, and
     construction of the $K$ points of the batch to be evaluated, using
     samples and centroids}
 \end{figure}
@@ -1584,7 +1584,7 @@ $\{(\kk, \uu) \mid J(\kk, \uu) = \alpha J^*(\uu)\}$, as expected.
 \begin{figure}[ht]
   \centering
   \includegraphics[width = \textwidth]{\imgpath AK_MCS_design.pdf}
-  \caption{\label{fig:AK_MCS_design} GP prediction and final
+  \caption[GP prediction, final experimental design and margin of uncertainty]{\label{fig:AK_MCS_design} GP prediction and final
     experimental design (left) and resulting margin of uncertainty
     $\mathbb{M}_{\eta}$}
 \end{figure}
@@ -1656,9 +1656,9 @@ The relation between $\Gamma_{\alpha_p}$ and $q_p$ is illustrated~\cref{fig:q_p_
 \begin{figure}[ht]
   \centering
   \input{\imgpath q_p_illustration.pgf}
-  \caption{\label{fig:q_p_illu} Relation between the probability
+  \caption[Relation between $\Gamma_{\alpha}$ and $q_p$]{\label{fig:q_p_illu} Relation between the probability
     $\Gamma_{\alpha}$ and its maximum and the quantile function of the
-    ratio}
+    ratio $q_p$}
 \end{figure}
 
 Given~\cref{eq:alpha_p_min}, we are going to focus on the estimation
@@ -1776,7 +1776,7 @@ change in the hyperparameters of the GP.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath qPI_aIMSE.pdf}
-  \caption{\label{fig:qPI_aIMSE} Evolution of the error of the estimation when reducing the augmented IMSE of the log-ratio $\Xi$}
+  \caption[Error of the estimation when reducing the augmented ISME of $\Xi$]{\label{fig:qPI_aIMSE} Evolution of the error of the estimation when reducing the augmented IMSE of the log-ratio $\Xi$}
 \end{figure}
 
 Each step of this method requires the optimization of the expected
@@ -1853,7 +1853,8 @@ shown~\cref{fig:qPI_aIMSE}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath evol_error_qAK_MCS.pdf}
-  \caption{\label{fig:evol_error_qAK_MCS} Evolution of the estimation
+  \caption[Evolution of the estimation
+    error for $K=K_qK_{\mathbb{M}}=12$]{\label{fig:evol_error_qAK_MCS} Evolution of the estimation
     error as $K=K_qK_{\mathbb{M}}=12$ are added each iterations}
 \end{figure}
 
@@ -1921,9 +1922,7 @@ introduced in this chapter.
 %   \end{tabular}
 %   \caption{Summary of single objective robust estimators}
 % \end{table}
-\etoile
-\vfill
-
+\markchapterend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

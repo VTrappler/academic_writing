@@ -40,11 +40,11 @@ rendent compte des phénomènes sous-mailles, ou bien de l'ignorance des
 conditions environnementales réelles dans lesquelles le phénomène est
 observé.
 
-De manière plus formelle, on peut distinguer deux types d'incertitudes
+De manière plus formelle, on peut distinguer grossièrement deux types d'incertitudes
 dans ces modèles, comme évoqué dans~\cite{walker_defining_2003}.
 \begin{itemize}
 \item les incertitudes dites \emph{épistémiques}, qui proviennent d'un
-  manque de connaissance sur des charactéristiques du phénomène
+  manque de connaissance sur des caractéristiques du phénomène
   étudié, mais qui pourraient être réduites
 \item les incertitudes dites \emph{aléatoires}, qui proviennent
   directement de la variabilité intrinsèque du phénomène étudié.
@@ -74,11 +74,11 @@ conditions environnementales, comme le forçage d'un modèle ou les
 conditions aux bords. Ces conditions ne sont pas directement
 contrôlées par le modèle, donc l'on subit leurs fluctuations, ou leur
 imprécision.  Ces variables environnementales vont être modélisées à
-l'aide d'une variable aléatoire $\UU$, de réalisation
+l'aide d'une variable aléatoire $\UU$, de réalisation notée
 $\uu\in \Uspace$.
 
 Comme le modèle que l'on cherche à calibrer vise à représenter la
-réalité, il est souhaitable que les predictions du modèle soient le
+réalité, il est souhaitable que les prédictions du modèle soient le
 plus similaire possible aux observations dont on dispose. Cette notion
 de distance est retranscrite en définissant une fonction $J$, dite
 fonction coût ou fonction objectif qui mesure l'écart entre la sortie
@@ -103,22 +103,21 @@ Ne pas prendre en compte les incertitudes aléatoires dans l'estimation
 de $\kk$ peut amener à compenser de manière artificielle certains
 aspects physiques dûs à la variable environnementale, et donc amener à
 un comportement analogue au \emph{sur-apprentissage} (overfitting), ou
-\emph{optimisation localisée}~\cite{huyse_probabilistic_2002}. Cela
-peut amener à des situations où le paramètre estimé n'est optimal que
-pour la valeur de $\uu$ supposée, et pour une autre réalisation de la
-variable aléatoire sous-jacente, le modèle ainsi calibré donne des
-prédictions potentiellement aberrantes~\cite{kuczera_there_2010}.
+\emph{optimisation localisée}~\cite{huyse_probabilistic_2002}: des
+situations où le paramètre estimé n'est optimal que pour la valeur de
+$\uu$ supposée, et pour une autre réalisation de la variable aléatoire
+sous-jacente, le modèle ainsi calibré donne des prédictions
+potentiellement aberrantes~\cite{kuczera_there_2010}.
 
 On cherche donc à définir une valeur de $\kk$, notée $\hat{\kk}$ de
 manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque
-l'on prend en compte la variabilité intrinsèque de $\uu$.  En prenant
-en compte le caractère aléatoire de la variable environnementale, pour
-un $\kk$ donné, la fonction coût peut être vue comme une variable
-aléatoire: $J(\kk,\UU)$, que l'on va chercher intuitivement à
-``minimiser'' dans un certain sens qui reste à définir.  Cette
-problématique porte différents noms, comme l'optimisation robuste, où
-cette robustesse doit être comprise comme l'insensibilité aux
-variations de $\UU$. Ceci se rapproche de l'optimisation sous
+l'on prend en compte la variabilité intrinsèque de $\uu$. Comme $\UU$
+est une variable aléatoire, pour un $\kk$ donné, la fonction coût peut
+être elle aussi vue comme une variable aléatoire: $J(\kk,\UU)$, que
+l'on va chercher intuitivement à ``minimiser'' dans un certain sens
+qui reste à définir.  Cette problématique porte différents noms, comme
+l'optimisation robuste, où cette robustesse doit être comprise comme
+l'insensibilité aux variations de $\UU$, l'optimisation sous
 incertitudes (\emph{Optimisation under Uncertainty} ou \emph{OUU}), ou
 encore d'optimisation stochastique. Une nomenclature prenant en compte
 les différences, notamment sur les contraintes potentiellement
@@ -134,11 +133,11 @@ plus complexes d'estimation de la friction de fond.
 
 \subsection*{Critères basés sur le regret additif et relatif}
 Dans le \frchap{chap:robust_estimators}, nous abordons le problème de
-calibration en présence d'incertitdes. Un certain nombre des méthodes d'optimisation sous
-incertitudes se basent sur la minimisation des moments de la variable
-aléatoire $J(\mathbf{\cdot}, \UU)$ comme
+calibration en présence d'incertitudes. Un certain nombre des méthodes
+d'optimisation sous incertitudes se basent sur la minimisation des
+moments de la variable aléatoire $J(\mathbf{\cdot}, \UU)$ comme
 dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou
-bien se basent sur la résolution d'un problème
+les incorporent dans un problème d'optimisation
 multiobjectifs~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
 
 Dans le cadre de cette thèse, nous proposons une approche basée sur le
@@ -155,9 +154,10 @@ et le \emph{minimiseur conditionnel} associé est
   \label{eq:Kstar}
   \kk^*(\uu) = \argmin_{\kk\in \Kspace}J(\kk,\uu)
 \end{equation*}
-Ceci permet de définir le regret additif: $J - J^*$. Étant donné la
-strict positivité de $J$, nous pouvons définir aussi le regret relatif
-$J/J^*$. Ceci nous permet d'introduire une notion
+
+Ceci nous permet de définir différentes notions de regret: le regret
+additif $J - J^*$ et étant donné la strict positivité de $J$, le
+regret relatif $J/J^*$. Ceci nous permet d'introduire une notion
 d'\emph{acceptabilité}, à entendre dans le sens d'écart par rapport au
 minimum conditionnel.
 
@@ -167,14 +167,14 @@ $\beta \geq 0$. La notion de $\beta$-acceptabilité est donc associée
 au regret additif: $J(\kk, \uu) - J^*(\uu)$.  Similairement, on
 définit la notion de $\alpha$-acceptabilité: $\kk$ est dit
 $\alpha$-acceptable si $J(\kk, \uu) \leq \alpha J^*(\uu)$, pour
-$\alpha > 1$ Dans la suite, sous nous intéresserons plus
+$\alpha > 1$. Dans la suite, sous nous intéresserons plus
 particulièrement au regret relatif, qui permet de mieux prendre en
 compte les variations de magnitude de la fonction objectif, mais les
 définitions suivantes peuvent être adaptée au regret additif.
 
 
 En prenant en compte le caractère aléatoire de $\UU$, nous pouvons
-donc étudier la probabilité pour un point $\kk$, d'être acceptable:
+donc étudier la probabilité pour un point $\kk$, d'être $\alpha$-acceptable:
 \begin{equation*}
 \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
 \end{equation*}
@@ -193,7 +193,7 @@ $p$, nous pouvons définir la fonction quantile du regret relatif comme
   q_p(\kk) = Q_{\UU}\left(\frac{J(\kk,\UU)}{J^*(\UU)};p\right)
 \end{equation*}
 où $Q_{\UU}(\cdot;p)$ est la fonction quantile à l'ordre $p$ de la
-variable aléatoire en argument. $q_p(\kk)$ qui représente donc la valeur qui
+variable aléatoire en argument. $q_p(\kk)$ représente donc la valeur qui
 borne le regret au point $\kk$ avec une probabilité donnée $p$.
 Ce quantile peut aussi être minimisé, donnant
 \begin{equation*}
@@ -214,14 +214,13 @@ grande valeur de $\alpha$ (ou $p$ très proche de $1$) permet de se
 prévenir des hautes déviations avec un grande probabilité. Si à
 l'inverse, $\alpha$ est choisi plus faible, on favorisera les
 solutions qui donnent des valeurs de la fonction objectif proches du
-minmum atteignable, mais potentiellement avec une probabilité plus
-faible.
-  
+minimum atteignable, mais potentiellement avec une probabilité plus
+faible.  
 Ce travail a mené à la publication de~\cite{trappler_robust_2020}.
   
 \subsection*{Optimisation robuste et processus Gaussiens}
 D'un point de vue pratique, ces notions de minimiseur conditionnel et
-de minimum conditionnel peuvent s'avérer difficiles et chères à
+de minimum conditionnel peuvent s'avérer difficiles et coûteuses à
 calculer, car nécessitant une procédure d'optimisation. De plus, la
 connaissance de la fonction objectif doit être suffisante afin de
 calculer assez précisemment les quantités $\Gamma_{\alpha}$ et $q_p$.
@@ -245,29 +244,29 @@ quantités, comme la probabilité de défaillance
 \cite{razaaly_rare_2019,moustapha_quantile-based_2016,bect_sequential_2012},
 ou les minimiseurs et minimums conditionnels
 dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
-méthodes SUR (\emph{Stepwise Uncertainty reduction}, réduction
+méthodes SUR (\emph{Stepwise Uncertainty Reduction}, réduction
 d'incertitude séquentielle) sont basées sur la définition d'un
-\emph{critère} $\kappa$, dont le maximiseur va être évalué par la fonction
+\emph{critère} $\kappa$, dont le maximiseur va ensuite être évalué par la fonction
 originale: 
 \begin{equation*}
   (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa\left((\kk, \uu); Z\right)
 \end{equation*}
-et le plan d'expérience est enrichi avec ce nouveau point:
+puis le plan d'expérience est enrichi avec ce nouveau point et son évaluation:
 \begin{equation}
 \mathcal{X}_{n+1} = \mathcal{X}_n \cup \{(\kk_{n+1}, \uu_{n+1}), J(\kk_{n+1}, \uu_{n+1})\}
 \end{equation}
-et enfin, $Z$ est mis à jour avec le nouveau plan
-d'expérience $\mathcal{X}_{n+1}$.  Ce critère va donc représenter une
-mesure de l'incertitude sur l'estimation, que l'on va chercher à
-réduire. Nous allons ainsi proposer plusieurs méthodes permettant
-d'améliorer l'estimation de $\Gamma_{\alpha}$ ou de $q_p$.  Nous
-proposons aussi des méthodes basées sur l'échantillonage d'une
-variable aléatoire, qui représente des points à forte incertitudes par
-rapport à l'objectif final, comme
+et enfin, $Z$ est mis à jour avec le nouveau plan d'expérience
+$\mathcal{X}_{n+1}$.  Ce critère va donc représenter une mesure de
+l'incertitude sur l'estimation, que l'on va chercher à réduire. Nous
+allons ainsi proposer plusieurs méthodes permettant d'améliorer
+l'estimation de $\Gamma_{\alpha}$ ou de $q_p$.  Nous proposons aussi
+des méthodes basées sur l'échantillonage d'une variable aléatoire à
+support dans $\Kspace\times \Uspace$, dont les échantillons sont des
+points à forte incertitudes par rapport à l'objectif final, comme
 dans~\cite{echard_ak-mcs_2011,razaaly_rare_2019}. Après une procédure
 de réduction statistique, comme le partitionnement (ou
 \emph{clustering} en anglais), on peut donc évaluer et ajouter au plan
-d'expérience un \emph{lot} de points, et ainsi prendre avantage du
+d'expérience un \emph{lot} de points, et ainsi tirer parti du
 parallélisme quand une telle architecture est disponible.
 
 Ceci sera fait en définissant notamment
@@ -311,9 +310,7 @@ significativement, nous appliquerons des méthodes présentées au
 chapitre précédent, afin d'estimer de manière robuste le paramètre de
 friction de fond dans ce problème académique.
 
-\etoile
-\vfill
-
+\markchapterend
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

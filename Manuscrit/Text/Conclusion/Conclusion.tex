@@ -40,36 +40,58 @@
 % the calibration of a numerical model under uncertainties, by proposing a new criterion based on the regret, relative or additive
 
 \paragraph{Summary}
-In~\cref{chap:inverse_problem}, after having detailed common notions
-of probabilities and aspects of statistical inference, we presented
-the calibration problem as an optimisation problem, by introducing an
+
+Numerical models are ubiquitous nowadays for the prediction of various
+phenomena, which have a large impact especially for policy- and
+decision-making.  Due to the increase in computing power and to the
+various advances in research that allow the quantification of
+additional effects or interactions that were overlooked until then,
+realistic models may become increasingly complex, as additional
+parameters are taken into account. In order to get a meaningful
+representation of the reality, those parameters have to be chosen
+accordingly. Furthermore, the numerical model studied may also be
+affected by some random inputs, making the calibration more
+difficult. In this thesis, we tackled the estimation problem of
+parameters under uncertainty. More precisely, we studied the notion of
+robustness of a calibrated model when a random variable which
+represent some uncontrollable environmental conditions is taken into
+account.
+
+
+In~\cref{chap:inverse_problem}, after having covered common notions
+of probability and aspects of statistical inference, we introduced
+the calibration problem as an optimisation problem by introducing an
 objective function, that we wish to minimise with resepct to the
 control parameter $\kk$.
 
-However, due to the presence of some random environmental variables in
-the study $\UU$, a plain minimisation of the objective function is not
-completely relevant, as it will depend on the realisation of this
-random variable.  By taking into account the random nature of the
-{environmental parameters}, the calibration can be seen as a problem
-of \emph{optimisation under uncertainties}, and many specific methods
-and criteria can be defined to treat accordingly this new problem of
+However, due to the presence of some random environmental variables
+$\UU$ in the study, a plain minimisation of the objective function is
+not completely relevant, as it will depend on the realisation of this
+random variable assumed.  By
+taking into account the random nature of the {environmental
+  parameters}, the calibration can be seen as a problem of
+\emph{optimisation under uncertainties}, and many specific methods and
+criteria can be defined to treat accordingly this new problem of
 \emph{robust} calibration.
 
 
 Some classical criteria are first introduced
-in~\cref{chap:robust_estimators}, leading to Bayesian or frequentist
-estimates when keeping an probabilistic inference framework, or
+in~\cref{chap:robust_estimators}. Depending on the framework used to
+describe the quantities involved, we can define Bayesian or
+frequentist estimates by keeping a fully probabilistic inference
+framework. On the other hand, when considering a variational approach,
 estimates such as the minimiser of the mean value of the objective
-function, the minimiser of what is sometimes called the \emph{expected loss} for instance.
+function, \emph{i.e.} the minimiser of the \emph{expected loss}, are
+often used.
 
-In this thesis, we focused on estimates based on a notion of regret:
+In this thesis, we focused on estimates based on the notion of regret:
 instead of comparing directly the values taken by the objective
-function for different configurations given by $\uu$ sampled from
-$\UU$, the regret allows the modeller to compare the value of the
-objective with the best attainable performance given this specific
-environmental variable.
-This allows to put less emphasis on configurations which already lead
-to bad performances, and to focus more on ``salveagable'' situations.
+function for different configurations given by $\uu$, the regret
+allows the modeller to compare the value of the objective with the
+best attainable performance given this specific environmental
+variable.  This allows to put less emphasis on configurations which
+already lead to bad performances, and to focus more on ``salveagable''
+situations.
 
 Moreover, the user can adjust a parameter in order to reflect either a
 risk-adverse behaviour, by favourising a control of the regret with
@@ -81,13 +103,13 @@ with lower probability.
 In general, criteria of robust optimisation require a global knowledge
 of the function, since they often involve several evaluations of
 expectations and probabilities with respect to $\UU$. In addition to
-that, The family of regret-based estimates we introduced depends
+that, the family of regret-based estimates we introduced depends
 directly on the conditional minimum and
 minimiser. In~\cref{chap:adaptative_design_gp}, we proposed to use
-Gaussian Processes (GP) in order to compute the quantities associated with
-regret-based estimators. More precisely, we proposed a few methods
-which aim at improving this estimation by choosing iteratively a new,
-or a batch of new points to evaluate and to add to the design.
+Gaussian Processes (GP) in order to compute the quantities associated
+with regret-based estimators. More precisely, we proposed a few
+methods which aim at improving this estimation by choosing iteratively
+a new, or a batch of new points to evaluate and to add to the design.
 
 Finally in~\cref{chap:croco}, we studied an academic problem of
 calibration of a coastal model based on CROCO.\@ After having reduced
@@ -96,23 +118,45 @@ bottom, we enriched the design in order to improve the estimation of
 the functions that define the regret-based estimates, which are then
 optimised.
 
-\paragraph{Limitations and perspectives}
 
+\paragraph{Limitations and perspectives}
+Throughout this thesis, we assumed that the forward operator was a
+deterministic black-box, or \emph{deterministic simulator}, in the
+sense that the uncertainties in the modelling are ``controlled'' by
+the modeller. \emph{Stochastic simulator} in contrast do not take an
+environmental parameter as parameter, so each evaluation of the
+forward operator can be seen as a realisation of a random
+variable. This may be the case when the environmental variables are
+not easily parametrised, such as in the presence of functional
+inputs~\cite{el_amri_analyse_2019}. In this case, it is not possible
+to control the value of $\uu$ chosen for an enrichment strategies for
+instance. An alternative strategy would be to consider this
+uncertainty as \emph{noise} in the output of the simulator, and thus
+model it using \emph{noisy kriging} and/or or noisy optimisation
+methods~\cite{picheny_noisy_2014}.
 % 2-stage enrichment strategies
-Using the GP, we developed criteria which aim at improving the
-estimations of the functions $\Gamma_\alpha$ and $q_p$. In order to
-get estimators, those functions had to be optimised, in a sample
-average approximation (SAA) fashion. We could instead develop methods
-which aim at optimising directly those functions, along with their
-estimations. This could for instance be done in a $2$-stage enrichment
-strategy. First, a $\tilde{\kk}$ is chosen, with a ``high'' potential
-to be the optimiser (quite similarly as the EI criterion), and then
-the couple $(\kk_{n+1}, \uu_{n+1})$ to evaluate is chosen in order to
+
+Based on the assumption that the environmental parameter $\uu$ was
+indeed controllable, using the properties of the Gaussian processes we
+developed criteria which aim at improving the estimations of the
+functions $\Gamma_\alpha$ and $q_p$. In order to get the regret-based
+estimators, those functions had to be optimised, using a set of
+samples of $\UU$ to approximate expectations and quantiles, in a
+sample average approximation (SAA) fashion. We could instead develop
+methods which aim at optimising directly those functions, and thus aim
+at combining the estimation and the optimisation.  This could for
+instance be done in a $2$-stage enrichment strategy, as
+in~\cite{janusevskis_simultaneous_2010}. First, a value
+$\tilde{\kk} \in \Kspace$ is chosen, with a ``high'' potential to be
+the optimiser (quite similarly as the EI criterion), and then the
+couple $(\kk_{n+1}, \uu_{n+1})$ to evaluate is chosen in order to
 reduce a measure of uncertainty associated with the space
 $\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over
 this space). This would focus the enrichment in regions of interest,
-and also reduce the dimension of the integral to evaluate.  When
-introduced also a few sampling-based methods, that rely on efficient
+and also reduce the dimension of the integral to evaluate.
+
+
+We introduced also a few sampling methods, that rely on efficient
 sampling in different margin of uncertainties. Depending on the
 problem, this task can reveal itself quite challenging: the more
 accurate the GP is, the less prediction variance it shows, and thus
@@ -122,22 +166,21 @@ inefficient, even more so when the dimension of the problem
 increases. Refinement such as importance sampling can be considered
 such as in~\cite{razaaly_rare_2019}.
 
-
 % Calibration using a Bayesian approach
 In this thesis we focused on the variational formulation of the
 calibration problem, \emph{i.e.} by defining an objective function,
-akin to the negative log-likelihood, that is then optimised. A
-Bayesian method could be performed in order to estimate the posterior
-distribution of the parameter $\kk$ given the observations. Moreover,
-this task could be performed using adapted sampling schemes, such as
-Hamiltonian Monte-Carlo~\cite{betancourt_conceptual_2017}, in order to
-use the gradient that may be available using adjoint method.
+akin to the log-likelihood, or to the log-posterior density that is
+then optimised. A Bayesian method could be performed in order to
+estimate the posterior distribution of the parameter $\kk$ given the
+observations. Moreover, this task could be performed using adapted
+sampling schemes, such as Hamiltonian
+Monte-Carlo~\cite{betancourt_conceptual_2017}, in order to use the
+gradient that may be available using adjoint method.
 
-More generally, we did not take much advantage of the potential
-availability of the gradient with respect to the control parameter: We
-can incorporate this additional knowledge in the mdoelling of the GP,
-so that the predictions are improved, as done
-in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}.
+This gradient, taken with respect to the control parameter, may be
+used at different stages: we can incorporate this additional knowledge
+in the modelling of the GP, so that the predictions are improved, as
+done in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}.
 However, GP are flexible and useful tools but are not well suited for
 modelling problems with dimensions higher than about 10: when the
 designs considered are too large, fitting the GP can also be
@@ -160,7 +203,7 @@ exceeding this threshold. A similar approach could be developed
 analogous to the CVaR (Conditional Value at
 Risk)~\cite{rockafellar_conditional_2002}, also called \emph{expected
   shortfall}, in order to control the values of the objective function
-when they do exceed the threshold.
+when they \emph{do} exceed the threshold.
 % Horsetail matching, comparison J*(U) and J(k, U)
 In order to introduce this family, we introduced the random variable
 that corresponds to the conditional minimum and the conditional
@@ -177,9 +220,7 @@ so that the a metric between cdf of the two distribution is minimised.
 
 
 
-\etoile
-\vfill
-
+\markchapterend
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}

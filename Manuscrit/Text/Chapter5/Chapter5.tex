@@ -610,7 +610,7 @@ defined in~\cref{eq:tide_error}. The SA is performed on the objective function, 
 \end{equation}
 for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$
 
-\Cref{fig:SA_tides} shows the Sobol indices of order 1 (left), 2
+\Cref{fig:SA_tides} shows the Sobol indices of first order (left), second
 (right), and the total effect indices, along with bootstrap confidence
 intervals.
 \begin{figure}[ht]
@@ -634,83 +634,80 @@ analysis. The uncertain variable can then be redefined as
 \end{align}
 
 where $\UU_1$ is the error on the $M_2$ amplitude, and $\UU_2$ is the
-error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent and
-identically distributed, and
+error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent, and
 $\UU \sim \mathcal{U}\left(\Uspace\right)$ with
 $\Uspace = \interval{0}{1}^2$.
 
 \section{Robust Calibration of the bottom friction}
 
-\subsection{Objective function definition}
+\subsection{Objective function and global minimum}
 
 Based on the sensitivity analysis carried in the previous section, we
 are going to consider the following setting for robust calibration.
 The control variable is defined as
 \begin{equation}
-  \kk=\left(\kk_1,\kk_2,\kk_3\right) \in \Kspace, \quad \kk_i = \log(\zob^i), \quad \KK \in \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^3
+  \kk=\left(\kk^{(1)},\kk^{(2)},\kk^{(3)}\right) \in \Kspace % \quad \kk^{(i)} = \log(\zob^i),
+  \quad \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^3
 \end{equation}
-\todo{to check}
-  where the index $1$ is for the region defined as Pebbles, the index
-  $2$ is for the regions defined as Rocks, Gravel, and Sand, and the
-  index $3$ is for the Silts, Mud, and Fine Sands.  Following the SA
-  on the tide constituents, the uncertain variable is defined we are
-  going to consider is
+ where the superscript $(1)$ corresponds to the region
+defined as Pebbles, $(2)$ is for the regions defined as Gravel, and
+$(3)$ corresponds to the merged regions of Rocks, Sand, Silts, Mud,
+and Fine Sands.
+
+% $(2)$ is for the regions defined as Rocks, Gravel,
+% and Sand, and the index $3$ is for the Silts, Mud, and Fine Sands.
+
+
+Following the SA on the tide constituents, the uncertain variable is a
+random vector with \num{2} components, representing the error on
+amplitude of the $M_2$ and the $S_2$ tide constituent:
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
-The numerical model is defined as previously as
+As previously, the forward operator of the numerical model gives the sea-surface height $\eta$:
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace \times \Uspace &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
     (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{i,t}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
-and the cost function is defined as
+and the objective function $J$ is the squared difference between the
+observations $y$ and the forward operator.
 \begin{equation}
   \begin{array}{rcl}
     J: \Kspace \times \Uspace & \longrightarrow & \mathbb{R} \\
     (\kk, \uu) & \longmapsto & \|\mathcal{M}(\kk, \uu) - y \|^2_2
   \end{array}
 \end{equation}
-
-
-
-
-
-We also optimised the original function $J$ over
-$\Kspace\times\Uspace$:
+For the sake of the study, the original function $J$ has been
+optimised over $\Kspace\times\Uspace$, giving
 \begin{equation}
-  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = \num{29.749}
+  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = J(\hat{\kk}_{\mathrm{opt}}, \hat{\uu}_{\mathrm{opt}})= \num{29.749}
 \end{equation}
 for
 \begin{align}
-  \kk &= (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442}) \\\uu&= (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
+  \hat{\kk}_{\mathrm{opt}}                     & = (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442})                                                                                                            \\\hat{\uu}_{\mathrm{opt}} & = (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
 \end{align}
+In order to compare the result of this optimisation with the truth
+value,~\cref{tab:ktruthkopt} shows the different values of the
+different components of $\kk^{\mathrm{truth}}$ and
+$\hat{\kk}_{\mathrm{opt}}$.
+
 \begin{table}[!h]
   \centering
   \begin{tabular}{rrrr}\toprule
-   Component & $\kk^{\mathrm{truth}}$ &Component & $\hat{\kk}_{\mathrm{opt}}$\\ \midrule
-    $\kk_{\mathrm{C}}$  & \num[round-mode=places,round-precision=4]{-3.68887} & $\kk_1$ & \num[round-mode=places,round-precision=4]{-3.5161661} \\
-    $\kk_{\mathrm{G}}$  & \num[round-mode=places,round-precision=4]{-4.96184} & $\kk_2$ & \num[round-mode=places,round-precision=4]{-5.07764701} \\
-    $\kk_{\mathrm{R}}$  & \num[round-mode=places,round-precision=4]{-2.99573} & \multirow{4}{*}{$\kk_3$} & \multirow{4}{*}{\num[round-mode=places,round-precision=4]{-6.34588442}}\\
-    $\kk_{\mathrm{S}}$  & \num[round-mode=places,round-precision=4]{-6.907755} & &\\
-    $\kk_{\mathrm{SF}}$ &\num[round-mode=places,round-precision=4]{-8.804875} & &\\
-    $\kk_{\mathrm{Si,V}}$&\num[round-mode=places,round-precision=4]{-10.81977} &  &\\ \bottomrule
+   Component              & $\kk^{\mathrm{truth}}$                                                                                                                                                                                                                                                                      & Component                & $\hat{\kk}_{\mathrm{opt}}$                                              \\ \midrule
+    $\kk_{\mathrm{C}}$    & \num[round-mode=places,round-precision=4]{-3.68887}                                                                                                                                                                                                                                         & $\kk^{(1)}$                  & \num[round-mode=places,round-precision=4]{-3.5161661}                   \\
+    $\kk_{\mathrm{G}}$    & \num[round-mode=places,round-precision=4]{-4.96184}                                                                                                                                                                                                                                         & $\kk^{(2)}$                  & \num[round-mode=places,round-precision=4]{-5.07764701}                  \\
+    $\kk_{\mathrm{R}}$    & \num[round-mode=places,round-precision=4]{-2.99573}                                                                                                                                                                                                                                         & \multirow{4}{*}{$\left. \vphantom{\begin{tabular}{c}3\\3\\3\\3\end{tabular}}\right\}\kk^{(3)}$} & \multirow{4}{*}{\num[round-mode=places,round-precision=4]{-6.34588442}} \\
+    $\kk_{\mathrm{S}}$    & \num[round-mode=places,round-precision=4]{-6.907755}                                                                                                                                                                                                                                        &                          &                                                                         \\
+    $\kk_{\mathrm{SF}}$   & \num[round-mode=places,round-precision=4]{-8.804875}                                                                                                                                                                                                                                        &                          &                                                                         \\
+    $\kk_{\mathrm{Si,V}}$ & \num[round-mode=places,round-precision=4]{-10.81977}                                                                                                                                                                                                                                        &                          &                                                                         \\ \bottomrule
   \end{tabular}
+  \caption{\label{tab:ktruthkopt} Values of the $\kk$ component of the global optimiser, and truth value}
 \end{table}
-% \begin{table}[!h]
-%   \centering
-%   \begin{tabular}{rrr} \toprule
-%     Indice & Sediment & Code  \\ \midrule
-%     $1$ & Rocks & R \\
-%     $2$ & Pebbles & C \\
-%     $3$ & Gravel & G \\
-%     $4$ & Sand & S \\
-%     $5$ & Fine sand & SF \\
-%     $6$ & Silts and mud & Si,V \\ \bottomrule
-%   \end{tabular}
-% \end{table}
-    %     \label{ssec:croco_construction_gp}
+One can also notice that $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq \hat{\uu}_{\mathrm{opt}}$.
+
 
 In order to construct GP, we will first define the initial design: we
 will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in order
@@ -719,27 +716,25 @@ notation as in the previous chapter, we denote $\mathcal{X}_0$ the
 initial design, and $Z$ the Gaussian Process constructed and fitted
 using $\mathcal{X}_0$.  We will write
 \begin{equation}
-  Z \sim \GP\left(m_Z, C_Z\right)
+  Z \sim \GP\left(m_Z, C_Z\right) \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
 \end{equation}
-with $C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)$. We have for
-any $(\kk, \uu) \in \Kspace\times\Uspace$,
+We then have, for any $(\kk, \uu) \in \Kspace\times\Uspace$,
 \begin{equation}
   Z(\kk, \uu) \sim \mathcal{N}\left(m_Z(\kk, \uu), \sigma^2_Z(\kk, \uu)\right)
 \end{equation}
 
-
 By definition, for any $\kk\in \Kspace$ and any $\uu \in \Uspace$, we
-have $J(\kk, \uu) \geq 0$.  However, this positivity property is not
-necessarily verified by the surrogate $m_Z$, and thus the notion of
-relative-regret is not defined. We have to first ensure that the GP
-$Z$ (and consequently $Z^*$) is positive with large enough
+have $J(\kk, \uu) \geq 0$.  However, the positivity of the objective
+function is not necessarily verified by the surrogate $m_Z$, and thus
+the notion of relative-regret is not defined. We have to first ensure
+that the GP $Z$ (and consequently $Z^*$) is positive with large enough
 probability.  To do so, we are first going to enrich the design near
 the conditional minimisers, using the PEI criterion.  Alternatively,
 one could have added points to the design according to the reliability
 index, defined~\cref{eq:reliability_rho}, and thus look to find points
 which have the largest probability of being negative.
 
-\subsection{Global minimum, Conditional minimums and conditional minimisers}
+\subsection{Conditional minimums and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
 
 
@@ -761,7 +756,7 @@ surrogate in order to approximate them:
 \end{align}
 In order to improve the accuracy of those two functions, we are first
 going to enrich the design using the PEI criterion, as detailed
-\cref{sec:PEI_criterion} on \cpageref{sec:PEI_criterion},
+\cref{sec:PEI_criterion} on~\cpageref{sec:PEI_criterion},
 from~\cite{ginsbourger_bayesian_2014}.
 
 The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
@@ -772,8 +767,8 @@ $\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate
 the distribution of the random variable $\kk^*(\UU)$. The samples
 $\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed
 in~\cref{fig:distrib_minimizers_reduced}. Those estimated marginal
-distributions are bimodal, and we can notice two different points
-$\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
+distributions are bimodal, % and we can notice two different points
+% $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
@@ -809,33 +804,93 @@ $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
 %   \label{tab:initial_quantiles}
 % \end{table}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath contour_Jstar.png}
+  \caption{\label{fig:contour_Jstar} Conditional minimum computed using a GP $m_Z^*(\uu)$}
+\end{figure}
+
 \subsection{Relative-regret based estimators}
-We are going to estimate a member of the family of relative-regret
-estimators, as defined~\cref{def:RR_family}, on
-\cpageref{def:RR_family}, for a specific $\alpha\geq 1$.
+We are here going to estimate members of the relative-regret family of estimators as defined~\cref{def:RR_family}, on
+\cpageref{def:RR_family}:
 \begin{equation}
-  \kk_{\mathrm{RR},\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \argmax_{\kk \in \Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
+  \left\{\kk_{\mathrm{RR,\alpha}} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) \mid \alpha \geq 1\right\}
 \end{equation}
-
-\subsubsection{Optimisation of the probability of exceeding a threshold}
-
-We will first look to improve the estimation of $\Gamma_{\alpha}$,
-defined as the following probability:
+where
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
-This function is the probability at which the objective function stays
+is the probability at which the objective function stays
 below $\alpha$ times its minimal attainable value.
 
+
 We are going to use a plug-in approach (see~\cref{def:plugin}) in
-order to approximate the probability $\Gamma_{\alpha}$. As defined
+order to approximate this probability $\Gamma_{\alpha}$:
+\begin{align}
+  \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}}% \\
+                                           % &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
+\end{align}
+where $\{\uu_i\}_{1\leq i \leq n_{\uu}}$  is a set of i.i.d.\ samples of $\UU$,
+and $\hat{\kk}_{\mathrm{RR},\alpha} = \argmax_{\kk \in \Kspace} \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk)$
+
+
+Alternatively, for a given level of confidence
+$p \in \interval{0}{1}$, we defined in the quantile function of the
+ratio, at the order $p$:
+\begin{equation}
+  q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
+\end{equation}
+where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
+relative-regret, that we introduce for notational convenience.
+As $\mathrm{RR}$ is unknown directly, we can also apply the plug-in approach, and define
+\begin{equation}
+  \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
+\end{equation}
+where $\Xi$ is the lognormal approximation as defined in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is done using a set of i.i.d.\ samples of $\UU$: $\{\uu_i\}_{1\leq i \leq n_{\uu}}$
+\begin{equation}
+  \label{eq:RRPI}
+  \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
+\end{equation}
+where the subscript indicates the order statistic, \emph{i.e.} the
+$\left[n_{\uu}p\right]$ smallest value of
+$\{\mathrm{RR}^\mathrm{PI}(\kk,\uu_i)\}_{1\leq i\leq n_\uu}$ (with
+$[\cdot]$ as the rounding operator). Finally, we can define
+$\hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace}
+\hat{q}_p^{\mathrm{PI}}(\kk)$
+
+\subsubsection{Preliminary analysis}
+We are going to estimate a member of the family of relative-regret
+estimators, for a specific $\alpha\geq 1$.
+\begin{equation}
+  \hat{\kk}_{\mathrm{RR},\alpha} = \argmax_{\kk\in\Kspace} \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) = (\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}, \hat{\kk}^{(2)}_{\mathrm{RR},\alpha},\hat{\kk}^{(3)}_{\mathrm{RR},\alpha})
+\end{equation}
+or alternatively,
+\begin{equation}
+  \hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} \hat{q}^{\mathrm{PI}}_p(\kk) = (\kk^{(1)}_{\mathrm{RR},\alpha_p}, \kk^{(2)}_{\mathrm{RR},\alpha_p},\kk^{(3)}_{\mathrm{RR},\alpha_p})
+\end{equation}
+Based on the GP constructed using the , we did compute
+$\alpha_p = \min q_p$ and $\kk_{\mathrm{RR},\alpha_p}$ for different
+$p$:
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath evo_alpha_p_kp.pgf}
+  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ as a function of $p$, and $\kk_{\mathrm{RR},\alpha_p}$}
+\end{figure}
+
+
+
+\subsubsection{Optimisation of the probability of exceeding a threshold}
+We will first look to improve the estimation of $\Gamma_{\alpha}$,
+defined as the following probability:
+. As defined
 in~\cref{eq:def_hatgamma_PI}, given the GP $Z$, constructed upon
 evaluations of $J$, and a set $\{\uu_i\}_{1\leq i\leq n_{\uu}}$ of
 i.i.d.\ samples from $\UU$, the plug-in approximation of
 $\Gamma_{\alpha}$ is
 \begin{align}
-  \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=0}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}} \\
-                                           &= \frac{1}{n_\uu}\sum_{i=0}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
+  \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}} \\
+                                           &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
 \end{align}
 where
 $\Delta_{\alpha} = Z - \alpha Z^* \sim \GP(m_{\Delta_{\alpha}},
@@ -876,31 +931,12 @@ random set $\{\Delta_\alpha \leq 0\}$ to be
   or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step can
   become difficult,\todo{finir}
 \subsubsection{Optimisation of the quantile of the relative-regret}
-
-Alternatively, we want 
-We will then look to optimise the quantile of order $p=0.95$ of the ratio defined as
-\begin{equation}
-  {\kk}_{\mathrm{RR},\alpha_p} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha_p}\left(\kk\right)
-\end{equation}
+In this section, we will fix a level of confidence $p=0.95$, and look to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.
+By definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$  verifies
 \begin{equation}
 \max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
 \end{equation}
-In \cref{chap:adaptative_design_gp}, we defined the quantile function of the ratio, at the order $p$:
-\begin{equation}
-  q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
-\end{equation}
-where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
-relative-regret, that we introduce for notational convenience.
-As $\mathrm{RR}$ is unknown directly, we will apply the plug-in approach, and define
-\begin{equation}
-  \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
-\end{equation}
-where $\Xi$ is the lognormal approximation as defined in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is done using a set of i.i.d.\ samples of $\UU$: $\{\uu_i\}_{1\leq i \leq n_{\uu}}$
-\begin{equation}
-  \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
-\end{equation}
-where the subscript indicates the order statistic, \emph{i.e.} the $\left[n_{\uu}p\right]$ smallest value of $\mathrm{RR}^\mathrm{PI}(\kk,\uu_i)$ (with $[\cdot]$ as the rounding operator).
-\todo{!!}
+
 \section{Partial conclusion}
 In this chapter, we addressed the problem of calibration of the
 numerical model CROCO. After having defined the calibration and
@@ -917,9 +953,7 @@ environmental parameters, we \todo{!!}
 %   \caption{\label{fig:dist_minimizers} Distribution of the minimizers, estimated using the GP constructed on $J$, and enriched using the PEI criterion}
 % \end{figure}
 
-\etoile
-\vfill
-
+\markchapterend
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
