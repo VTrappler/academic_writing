@@ -142,10 +142,17 @@ developed criteria which aim at improving the estimations of the
 functions $\Gamma_\alpha$ and $q_p$. In order to get the regret-based
 estimators, those functions had to be optimised, using a set of
 samples of $\UU$ to approximate expectations and quantiles, in a
-sample average approximation (SAA) fashion. We could instead develop
-methods which aim at optimising directly those functions, and thus aim
-at combining the estimation and the optimisation.  This could for
-instance be done in a $2$-stage enrichment strategy, as
+sample average approximation (SAA) fashion. Because of this, for
+levels of confidence very close to $1$, the estimation of quantities
+in such high probabilities can be difficult, and usually needs
+specific methods instead of simple Monte-Carlo sampling in order to
+get accurate enough results, as in~\cite{razaaly_rare_2019}.
+
+Also, instead of improving the estimation of $\Gamma_{\alpha}$ and of
+$q_p$ on the whole space, we could develop methods in order to
+optimise directly those functions, and thus combine the estimation and
+the optimisation.  This could for instance be done in a $2$-stage
+enrichment strategy, as
 in~\cite{janusevskis_simultaneous_2010}. First, a value
 $\tilde{\kk} \in \Kspace$ is chosen, with a ``high'' potential to be
 the optimiser (quite similarly as the EI criterion), and then the
@@ -154,6 +161,7 @@ reduce a measure of uncertainty associated with the space
 $\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over
 this space). This would focus the enrichment in regions of interest,
 and also reduce the dimension of the integral to evaluate.
+
 
 
 We introduced also a few sampling methods, that rely on efficient
@@ -204,6 +212,7 @@ analogous to the CVaR (Conditional Value at
 Risk)~\cite{rockafellar_conditional_2002}, also called \emph{expected
   shortfall}, in order to control the values of the objective function
 when they \emph{do} exceed the threshold.
+
 % Horsetail matching, comparison J*(U) and J(k, U)
 In order to introduce this family, we introduced the random variable
 that corresponds to the conditional minimum and the conditional
