@@ -296,31 +296,31 @@ primary harmonic constituents as described \cref{tab:tides_components}.
 \end{table}
 
 By perturbating some properties of those tide components, we can
-introduce a new variable that will act as \emph{uncertain variables} in
-our numerical model.
-
-In this work, we chose to add a small multiplicative error on the
-amplitude on the different components of the tide.  Let
-$\uu = (\uu_1,\dots,\uu_5)\in \Uspace = \interval{0}{1}^5$. Let $A_k$
-be the amplitude of the $k$th component of the tide. The perturbated
-amplitude $\tilde{A}_k$ is defined as
+introduce some error in the numerical model, \emph{i.e.} a parametric
+misspecification. In this work, we chose to add a small
+multiplicative error on the amplitude of the different components of
+the tide. Let
+$\uu = (\uu_1,\dots,\uu_5)\in \Uspace = \interval{0}{1}^5$ be the
+environmental variable, that will be considered as a random variable later, and let $A_k$ be the amplitude of the $k$th
+component of the tide.  The perturbated amplitude $\tilde{A}_k$ is
+defined as
 \begin{equation}
   \label{eq:tide_error}
   \tilde{A}_k(\uu_k) = A_k (1 + 0.01(2\uu_k - 1))
 \end{equation}
-where $\uu_k$ is the $k$th component of the uncertain variable $\uu$.
 Based on this definition $\tilde{A}_k(0) = 0.99A_k$,
 $\tilde{A}_k(0.5) = A_k$ and $\tilde{A}_k(1) = 1.01A_k$. This choice
 has been made in order to represent some possible uncertainties on the
 external forcing of the model. We also define $\uu^{\mathrm{truth}}$
 as the vector whose all its components are set to \num{0.5}, so when
-no amplitude is perturbated.
-
+no amplitude is perturbated: $\tilde{A}_k(\uu^{\mathrm{truth}}) = A_k$
+for $1\leq k \leq 5$.
+In the next section, we are going to 
 \section{Deterministic calibration of the bottom friction}
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will be first studied without
 external uncertainties, which corresponds to an unperturbated tidal
-forcing. In terms of the environmental variable, it is equivalent to
+forcing, that is to set the environmental variable to
 $\uu^{\mathrm{truth}}$.
     %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
 
@@ -345,7 +345,7 @@ In a twin experiment setup, the observation $y$ are generated using
 the numerical model, and a predefined truth value
 $\kk^{\mathrm{truth}}$.  This means that the ``physical model'' is
 defined using the forward operator $\mathscr{M}$, based on the forward
-numerical model, evaluated with a certain uncertain parameter
+numerical model, evaluated with the environmental parameter
 $\uu^{\mathrm{truth}}$.
 \begin{equation}
   \label{eq:twin_exp}
@@ -580,7 +580,8 @@ with
   \kk_{\mathrm{SF}},\kk_{\mathrm{Si,V}})\in\Kspace, \text{ with }
   \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^6
 \end{equation}
-
+In the context of the sensitivity analysis, all the inpus are assumed
+to be independent, and to be uniformly distributed on their support.
 The first, second and total order effect are
 displayed~\cref{fig:SA_sediments}, where the regions defined by each
 sediment is \cref{fig:sediments_reduced}. The experimental design used
@@ -602,22 +603,29 @@ objective function.
 \subsubsection{SA on the tide components}
 \label{ssec:SA_tide}
 As introduced~\cref{ssec:tidal_modelling}, \CROCO{} incorporates
-different tides constituents and we performed a sensitivity analysis
-on the variable which controls the perturbation of their amplitude, as
-defined in~\cref{eq:tide_error}. The SA is performed on the objective function, whose control parameter $\kk$ is set to its truth value:
+different tide constituents that we perturbate through the uncertain
+variable $\uu\in\Uspace$. In order to quantify the influence of each
+component of the environmental parameter, we performed also a
+sensitivity analysis. As before, the SA is performed on the sum of
+squares of the difference between the forward operator and the
+observations. This time however, the control parameter $\kk$ is set to its
+truth value, and the sum of squares depends only on $\uu$:
 \begin{equation}
   \uu \mapsto  \| \mathcal{M}(\kk^{\mathrm{truth}}, \uu) - y \|_2^2
 \end{equation}
-for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$
-
-\Cref{fig:SA_tides} shows the Sobol indices of first order (left), second
-(right), and the total effect indices, along with bootstrap confidence
-intervals.
+for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$.
+Once again, in the SA context, every component is assumed to be
+uniformly distributed on $\interval{0}{1}$ and independent.
+\Cref{fig:SA_tides} shows the Sobol indices of first order (left),
+second (right), and the total effect indices, along with bootstrap
+confidence intervals, obtained with a design of experiment of
+\num{2888} points.
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_tides.pgf}
-  \caption[SA on the tide components]{\label{fig:SA_tides} Global SA on the different components
-    of the tide, and bootstrap confidence intervals}
+  \caption[SA on the tide components]{\label{fig:SA_tides} Global SA
+    on the different components of the tide, and bootstrap confidence
+    intervals}
 \end{figure}
 
 We can see that the component of the vector affecting the amplitude of
@@ -704,8 +712,14 @@ $\hat{\kk}_{\mathrm{opt}}$.
   \end{tabular}
   \caption{\label{tab:ktruthkopt} Values of the $\kk$ component of the global optimiser, and truth value}
 \end{table}
-One can also notice that $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq \hat{\uu}_{\mathrm{opt}}$.
-
+We can also notice that
+$\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
+\hat{\uu}_{\mathrm{opt}}$.  This can be explained by the choice of the
+control variable, which possesses 3 elements, while the truth used to
+generate the observations had 6. The difference
+$\hat{\uu}^{\mathrm{opt}}$ and $\uu^{\mathrm{truth}}$ happens in order
+to compensate for the difference of dimensionality between
+$\kk\in\Kspace$, the control variable, and $\kk^{\mathrm{truth}}$.
 
 In order to construct GP, we will first define the initial design: we
 will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in order
