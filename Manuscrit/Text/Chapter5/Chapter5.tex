@@ -29,7 +29,7 @@
 \chapter{Application to the numerical coastal model \CROCO}
 \label{chap:croco}
 \minitoc
-% \newpage
+\newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -395,10 +395,10 @@ tool has been used in order to get the gradient (with respect to
 $\kk$) of the cost function $J$ using the adjoint method, as
 described~\cref{sec:calibration_adjoint_optimization}. The
 optimisation procedure is stopped after \num{400} iterations, and the
-estimated controlled parameter is
-shown~\cref{fig:optimization_map_399}.  \Cref{fig:ctrl_true} shows the
-evolution of the cost function and the squared norm of the gradient
-during the optimisation procedure. %  \todo{plutot deviation
+estimated control parameter is
+shown~\cref{fig:optimization_map_399}. The evolution of the cost
+function and the squared norm of the gradient during the optimisation
+procedure is shown~\cref{fig:ctrl_true}. % \todo{plutot deviation
 %   \cref{fig:optimization_map_399} ou log deviation ?
 %   \cref{fig:optimization_map_399_log}}
 % \begin{figure}[ht]
@@ -548,7 +548,7 @@ above). Those total effect indices can be expressed as
 \begin{equation}
   S_{T_i} = 1 - \frac{\Var_{X_{-i}}\left[\Ex_{Y}\left[Y \mid X_{-i}\right]\right]}{\Var_{Y}\left[Y\right]}
 \end{equation}
-where $X_{-i} = (X_1,\dots X_{i-1},X_{i+1},\dots,X_p)$ is random vector of $p-1$ components.
+where $X_{-i} = (X_1,\dots X_{i-1},X_{i+1},\dots,X_p)$ is a random vector of $p-1$ components.
 
 In our study, the Sobol' indices of order $1$, $2$ and total effect
 are computed using a replicated
@@ -584,13 +584,13 @@ with
 The first, second and total order effect are
 displayed~\cref{fig:SA_sediments}, where the regions defined by each
 sediment is \cref{fig:sediments_reduced}. The experimental design used
-here is comprised of \num{7888} points.
+here comprises \num{7888} points.
 
 \label{ssec:SA_sediments}
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_sediments.pgf}
-  \caption{\label{fig:SA_sediments} Global SA on the regions defined by the sediment type, and bootstrap confidence intervals}
+  \caption[SA on the sediments-based regions]{\label{fig:SA_sediments} Global SA on the regions defined by the sediment type, and bootstrap confidence intervals}
 \end{figure}
 
 We can see that the most influential region is the one defined by the
@@ -616,8 +616,8 @@ intervals.
 \begin{figure}[ht]
   \centering
   \input{\imgpath SA_tides.pgf}
-  \caption{\label{fig:SA_tides} Global SA on the different components
-    of the tide, and boostrap confidence intervals}
+  \caption[SA on the tide components]{\label{fig:SA_tides} Global SA on the different components
+    of the tide, and bootstrap confidence intervals}
 \end{figure}
 
 We can see that the component of the vector affecting the amplitude of
@@ -626,20 +626,18 @@ function, and the $S_2$ component seems to have a non negligible
 effect as well. For the other tide constituents, the SA reveals that
 perturbating their amplitude has little to no-effect in this
 configuration, and thus those variable will be discarded in further
-analysis. The uncertain variable can then be redefined as
+analysis. The uncertain variable can then be redefined in what follows as
 \begin{align}
   \UU = (\UU_1, \UU_2)%  \\
   % \UU_1 \text{ and } \UU_2 \text{i.i.d.} \\
   % \UU_i \sim \mathcal{U}\left(\interval{0}{1}\right) \text{ i=1,2}\\
 \end{align}
-
 where $\UU_1$ is the error on the $M_2$ amplitude, and $\UU_2$ is the
 error on the $S_2$ amplitude, $\UU_1$ and $\UU_2$ are independent, and
 $\UU \sim \mathcal{U}\left(\Uspace\right)$ with
 $\Uspace = \interval{0}{1}^2$.
 
 \section{Robust Calibration of the bottom friction}
-
 \subsection{Objective function and global minimum}
 
 Based on the sensitivity analysis carried in the previous section, we
@@ -751,8 +749,8 @@ Since both of these functions require an optimisation of the objective
 function, they are quite expensive to compute. We can use the
 surrogate in order to approximate them:
 \begin{align}
-  m_{Z^*}: \uu\in\Uspace \mapsto &\min_{\kk \in \Kspace} m_Z(\kk, \uu) \\
-  \kk^*_{Z}: \uu \in \Uspace \mapsto &\argmin_{\kk \in \Kspace} m_{Z^*}(\uu)
+  m_{Z^*}: \uu\mapsto &\min_{\kk \in \Kspace} m_Z(\kk, \uu) \\
+  \kk^*_{Z}: \uu  \mapsto &\argmin_{\kk \in \Kspace} m_{Z^*}(\uu)
 \end{align}
 In order to improve the accuracy of those two functions, we are first
 going to enrich the design using the PEI criterion, as detailed
@@ -763,9 +761,9 @@ The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
 and the additional evaluations due to the PEI criterion is then used
 in order to construct $m_{Z^*}$ and $\kk^*_Z$. This new design will be
 denoted as $\mathcal{X}_0$. By sampling $\uu_i$ from
-$\UU$ for $1\leq i \leq N_{\mathrm{samples}}$, we can then estimate
+$\UU$ for $1\leq i \leq n_{\uu}$, we can then estimate
 the distribution of the random variable $\kk^*(\UU)$. The samples
-$\kk^*_Z(\uu_i)$ for $1\leq i \leq N_{\mathrm{samples}}$ are displayed
+$\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$ are displayed
 in~\cref{fig:distrib_minimizers_reduced}. Those estimated marginal
 distributions are bimodal, % and we can notice two different points
 % $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
@@ -811,7 +809,8 @@ distributions are bimodal, % and we can notice two different points
 \end{figure}
 
 \subsection{Relative-regret based estimators}
-We are here going to estimate members of the relative-regret family of estimators as defined~\cref{def:RR_family}, on
+We are here going to estimate members of the relative-regret family of
+estimators as defined~\cref{def:RR_family}, on
 \cpageref{def:RR_family}:
 \begin{equation}
   \left\{\kk_{\mathrm{RR,\alpha}} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) \mid \alpha \geq 1\right\}
@@ -841,12 +840,16 @@ ratio, at the order $p$:
   q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
 \end{equation}
 where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
-relative-regret, that we introduce for notational convenience.
-As $\mathrm{RR}$ is unknown directly, we can also apply the plug-in approach, and define
+relative-regret, that we introduce for notational convenience.  As
+$\mathrm{RR}$ is unknown directly, we can also apply the plug-in
+approach, and define
 \begin{equation}
   \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
 \end{equation}
-where $\Xi$ is the lognormal approximation as defined in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is done using a set of i.i.d.\ samples of $\UU$: $\{\uu_i\}_{1\leq i \leq n_{\uu}}$
+where $\Xi$ is the lognormal approximation as defined
+in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is
+done using a set of i.i.d.\ samples of $\UU$:
+$\{\uu_i\}_{1\leq i \leq n_{\uu}}$
 \begin{equation}
   \label{eq:RRPI}
   \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
@@ -877,8 +880,6 @@ $p$:
   \input{\imgpath evo_alpha_p_kp.pgf}
   \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ as a function of $p$, and $\kk_{\mathrm{RR},\alpha_p}$}
 \end{figure}
-
-
 
 \subsubsection{Optimisation of the probability of exceeding a threshold}
 We will first look to improve the estimation of $\Gamma_{\alpha}$,
@@ -928,19 +929,21 @@ random set $\{\Delta_\alpha \leq 0\}$ to be
   in~\cref{alg:sampling_enrichment_star}.  As the margin
   $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
   to the design (as it is easier to classify points either \emph{in}
-  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step can
-  become difficult,\todo{finir}
+  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step
+  can become difficult,\todo{finir}
 \subsubsection{Optimisation of the quantile of the relative-regret}
-In this section, we will fix a level of confidence $p=0.95$, and look to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.
-By definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$  verifies
+In this section, we will fix a level of confidence $p=0.95$, and look
+to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.  By
+definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$
+verifies
 \begin{equation}
 \max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
 \end{equation}
 
 \section{Partial conclusion}
-In this chapter, we addressed the problem of calibration of the
-numerical model CROCO. After having defined the calibration and
-environmental parameters, we \todo{!!}
+In this chapter, we adressed the problem of calibration of the
+numerical model CROCO.\@ After having defined the calibration and
+environmental parameters, we 
 % \begin{figure}[ht]
 %   \centering
 %   \input{\imgpath SA_croco.pgf}
@@ -956,8 +959,6 @@ environmental parameters, we \todo{!!}
 \markchapterend
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% BIB
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

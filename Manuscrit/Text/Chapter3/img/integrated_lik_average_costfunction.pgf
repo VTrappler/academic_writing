@@ -573,7 +573,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.769254in,y=2.950739in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \mu(\theta) = \mathrm{E}_U[J(\theta, U)]\)}%
+\pgftext[x=1.769254in,y=2.950739in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \mu(\theta) = \mathbb{E}_U[J(\theta, U)]\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
