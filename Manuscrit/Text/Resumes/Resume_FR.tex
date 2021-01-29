@@ -52,13 +52,14 @@ dans ces modèles, comme évoqué dans~\cite{walker_defining_2003}.
 
 Dans le cadre de cette thèse, les incertitudes épistémiques prennent
 la forme de la méconnaissance de la valeur d'un paramètre
-$\kk \in \Kspace$, que l'on va chercher à calibrer.  Un exemple de ce
+$\kk \in \Kspace$, que l'on va chercher à calibrer. Un exemple de ce
 genre de problèmes est l'estimation de la friction dans les modèles
-d'océans.  En effet, la friction de fond est dûe à la rugosité du
-plancher océanique, provoquant de la dissipation d'énergie à cause des
-turbulences engendrées. L'estimation de la friction de fond est un
-problème à forts enjeux, notamment dans les régions côtières, du fait de
-son influence sur les courants et de son interaction avec la
+d'océans qui va donc nous servir de cas d'application. En effet, la
+friction de fond est dûe à la rugosité du plancher océanique,
+provoquant de la dissipation d'énergie à cause des turbulences
+engendrées. L'estimation de la friction de fond est un problème à
+forts enjeux, notamment dans les régions côtières, du fait de son
+influence sur les courants et de son interaction avec la
 marée~\cite{sinha_principal_1997,boutet_estimation_2015}.
 
 Cette estimation peut être traitée dans un cadre
@@ -66,25 +67,25 @@ d'assimilation de données avec des méthodes variationelles comme
 dans~\cite{das_estimation_1991,das_variational_1992} sur un cas
 simplifié, ou dans un cas plus réaliste
 dans~\cite{boutet_estimation_2015}, avec une méthode de gradient
-stochastique, permettant de se passer du calcul du gradient.
+stochastique, permettant de se passer du calcul exact du gradient.
 
 
 Les incertitudes aléatoires, quant à elles, représentent des
 conditions environnementales, comme le forçage d'un modèle ou les
 conditions aux bords. Ces conditions ne sont pas directement
 contrôlées par le modèle, donc l'on subit leurs fluctuations, ou leur
-imprécision.  Ces variables environnementales vont être modélisées à
+imprécision. Ces variables environnementales vont être modélisées à
 l'aide d'une variable aléatoire $\UU$, de réalisation notée
 $\uu\in \Uspace$.
 
 Comme le modèle que l'on cherche à calibrer vise à représenter la
 réalité, il est souhaitable que les prédictions du modèle soient le
-plus similaire possible aux observations dont on dispose. Cette notion
-de distance est retranscrite en définissant une fonction $J$, dite
-fonction coût ou fonction objectif qui mesure l'écart entre la sortie
-du modèle et les observations disponibles. Cette fonction prendra donc
-en entrée le paramètre à estimer $\kk$, que l'on nommera paramètre de
-contrôle, ainsi que $\uu$, le paramètre environnemental:
+plus proche possible des observations dont on dispose. Cette notion
+est retranscrite en définissant une fonction $J$, dite fonction coût
+ou fonction objectif qui mesure l'écart entre la sortie du modèle et
+les observations disponibles. Cette fonction prendra donc en entrée le
+paramètre à estimer $\kk$, que l'on nommera paramètre de contrôle,
+ainsi que $\uu$, le paramètre environnemental:
 
 \begin{equation*}
   \label{eq:def_J}
@@ -114,7 +115,7 @@ manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque
 l'on prend en compte la variabilité intrinsèque de $\uu$. Comme $\UU$
 est une variable aléatoire, pour un $\kk$ donné, la fonction coût peut
 être elle aussi vue comme une variable aléatoire: $J(\kk,\UU)$, que
-l'on va chercher intuitivement à ``minimiser'' dans un certain sens
+l'on va chercher à ``minimiser'' dans un sens
 qui reste à définir.  Cette problématique porte différents noms, comme
 l'optimisation robuste, où cette robustesse doit être comprise comme
 l'insensibilité aux variations de $\UU$, l'optimisation sous
@@ -129,7 +130,7 @@ robustesse, et d'appliquer des méthodes adaptées permettant d'estimer
 un paramètre en présence d'incertitudes. Cette estimation se réalise
 dans un premier temps dans des cas simples (fonctions analytiques,
 problèmes simplifiés de faibles dimensions), puis sur des problèmes
-plus complexes d'estimation de la friction de fond.
+plus complexes d'estimation de la friction de fond océanique.
 
 \subsection*{Critères basés sur le regret additif et relatif}
 Dans le \frchap{chap:robust_estimators}, nous abordons le problème de
@@ -234,7 +235,7 @@ $\mathcal{X}=\{(\kk_i, \uu_i), J(\kk_i, \uu_i)\}_{1\leq i \leq n}$,
 comprenant donc $n$ points.  Le métamodèle associé à $Z$ et construit
 d'après $\mathcal{X}$ sera noté
 $m_Z:\Kspace\times \Uspace \rightarrow \mathbb{R}$, et utilisé en lieu
-et en place de $J$ pour estimer $\Gamma_{\alpha}$ ou $q_p$, dans un
+et en place de $J$ pour estimer $\Gamma_{\alpha}$ ou $q_p$, dans une
 approche dite \emph{plug-in}.
 
 Les propriétés des GP nous permettrons aussi d'établir des stratégies
@@ -299,7 +300,7 @@ Nous effectuerons tout d'abord une optimisation de la fonction
 objectif, sans introduire d'incertitudes. Ensuite, dans le but de
 réduire la dimension du problème, nous segmenterons le domaine
 océanique étudié selon le type de sédiments qui se trouve au
-fond. Afin de quantifier l'influence de chacune des régions délimitée
+fond. Afin de quantifier l'influence de chacune des régions délimitées
 par la classe de sédiments, une analyse de sensibilité globale sera
 effectuée, afin de calculer les indices de Sobol'
 correspondants~\cite{sobol_global_2001,iooss_revue_2011}. Une étude
