@@ -47,10 +47,10 @@ solvers.%in
 
 Models are then only a partial representation of the reality, which
 aim at representing complex processes that occur across a large range
-of scales, scales that interact with each other. For computational
-reasons, no modelling system would be able to take all of those into
-account but instead, their effect are incorporated in the modelling by
-overly simplifying them and by {parametrizing} them.
+of scales, scales that interact with each other. By essence, no
+modelling system would be able to take all of those into account but
+instead, their effect are incorporated in the modelling by overly
+simplifying them and by {parametrizing} them.
 
 In ocean modelling, and especially in coastal regions, a telling
 example of this is the parametrization of the bottom friction. This
@@ -58,18 +58,18 @@ phenomenon occurs as the asperities of the ocean bed dissipates energy
 through turbulences, and thus affects the circulation at the
 surface. Since this happens at a subgrid level, \emph{i.e.} at a scale
 usually several order of magnitudes below the scale of the domain
-studied, modelling all those turbulences is completely unfeasible in
-practice: the knowledge of the ocean bed is too limited for such
-applications and the computational power required would be
+after discretization, modelling all those turbulences is completely
+unfeasible in practice: the knowledge of the ocean bed is too limited
+for such applications and the computational power required would be
 unthinkable. Instead, the effect of the bottom friction is accounted
 for through parametrization, so by introducing a new parameter which
-is defined at every mesh point.
+is defined at every mesh point.\todo{il manque qqchose} 
 
 As this modelling is supposed to represent the reality, the prediction
 should be compared with some data acquired through observations. This
 comparison usually takes the form of the definition of a misfit
 function $J$ that measures the error between the forecast and the
-reality. This objective function is then minimised with respect to
+observations. This objective function is then minimised with respect to
 some chosen parameters
 $\kk$~\cite{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
 in order to get a calibrated model. Those parameters will be called
@@ -98,13 +98,13 @@ parameter.
 Due to the presence of this random source of uncertainty, we wish to
 calibrate the model, \emph{i.e.} to select a value of the control
 parameter $\kk$, in a manner that guarantees that the model represents
-accurately enough the reality, ``as often as possible'' given the
-random nature of the value of the environmental parameter. In other
-words, as the objective function measures in some sense the quality of
-the calibration, we wish that this function exhibits \emph{acceptable}
-values as often as possible, when $\kk$ is fixed. This defines
-intuitively the underlying notion of \emph{robustness} with respect to
-the variability of the uncertain variable.
+accurately enough the reality, despite the random nature of the value of
+the environmental parameter. In other words, as the objective function
+measures in some sense the quality of the calibration, we wish that
+this function exhibits \emph{acceptable} values as often as possible,
+when $\kk$ is fixed. This defines intuitively the underlying notion of
+\emph{robustness} with respect to the variability of the uncertain
+variable.
 
 In this thesis, we will study an aspect of the calibration of a
 numerical model under uncertainty, by discussing the notions of

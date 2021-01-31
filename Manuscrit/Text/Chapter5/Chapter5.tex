@@ -133,7 +133,7 @@ where the depth is closer to \SI{5000}{\meter}.
 
 \CROCO{} can solve the fluid motion equations in 3D, but in this
 configuration, solves the shallow water equations instead, which are
-obtained by vertically integrating the primitive equations.
+obtained by vertically integrating the primitive equations:
 % \begin{align}
     %     \left\{
     %     \begin{array}{rcl}
@@ -313,9 +313,10 @@ $\tilde{A}_k(0.5) = A_k$ and $\tilde{A}_k(1) = 1.01A_k$. This choice
 has been made in order to represent some possible uncertainties on the
 external forcing of the model. We also define $\uu^{\mathrm{truth}}$
 as the vector whose all its components are set to \num{0.5}, so when
-no amplitude is perturbated: $\tilde{A}_k(\uu^{\mathrm{truth}}) = A_k$
-for $1\leq k \leq 5$.
-In the next section, we are going to 
+no amplitude is perturbated:
+$\tilde{A}_k(\uu_k^{\mathrm{truth}}) = A_k$ for $1\leq k \leq 5$.  In
+the next section, we are going to estimate the parameter $\kk$ by
+minimising the objective function using a gradient descent algorithm.
 \section{Deterministic calibration of the bottom friction}
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will be first studied without
@@ -599,7 +600,6 @@ pebbles (with code C). More generally, except for the rocks, we can
 see that the shallower the region, the larger impact it has on the
 objective function. 
 
-
 \subsubsection{SA on the tide components}
 \label{ssec:SA_tide}
 As introduced~\cref{ssec:tidal_modelling}, \CROCO{} incorporates
@@ -714,19 +714,22 @@ $\hat{\kk}_{\mathrm{opt}}$.
 \end{table}
 We can also notice that
 $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
-\hat{\uu}_{\mathrm{opt}}$.  This can be explained by the choice of the
-control variable, which possesses 3 elements, while the truth used to
-generate the observations had 6. The difference
-$\hat{\uu}^{\mathrm{opt}}$ and $\uu^{\mathrm{truth}}$ happens in order
-to compensate for the difference of dimensionality between
-$\kk\in\Kspace$, the control variable, and $\kk^{\mathrm{truth}}$.
+\hat{\uu}_{\mathrm{opt}}$. This can be explained by the choice of
+controlling the parameter on a space of dimension 3, while the truth
+value used to generate the observations can be seen as 6
+dimensional. The difference $\hat{\uu}^{\mathrm{opt}}$ and
+$\uu^{\mathrm{truth}}$ happens in order to compensate for the
+difference of dimensionality between $\kk\in\Kspace$, the control
+variable, and $\kk^{\mathrm{truth}}$.
 
-In order to construct GP, we will first define the initial design: we
-will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in order
-to construct first a GP that can be used as a surrogate. Using similar
-notation as in the previous chapter, we denote $\mathcal{X}_0$ the
-initial design, and $Z$ the Gaussian Process constructed and fitted
-using $\mathcal{X}_0$.  We will write
+In what follows, we are going to detail quickly the construction of
+the GP that will be used to estimate the relative-regret estimates.
+In order to construct a GP, we will first define the initial design:
+we will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in
+order to construct first a GP that can be used as a surrogate. Using
+similar notation as in the previous chapter, we denote $\mathcal{X}_0$
+the initial design, and $Z$ the Gaussian Process constructed and
+fitted using $\mathcal{X}_0$.  We will write
 \begin{equation}
   Z \sim \GP\left(m_Z, C_Z\right) \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
 \end{equation}
@@ -748,7 +751,6 @@ which have the largest probability of being negative.
 
 \subsection{Conditional minimums and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
-
 
 In the previous chapter, we defined the conditional minimum as the
 minimum of the objective function given $\uu\in \Uspace$:
@@ -778,8 +780,8 @@ denoted as $\mathcal{X}_0$. By sampling $\uu_i$ from
 $\UU$ for $1\leq i \leq n_{\uu}$, we can then estimate
 the distribution of the random variable $\kk^*(\UU)$. The samples
 $\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$ are displayed
-in~\cref{fig:distrib_minimizers_reduced}. Those estimated marginal
-distributions are bimodal, % and we can notice two different points
+in~\cref{fig:distrib_minimizers_reduced}.
+% and we can notice two different points
 % $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
 \begin{figure}[ht]
   \centering
@@ -793,33 +795,20 @@ distributions are bimodal, % and we can notice two different points
 % Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
 % approximation of the repartition of the minimisers.
 \todo{transition minimiseurs à regrets based}
-% \begin{table}[!ht]
-%   \centering
-%   \begin{tabular}{rcl} \toprule
-%     $p$ & $\alpha_p$ & $\kk_{\mathrm{RR},p}$ \\ \midrule
-%     \num{0.5} & \num{1.027% 9807270764623
-%                 } &   \\
-%     \num{0.7} & \num{1.054% 1171507139304
-%                 } &  \\
-%     \num{0.8} & \num{1.101% 1858035465198
-%                 } & \\
-%     \num{0.9} & \num{1.109% 897062278107
-%                 } & \\
-%     \num{0.95}& \num{1.159% 8372511190105
-%                 } & \\
-%     \num{0.99}& \num{1.198% 4792983910981
-%                 } & \\
-%     \num{1.0} & \num{1.200% 6928687163256
-%                 } & \\ \bottomrule
-%   \end{tabular}
-%   \caption{Initial}
-%   \label{tab:initial_quantiles}
-% \end{table}
 
+%\begin{figure}[ht]
+%  \centering
+%  \includegraphics{\imgpath contour_Jstar.png}
+%  \caption{\label{fig:contour_Jstar} Conditional minimum computed using a GP $m_Z^*(\uu)$}
+%\end{figure}
 \begin{figure}[ht]
   \centering
-  \includegraphics{\imgpath contour_Jstar.png}
-  \caption{\label{fig:contour_Jstar} Conditional minimum computed using a GP $m_Z^*(\uu)$}
+  \includegraphics{\imgpath pairplot_aimse.png}
+  \caption[Distribution of the minimisers $\kk^*(\UU)$]{\label{fig:pairplot_aimse} Distribution of the minimisers
+    estimated using the GP $Z$ enriched. The diagonal plots show the
+    KDE of the marginal distributions of the minimisers. The non-diagonal plots
+    show the pairwise relation between the different components of the minimisers
+  }
 \end{figure}
 
 \subsection{Relative-regret based estimators}
@@ -898,12 +887,13 @@ $p$:
 \subsubsection{Optimisation of the probability of exceeding a threshold}
 We will first look to improve the estimation of $\Gamma_{\alpha}$,
 defined as the following probability:
-. As defined
+ As defined
 in~\cref{eq:def_hatgamma_PI}, given the GP $Z$, constructed upon
 evaluations of $J$, and a set $\{\uu_i\}_{1\leq i\leq n_{\uu}}$ of
 i.i.d.\ samples from $\UU$, the plug-in approximation of
 $\Gamma_{\alpha}$ is
 \begin{align}
+  \label{eq:gamma_pi_alpha}
   \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}} \\
                                            &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
 \end{align}
@@ -912,11 +902,13 @@ $\Delta_{\alpha} = Z - \alpha Z^* \sim \GP(m_{\Delta_{\alpha}},
 C_{\Delta_\alpha})$ is a GP, as defined in the previous chapter. We
 define the prediction variance, or mean square error, as
 $\sigma^2_{\Delta_{\alpha}}: (\kk, \uu) \mapsto
-C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$.
-
+C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$.  In the
+following, we are going to estimate the relative-regret, associated
+with the value $\alpha=1.3$, meaning that we are looking to find the
+probability of being within $30\%$ of the optimal value.
 \paragraph{Stepwise reduction of the augmented IMSE}
 We are going to reduce the augmented IMSE of the random process
-defined as The $\mathrm{IMSE}$ associated with the GP
+defined as. The $\mathrm{IMSE}$ associated with the GP
 $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
 $\mathcal{X}_n$ is defined as
 \begin{equation}
@@ -926,8 +918,42 @@ and we select a new point to evaluate as:
 \begin{equation}
   (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right]
 \end{equation}
+In practice, we selected the new point $(\kk_{n+1}, \uu_{n+1})$ in a
+stochastic manner: first the IMSE is estimated using a Monte-Carlo
+method:
+\begin{align}
+  \IMSE(\mathcal{X}_n) %&= \int_{\Kspace \times\Uspace} \sigma^2_{\Delta_{\alpha}}(\kk, \uu) \,\mathrm{d}\kk\, \mathrm{d}\uu \\
+                       &\approx \frac{1}{n_{\IMSE}} \sum_{i=1}^{n_{\IMSE}} \sigma_{\Delta_{\alpha}}^2(\kk_i, \uu_i)
+\end{align}
+where the points $(\kk_i, \uu_i)$ for $1\leq i \leq n_{\IMSE}$ are
+resampled each iteration using a LHS on $\Kspace \times \Uspace$.
+\Cref{fig:aIMSE} shows the reduction of the IMSE with the number of
+additional iterations, until reaching a number of \num{500}
+evaluations of the model in total. Abrupt changes in the IMSE can be
+explained by a significant changes in the hyperparameters of the GP.
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath aIMSE.pgf}
+  \caption{\label{fig:aIMSE} Evolution of the IMSE during the enrichment strategy}
+\end{figure}
+Based on the enriched GP, we can maximise
+$\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$. We chose here
+$n_{\uu}=\num{500}$ to compute it according to
+\cref{eq:gamma_pi_alpha}, and the maximum found is
+\begin{equation}
+  \max_{\kk} \Gamma_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.848\pm 0.031}
+\end{equation}
+where the confidence interval given is computed using the normal approximation of
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath evo_alpha_p_kp.pgf}
+  \caption{\label{fig:} Evolution of the threshold $\alpha_p$ and
+    estimates with respect to $p$, using the GP enriched with 200 additional points}
+\end{figure}
 
 \paragraph{Sampling in the margin of uncertainty}
+
 In the previous chapter, we defined the probability of coverage of the
 random set $\{\Delta_\alpha \leq 0\}$ to be
 \begin{equation}
@@ -956,8 +982,17 @@ verifies
 
 \section{Partial conclusion}
 In this chapter, we adressed the problem of calibration of the
-numerical model CROCO.\@ After having defined the calibration and
-environmental parameters, we 
+numerical model CROCO.\@ After having defined the control and
+environmental parameters, we performed different studies, in order to
+have a better understanding of the model at play.
+
+After having optimised the objective function with a high-dimensional
+control parameter, but without external uncertainties, we chose to
+segment the domain according to the type of sediments that can be
+found at the bottom. This first leads to a dimension reduction.
+
+Based on this reduced dimension we compared the influence of each of
+these regions on the objective function in a sensitivity analysis.
 % \begin{figure}[ht]
 %   \centering
 %   \input{\imgpath SA_croco.pgf}

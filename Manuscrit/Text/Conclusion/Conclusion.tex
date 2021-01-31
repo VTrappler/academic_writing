@@ -66,7 +66,7 @@ control parameter $\kk$.
 
 However, due to the presence of some random environmental variables
 $\UU$ in the study, a plain minimisation of the objective function is
-not completely relevant, as it will depend on the realisation of this
+not completely relevant, as its result will depend on the realisation of this
 random variable assumed.  By
 taking into account the random nature of the {environmental
   parameters}, the calibration can be seen as a problem of
@@ -90,7 +90,7 @@ function for different configurations given by $\uu$, the regret
 allows the modeller to compare the value of the objective with the
 best attainable performance given this specific environmental
 variable.  This allows to put less emphasis on configurations which
-already lead to bad performances, and to focus more on ``salveagable''
+lead to bad performances, and to focus more on ``salveagable''
 situations.
 
 Moreover, the user can adjust a parameter in order to reflect either a
@@ -131,8 +131,8 @@ not easily parametrised, such as in the presence of functional
 inputs~\cite{el_amri_analyse_2019}. In this case, it is not possible
 to control the value of $\uu$ chosen for an enrichment strategies for
 instance. An alternative strategy would be to consider this
-uncertainty as \emph{noise} in the output of the simulator, and thus
-model it using \emph{noisy kriging} and/or or noisy optimisation
+uncertainty as \emph{noise} in the output of the simulator, leading to
+\emph{noisy kriging} and/or or noisy optimisation
 methods~\cite{picheny_noisy_2014}.
 % 2-stage enrichment strategies
 
@@ -202,12 +202,16 @@ reduction method could be done, without prior information, using the
 gradient for instance, as done in~\cite{benameur_refinement_2002} or
 in~\cite{zahm_certified_2018}.
 
-
+\todo{refaire 2derniers par}
 % Choice of quantile ? to remove maybe
-In this thesis, we proposed a regret-based family of estimates that
-depends on the probability of exceeding a specified
-threshold. However, we do not control the values of the function when
-exceeding this threshold. A similar approach could be developed
+
+
+In this thesis, the distribution of the random variable defined as the
+conditional minimum $J^*(\UU)$, and the associated minimisers
+$\kk^*(\UU)$ play a central role in our notions of robustness. We
+focused here on the expression of the regret, that we control through
+its quantile. However, we do not control the values of the function
+when exceeding this threshold. A similar approach could be developed
 analogous to the CVaR (Conditional Value at
 Risk)~\cite{rockafellar_conditional_2002}, also called \emph{expected
   shortfall}, in order to control the values of the objective function
