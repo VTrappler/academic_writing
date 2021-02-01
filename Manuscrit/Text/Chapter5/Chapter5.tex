@@ -238,9 +238,10 @@ found~\cref{fig:sediments_full}.
   \centering
   \includegraphics{\imgpath sediments_reduced.png}
   \caption{\label{fig:sediments_reduced} Repartition of the sediments
-    on the ocean floor.}
+    on the ocean floor. Data source: SHOM, under CC BY-SA-4.0
+    license}
 \end{figure}
-
+%\footnotetext[2]{\url{https://creativecommons.org/licenses/by-sa/4.0/}}
 Most of the ocean floor in this region is composed of sand. Even
 though siltic soil is listed, it is only scarcely present. The figure
 also shows that the largest sediments are rocks but are mostly located
@@ -260,17 +261,18 @@ variable $\kk$ as
 \end{equation}
 where $\kk_{\min} = \log(10^{-5}) \approx -11.5$, and
 $\kk_{\max} = \log(5\cdot 10^{-2}) \approx -3$.  The dimension of
-$\Kspace$ will be written $p$, and will be specified depending on the
+$\Kspace$ will be written $p$, and will be specified later depending on the
 chosen segmentation.
 
 \subsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
 The ocean, especially near the English Channel is driven by tidal
 forces that produce current at the surface. As a periodic signal, the
-tidal forcing is analysed harmonically, in order to separate its
-influence by frequency. In \CROCO, this forcing comes from the TPXO
-model of tides~\cite{egbert_efficient_2002}, and the configuration uses the 5
-primary harmonic constituents as described \cref{tab:tides_components}.
+tidal forcing is usually analysed harmonically, in order to separate
+its influence by frequency. In \CROCO, this forcing comes from the
+TPXO model of tides~\cite{egbert_efficient_2002}, and the
+configuration uses the 5 primary harmonic constituents as described
+\cref{tab:tides_components}.
 \begin{table}[!h]
   \centering
   % % Chose order from the rank in the TPXO file :
@@ -297,13 +299,13 @@ primary harmonic constituents as described \cref{tab:tides_components}.
 
 By perturbating some properties of those tide components, we can
 introduce some error in the numerical model, \emph{i.e.} a parametric
-misspecification. In this work, we chose to add a small
-multiplicative error on the amplitude of the different components of
-the tide. Let
+misspecification that we will consider as the environmental
+variable. In this work, we chose to add a small multiplicative error
+on the amplitude of the different components of the tide. Let
 $\uu = (\uu_1,\dots,\uu_5)\in \Uspace = \interval{0}{1}^5$ be the
-environmental variable, that will be considered as a random variable later, and let $A_k$ be the amplitude of the $k$th
-component of the tide.  The perturbated amplitude $\tilde{A}_k$ is
-defined as
+environmental variable, that will be considered as a random variable
+later, and let $A_k$ be the amplitude of the $k$th component of the
+tide.  The perturbated amplitude $\tilde{A}_k$ is defined as
 \begin{equation}
   \label{eq:tide_error}
   \tilde{A}_k(\uu_k) = A_k (1 + 0.01(2\uu_k - 1))
@@ -399,23 +401,17 @@ optimisation procedure is stopped after \num{400} iterations, and the
 estimated control parameter is
 shown~\cref{fig:optimization_map_399}. The evolution of the cost
 function and the squared norm of the gradient during the optimisation
-procedure is shown~\cref{fig:ctrl_true}. % \todo{plutot deviation
-%   \cref{fig:optimization_map_399} ou log deviation ?
-%   \cref{fig:optimization_map_399_log}}
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_399.png% /home/victor/optimisation_dahu/optim_true/map_150.png
-%   }
-%   \caption{\label{fig:optimization_map_399} Optimization of $\zob$ on
-%     the whole space using gradient obtained via adjoint method, after
-%     $400$ iterations.}
-% \end{figure}
+procedure is shown~\cref{fig:ctrl_true}.
+In~\Cref{sec:appendix_truth_optim} is presented the result of the
+optimisation over the whole domain, for other choices of the
+environmental parameter.
 
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
   }
-  \caption[Optimization of $\zob$ on the whole space]{\label{fig:optimization_map_399} Optimization of $\zob$ on
+  \caption[Optimization of $\zob$ on the whole
+  space]{\label{fig:optimization_map_399} Optimization of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
     $400$ iterations.}
 \end{figure}
@@ -432,11 +428,10 @@ charts~\cref{fig:sediments_reduced} and the bathymetry
 map~\cref{fig:depth_maps}, we can have a first overview on which
 regions of the domain are properly estimated (\emph{i.e.} where the
 the estimation is close to the truth value).
-
-On a first look, we can see that the abyssal plain (the deep region
-off the Bay of Biscay) remains mostly unaffected by the optimisation,
-while the continental shelf, except for some parts of the English
-Channel, is well retrieved.
+On a first look, we can see that the abyssal
+plain (the deep region off the Bay of Biscay) remains mostly
+unaffected by the optimisation, while the continental shelf, except
+for some parts of the English Channel, is well retrieved.
 
 \begin{figure}[ht]
   \centering
