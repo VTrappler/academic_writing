@@ -1809,11 +1809,11 @@ estimate of the ratio, and $\hat{\alpha}_p = \hat{q}_p(\tilde{\kk})$.
 
 By linearly discretizing the interval
 $\interval{q^-_p(\tilde{\kk})}{q^+_p(\tilde{\kk})}$, we can define
-$\{\mathfrak{q}_l\}$ for $1 \leq l \leq K_q$, with
+$\mathfrak{q}_l$ for $1 \leq l \leq K_q$, with
 $\mathfrak{q}_1 = q^-_p$ and $\mathfrak{q}_{K_q} = q^+_p$. The
-$\{\mathfrak{q}_l\}$ are then expected to cover the plausible range of
-value that the sought quantile $\alpha_p = \min q_p(\kk)$ may
-take.
+$\{\mathfrak{q}_l\}_{1\leq l \leq K_q}$ are then expected to cover the
+plausible range of value that the sought quantile
+$\alpha_p = \min q_p(\kk)$ may take.
 
 For each of those $K_q$ quantiles, we can look to sample
 $K_{\mathbb{M}}$ points in the margin of uncertainty of the log-ratio,
@@ -1823,12 +1823,12 @@ which is defined as
                                      &= \{(\kk, \uu) \mid m_{\Xi}(\kk,\uu) - k\sigma_{\Xi}(\kk, \uu) < \log \mathfrak{q}_l < m_{\Xi}(\kk, \uu) + k\sigma_{\Xi}(\kk, \uu)\}
                                      % &= \left\{ (\kk, \uu) \mid m_{\Xi} - k \sigma_{\Xi} < \log \mathfrak{q}_l \land  m_{\Xi} + k \sigma_{\Xi} > \log \mathfrak{q}_l\right\} \\
 \end{align}
-with $k = \Phi^{-1}(1-\eta/2)$. Equivalently, by defining the coverage
-probability of the set
-$\{\log \frac{Z(\kk,\uu)}{Z^*(\uu)}\leq \log \mathfrak{q}_l\}$, which
-is
+with $k$ an appropriate quantile of the standard Gaussian random
+variable. Equivalently, by defining the coverage probability of the
+set $\{\log \frac{Z(\kk,\uu)}{Z^*(\uu)}\leq \log \mathfrak{q}_l\}$,
+which is
 $\pi_{\Xi,l}(\kk, \uu) = \Phi\left(-\frac{m_{\Xi}(\kk, \uu) - \log
-    \mathfrak{q}_l}{\sigma_{\Xi}}\right)$,
+    \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}\right)$,
 \begin{equation}
   \mathbb{M}_{\eta}(\mathfrak{q}_l) = \left\{(\kk, \uu) \mid \frac{\eta}{2}\leq\pi_{\Xi,l}(\kk, \uu) \leq 1-\frac{\eta}{2}\right\}
 \end{equation}

@@ -705,7 +705,11 @@ $\hat{\kk}_{\mathrm{opt}}$.
     $\kk_{\mathrm{SF}}$   & \num[round-mode=places,round-precision=4]{-8.804875}                                                                                                                                                                                                                                        &                          &                                                                         \\
     $\kk_{\mathrm{Si,V}}$ & \num[round-mode=places,round-precision=4]{-10.81977}                                                                                                                                                                                                                                        &                          &                                                                         \\ \bottomrule
   \end{tabular}
-  \caption{\label{tab:ktruthkopt} Values of the $\kk$ component of the global optimiser, and truth value}
+  \caption[Values of the $\kk$ component of the global optimiser, and
+  truth value]{\label{tab:ktruthkopt} Values of the $\kk$ component of
+    the global optimiser, and truth value. The region associated with
+    $\kk^{(3)}$ is the union of the regions defined with code R, S,
+    SF, Si and V.}
 \end{table}
 We can also notice that
 $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
@@ -721,10 +725,12 @@ In what follows, we are going to detail quickly the construction of
 the GP that will be used to estimate the relative-regret estimates.
 In order to construct a GP, we will first define the initial design:
 we will sample a Latin Hypersquare on $\Kspace \times \Uspace$ in
-order to construct first a GP that can be used as a surrogate. Using
-similar notation as in the previous chapter, we denote $\mathcal{X}_0$
-the initial design, and $Z$ the Gaussian Process constructed and
-fitted using $\mathcal{X}_0$.  We will write
+order to construct first a GP that can be used as a surrogate. This
+will be done using the Python module
+Scikit-learn~\cite{pedregosa_scikit-learn_2011}. Using similar notation
+as in the previous chapter, we denote $\mathcal{X}_0$ the initial
+design, and $Z$ the Gaussian Process constructed and fitted using
+$\mathcal{X}_0$.  We will write
 \begin{equation}
   Z \sim \GP\left(m_Z, C_Z\right) \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
 \end{equation}
@@ -743,29 +749,29 @@ the conditional minimisers, using the PEI criterion.  Alternatively,
 one could have added points to the design according to the reliability
 index, defined~\cref{eq:reliability_rho}, and thus look to find points
 which have the largest probability of being negative.
-
 \subsection{Conditional minimums and conditional minimisers}
 \label{ssec:croco_cond_minimum_minimisers}
 
 In the previous chapter, we defined the conditional minimum as the
-minimum of the objective function given $\uu\in \Uspace$:
+minimum of the objective function at a given $\uu\in \Uspace$:
 \begin{equation}
   J^* : \uu \mapsto J^*(\uu) = \min_{\kk\in\Kspace} J(\kk, \uu)
 \end{equation}
-and the conditional minimiser function as
+The conditional minimisers function is defined as
 \begin{equation}
   \kk^*:\uu  \mapsto \kk^*(\uu) = \argmin_{\kk \in \Kspace} J(\kk, \uu)
 \end{equation}
 Since both of these functions require an optimisation of the objective
-function, they are quite expensive to compute. We can use the
-surrogate in order to approximate them:
+function, they are quite expensive to compute, so, as done before, we
+use the GP prediction of $Z$ in order to approximate them:
 \begin{align}
   m_{Z^*}: \uu\mapsto &\min_{\kk \in \Kspace} m_Z(\kk, \uu) \\
   \kk^*_{Z}: \uu  \mapsto &\argmin_{\kk \in \Kspace} m_{Z^*}(\uu)
 \end{align}
-In order to improve the accuracy of those two functions, we are first
-going to enrich the design using the PEI criterion, as detailed
-\cref{sec:PEI_criterion} on~\cpageref{sec:PEI_criterion},
+In order to improve the accuracy of those two functions and to ensure
+the positivity of $m_Z$, we are first going to enrich the design using
+the PEI criterion, as detailed \cref{sec:PEI_criterion}
+on~\cpageref{sec:PEI_criterion},
 from~\cite{ginsbourger_bayesian_2014}.
 
 The fitted GP $Z$, conditioned on the initial design $\mathcal{X}_0$
@@ -775,27 +781,27 @@ denoted as $\mathcal{X}_0$. By sampling $\uu_i$ from
 $\UU$ for $1\leq i \leq n_{\uu}$, we can then estimate
 the distribution of the random variable $\kk^*(\UU)$. The samples
 $\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$ are displayed
-in~\cref{fig:distrib_minimizers_reduced}.
+in~\cref{fig:pairplot_aimse}.
 % and we can notice two different points
 % $\hat{\kk}_1=(-7, -3, -5)$, and $\hat{\kk}_2=(-5, -4, -10)$.
-\begin{figure}[ht]
-  \centering
-  \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
-  \caption{\label{fig:distrib_minimizers_reduced} Estimated marginal
-    distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$
-    using KDE. The $y$-axis is the corresponding value of the minimum
-    $m_Z^*(\uu_i)$}
-\end{figure}
-\todo{refaire figure} 
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics{\imgpath distribution_minimizers_reduced.pdf}
+%   \caption{\label{fig:distrib_minimizers_reduced} Estimated marginal
+%     distributions of the conditional minimisers $\{\kk^*_Z(\uu_i)\}_i$
+%     using KDE. The $y$-axis is the corresponding value of the minimum
+%     $m_Z^*(\uu_i)$}
+% \end{figure}
 % Using the GP $Z\mid \mathcal{X}_0^{\mathrm{PEI}}$, we can have a first
 % approximation of the repartition of the minimisers.
-\todo{transition minimiseurs à regrets based}
+\todo{revoir figure, + transition minimiseurs à regrets based}
 
-%\begin{figure}[ht]
-%  \centering
-%  \includegraphics{\imgpath contour_Jstar.png}
-%  \caption{\label{fig:contour_Jstar} Conditional minimum computed using a GP $m_Z^*(\uu)$}
-%\end{figure}
+\begin{figure}[ht]
+ \centering
+ \includegraphics{\imgpath contour_Jstar.png}
+ \caption{\label{fig:contour_Jstar} Conditional minimum computed using a GP $m_Z^*(\uu)$}
+\end{figure}
+\todo{commenter figures}
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath pairplot_aimse.png}
@@ -808,7 +814,7 @@ in~\cref{fig:distrib_minimizers_reduced}.
 
 \subsection{Relative-regret based estimators}
 We are here going to estimate members of the relative-regret family of
-estimators as defined~\cref{def:RR_family}, on
+estimators as introduced~\cref{def:RR_family}, on
 \cpageref{def:RR_family}:
 \begin{equation}
   \left\{\kk_{\mathrm{RR,\alpha}} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) \mid \alpha \geq 1\right\}
@@ -817,97 +823,55 @@ where
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
-is the probability at which the objective function stays
-below $\alpha$ times its minimal attainable value.
+is the probability that $\kk$ is $\alpha$-acceptable.
 
+%\begin{figure}[ht]
+%  \centering
+%  \input{\imgpath evo_alpha_p_kp.pgf}
+%  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ as a function of $p$, and $\kk_{\mathrm{RR},\alpha_p}$}
+%\end{figure}
 
-We are going to use a plug-in approach (see~\cref{def:plugin}) in
-order to approximate this probability $\Gamma_{\alpha}$:
+\subsubsection{Optimisation of the probability of exceeding a threshold}
+\paragraph{Plug-in approximation of the probability of acceptability}
+The $\Gamma_{\alpha}$ function is quite expensive to compute, so we
+are going to use a plug-in approach (see~\cref{def:plugin}) in order
+to avoid exhaustive computations of the objective function
+$J$. Instead, we will use $m_Z$ and $m_{Z^*}$ as surrogates of $J$ and
+$J^*$.  For the approximation of the probability, we are going to use
+a Sample Average Approximation (SAA) approach, by using a set of
+$n_\uu$ i.i.d.\ samples $\{\uu_i\}_{1\leq i \leq n_{\uu}}$.  All in
+all, we define
 \begin{align}
   \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}}% \\
                                            % &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
 \end{align}
-where $\{\uu_i\}_{1\leq i \leq n_{\uu}}$  is a set of i.i.d.\ samples of $\UU$,
-and $\hat{\kk}_{\mathrm{RR},\alpha} = \argmax_{\kk \in \Kspace} \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk)$
 
-
-Alternatively, for a given level of confidence
-$p \in \interval{0}{1}$, we defined in the quantile function of the
-ratio, at the order $p$:
-\begin{equation}
-  q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
-\end{equation}
-where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
-relative-regret, that we introduce for notational convenience.  As
-$\mathrm{RR}$ is unknown directly, we can also apply the plug-in
-approach, and define
-\begin{equation}
-  \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
-\end{equation}
-where $\Xi$ is the lognormal approximation as defined
-in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. The estimation is
-done using a set of i.i.d.\ samples of $\UU$:
-$\{\uu_i\}_{1\leq i \leq n_{\uu}}$
-\begin{equation}
-  \label{eq:RRPI}
-  \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
-\end{equation}
-where the subscript indicates the order statistic, \emph{i.e.} the
-$\left[n_{\uu}p\right]$ smallest value of
-$\{\mathrm{RR}^\mathrm{PI}(\kk,\uu_i)\}_{1\leq i\leq n_\uu}$ (with
-$[\cdot]$ as the rounding operator). Finally, we can define
-$\hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace}
-\hat{q}_p^{\mathrm{PI}}(\kk)$
-
-\subsubsection{Preliminary analysis}
-We are going to estimate a member of the family of relative-regret
-estimators, for a specific $\alpha\geq 1$.
+Maximising this approximation yields
 \begin{equation}
   \hat{\kk}_{\mathrm{RR},\alpha} = \argmax_{\kk\in\Kspace} \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) = (\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}, \hat{\kk}^{(2)}_{\mathrm{RR},\alpha},\hat{\kk}^{(3)}_{\mathrm{RR},\alpha})
 \end{equation}
-or alternatively,
-\begin{equation}
-  \hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} \hat{q}^{\mathrm{PI}}_p(\kk) = (\kk^{(1)}_{\mathrm{RR},\alpha_p}, \kk^{(2)}_{\mathrm{RR},\alpha_p},\kk^{(3)}_{\mathrm{RR},\alpha_p})
-\end{equation}
-Based on the GP constructed using the , we did compute
-$\alpha_p = \min q_p$ and $\kk_{\mathrm{RR},\alpha_p}$ for different
-$p$:
-
-\begin{figure}[ht]
-  \centering
-  \input{\imgpath evo_alpha_p_kp.pgf}
-  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ as a function of $p$, and $\kk_{\mathrm{RR},\alpha_p}$}
-\end{figure}
-
-\subsubsection{Optimisation of the probability of exceeding a threshold}
-We will first look to improve the estimation of $\Gamma_{\alpha}$,
-defined as the following probability:
- As defined
-in~\cref{eq:def_hatgamma_PI}, given the GP $Z$, constructed upon
-evaluations of $J$, and a set $\{\uu_i\}_{1\leq i\leq n_{\uu}}$ of
-i.i.d.\ samples from $\UU$, the plug-in approximation of
-$\Gamma_{\alpha}$ is
-\begin{align}
-  \label{eq:gamma_pi_alpha}
-  \hat{\Gamma}^{\mathrm{PI}}_{\alpha}(\kk) &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_Z(\kk, \uu_i) \leq \alpha m_{Z^*}(\uu_i)\}} \\
-                                           &= \frac{1}{n_\uu}\sum_{i=1}^{n_{\uu}} \mathbbm{1}_{\{m_{\Delta_{\alpha}}(\kk,\uu_i) \leq 0\}}
-\end{align}
-where
+In order to get a relevant value of $\hat{\kk}_{\mathrm{RR},\alpha}$,
+we are going to reduce sequentially a measure of uncertainty linked to
+this estimation.
+\paragraph{Stepwise reduction of the augmented IMSE}
+We will first look to improve the estimation of $\Gamma_{\alpha}$, by
+improving the plug-in approximation by defining
 $\Delta_{\alpha} = Z - \alpha Z^* \sim \GP(m_{\Delta_{\alpha}},
-C_{\Delta_\alpha})$ is a GP, as defined in the previous chapter. We
-define the prediction variance, or mean square error, as
+C_{\Delta_\alpha})$, which is a GP as defined in the previous chapter.
+We define the prediction variance, or mean square error, as
 $\sigma^2_{\Delta_{\alpha}}: (\kk, \uu) \mapsto
 C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$.  In the
 following, we are going to estimate the relative-regret, associated
-with the value $\alpha=1.3$, meaning that we are looking to find the
-probability of being within $30\%$ of the optimal value.
-\paragraph{Stepwise reduction of the augmented IMSE}
-We are going to reduce the augmented IMSE of the random process
-defined as. The $\mathrm{IMSE}$ associated with the GP
-$\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
+with the value $\alpha=1.3$, meaning that we are looking to maximise
+the probability of being within $30\%$ of the optimal value.
+
+
+We are then going to reduce the augmented IMSE of the random process
+defined as $\Delta_{\alpha}$. The $\mathrm{IMSE}$ associated with the
+GP $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
 $\mathcal{X}_n$ is defined as
 \begin{equation}
-  \IMSE(\mathcal{X}) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
+  \IMSE(\mathcal{X}_n) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
 \end{equation}
 and we select a new point to evaluate as:
 \begin{equation}
@@ -925,7 +889,7 @@ resampled each iteration using a LHS on $\Kspace \times \Uspace$.
 \Cref{fig:aIMSE} shows the reduction of the IMSE with the number of
 additional iterations, until reaching a number of \num{500}
 evaluations of the model in total. Abrupt changes in the IMSE can be
-explained by a significant changes in the hyperparameters of the GP.
+explained by a significant changes in the hyperparameters of the GP.\@
 
 \begin{figure}[ht]
   \centering
@@ -934,46 +898,121 @@ explained by a significant changes in the hyperparameters of the GP.
 \end{figure}
 Based on the enriched GP, we can maximise
 $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$. We chose here
-$n_{\uu}=\num{500}$ to compute it according to
-\cref{eq:gamma_pi_alpha}, and the maximum found is
+$n_{\uu}=\num{500}$, and the maximum found is
 \begin{equation}
-  \max_{\kk} \Gamma_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.848\pm 0.031}
+  \max_{\kk} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.848\pm 0.031}
 \end{equation}
-where the confidence interval given is computed using the normal approximation of
+where the given confidence interval is computed using the normal
+approximation of the binomial proportion.
 \begin{figure}[ht]
   \centering
   \input{\imgpath evo_alpha_p_kp.pgf}
-  \caption{\label{fig:} Evolution of the threshold $\alpha_p$ and
+  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ and
     estimates with respect to $p$, using the GP enriched with 200 additional points}
 \end{figure}
+On~\cref{fig:evo_alphap_kp} is shown the threshold $\alpha_p$ as a
+function of $p$, and the different components of the control variable
+$\hat{\kk}_{\mathrm{RR},\alpha_p}$, all these quantities computed
+using the metamodel $m_Z$ after the additional iterations.
 
-\paragraph{Sampling in the margin of uncertainty}
+We can observe a gradual shift in those components when increasing the
+level of confidence.
 
-In the previous chapter, we defined the probability of coverage of the
-random set $\{\Delta_\alpha \leq 0\}$ to be
-\begin{equation}
-  \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}(\kk, \uu)}{\sigma_{\Delta_\alpha}(\kk, \uu)}\right)
-  \end{equation}
-  and the margin of uncertainty at the level $\eta$ to be $\mathbb{M}_{\eta}$:
-  \begin{equation}
-    \mathbb{M}_{\eta} = \left\{(\kk, \uu)\in \Kspace \times \Uspace \mid \frac{\eta}{2} \leq \pi_{\alpha}(\kk, \uu) \leq 1-\frac{\eta}{2}\right\}
-  \end{equation}
-  We can then sample points in this margin, find $K$ centroids that
-  represent statistically those samples, and adjust them in order to
-  reduce the most the uncertainty, as explained
-  in~\cref{alg:sampling_enrichment_star}.  As the margin
-  $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
-  to the design (as it is easier to classify points either \emph{in}
-  or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step
-  can become difficult,\todo{finir}
+% \paragraph{Sampling in the margin of uncertainty}
+
+% In the previous chapter, we defined the probability of coverage of the
+% random set $\{\Delta_\alpha \leq 0\}$ to be
+% \begin{equation}
+%   \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}(\kk, \uu)}{\sigma_{\Delta_\alpha}(\kk, \uu)}\right)
+%   \end{equation}
+%   and the margin of uncertainty at the level $\eta$ to be $\mathbb{M}_{\eta}$:
+%   \begin{equation}
+%     \mathbb{M}_{\eta} = \left\{(\kk, \uu)\in \Kspace \times \Uspace \mid \frac{\eta}{2} \leq \pi_{\alpha}(\kk, \uu) \leq 1-\frac{\eta}{2}\right\}
+%   \end{equation}
+%   We can then sample points in this margin, find $K$ centroids that
+%   represent statistically those samples, and adjust them in order to
+%   reduce the most the uncertainty, as explained
+%   in~\cref{alg:sampling_enrichment_star}.  As the margin
+%   $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
+%   to the design (as it is easier to classify points either \emph{in}
+%   or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step
+%   can become difficult,\todo{finir}
 \subsubsection{Optimisation of the quantile of the relative-regret}
-In this section, we will fix a level of confidence $p=0.95$, and look
-to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.  By
-definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$
-verifies
+\paragraph{Plug-in approximation of the quantile}
+Alternatively, for a level of confidence
+$p \in \interval{0}{1}$, we can define the quantile function of the
+ratio:
 \begin{equation}
-\max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
+  q_p(\kk) = Q_{\UU}\left(\mathrm{RR}(\kk, \UU);p \right)
 \end{equation}
+where $\mathrm{RR}(\kk, \UU)=\frac{J(\kk, \UU)}{J^*(\UU)}$ is the
+relative-regret, that we introduce for notational convenience.  As
+$\mathrm{RR}$ is unknown directly, we can also apply the plug-in
+approach, and define
+\begin{equation}
+  \mathrm{RR}^{\mathrm{PI}}(\kk, \uu) = \exp\left[m_{\Xi}(\kk, \uu) + \frac{1}{2}\sigma^2_{\Xi}(\kk, \uu)\right]
+\end{equation}
+where $\Xi$ is the lognormal approximation as defined
+in~\cref{eq:log_ratio}, \cpageref{eq:log_ratio}. Once again, the
+estimation is done using a set of i.i.d.\ samples of $\UU$:
+$\{\uu_i\}_{1\leq i \leq n_{\uu}}$
+\begin{equation}
+  \label{eq:RRPI}
+  \hat{q}_p^{\mathrm{PI}}(\kk) = {\mathrm{RR}}^{\mathrm{PI}}(\kk, \uu)_{(\left[n_{\uu}p\right])}
+\end{equation}
+where the subscript indicates the order statistic, \emph{i.e.} the
+$\left[n_{\uu}p\right]$ smallest value of
+$\{\mathrm{RR}^\mathrm{PI}(\kk,\uu_i)\}_{1\leq i\leq n_\uu}$ (with
+$[\cdot]$ as the rounding operator). 
+
+As defined in the previous chapter, the minimiser of
+$\hat{q}_p^{\mathrm{PI}}$ is the member of the relative-regret family
+associated with $\alpha_p$:
+\begin{equation}
+  \hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} \hat{q}^{\mathrm{PI}}_p(\kk) = (\hat{\kk}^{(1)}_{\mathrm{RR},\alpha_p}, \hat{\kk}^{(2)}_{\mathrm{RR},\alpha_p},\hat{\kk}^{(3)}_{\mathrm{RR},\alpha_p})
+\end{equation}
+\paragraph{Sampling-based method for the estimation of the quantile}
+We are now going to treat this problem using a sampling-based method,
+as introduced~\cref{ssec:quantile_qeakmcs}, which is derived
+from~\cite{razaaly_rare_2019}.  The log-normal approximation of the
+relative-regret, as introduced~\cref{ssec:lognormal_approx}, allow us
+to define the random process $\Xi$ as
+\begin{equation}
+  \log \frac{Z(\kk, \uu)}{Z^*(\uu)} \approx \Xi(\kk, \uu) \sim \mathcal{N}\left(m_{\Xi}(\kk, \uu),\sigma^2_{\Xi}(\kk, \uu)\right)
+\end{equation}
+
+Using the Gaussian nature of $\Xi$, we define $\mathfrak{q}_1$,
+$\mathfrak{q}_2$ and $\mathfrak{q}_3$, as a lower bound, a central
+estimate and an upper bound respectively, of the value
+$\min_\kk \hat{q}_p(\kk)=\hat{\alpha}_p$, minimum which is attained at
+$\hat{\kk}= \argmin_{\kk\in\Kspace} \hat{q}_p(\kk)$. With
+$k=\Phi^{-1}(1 - 0.025)$ the quantile of order \num{0.975} of the
+standard normal distribution, we define
+\begin{align}
+  \log {\mathfrak{q}}_1 &= \left(m_{\Xi}(\tilde{\kk}, \uu) - k \sigma_{\Xi}(\tilde{\kk}, \uu)\right)_{([n_{\uu}p])} \approx Q_U(m_{\Xi}(\tilde{\kk}, \UU) - k \sigma_{\Xi}(\tilde{\kk}, \UU); p) \\
+  \log \mathfrak{q}_2 &= \log \left(\min_{\kk\in\Kspace}\hat{q}^{\mathrm{PI}}_p(\kk) \right) = \log \hat{q}^{\mathrm{PI}}_p(\tilde{\kk}) = \log \hat{\alpha}_p \\
+  \log \mathfrak{q}_3 &= \left(m_{\Xi}(\tilde{\kk}, \uu) + k \sigma_{\Xi}(\tilde{\kk}, \uu)\right)_{([n_{\uu}p])} \approx Q_U(m_{\Xi}(\tilde{\kk}, \UU) + k \sigma_{\Xi}(\tilde{\kk}, \UU); p)
+\end{align}
+
+We can then define the margin of uncertainty of level $\eta$,
+associated with each of those values:
+\begin{equation}
+  \mathbb{M}_{\eta}(\mathfrak{q}_l) = \left\{(\kk, \uu) \mid \frac{\eta}{2} \leq \Phi\left(-\frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}\right) \leq 1 - \frac{\eta}{2}\right\}
+\end{equation}
+and sample points in each of those margins, perform a statistical
+reduction method in order to get $K_q$ points for each margin, adjust
+them and finally evaluate the $3\cdot K_q$ points by the objective
+function.
+                         %
+
+
+% In this section, we will fix a level of confidence $p=0.95$, https://p-mckenzie.github.io/2017/12/01/embedding-bokeh-with-github-pages/and look
+% to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.  By
+% definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$
+% verifies
+% \begin{equation}
+% \max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
+% \end{equation}
 
 \section{Partial conclusion}
 In this chapter, we adressed the problem of calibration of the

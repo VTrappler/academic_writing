@@ -54,7 +54,7 @@ Dans le cadre de cette thèse, les incertitudes épistémiques prennent
 la forme de la méconnaissance de la valeur d'un paramètre
 $\kk \in \Kspace$, que l'on va chercher à calibrer. Un exemple de ce
 genre de problèmes est l'estimation de la friction dans les modèles
-d'océans qui va donc nous servir de cas d'application. En effet, la
+d'océan qui va donc nous servir de cas d'application. En effet, la
 friction de fond est dûe à la rugosité du plancher océanique,
 provoquant de la dissipation d'énergie à cause des turbulences
 engendrées. L'estimation de la friction de fond est un problème à
@@ -115,14 +115,15 @@ manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque
 l'on prend en compte la variabilité intrinsèque de $\uu$. Comme $\UU$
 est une variable aléatoire, pour un $\kk$ donné, la fonction coût peut
 être elle aussi vue comme une variable aléatoire: $J(\kk,\UU)$, que
-l'on va chercher à ``minimiser'' dans un sens
-qui reste à définir.  Cette problématique porte différents noms, comme
-l'optimisation robuste, où cette robustesse doit être comprise comme
-l'insensibilité aux variations de $\UU$, l'optimisation sous
-incertitudes (\emph{Optimisation under Uncertainty} ou \emph{OUU}), ou
-encore d'optimisation stochastique. Une nomenclature prenant en compte
-les différences, notamment sur les contraintes potentiellement
-présentes, peut être trouvé dans~\cite{lelievre_consideration_2016}
+l'on va chercher à ``minimiser'' dans un sens qui reste à définir.
+Cette problématique porte différents noms, comme ``optimisation
+robuste'', où cette robustesse doit être comprise comme
+l'insensibilité aux variations de $\UU$, ``optimisation sous
+incertitudes'' (\emph{Optimisation under Uncertainty} ou \emph{OUU}),
+ou encore ``optimisation stochastique'', selon la configuration du
+problème. Une nomenclature prenant en compte les différences,
+notamment sur les contraintes potentiellement présentes, peut être
+trouvé dans~\cite{lelievre_consideration_2016}
 
 
 L'objectif de la thèse est donc de proposer différents critères de
@@ -135,11 +136,11 @@ plus complexes d'estimation de la friction de fond océanique.
 \subsection*{Critères basés sur le regret additif et relatif}
 Dans le \frchap{chap:robust_estimators}, nous abordons le problème de
 calibration en présence d'incertitudes. Un certain nombre des méthodes
-d'optimisation sous incertitudes se basent sur la minimisation des
+d'optimisation sous incertitude se basent sur la minimisation des
 moments de la variable aléatoire $J(\mathbf{\cdot}, \UU)$ comme
 dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou
 les incorporent dans un problème d'optimisation
-multiobjectifs~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
+multiobjectif~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
 
 Dans le cadre de cette thèse, nous proposons une approche basée sur le
 regret, qui consiste à comparer les valeurs de la fonction $J$ avec le
@@ -157,7 +158,7 @@ et le \emph{minimiseur conditionnel} associé est
 \end{equation*}
 
 Ceci nous permet de définir différentes notions de regret: le regret
-additif $J - J^*$ et étant donné la strict positivité de $J$, le
+additif $J - J^*$ et étant donné la stricte positivité de $J$, le
 regret relatif $J/J^*$. Ceci nous permet d'introduire une notion
 d'\emph{acceptabilité}, à entendre dans le sens d'écart par rapport au
 minimum conditionnel.
@@ -203,7 +204,7 @@ Ce quantile peut aussi être minimisé, donnant
 et le minimum atteint est par conséquent $\alpha_p$, qui vérifie
 $\Gamma_{\alpha_p}(\kk_{\mathrm{RR},\alpha_p}) = p$.
   
-D'après ces deux formulations nous pouvons donc soit: chercher à
+D'après ces deux formulations nous pouvons donc soit chercher à
 maximiser la probabilité $\Gamma_{\alpha}$ pour $\alpha > 1$ bien
 choisi, soit chercher à minimiser le quantile $q_p$, au niveau de
 confiance $p$.
@@ -212,12 +213,12 @@ Ces critères dépendent donc d'un paramètre additionel, $\alpha$, ou
 $p$ selon la formulation choisie, qui va permettre d'ajuster le
 caractère \emph{conservatif} de la solution. En effet, choisir une
 grande valeur de $\alpha$ (ou $p$ très proche de $1$) permet de se
-prévenir des hautes déviations avec un grande probabilité. Si à
-l'inverse, $\alpha$ est choisi plus faible, on favorisera les
-solutions qui donnent des valeurs de la fonction objectif proches du
-minimum atteignable, mais potentiellement avec une probabilité plus
-faible.  
-Ce travail a mené à la publication de~\cite{trappler_robust_2020}.
+prévenir des hautes déviations de la fonction objectif avec un grande
+probabilité. Si à l'inverse, $\alpha$ est choisi plus faible, on
+favorisera les solutions qui donnent des valeurs de la fonction
+objectif proches du minimum atteignable, mais potentiellement avec une
+probabilité plus faible.  Ce travail a mené à la publication
+de~\cite{trappler_robust_2020}.
   
 \subsection*{Optimisation robuste et processus Gaussiens}
 D'un point de vue pratique, ces notions de minimiseur conditionnel et
@@ -247,8 +248,9 @@ ou les minimiseurs et minimums conditionnels
 dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
 méthodes SUR (\emph{Stepwise Uncertainty Reduction}, réduction
 d'incertitude séquentielle) sont basées sur la définition d'un
-\emph{critère} $\kappa$, dont le maximiseur va ensuite être évalué par la fonction
-originale: 
+\emph{critère} $\kappa$ qui va ensuite être optimisé, et dont le
+maximiseur va ensuite être évalué par la fonction (supposée coûteuse)
+$J$:
 \begin{equation*}
   (\kk_{n+1}, \uu_{n+1}) = \argmax_{(\kk,\uu) \in \Kspace\times\Uspace} \kappa\left((\kk, \uu); Z\right)
 \end{equation*}
