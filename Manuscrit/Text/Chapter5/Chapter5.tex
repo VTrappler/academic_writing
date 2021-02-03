@@ -40,8 +40,8 @@
 % \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
 In this chapter, we will study the problem of the calibration under
-uncertainties of the friction parameter of the ocean bed of a realistic
-numerical model of the Atlantic french coast, which is run using \CROCO. 
+uncertainties of the bottom friction, in a realistic numerical based
+on \CROCO{} of the Atlantic French coast.
 
 Since the bottom friction depends directly on the size of the
 asperities on the ocean bed, it is a subgrid phenomenon, meaning that
@@ -75,7 +75,7 @@ calibration we will assume that the uncertainties take the form of an
 environmental parameter which perturbates the amplitude of some tidal
 constituents.  In order to quantify the influence of each of the
 sediments-based regions, and each of the components of the
-environmental variable, we will carry global sensitivity analysis,
+environmental variable, we will carry a global sensitivity analysis,
 in~\cref{sec:sensitivity-analysis}.
 
 Finally, after this study that we will use to reduce significantly the
@@ -226,7 +226,7 @@ $\zob^{\mathrm{truth}}$.  % We can see that the rugosity spans several
                                                                                                                                                  \\ \bottomrule
             %             A           & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
   \end{tabular}
-  \caption{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
+  \caption[Types and sizes of each sediment class]{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment}
 \end{table}
 
 Based on the documentation of the SHOM\footnote{Service hydrographique
@@ -238,10 +238,8 @@ found~\cref{fig:sediments_full}.
   \centering
   \includegraphics{\imgpath sediments_reduced.png}
   \caption{\label{fig:sediments_reduced} Repartition of the sediments
-    on the ocean floor. Data source: SHOM, under CC BY-SA-4.0
-    license}
+    on the ocean floor. Data source: SHOM, used under \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0} license}
 \end{figure}
-%\footnotetext[2]{\url{https://creativecommons.org/licenses/by-sa/4.0/}}
 Most of the ocean floor in this region is composed of sand. Even
 though siltic soil is listed, it is only scarcely present. The figure
 also shows that the largest sediments are rocks but are mostly located
@@ -985,8 +983,9 @@ Using the Gaussian nature of $\Xi$, we define $\mathfrak{q}_1$,
 $\mathfrak{q}_2$ and $\mathfrak{q}_3$, as a lower bound, a central
 estimate and an upper bound respectively, of the value
 $\min_\kk \hat{q}_p(\kk)=\hat{\alpha}_p$, minimum which is attained at
-$\hat{\kk}= \argmin_{\kk\in\Kspace} \hat{q}_p(\kk)$. With
-$k=\Phi^{-1}(1 - 0.025)$ the quantile of order \num{0.975} of the
+$\hat{\kk}= \argmin_{\kk\in\Kspace} \hat{q}_p(\kk)$. Following the
+notation introduced in the previous chapter, we chose $K_q = 3$.
+With $k=\Phi^{-1}(1 - 0.025)$ the quantile of order \num{0.975} of the
 standard normal distribution, we define
 \begin{align}
   \log {\mathfrak{q}}_1 &= \left(m_{\Xi}(\tilde{\kk}, \uu) - k \sigma_{\Xi}(\tilde{\kk}, \uu)\right)_{([n_{\uu}p])} \approx Q_U(m_{\Xi}(\tilde{\kk}, \UU) - k \sigma_{\Xi}(\tilde{\kk}, \UU); p) \\
@@ -1000,8 +999,8 @@ associated with each of those values:
   \mathbb{M}_{\eta}(\mathfrak{q}_l) = \left\{(\kk, \uu) \mid \frac{\eta}{2} \leq \Phi\left(-\frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}\right) \leq 1 - \frac{\eta}{2}\right\}
 \end{equation}
 and sample points in each of those margins, perform a statistical
-reduction method in order to get $K_q$ points for each margin, adjust
-them and finally evaluate the $3\cdot K_q$ points by the objective
+reduction method in order to get $K_{\mathbb{M}}$ points for each margin, adjust
+them and finally evaluate the $3\cdot K_{\mathbb{M}}$ points by the objective
 function.
                          %
 
@@ -1018,15 +1017,21 @@ function.
 In this chapter, we adressed the problem of calibration of the
 numerical model CROCO.\@ After having defined the control and
 environmental parameters, we performed different studies, in order to
-have a better understanding of the model at play.
+have a better understanding of the behaviour of the forward model.
 
 After having optimised the objective function with a high-dimensional
 control parameter, but without external uncertainties, we chose to
 segment the domain according to the type of sediments that can be
-found at the bottom. This first leads to a dimension reduction.
+found at the bottom. This reduction of the dimension has been
+justified by a global sensitivity analysis, in order to compare the
+influence of each spatial regions defined through the segmentation. A
+similar study has been done in order to reduce the dimension of the
+environmental parameter.
 
-Based on this reduced dimension we compared the influence of each of
-these regions on the objective function in a sensitivity analysis.
+Finally, we applied some of the methods that rely on GP, as introduced
+in~\cref{chap:adaptative_design_gp}, in order to get robust estimators
+of the bottom friction, in this specific academic problem.
+
 % \begin{figure}[ht]
 %   \centering
 %   \input{\imgpath SA_croco.pgf}

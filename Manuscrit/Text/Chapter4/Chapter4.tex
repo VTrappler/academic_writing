@@ -798,7 +798,9 @@ Those sets are decreasing (with respect to the inclusion) when $\eta$ increases:
   0\leq \eta \leq \xi \leq 1 \implies Q_{\xi} \subseteq Q_{\eta}
 \end{equation}
 
-Using the properties of the GP, we can express the probability of
+Using the properties of the GP stating that $x\in\Xspace$,
+$Z(x)\sim\mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right)$,
+we can express the probability of
 coverage of the random set $A$ using $F_{Z(x)}$, the cdf of the r.v.\
 $Z(x)$, or $\Phi$, the cdf of the centered standard Gaussian
 distribution:
@@ -814,8 +816,6 @@ distribution:
   %     T}{\sigma_Z(x)}\right)\right)\\
            &= \Phi\left(- \frac{\lvert m_Z(x) - T \rvert}{\sigma_Z(x)} \right) \label{eq:prob_missclassification_GP}
 \end{align}
-since for $x\in\Xspace$,
-$Z(x)\sim\mathcal{N}\left(m_Z(x), \sigma^2_Z(x)\right)$.
 \cite{echard_ak-mcs_2011} defines the argument of the cdf
 \cref{eq:prob_missclassification_GP} as the \emph{reliability index}
 $\rho$ (denoted $U$ in its original definition

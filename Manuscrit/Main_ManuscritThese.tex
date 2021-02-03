@@ -15,21 +15,22 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% Page de couverture
 	\includepdf{couverture_these.pdf}
-	\newpage
+	\fullclear
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% Numérotation des pages en chiffres romains
 	\pagenumbering{roman}
-	
+        \dominitoc
+	\pagestyle{empty} % Disable any style
+        %\subfile{Text/Merci.tex}
+        %\fullclear
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%% Sommaire
-	\cleartoleftpage %% On veut que les pages du sommaires de fassent face
-	\pagestyle{empty} % Disable any style
 
-	\dominitoc
         \subfile{Text/Resumes/Resume_FR.tex}
                 
         
+	%\cleartoleftpage %% On veut que les pages du sommaires de fassent face
 
         \phantomsection % Pour que hyperref pointe sur la page
 	\addstarredchapter{\contentsname}
@@ -87,6 +88,7 @@
 
 	\fullclear
 	\pagestyle{empty} % Disable any style
+        \cleartoleftpage
 	\subfile{Text/Resumes/Resumes_4thcover.tex}
 	
 \end{document}
