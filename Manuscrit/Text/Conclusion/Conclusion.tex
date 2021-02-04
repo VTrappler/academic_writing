@@ -162,8 +162,6 @@ $\{\tilde{\kk}\} \times \Uspace$ (\emph{e.g.} the IMSE integrated over
 this space). This would focus the enrichment in regions of interest,
 and also reduce the dimension of the integral to evaluate.
 
-
-
 We introduced also a few sampling methods, that rely on efficient
 sampling in different margin of uncertainties. Depending on the
 problem, this task can reveal itself quite challenging: the more
@@ -175,39 +173,41 @@ increases. Refinement such as importance sampling can be considered
 such as in~\cite{razaaly_rare_2019}.
 
 % Calibration using a Bayesian approach
-In this thesis we focused on the variational formulation of the
-calibration problem, \emph{i.e.} by defining an objective function,
-akin to the log-likelihood, or to the log-posterior density that is
-then optimised. A Bayesian method could be performed in order to
-estimate the posterior distribution of the parameter $\kk$ given the
-observations. Moreover, this task could be performed using adapted
-sampling schemes, such as Hamiltonian
+Once set aside potential technical improvements in the methods
+proposed, we can propose a few other possibilities that may warrant
+further investigations.
+
+In this thesis we focused on the variational
+formulation of the calibration problem, \emph{i.e.} by defining an
+objective function, akin to the log-likelihood, or to the
+log-posterior density that is then optimised. A Bayesian method could
+be performed in order to estimate the posterior distribution of the
+parameter $\kk$ given the observations. Moreover, this task could be
+performed using adapted sampling schemes, such as Hamiltonian
 Monte-Carlo~\cite{betancourt_conceptual_2017}, in order to use the
 gradient that may be available using adjoint method.
 
 This gradient, taken with respect to the control parameter, may be
-used at different stages: we can incorporate this additional knowledge
-in the modelling of the GP, so that the predictions are improved, as
-done in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}.
+useful at different stages: we can incorporate this additional
+knowledge in the modelling of the GP, so that the predictions are
+improved, as done
+in~\cite{bouhlel_gradient-enhanced_2019,laurent_overview_2019}.
 However, GP are flexible and useful tools but are not well suited for
 modelling problems with dimensions higher than about 10: when the
 designs considered are too large, fitting the GP can also be
 problematic, as large matrices have to be inverted, and the
 optimisation of the hyperparameters can become difficult. Reducing the
 dimension of the input spaces is then often necessary.
-
 The segmentation we performed in~\cref{chap:croco} for instance is
 rather coarse and based on external information. A finer dimension
 reduction method could be done, without prior information, using the
 gradient for instance, as done in~\cite{benameur_refinement_2002} or
 in~\cite{zahm_certified_2018}.
 
-\todo{refaire 2derniers par}
 % Choice of quantile ? to remove maybe
-
-In this thesis, the random variables $J^*(\UU)$ and $\kk^*(\UU)$
-which represent the conditional minimum and minimisers respectively,
-play a central role in our notions of robustness.
+Finally, in this work, the random variables $J^*(\UU)$ and
+$\kk^*(\UU)$ which represent the conditional minimum and minimisers
+respectively, play a central role in our notions of robustness.
 % Those distributions
 % are involved in the expression of the regret, that we control through
 % its quantile.
@@ -228,7 +228,7 @@ distribution of $J^*(\UU)$ and the distribution of $J(\hat{\kk},\UU)$
 be worth exploring. Horsetail matching for
 instance~\cite{cook_extending_2017,cook_horsetail_2018} could be used
 so that the a metric between cdf of the two distribution is minimised.
-
+\thispagestyle{plain}
 \markchapterend
 \subfileLocal{
 	\pagestyle{empty}
