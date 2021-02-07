@@ -1,52 +1,112 @@
 % 4e de couverture
 \pagestyle{empty}
-
-
+\newgeometry{top=2cm, left=2cm, right=2cm, bottom=2cm}
+%\scriptsize
 \small
 \begin{center}
   \bf Abstract
 \end{center}
 \vspace{0.5cm}
-Many physical phenomena are modelled numerically in
-order to better understand and/or to predict their behaviour. However,
-some complex and small scale phenomena can not be fully represented in
-the models. The introduction of parametrization terms is usually the
-solution to represent these unresolved processes, but those need to be
-properly estimated.
 
-Classical methods of parameter estimation usually imply the
-minimisation of an objective function, that measures the error between
-some observations and the results obtained by a numerical model. The
-optimum is directly dependent on the fixed nominal value given to the
-uncertain parameter ; and therefore may not be relevant in other
-conditions.
+To understand and to be able to forecast natural phenomena is
+increasingly important nowadays, as those predictions are often the
+basis of many decisions, whether economical or ecological. In order to
+do so, mathematical models are introduced to represent the reality at
+a scale relevant for the foreseen application, and are then
+implemented numerically. However in this process of modelling, many
+complex and subscale phenomena have to be simplified. Instead of being
+completely overlooked, additional parameters are introduced in order
+to account for those unresolved processes, but they need to be
+properly estimated. Classical methods of estimation usually involve
+an objective function, that measures the distance between the
+simulations and some observations, which is then optimised. This
+function requires a run of the numerical model, thus can be expensive
+to evaluate computational-wise.
 
-A good example of this type of problem is the estimation of bottom
-friction parameters of the ocean floor. This task is further
-complicated by the presence of uncertainties in certain other
-characteristics linking the bottom and the surface (eg boundary
-conditions).
+However, some other uncertainties can also be present, which represent
+some uncontrollable and external factors that affect the
+modelling. Those variables will be qualified as
+\emph{environmental}. By modelling them with a random variable, the
+objective function is then a random variable as well, that we wish to
+minimise in some sense. Omitting the random nature of the
+environmental variable can lead to localised optimisation, and thus a
+value of the parameter that is optimal only for the fixed nominal
+value.  To overcome this, the minimisation of the expected value of
+the objective function is often considered in the field of
+optimisation under uncertainty for instance.
 
-In this work, we propose a new criterion, based on the
-relative-regret, in order to control in probability the deviation of
-the relative-regret above a specified threshold. We introduce also
-iterative methods based on Gaussian Processes, in order to compute
-efficiently quantities linked to this estimation.  Finally, we will
-apply some of those techniques on an academic model of a coastal area,
-in order to find a robust value of the bottom friction.
+In this thesis, we focus instead on the notion of regret, that
+measures the deviation of the objective function from its optimal
+value for the same environmental variable. This regret (either
+additive or relative) translates a notion of robustness through its
+probability of exceeding a specified threshold. So, by either
+controlling the threshold or the probability, we can define a family
+of estimators based on the regret.
+
+This regret can quickly become expensive to evaluate since it requires
+an optimisation of the objective for every realisation of the
+environmental variable. We then propose to use Gaussian Processes (GP)
+in order to reduce the computational burden of this evaluation. In
+addition to that, we propose a few adaptive methods in order to
+improve the estimation: the next points to evaluate are chosen
+sequentially, according to a specific criterion, in a Stepwise
+Uncertainty Reduction (SUR) strategy.
+
+
+Finally, we are going to apply some of the methods introduced in this
+thesis on an academic problem of parameter estimation. We will
+calibrate the bottom friction of a model of the Atlantic ocean near
+the French coasts, while introducing some uncertainties in the forcing
+of the tide.
+
+
+
+%\todo{réécrire complétement}
+%Many physical phenomena are modelled numerically in
+%order to better understand and/or to predict their behaviour. However,
+%some complex and small scale phenomena can not be fully represented in
+%the models. The introduction of parametrization terms is usually the
+%solution to represent these unresolved processes, but those need to be
+%properly estimated.
+%
+%Classical methods of parameter estimation usually imply the
+%minimisation of an objective function, that measures the error between
+%some observations and the results obtained by a numerical model. The
+%optimum is directly dependent on the fixed nominal value given to the
+%uncertain parameter ; and therefore may not be relevant in other
+%conditions.
+%
+%A good example of this type of problem is the estimation of bottom
+%friction parameters of the ocean floor. This task is further
+%complicated by the presence of uncertainties in certain other
+%characteristics linking the bottom and the surface (eg boundary
+%conditions).
+%
+%In this work, we propose a new criterion, based on the
+%relative-regret, in order to control in probability the deviation of
+%the relative-regret above a specified threshold. We introduce also
+%iterative methods based on Gaussian Processes, in order to compute
+%efficiently quantities linked to this estimation.  Finally, we will
+%apply some of those techniques on an academic model of a coastal area,
+%in order to find a robust value of the bottom friction.
 
 \vspace{1cm}
+%\vfill
 \etoile
+%\vfill
 \vspace{1cm}
-
+\todo{à traduire}
 \begin{center}
   \bf Résumé
 \end{center}
-\vspace{0.5cm} De nombreux phénomènes physiques sont modélisés afin
+\vspace{0.5cm}
+
+De nombreux phénomènes physiques sont modélisés afin
 d'en mieux connaître les comportements ou de pouvoir les
-prévoir. Cependant, certains paramètres ne sont connus
-qu'ap\-proxi\-mati\-vement d'où la nécessité d'ajouter des termes
-correctifs.  \todo{raccourcis}
+prévoir. Cependant pour ce faire, de nombreux processus doivent être
+simplifiés, car ils sont souvent trop complexes, ou apparaissent à
+petite échelle. Ces simplifications prennent donc la forme de
+paramètres additionnels qui doivent ensuite être estimés.
 
 Les techniques utilisées actuellement
 pour ajuster de tels paramètres se basent sur la minimisation d'une
@@ -68,4 +128,4 @@ efficacement les quantités liées à ce nouveau critère.  Enfin, nous
 appliquons ces nouvelles méthodes à la calibration sous incertitudes
 d'un modèle océanique côtier, pour trouver un paramètre de friction de
 fond robuste.
-
+\restoregeometry
