@@ -42,12 +42,12 @@
 In the previous chapter, we introduced different notions of robustness
 for the estimation of a calibration parameter. Those objectives
 usually require the evaluation of various integrals, and to perform
-several optimizations. A large number of model evaluations is then
+several optimisations. A large number of model evaluations is then
 needed, but it may bring some practical issues, as numerical models
 are usually very expensive to run in terms of computational
 resources. Indeed, for most realistic physical simulations, systems of
 PDEs over large discretized domains have to be solved. Even though the
-programs are optimized and parallelized to take best advantage of
+programs are optimised and parallelized to take best advantage of
 high-performance computers, the time required to compute the
 quantities of interest may range from a few seconds to days. Because
 of that, methods requiring a large number of runs of the model for
@@ -58,7 +58,7 @@ exhaustivity should be avoided.
 % \subsubsection{Sensitivity analysis}
 
 In this chapter, we will focus on the use of \emph{surrogate models}
-to solve robust optimization problems, according to some of the
+to solve robust optimisation problems, according to some of the
 criteria introduced in the previous chapter.
 \begin{definition}[Surrogate function]
   Let $f: \Xspace \rightarrow \mathbb{R}$ be a function representing
@@ -89,9 +89,9 @@ instead of $f$ in a \emph{plug-in} approach.
 In this chapter, after defining the usual kriging equations
 in~\cref{sec:krigin_equations}, we are going to introduce a few
 classic and useful criteria in \cref{sec:enrichment_strategies} for
-global optimization and/or exploration of an unknown function
+global optimisation and/or exploration of an unknown function
 $f$. Finally, in~\cref{sec:robust_criteria_gp}, we are going to focus
-on robust optimization, by splitting the input space in $\Kspace$ and
+on robust optimisation, by splitting the input space in $\Kspace$ and
 $\Uspace$, and introduce other strategies to take advantage of the
 nature of the surrogate in order to efficiently compute the robust
 estimates introduced before, especially regret-based estimators.
@@ -364,7 +364,7 @@ The approximation given by the metamodel can be improved by adding
 points to the design, \emph{i.e.} by evaluating some points in the
 input space. In order to incorporate as most information on $f$ as
 possible, choosing those points can be done sequentially, by
-optimizing a specified criterion, as described~\cref{ssec:1stepSUR},
+optimising a specified criterion, as described~\cref{ssec:1stepSUR},
 or we can look to add a batch of $K$ points each iteration, as
 described in~\cref{sec:sampling_based_criterion}.
 
@@ -392,7 +392,7 @@ definition of a \emph{criterion} (also called \emph{learning
 certain objective associated with the GP and with $f$. This criterion
 implicitly depends on the GP and thus the design used to construct it.
 
-To select the next point to evaluate with $f$, this criterion is maximized on $\Xspace$.
+To select the next point to evaluate with $f$, this criterion is maximised on $\Xspace$.
 This procedure is then repeated at each iteration: at the iteration $n$, with the set of evaluated points $\mathcal{X}_n$, the next point is chosen as
 \begin{equation}
   x_{n+1} = \argmax_{x\in\Xspace} \kappa(x) = \argmax_{x\in\Xspace} \kappa(x; Z \mid \mathcal{X}_n)
@@ -423,7 +423,7 @@ The GP is updated according to the new evaluation which is added to the design. 
 Due to the structure of many computer codes, it may sometimes be
 beneficial to evaluate a batch of points, instead of selecting a
 unique point at each step of the procedure. The SUR strategies
-introduced before require the optimization of a criterion function to
+introduced before require the optimisation of a criterion function to
 select a single point, but in~\cite{ginsbourger_kriging_2010}, the
 authors introduce a few ways to transform the criterion in order to be
 able to select $K$ points that will be evaluated by the true function.
@@ -458,8 +458,8 @@ able to select $K$ points that will be evaluated by the true function.
 % \end{itemize}
 % By choosing a specific realization instead of averaging over all
 % possible realizations, we avoid the avoid the successive
-% optimization of expectations, which can be very expensive.  However,
-% despite avoiding the successive integrals, the optimizations can be
+% optimisation of expectations, which can be very expensive.  However,
+% despite avoiding the successive integrals, the optimisations can be
 % expensive.
 
 Instead of adapting a 1-step criterion, we can rely on sampling in order
@@ -530,7 +530,7 @@ different problems involving an unknown function $f$:
   addressed~\cref{sec:exploration_criteria}, in order to target
   regions where the kriging prediction may differ significantly from
   the true function;
-\item the global optimization of the function $f$
+\item the global optimisation of the function $f$
   in~\cref{sec:GP_optimization_criteria}, to focus the exploration of
   the input space $\Xspace$ in the regions where $f$ is minimal;
 \item the estimation of different level sets $f^{-1}(\{T\})$ and/or
@@ -614,7 +614,7 @@ the Gaussian nature of $Z(x)$.
 
 The hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.\@
 
-Finally, we can maximize a criterion which is the opposite of the expression in~\cref{eq:IMSE_augmented} to enrich the design:
+Finally, we can maximise a criterion which is the opposite of the expression in~\cref{eq:IMSE_augmented} to enrich the design:
 \begin{equation}
   x_{n+1} = \argmax_{x\in \Xspace}-\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
@@ -627,13 +627,13 @@ Finally, we can maximize a criterion which is the opposite of the expression in~
 % \end{figure}
 
 
-\subsection{Criteria for optimization of the objective function}
+\subsection{Criteria for optimisation of the objective function}
 \label{sec:GP_optimization_criteria}
 The criteria we detailed above aim at reducing the epistemic
 uncertainty modelled through the Gaussian Process. In other words, we
 try to improve our knowledge on the unknown function globally. We are
 now going to evoke a few criteria which are driven by the global
-optimization of the function.
+optimisation of the function.
 
 Those methods usually aim at striking a balance between the
 \emph{exploration} of the whole space $\Xspace$ and
@@ -667,10 +667,10 @@ at the expense of exploration.
   x_{n+1} = \argmax_{x\in \Xspace} \mathrm{PI}(x)
 \end{equation}
 \paragraph{Expected improvement and EGO}
-One of the most common criteria for global optimization is the
+One of the most common criteria for global optimisation is the
 \emph{Expected Improvement} (EI)~\cite{mockus_bayesian_1974}, and the
 SUR strategy using it as an enrichment criterion is called
-\emph{Efficient Global Optimization}
+\emph{Efficient Global Optimisation}
 (EGO)~\cite{jones_efficient_1998}.  Analogously to the probability of
 improvement, we define the improvement $I(x)$ as the random variable
 defined as
@@ -691,7 +691,7 @@ that does not require the direct evaluation of the expectation
   \mathrm{EI}(x) = \left(f_{\min} - m_Z(x)\right) \Phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right) + \sigma_Z(x) \phi\left(\frac{f_{\min} - m_Z(x)}{\sigma_Z(x)}\right)
 \end{equation}
 The EI is then quite easy to evaluate and furthermore it is possible
-to compute the gradient of the EI and use it for the optimization as
+to compute the gradient of the EI and use it for the optimisation as
 done in~\cite{pardalos_differentiating_2015}.
 \begin{equation}
   x_{n+1} = \argmax_{x\in \Xspace} \mathrm{EI}(x)
@@ -701,28 +701,28 @@ done in~\cite{pardalos_differentiating_2015}.
 \label{ssec:IAGO}
 Another criterion worth mentioning is a criterion based on the
 distribution of the
-minimizers~\cite{villemonteix_informational_2006,hennig_entropy_2011},
+minimisers~\cite{villemonteix_informational_2006,hennig_entropy_2011},
 called IAGO (\emph{Informational Approach to Global Optimisation}) Let
-$z_i$ be a sample path of $Z$, and let $x_i^*$ the global minimizer of
+$z_i$ be a sample path of $Z$, and let $x_i^*$ the global minimiser of
 $z_i$.  We denote then $X^*$ the random variable corresponding to the
-global minimizer of $Z$.  We consider the differential entropy of
+global minimiser of $Z$.  We consider the differential entropy of
 $X^*$ introduced \cref{def:KL_entropy}, given the augmented design
 $\mathcal{X}_n \cup \left\{\left(x,Z(x)\right)\right\}$:
 $H[X^*\mid \mathcal{X}_n \cup \left\{(x, Z(x))\right\}]$.  So at each
 step, we choose the point that gives the smallest expected uncertainty
-on the location of the global minimizers of the sample paths.  The
+on the location of the global minimisers of the sample paths.  The
 criterion can then be written as
 \begin{equation}
   x_{n+1}= \argmax_{x \in \Xspace} -\Ex_{Z(x)}\Big[H\left[X^* \mid \mathcal{X}_n \cup \left\{(x, Z(x))\right\} \right]\Big]
 \end{equation}
 
 
-\Cref{fig:example_optimization_criteria} shows different criteria
+\Cref{fig:example_optimisation_criteria} shows different criteria
 introduced before for an unknown function.
 \begin{figure}[ht!]
   \centering
   \input{\imgpath example_optimization_criteria.pgf}
-  \caption[Optimization criteria for GP]{\label{fig:example_optimization_criteria} Example of optimization criteria. At this iteration, $\mathrm{EI}$ and $\mathrm{PI}$ aim toward intensification, while $\mathrm{IAGO}$ and the maximum of variance favorize exploration}
+  \caption[Optimisation criteria for GP]{\label{fig:example_optimisation_criteria} Example of optimisation criteria. At this iteration, $\mathrm{EI}$ and $\mathrm{PI}$ aim toward intensification, while $\mathrm{IAGO}$ and the maximum of variance favorize exploration}
 \end{figure}
 
 % \clearpage
@@ -828,9 +828,9 @@ $\rho$ (denoted $U$ in its original definition
 Based on those quantities, we will introduce two criteria which aim at
 improving the classification problem of $x\in A=f^{-1}(B)$.
 
-First, we can minimize the point which has the maximal probability of
+First, we can minimise the point which has the maximal probability of
 misclassification, or equivalently since $\Phi$ is monotonously
-increasing, maximize the criterion given by
+increasing, maximise the criterion given by
 \begin{equation} x_{n+1} =\argmax_{\kk\in\Kspace} -\frac{\lvert m_Z(x)- T \rvert}{\sigma_Z(x)}
 \end{equation}
 
@@ -843,7 +843,7 @@ Alternatively, we can also use the variance of the probability of
 coverage $\mathscr{V}_A$ as an indication of the uncertainty of the
 classification problem. As the maximum of variance will be obtained
 for points having a probability of coverage $\pi_A(x) =0.5$, looking
-and evaluating the maximizer of this criterion is not really relevant:
+and evaluating the maximiser of this criterion is not really relevant:
 any point verifying $m_Z(x)=T$ would be suited, without taking into
 account its prediction error $\sigma^2_Z(x)$, and a point already well
 predicted (\emph{i.e.} close to other points already in the design)
@@ -982,14 +982,14 @@ of these spaces is different: one need to explore sufficiently the
 space $\Uspace$ according to the distribution of $\UU$, in order to be
 able to compute $\Prob_{\UU}$ and $\Ex_{\UU}$, while $\Kspace$ does
 not need to be explored as much because the objective function is
-supposed to be \emph{optimized} with respect to $\kk$.
+supposed to be \emph{optimised} with respect to $\kk$.
 
 In what follows, we are going to focus on the estimation of the
 conditional minimisers $\kk^*: \uu\mapsto \kk^*(\uu)$, which can be
 used to estimate the mode of the distribution of the conditional
 minimisers $\estimtxt{\kk}{MPE}$, and on the estimators which satisfy
 properties based on regret.  For that purpose, the methods introduced
-here will usually involve the computation and the optimization of a
+here will usually involve the computation and the optimisation of a
 criterion on the joint space directly, following the method
 of~\cref{alg:SUR_strat} on \cpageref{alg:SUR_strat}, and sampling in
 regions of large uncertainties, as detailed
@@ -1015,15 +1015,15 @@ value and the gradient of the expected value and the variance.
 
 
 
-% \subsection{Minimization of the expected loss}
+% \subsection{Minimisation of the expected loss}
 % \label{ssec:expected_loss_GP_projection}
-% Recalling the definition of $\estimtxt{\kk}{mean} = \argmin_{\kk \in \Kspace} \Ex_{\UU}\left[J(\kk, \UU)\right]$, we can look to minimize the expected loss. 
+% Recalling the definition of $\estimtxt{\kk}{mean} = \argmin_{\kk \in \Kspace} \Ex_{\UU}\left[J(\kk, \UU)\right]$, we can look to minimise the expected loss. 
 % In~\cite{janusevskis_simultaneous_2010}, the authors define the \emph{projected process} $W$, the stochastic process $\kk \rightarrow \left(\Omega \rightarrow \mathbb{R}\right)$ which verifies
 % \begin{equation}
 %   W(\kk) = \Ex_U[Z(\kk, \UU)] = \int_{\Uspace} Z(\kk, \uu) p_{\UU}(\uu)\,\mathrm{d}\uu
 % \end{equation}
-% $W$ is then a Gaussian process on $\Kspace$. As done before, we want to minimize the unknown function $\Ex_U[J(\kk, \UU)]$ using $W$, thus we can maximize the expected improvement~\cref{eq:def_ei} to find a potentially interesting point $\tilde{\kk}$.
-% Then, we will look for the pair $(\kk, \uu) \in \Kspace\times \Uspace$ which minimizes the variance of the augmented projected process at this candidate.
+% $W$ is then a Gaussian process on $\Kspace$. As done before, we want to minimise the unknown function $\Ex_U[J(\kk, \UU)]$ using $W$, thus we can maximise the expected improvement~\cref{eq:def_ei} to find a potentially interesting point $\tilde{\kk}$.
+% Then, we will look for the pair $(\kk, \uu) \in \Kspace\times \Uspace$ which minimises the variance of the augmented projected process at this candidate.
 % \begin{align}
 %   \tilde{\kk} &= \argmax_{\kk \in \Kspace} \mathrm{EI}_W(\kk) \\
 %   (\kk_{n+1}, \uu_{n+1}) &= \argmin_{(\kk, \uu)\in\Kspace\times \Uspace} \Var\left[W(\tilde{\kk}) \mid \mathcal{X} \cup (\kk,\uu) \right]
@@ -1037,9 +1037,9 @@ value and the gradient of the expected value and the variance.
 \subsection{PEI for the conditional minimisers}
 \label{sec:PEI_criterion}
 In the previous chapter, we introduced the conditional minimums
-$\uu\mapsto J^*(\uu)$ and the conditional minimizers
+$\uu\mapsto J^*(\uu)$ and the conditional minimisers
 $\uu \mapsto \kk^*(\uu)$. Each evalutation of these functions require
-an optimization procedure, thus can be expensive from a computational
+an optimisation procedure, thus can be expensive from a computational
 point of view.~\cite{ginsbourger_bayesian_2014} proposes a criterion,
 adapted from the EI, which aims at solving such a problem: the
 \emph{Profile Expected Improvement} $\mathrm{PEI}$, which is defined
@@ -1058,13 +1058,13 @@ criterion: instead of having a fixed threshold, the $\mathrm{PEI}$
 introduces a criterion that depends on $\uu$. \Cref{fig:example_PEI}
 shows an example of GP enriched using the $\mathrm{PEI}$ criterion.
 The criterion can then be used in a classical SUR strategy introduced
-in~\cref{alg:SUR_strat}, where at each iteration, the PEI is maximized
+in~\cref{alg:SUR_strat}, where at each iteration, the PEI is maximised
 over $\Kspace \times \Uspace$:
 \begin{equation}
   \label{eq:PEI_criterion_SUR}
   x_{n+1}=(\kk_{n+1}, \uu_{n+1}) =\argmax_{(\kk, \uu)\in \Kspace \times \Uspace} \mathrm{PEI}(\kk, \uu)
 \end{equation}
-and the maximizer is evaluated by $f$ and added to the design.
+and the maximiser is evaluated by $f$ and added to the design.
 \begin{figure}[ht]
   \centering
   \input{\imgpath PEI_example.pgf}
@@ -1112,7 +1112,7 @@ As explained~\cref{sec:rr_family}, in order to get an estimator, two starting po
 
 
 We first need to detail some notations with respect to the conditional
-minimum and conditional minimizers, and their equivalent for the GP.
+minimum and conditional minimisers, and their equivalent for the GP.
 % Let us first consider the conditional minimiser:
 % \begin{align}
     %     J^*(\uu) = J(\kk^*(\uu),\uu) = \min_{\kk\in\Kspace} J(\kk,\uu)
@@ -1128,7 +1128,7 @@ where
   \kk_Z^*(\uu)&=\argmin_{\kk\in\Kspace} m_Z(\kk, \uu) \label{eq:theta_star}\\
   \sigma^{2}_{Z^*}(\uu) &= \sigma^{2}_Z(\kk^*_Z(\uu), \uu) \label{eq:sigma_star} 
 \end{align}
-We use then the minimizer and the minimum of the GP prediction as
+We use then the minimiser and the minimum of the GP prediction as
 estimates of the conditional minimum and minimiser, similarly as
 in~\cite{ginsbourger_bayesian_2014}. % for instance, but other choices could be considered, such as $m_Z(\kk^*_Z(\uu)) - \gamma \sigma^{2}_{Z^*}(\kk_Z^*(\uu))$. This choice would lead to be more ``optimistic'' in the estimation of the minimum (i.e.\ a lower minimum), and in turn, would have a tendency to overestimate the estimated value of $\alpha$, thus trending toward more conservative estimates.
 To generalize notions of the additive and relative regret, we can
@@ -1182,7 +1182,7 @@ in~\cref{eq:variance_delta_GP_ab}, 3 sources of uncertainty appear:
 \item $\sigma^2_{Z}$ is the prediction variance of the GP on $J$, that
   is directly reduced when additional points are evaluated
 \item $\sigma^2_{Z^*}$ is the variance of the predicted value of the
-  minimizers.
+  minimisers.
 \item Assuming a stationary form of the covariance, the third term is
   dependent only on the distance between $\kk$ and $\kk_{Z^*}(\uu)$,
   (the estimated conditional minimiser). By separating the $\kk$ and
@@ -1224,7 +1224,7 @@ $\{\Delta_{\alpha=1} \leq \beta \}$.
 
 
                                                   %                                                   \begin{algorithm}
-                                                  %                                                   \caption{\label{alg:2stage_SUR} Two-stages SUR strategies for robust optimization problem}
+                                                  %                                                   \caption{\label{alg:2stage_SUR} Two-stages SUR strategies for robust optimisation problem}
                                                   %                                                   \begin{algorithmic}
                                                   %                                                   \REQUIRE Initial design $\mathcal{X}_0$, criterion function $\kappa$
                                                   %                                                   \STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
@@ -1245,11 +1245,11 @@ $\{\Delta_{\alpha=1} \leq \beta \}$.
 \subsection{GP-based methods for the estimation of $\Gamma_{\alpha}$}
 \label{sec:evaluation_gamma}
 Let consider $\alpha\geq 1$ fixed. In order to compute
-$\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimize the
+$\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimise the
 function $\Gamma_{\alpha}$. For that purpose, we are going to explore
 the space to improve the estimation of $\Gamma_{\alpha}$, and once
 sufficient knowledge is acquired, use the plug-in % \todo{definir}
-estimate $\hat{\Gamma}_{\alpha}$ for the optimization, to get the
+estimate $\hat{\Gamma}_{\alpha}$ for the optimisation, to get the
 wanted estimator.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
@@ -1753,7 +1753,7 @@ confidence level to $p=0.95$.
 where $\sigma_\Xi^2$ is constructed using $Z/Z^*$ and the design $\mathcal{X}_n$.
 
 We can then look to improve the prediction error on the log-ratio
-described \cref{eq:log_ratio}, by minimizing the augmented IMSE:
+described \cref{eq:log_ratio}, by minimising the augmented IMSE:
 \begin{equation}
   \label{eq:aIMSE_Xi}
  (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk, \uu) \in \Kspace \times \Uspace}\Ex_{Z(\kk,\uu)}\left[\IMSE(\mathcal{X}_n \cup \left\{\left((\kk, \uu),Z(\kk, \uu)\right)\right\}\right]
@@ -1779,7 +1779,7 @@ change in the hyperparameters of the GP.
   \caption[Error of the estimation when reducing the augmented ISME of $\Xi$]{\label{fig:qPI_aIMSE} Evolution of the error of the estimation when reducing the augmented IMSE of the log-ratio $\Xi$}
 \end{figure}
 
-Each step of this method requires the optimization of the expected
+Each step of this method requires the optimisation of the expected
 IMSE~\cref{eq:aIMSE_Xi}, which can become expensive. We can also
 define a sampling based method, which is based on plausible values of
 the quantile of order $p$.
@@ -1804,7 +1804,7 @@ given $\kk\in\Kspace$ by using the quantiles of $\Xi(\kk, \uu)$:
 where $k = \Phi^{-1}(0.975)\approx 1.96$, ensuring a 95\% confidence
 interval for the quantile.  Let us define
 $\tilde{\kk}=\argmin_{\kk \in\Kspace} \hat{q}_p(\kk)$, that is the
-value which minimizes the quantile of order $p$ of the plug-in
+value which minimises the quantile of order $p$ of the plug-in
 estimate of the ratio, and $\hat{\alpha}_p = \hat{q}_p(\tilde{\kk})$.
 
 By linearly discretizing the interval
@@ -1884,9 +1884,9 @@ thesis, the estimation of the regret-based estimators.
 
 Several improvements can be considered. First, all the methods
 introduced here focus on the improvement of the estimation of a
-function, which will be optimized in order to get the estimator. The
+function, which will be optimised in order to get the estimator. The
 adaptive strategy could be adapted to take into account the subsequent
-optimization. Similarly as in~\cite{janusevskis_simultaneous_2010}, we
+optimisation. Similarly as in~\cite{janusevskis_simultaneous_2010}, we
 could develop strategies in two parts: first, identify the point in
 $\Kspace$ which has the most potential to be the wanted estimator, and
 second, find the point in the joint space $\Kspace \times \Uspace$
@@ -1894,7 +1894,7 @@ which reduces the most the uncertainty on the candidate.
 
 Another issue encountered is that Gaussian Processes are suited to
 approximate functions of a moderate number of variables, because the
-optimization of the hyperparameters becomes increasingly difficult. In
+optimisation of the hyperparameters becomes increasingly difficult. In
 order to apply the algorithms based on GP, the dimension may first
 have to be reduced. Moreover, we did not take advantage of the
 gradient information, which may be available through the adjoint
@@ -1910,7 +1910,7 @@ introduced in this chapter.
 %   \centering
 %   \begin{tabular}{lll}
 %     \toprule
-%     Objective name & Objective to minimize wrt $\kk$  & Computational solution \\ \midrule
+%     Objective name & Objective to minimise wrt $\kk$  & Computational solution \\ \midrule
 %     Profile Likelihood & $-\log \max_{\uu \in \Uspace} p_{Z \mid \KK, \UU}(y \mid \kk, \uu)$  \\
 %     Integrated Likelihood & $-\log \int_{\Uspace} p_{Z \mid \KK, \UU}(y \mid \kk, \uu) \,\mathrm{d}\uu=-\log p_{Z\mid \KK}(y\mid \kk)$ \\
 %     Marginal maximum a posteriori & $-\log p_{\KK\mid }(\kk \mid y)$  & MCMC based sampling (\cite{doucet_marginal_2002})\\ \midrule

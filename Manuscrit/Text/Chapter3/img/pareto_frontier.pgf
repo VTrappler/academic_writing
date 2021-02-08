@@ -329,7 +329,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.228162in,y=3.130198in,left,base]{\color{textcolor}\rmfamily\fontsize{11.000000}{13.200000}\selectfont  the multiobjective optimization problem \(\displaystyle (\mu, \sigma)\)}%
+\pgftext[x=1.228162in,y=3.130198in,left,base]{\color{textcolor}\rmfamily\fontsize{11.000000}{13.200000}\selectfont  the multiobjective optimisation problem \(\displaystyle (\mu, \sigma)\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetroundcap%

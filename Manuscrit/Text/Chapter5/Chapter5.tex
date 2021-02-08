@@ -411,8 +411,8 @@ environmental parameter, \emph{i.e.} in a misspecified case.
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
   }
-  \caption[Optimization of $\zob$ on the whole
-  space]{\label{fig:optimization_map_399} Optimization of $\zob$ on
+  \caption[Optimisation of $\zob$ on the whole
+  space]{\label{fig:optimization_map_399} Optimisation of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
     $400$ iterations.}
 \end{figure}
@@ -424,7 +424,7 @@ environmental parameter, \emph{i.e.} in a misspecified case.
     the squared norm of the gradient}
 \end{figure}
 By comparing the result of the
-optimization~\cref{fig:optimization_map_399} with the sediments
+optimisation~\cref{fig:optimization_map_399} with the sediments
 charts~\cref{fig:sediments_reduced} and the bathymetry
 map~\cref{fig:depth_maps}, we can have a first overview on which
 regions of the domain are properly estimated (\emph{i.e.} where the
@@ -736,9 +736,9 @@ that can be used as a surrogate.  In this work, the GP will be
 constructed using the Python module
 Scikit-learn~\cite{pedregosa_scikit-learn_2011}.
 
-We denote
-$\mathcal{X}_{mathrm{LHS}}$ the initial LHS, and $Z$ the Gaussian Process
-constructed and fitted using $\mathcal{X}_{\mathrm{LHS}}$.  We will write
+We denote $\mathcal{X}_{\mathrm{LHS}}$ the initial LHS, and $Z$ the
+Gaussian Process constructed and fitted using
+$\mathcal{X}_{\mathrm{LHS}}$.  We will write
 \begin{equation}
   Z \sim \GP\left(m_Z, C_Z\right) \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
 \end{equation}
@@ -793,7 +793,7 @@ evaluations of the objective function $J$. By sampling $\uu_i$ from
 $\UU$ for $1\leq i \leq n_{\uu}$, we can first estimate $m_{Z^*}(\uu)$
 using this set of samples, as shown in~\cref{fig:contour_Jstar}. As
 expected from the result of the optimisation carried
-in~\cref{ssec:glob_mini}, we can see that the minimum of $m_Z^*(\uu)$
+in~\cref{ssec:glob_mini}, we can see that the minimum of $m_{Z^*}(\uu)$
 (\emph{i.e.} the global minimum) is not attained at
 $(0.5, 0.5)=\uu^{\mathrm{truth}}$ but rather at approximatively
 $(\num{0.6},\num{0.3})$.
@@ -802,7 +802,7 @@ $(\num{0.6},\num{0.3})$.
 \begin{figure}[ht]
  \centering
  \includegraphics{\imgpath contour_Jstar_800.png}
- \caption{\label{fig:contour_Jstar} Conditional minimum $m_Z^*(\uu)$
+ \caption{\label{fig:contour_Jstar} Conditional minimum $m_{Z^*}(\uu)$
    estimated using the GP $Z$}
 \end{figure}
 Based on these samples, we can also approximate the distribution of the random variable
@@ -821,7 +821,7 @@ other component.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics{\imgpath pairplot_800.png}
+  \includegraphics[width=\textwidth]{\imgpath pairplot_800.png}
   \caption[Distribution of the minimisers
   $\kk^*(\UU)$]{\label{fig:pairplot} Estimated distribution of the
     minimisers $\kk^*_Z(\UU)$. The diagonal plots show the KDE of the
@@ -918,7 +918,8 @@ explained by a significant changes in the hyperparameters of the GP.\@
 \begin{figure}[ht]
   \centering
   \input{\imgpath aIMSE.pgf}
-  \caption{\label{fig:aIMSE} Evolution of the IMSE during the enrichment strategy}
+  \caption{\label{fig:aIMSE} Evolution of the IMSE during the
+    enrichment strategy}
 \end{figure}
 
 
@@ -933,8 +934,9 @@ approximation of the binomial proportion.
 \begin{figure}[ht]
   \centering
   \input{\imgpath evo_alpha_p_kp.pgf}
-  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold $\alpha_p$ and
-    estimates with respect to $p$, using the GP enriched with 200 additional points}
+  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold
+    $\alpha_p$ and estimates with respect to $p$, using the GP
+    enriched with 200 additional points}
 \end{figure}
 On~\cref{fig:evo_alphap_kp} is shown the threshold $\alpha_p$ as a
 function of $p$, and the different components of the control variable
@@ -1042,23 +1044,28 @@ function.
 % \end{equation}
 
 \section{Partial conclusion}
-In this chapter, we adressed the problem of calibration of the
-numerical model CROCO.\@ After having defined the control and
-environmental parameters, we performed different studies, in order to
-have a better understanding of the behaviour of the forward model.
+In this chapter, we addressed the problem of calibration under
+uncertainties of the numerical model CROCO.\@ After having defined the
+control and environmental parameters, we performed different studies,
+in order to have a better understanding of the behaviour of the
+forward model.
 
-After having optimised the objective function with a high-dimensional
-control parameter, but without external uncertainties, we chose to
-segment the domain according to the type of sediments that can be
-found at the bottom. This reduction of the dimension has been
-justified by a global sensitivity analysis, in order to compare the
-influence of each spatial regions defined through the segmentation. A
-similar study has been done in order to reduce the dimension of the
-environmental parameter.
+First, we optimised the objective function on a high-dimensional input
+space, but without external uncertainties. We chose then to segment
+the domain according to the type of sediments that can be found at the
+bottom, and by performing a sensitivity analysis, we could reduce
+further the dimension of the input space.
+A similar study has been done in order to reduce the dimension of the
+environmental parameter as well.
 
-Finally, we applied some of the methods that rely on GP, as introduced
-in~\cref{chap:adaptative_design_gp}, in order to get robust estimators
-of the bottom friction, in this specific academic problem.
+Finally, we applied some of the methods that rely on GP as introduced
+in~\cref{chap:adaptative_design_gp}, in order to explore the behaviour
+of the numerical model. First, to have a better estimation of the
+conditional minimum and minimisers we enriched the design using the
+PEI criterion, then in order to get robust estimators of the bottom
+friction, we used two different approach: the stepwise reduction of
+the augmented IMSE, and sampling in the margin of uncertainty for the
+estimation of quantiles of the relative-regret.
 
 % \begin{figure}[ht]
 %   \centering

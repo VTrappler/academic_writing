@@ -6524,7 +6524,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.011030in,y=5.413966in,,base]{\color{textcolor}\rmfamily\fontsize{11.000000}{13.200000}\selectfont Function to be optimized and kriging prediction}%
+\pgftext[x=3.011030in,y=5.413966in,,base]{\color{textcolor}\rmfamily\fontsize{11.000000}{13.200000}\selectfont Function to be optimised and kriging prediction}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%

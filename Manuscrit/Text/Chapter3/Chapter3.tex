@@ -29,15 +29,34 @@
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In the previous chapter, we introduced the problem of calibration of a numerical model with respect to a \emph{calibration parameter} $\kk$. This takes the form of the optimisation of an objective function. We also raised the problem of parametric misspecification of the numerical model with respect to the reality: $\uu \in \Uspace$. Moreover, this misspecification is modelled by a random variable $\UU$ with known distribution.
-One desirable property is that the calibrated model shows relatively good performances when the environmental variables varies, or in other words, we want the calibrated model to be \emph{robust} with respect to the varying environmental parameters. In this chapter, we are going to introduce some criteria that aim at solving this \emph{robust optimisation problem}. The actual computation of those estimates will be discussed in the next chapter.
+In the previous chapter, we introduced the problem of calibration of a
+numerical model with respect to a \emph{calibration parameter}
+$\kk$. This takes the form of the optimisation of an objective
+function. We also raised the problem of parametric misspecification of
+the numerical model with respect to the reality: $\uu \in
+\Uspace$. Moreover, this misspecification is modelled by a random
+variable $\UU$ with known distribution.  One desirable property is
+that the calibrated model shows relatively good performances when the
+environmental variables varies, or in other words, we want the
+calibrated model to be \emph{robust} with respect to the varying
+environmental parameters. In this chapter, we are going to introduce
+some criteria that aim at solving this \emph{robust optimisation
+  problem}. The actual computation of those estimates will be
+discussed in the next chapter.
 
 \section{Defining robustness}
 \label{sec:def_robustness}
 \subsection{Classifying the uncertainties}
-In the Bayesian formulation of the problem, the uncertainty on the calibration parameter is modelled through the prior distribution, while the uncertain parameter, $u$ has its own distribution. While mathematically similar, those two representations actually encompasses a significant difference: we are actively trying to reduce the uncertainty of the calibration parameter by Bayesian update, while the uncertainty on the environmental parameter is seen as a nuisance.
+In the Bayesian formulation of the problem, the uncertainty on the
+calibration parameter is modelled through the prior distribution,
+while the uncertain parameter, $u$ has its own distribution. While
+mathematically similar, those two representations actually encompasses
+a significant difference: we are actively trying to reduce the
+uncertainty of the calibration parameter by Bayesian update, while the
+uncertainty on the environmental parameter is seen as a nuisance.
 
-In that context, the very notion of uncertainty can be roughly split in two, as described in~\cite{walker_defining_2003}:
+In that context, the very notion of uncertainty can be roughly split
+in two, as described in~\cite{walker_defining_2003}:
 \begin{itemize}
 \item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
 \item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
@@ -125,7 +144,7 @@ Y \mid \KK, \UU \sim \mathcal{N}(\mathcal{M}(\KK, \UU), \Sigma)
 where $\Sigma$ is a covariance matrix.
 
 There are two common ways to get rid of the nuisance parameters: one by \emph{profiling}, one by \emph{marginalization}.
-Profiling implies to perform first a maximization of the likelihood with respect to the nuisance parameters:
+Profiling implies to perform first a maximisation of the likelihood with respect to the nuisance parameters:
 \begin{equation}
   \label{eq:def_profile_lik}
   \mathcal{L}_{\mathrm{profile}}(\theta;y) = \max_{\uu \in \Uspace} \mathcal{L}(\theta,u;y)
@@ -149,7 +168,7 @@ Another alternative is to define the \emph{integrated}, or \emph{marginalized} l
                                               &=\int_{\Uspace} p_{Y,\UU|\theta}(y,u \mid \theta)\,\mathrm{d}\uu \\
   &= p_{Y \mid \kk}(y \mid \kk)
 \end{align}
-and by maximizing this function,
+and by maximising this function,
 \begin{equation}
   \estimtxt{\kk}{intMLE} = \argmax_{\kk\in\Kspace}   \mathcal{L}_{\mathrm{integrated}}(\theta;y)
 \end{equation}
@@ -167,7 +186,7 @@ $\Uspace = \interval{-2}{2}$. The likelihood evaluated on
 $\Kspace \times \Uspace$ is
 displayed~\cref{fig:profile_integrated_lik}, with the integrated and
 profile likelihood.  We can see that there is not unicity of the
-maximizer for the profile likelihood:
+maximiser for the profile likelihood:
 $\mathcal{L}_{\mathrm{profile}}(\kk;y)$ is constant for
 $\kk \in \interval{-3}{1}$. This is due to the fact that the observations can
 have been generated with any $\kk$ and $\uu$ verifying
@@ -194,7 +213,7 @@ Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly. In order
                              &= \int_{\Uspace}p_{\KK \mid Y, \UU}(\kk \mid y, \uu) p_{\UU\mid Y}(\uu \mid y)\,\mathrm{d}u
 \end{align}
 
-We can then define the \emph{marginalized maximum a posteriori} (MMAP)~\cite{doucet_marginal_2002} as the  maximizer of this marginalized posterior:
+We can then define the \emph{marginalized maximum a posteriori} (MMAP)~\cite{doucet_marginal_2002} as the  maximiser of this marginalized posterior:
 \begin{equation}
   \label{eq:def_MMAP}
   \estimtxt{\kk}{MMAP} = \argmax_{\kk\in\Kspace} p_{\KK \mid Y}(\kk\mid y)
@@ -285,7 +304,7 @@ Rearranging slightly this problem, the $\theta$-component of the minimiser can b
 \end{equation}
 
 The global minimum is the equivalent of profile likelihood
-maximization~\cref{eq:def_profile_lik}, when $J$ is the negative
+maximisation~\cref{eq:def_profile_lik}, when $J$ is the negative
 log-likelihood. This method exhibits some flaws: we are optimising the
 cost function only over the most favourable cases of the environmental
 parameter, thus there is no guarantee on the behaviour of $J$ outside
@@ -726,7 +745,7 @@ Finally, when we have an estimation of the density of $\KK^*$, and if it exists,
 \begin{equation}
   \estimtxt{\kk}{MPE} = \argmax_{\kk \in \Kspace} p_{\KK^*}(\kk)
 \end{equation}
-This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\cite{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximization algorithm introduced~\cite{dempster_maximum_1977}.
+This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\cite{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximisation algorithm introduced~\cite{dempster_maximum_1977}.
 
 Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is
 ``most often'' the minimiser of the objective function. However, we
@@ -854,11 +873,11 @@ that $\kk \in \mathcal{I}_{\beta}(\uu)$, i.e.\
 \begin{figure}[ht]
   \centering
   \input{\imgpath gamma_beta_increasing.pgf}
-  \caption[Regions of $\beta$-acceptability]{\label{fig:gamma_beta_increasing} Boundaries of regions of acceptability for increasing $\beta$, and $\Gamma_{\beta}$. The colored lines on the left plot are the boundaries of those regions}
+  \caption[Regions of $\beta$-acceptability]{\label{fig:gamma_beta_increasing} Boundaries of regions of acceptability for increasing $\beta$, and $\Gamma_{\beta}$. The coloured lines on the left plot are the boundaries of those regions}
 \end{figure}
 
 
-$\Gamma_{\beta}$ is then maximized with respect to its argument, in
+$\Gamma_{\beta}$ is then maximised with respect to its argument, in
 order to get the value $\kk$ which has the highest probability of
 being acceptable at the level $\beta$. For different $\beta \geq 0$,
 we can define the family of additive-regret estimators.
@@ -867,7 +886,7 @@ we can define the family of additive-regret estimators.
   \begin{definition}[Additive-regret family of estimators]
     \label{def:AR_family}
     For $\beta \geq 0$, we define the family of robust estimators as
-    the maximizers of \cref{eq:def_gamma_additive}:
+    the maximisers of \cref{eq:def_gamma_additive}:
     \begin{equation}
       \label{eq:def_AR_family}
       \left\{\estimtxt{\kk}{AR,\beta} = \argmax_{\kk\in\Kspace} \Gamma_{\beta}(\kk) \mid \beta > 0\right\} %= \Prob_U\left[R_{\beta}(\kk)\right]\mid \beta \geq 0\right\}
@@ -960,14 +979,14 @@ $R_{\alpha}(\kk)$ is a measurable subset of $\Uspace$, and by integrating this s
 \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[R_\alpha(\kk)\right]
 \end{equation}
 the probability of being $\alpha$-acceptable. Using this function, we
-can define an estimator as the value which maximizes this
+can define an estimator as the value which maximises this
 probability. And by varying the threshold $\alpha$, we get the family
 of Relative-regret estimators.
 
 
 \begin{definition}[Relative-regret family of estimators]
   \label{def:RR_family}
-  Given $\alpha$, the value of $\kk$ that maximizes the probability of
+  Given $\alpha$, the value of $\kk$ that maximises the probability of
   being $\alpha$-acceptable is called the relative-regret (RR)
   estimator $\hat{\kk}_{\mathrm{RR},\alpha}$.
   
@@ -1037,7 +1056,7 @@ additive or relative.
   \caption[Regions of
   $\alpha$-acceptability]{\label{fig:gamma_alpha_increasing} Regions
     of acceptability for relative regret and increasing $\alpha$. The
-    colored lines on the left plot are the boundaries of those
+    coloured lines on the left plot are the boundaries of those
     regions}
 \end{figure}
 
@@ -1145,7 +1164,7 @@ summary of those introduced can be
 found~\cref{tab:summary_robust}. Some criteria are commonly
 encountered in optimisation under uncertainty, such as expected loss
 minimisation. We introduce also new families of estimators, which aim
-at maximizing a probability based on the regret, either additive or
+at maximising a probability based on the regret, either additive or
 relative.
 \begin{table}[ht]
   \centering
