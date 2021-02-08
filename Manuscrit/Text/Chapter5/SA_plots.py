@@ -66,7 +66,7 @@ def make_plot_sobol(df, variable_name, figname=None, dollar=False):
     else:
         xt = ['{} $\\times$ {}'.format(variable_name[i], variable_name[j]) for i, j in inde]
 
-    ax2.set_title(r'Second order indice')
+    ax2.set_title(r'Second order indices')
     ax2.set_yticks(x2)
     ax2.set_yticklabels(xt)
     ax2.tick_params(axis='y', which='major', labelsize=8)

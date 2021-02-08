@@ -39,7 +39,7 @@
 
 % \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
-In this chapter, we will study the problem of the calibration under
+In this chapter, we will study the problem of calibration under
 uncertainties of the bottom friction, in a realistic numerical based
 on \CROCO{} of the Atlantic French coast.
 
@@ -81,7 +81,7 @@ in~\cref{sec:sensitivity-analysis}.
 Finally using this study, we will reduce significantly the input
 space, and then apply some of the methods proposed in the previous
 chapter, in order to get a robust estimation of the bottom friction
-using Gaussian processes.
+using Gaussian processes in~\cref{ssec:rr_estimators_croco}.
 
 
 \section{\CROCO\ and bottom friction modelling}
@@ -92,9 +92,12 @@ COmmunity model) is a program written in Fortran that describes the
 motion of the ocean by solving the \emph{primitive equations}, which
 are simplified versions of the Navier-Stokes equations, in order to
 take into account the particular scales at play at the surface of the
-Earth. \CROCO{} has been developed upon ROMS\_AGRIF, and is designed
-to be coupled with other modelling systems, such as atmospheric,
-biological or ecosystem models.
+Earth. \CROCO{} has been developed upon
+ROMS\_AGRIF%\footnote{\url{https://www.myroms.org/},\url{http://www-ljk.imag.fr/MOISE/AGRIF/}}
+(Regional Ocean Modeling System, Adaptive Grid Refinement in
+Fortran)~\cite{debreu_two-way_2012}, and is designed to be coupled with
+other modelling systems, such as atmospheric, biological or ecosystem
+models.
 
 % gradually including algorithms from MARS3D (sediments) and
 % HYCOM (vertical coordinates). An important objective for \CROCO\ is to
@@ -116,14 +119,14 @@ mesh size between \SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The
 bathymetry map and the spatial domain is
 shown~\cref{fig:depth_maps}. The ocean can be split roughly in two
 regions, based on its depth : the region near the coasts which
-correspond to the continental shelf, where the water depth is less
+corresponds to the continental shelf, where the water depth is less
 than \SI{200}{\meter}, and the offshore region of the Bay of Biscay,
 where the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps_log.png}
   \caption[Bathymetry chart of the domain modelled]{\label{fig:depth_maps} Bathymetry used in \CROCO, and
-    geographical landmarks. The continental shelf correspond roughly
+    geographical landmarks. The continental shelf corresponds roughly
     to the area with depth less than \SI{200}{\meter} (green hue),
     while the abyssal plain has a depth larger than \SI{4000}{\meter}
     (blue hue)}
@@ -268,7 +271,7 @@ chosen segmentation.
 \subsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
 The ocean, especially near the English Channel is driven by tidal
-forces that produce current at the surface. As a periodic signal, the
+forces that produce currents at the surface. As a periodic signal, the
 tidal forcing is usually analysed harmonically, in order to separate
 its influence by frequency. In \CROCO, this forcing comes from the
 TPXO model of tides~\cite{egbert_efficient_2002}, and the
@@ -311,6 +314,7 @@ tide.  The perturbated amplitude $\tilde{A}_k$ is defined as
   \label{eq:tide_error}
   \tilde{A}_k(\uu_k) = A_k (1 + 0.01(2\uu_k - 1))
 \end{equation}
+for $1\leq k\leq 5$.
 Based on this definition, the perturbated amplitude varies from
 $\tilde{A}_k(0) = 0.99A_k$ to $\tilde{A}_k(1) = 1.01A_k$, for every
 $1\leq k \leq 5$. We define also $\uu^{\mathrm{truth}}$ as
@@ -402,9 +406,9 @@ optimisation procedure is stopped after \num{400} iterations, and the
 estimated control parameter is
 shown~\cref{fig:optimization_map_399}. The evolution of the cost
 function and the squared norm of the gradient during the optimisation
-procedure is shown~\cref{fig:ctrl_true}.
-In~\Cref{sec:appendix_truth_optim} is presented the result of the
-optimisation over the whole domain, for other choices of the
+procedure is shown~\cref{fig:ctrl_true}.  In the
+appendix~\cref{sec:appendix_truth_optim} is presented the result of
+the optimisation over the whole domain, for other choices of the
 environmental parameter, \emph{i.e.} in a misspecified case.
 
 \begin{figure}[ht]
@@ -424,15 +428,14 @@ environmental parameter, \emph{i.e.} in a misspecified case.
     the squared norm of the gradient}
 \end{figure}
 By comparing the result of the
-optimisation~\cref{fig:optimization_map_399} with the sediments
+optimisation~\cref{fig:optimization_map_399} with the sediment
 charts~\cref{fig:sediments_reduced} and the bathymetry
 map~\cref{fig:depth_maps}, we can have a first overview on which
 regions of the domain are properly estimated (\emph{i.e.} where the
-the estimation is close to the truth value).
-On a first look, we can see that the abyssal
-plain (the deep region off the Bay of Biscay) remains mostly
-unaffected by the optimisation, while the continental shelf, except
-for some parts of the English Channel, is well retrieved.
+estimation is close to the truth value).  On a first look, we can see
+that the abyssal plain (the deep region off the Bay of Biscay) remains
+mostly unaffected by the optimisation, while the continental shelf,
+except for some parts of the English Channel, is well retrieved.
 
 \begin{figure}[ht]
   \centering
@@ -528,7 +531,7 @@ as~\cite{sobol_sensitivity_1993,sobol_global_2001}
 \begin{equation}
   S_i = \frac{\Var_{X_i}\left[\Ex_{Y}\left[Y \mid X_i\right]\right]}{\Var_{Y}\left[Y\right]}
 \end{equation}
-and can be interpreted as the fraction of the variance of the output
+and can be interpreted as the fraction of variance of the output
 $Y$ explained by the variation of $X_i$ \emph{alone}. Indices of
 order $2$ are defined as
 \begin{equation}
@@ -577,8 +580,8 @@ with
   \kk_{\mathrm{SF}},\kk_{\mathrm{Si,V}})\in\Kspace, \text{ with }
   \Kspace = \interval{\kk_{\min}}{\kk_{\max}}^6
 \end{equation}
-In the context of the sensitivity analysis, all the inpus are assumed
-to be independent, and to be uniformly distributed on their support.
+In the context of the sensitivity analysis, all the inputs are assumed
+to be independent, and to be uniformly distributed on their support $\interval{\kk_{\min}}{\kk_{\max}}\approx \interval{\num{-11.5}}{\num{-3}}$.
 The first, second and total order effect are
 displayed~\cref{fig:SA_sediments}, where the regions defined by each
 sediment is \cref{fig:sediments_reduced}. The experimental design used
@@ -616,7 +619,7 @@ Once again, in the SA context, every component is assumed to be
 uniformly distributed on $\interval{0}{1}$ and independent.
 \Cref{fig:SA_tides} shows the Sobol indices of first order (left),
 second (right), and the total effect indices, along with bootstrap
-confidence intervals, obtained with a design of experiment of
+confidence intervals, obtained with a design of experiments of
 \num{2888} points.
 \begin{figure}[ht]
   \centering
@@ -644,6 +647,7 @@ $\UU \sim \mathcal{U}\left(\Uspace\right)$ with
 $\Uspace = \interval{0}{1}^2$.
 
 \section{Robust Calibration of the bottom friction}
+\label{sec:robust_calibration}
 \subsection{Objective function and global minimum}
 \label{ssec:glob_mini}
 Based on the sensitivity analysis carried in the previous section, we
@@ -664,7 +668,7 @@ and Fine Sands.
 
 Following the SA on the tide constituents, the uncertain variable is a
 random vector with \num{2} components, representing the error on
-amplitude of the $M_2$ and the $S_2$ tide constituent:
+amplitude of the $M_2$ and the $S_2$ tide constituents:
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
@@ -790,38 +794,38 @@ procedures described later.
 For the sake of this work, we are going to estimate the conditional
 minimisers as accurately as possible, using in total \num{750}
 evaluations of the objective function $J$. By sampling $\uu_i$ from
-$\UU$ for $1\leq i \leq n_{\uu}$, we can first estimate $m_{Z^*}(\uu)$
-using this set of samples, as shown in~\cref{fig:contour_Jstar}. As
-expected from the result of the optimisation carried
-in~\cref{ssec:glob_mini}, we can see that the minimum of $m_{Z^*}(\uu)$
-(\emph{i.e.} the global minimum) is not attained at
-$(0.5, 0.5)=\uu^{\mathrm{truth}}$ but rather at approximatively
-$(\num{0.6},\num{0.3})$.
+$\UU$ for $1\leq i \leq n_{\uu}=\num{2000}$, we can first estimate
+$m_{Z^*}(\uu)$ using this set of samples, as shown
+in~\cref{fig:contour_Jstar}. As expected from the result of the
+optimisation carried in~\cref{ssec:glob_mini}, we can see that the
+minimum of $m_{Z^*}(\uu)$ (\emph{i.e.} the global minimum) is not
+attained at $(0.5, 0.5)=\uu^{\mathrm{truth}}$ but rather at
+approximatively $(\num{0.6},\num{0.3})$.
 
 
 \begin{figure}[ht]
  \centering
- \includegraphics{\imgpath contour_Jstar_800.png}
+ \includegraphics{\imgpath contour_Jstar_800_.png}
  \caption{\label{fig:contour_Jstar} Conditional minimum $m_{Z^*}(\uu)$
    estimated using the GP $Z$}
 \end{figure}
 Based on these samples, we can also approximate the distribution of the random variable
 $\kk^*(\UU)$ by
-$\kk_Z^*(\UU) = (\kk^{(1),*}_Z(\UU), \kk^{(2),*}_Z(\UU), \kk^{(3),*}_Z(\UU))$.
+$\kk_Z^*(\UU) = (\kk^{(1) *}_Z(\UU), \kk^{(2) *}_Z(\UU), \kk^{(3) *}_Z(\UU))$.
 \Cref{fig:pairplot} shows the pairwise relations between the components
 of the random variable $\kk^*_Z(\UU)$, based on the samples
 $\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$. On the diagonal plots is
 shown the Kernel Density Estimation of the marginal distributions of
 $\kk^*(\UU)$, and the corresponding sampled $m_{Z^*}(\UU)$. The
 off-diagonal plots show the relations between the components. We can
-then observe a negative correlation between $\kk^{(1),*}_Z(\UU)$ and
-$\kk^{(2),*}_Z$ for instance, indicating that an increase in one of
+then observe a negative correlation between $\kk^{(1) *}_Z(\UU)$ and
+$\kk^{(2) *}_Z$ for instance, indicating that an increase in one of
 those value of the friction is compensated by the decrease in the
 other component.
-
+\todo{finir commentaire figure}        
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{\imgpath pairplot_800.png}
+  \includegraphics[width=\textwidth]{\imgpath pairplot_800_.png}
   \caption[Distribution of the minimisers
   $\kk^*(\UU)$]{\label{fig:pairplot} Estimated distribution of the
     minimisers $\kk^*_Z(\UU)$. The diagonal plots show the KDE of the
@@ -834,6 +838,7 @@ other component.
 
 \clearpage
 \subsection{Relative-regret based estimators}
+\label{ssec:rr_estimators_croco}
 We are now going to estimate members of the relative-regret family of
 estimators as introduced~\cref{def:RR_family}, on
 \cpageref{def:RR_family}:
@@ -927,24 +932,35 @@ Based on the enriched GP, we can maximise the plug-in approximation
 $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$. We chose here
 $n_{\uu}=\num{500}$, and the maximum found is
 \begin{equation}
-  \max_{\kk} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.848\pm 0.031}
+  \max_{\kk} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.93\pm 0.0224}
+%num[separate-uncertainty=true]{0.848\pm 0.031}
 \end{equation}
 where the given confidence interval is computed using the normal
-approximation of the binomial proportion.
+approximation of the binomial proportion, at a \num{95}\% level.
+
+On~\cref{fig:evo_alphap_kp} is shown the maximal probability reached
+by $\hat{\Gamma}^{\mathrm{PI}}_{\alpha}$ as a function of $\alpha$,
+and the different components of the control variable
+$\hat{\kk}_{\mathrm{RR},\alpha}$, all these quantities computed using
+the metamodel $m_Z$ after the additional iterations.
+
 \begin{figure}[ht]
   \centering
-  \input{\imgpath evo_alpha_p_kp.pgf}
-  \caption{\label{fig:evo_alphap_kp} Evolution of the threshold
-    $\alpha_p$ and estimates with respect to $p$, using the GP
-    enriched with 200 additional points}
+  %\input{\imgpath evo_alpha_p_kp.pgf}
+  \includegraphics{\imgpath evo_alpha_p_kp_bnd.png}
+  \caption{\label{fig:evo_alphap_kp} Evolution of the maximum reached
+    by $\Gamma_{\alpha}$ when $\alpha$ increases, and associated
+    estimates $\hat{\kk}_{\mathrm{RR},\alpha}$, using the GP enriched
+    with 200 additional points minimising the augmented IMSE.}
 \end{figure}
-On~\cref{fig:evo_alphap_kp} is shown the threshold $\alpha_p$ as a
-function of $p$, and the different components of the control variable
-$\hat{\kk}_{\mathrm{RR},\alpha_p}$, all these quantities computed
-using the metamodel $m_Z$ after the additional iterations.
 
 We can observe a gradual shift in those components when increasing the
-level of confidence.
+threshold $\alpha$, especially for
+$\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}$. This suggests that setting
+$\hat{\kk}^{(1)}$ equal to \num{-3.45} yields better values of the
+objective function but with (relatively) low frequency, while choosing
+\num{-3.4} is a more robust choice.
+
 
 % \paragraph{Sampling in the margin of uncertainty}
 
