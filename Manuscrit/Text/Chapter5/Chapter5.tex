@@ -932,24 +932,39 @@ Based on the enriched GP, we can maximise the plug-in approximation
 $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$. We chose here
 $n_{\uu}=\num{500}$, and the maximum found is
 \begin{equation}
+  \label{eq:max_gamma_alpha}
   \max_{\kk} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.93\pm 0.0224}
 %num[separate-uncertainty=true]{0.848\pm 0.031}
 \end{equation}
 where the given confidence interval is computed using the normal
-approximation of the binomial proportion, at a \num{95}\% level.
+approximation of the binomial proportion, at a \num{95}\% level. As we
+are using a plug-in approximation, we overlook the intrinsic
+uncertainty which is represented by the GP, and thus use directly
+$m_Z$ instead of $J$.
 
-On~\cref{fig:evo_alphap_kp} is shown the maximal probability reached
-by $\hat{\Gamma}^{\mathrm{PI}}_{\alpha}$ as a function of $\alpha$,
-and the different components of the control variable
+\Cref{fig:evo_alphap_kp} shows the maximal probability reached by
+$\hat{\Gamma}^{\mathrm{PI}}_{\alpha}$ as a function of $\alpha$, and
+the different components of the control variable
 $\hat{\kk}_{\mathrm{RR},\alpha}$, all these quantities computed using
 the metamodel $m_Z$ after the additional iterations.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics{\imgpath palpha.png}
+  \caption{\label{fig:p_alpha} Evolution of the maximal probability of
+    acceptablility $\max \Gamma_{\alpha}^{\mathrm{PI}}$, and 95\% CI
+    interval associated with the SAA approximation of the estimation
+    of the probability.}
+\end{figure}
+
+
 
 \begin{figure}[ht]
   \centering
   %\input{\imgpath evo_alpha_p_kp.pgf}
   \includegraphics{\imgpath evo_alpha_p_kp_bnd.png}
   \caption{\label{fig:evo_alphap_kp} Evolution of the maximum reached
-    by $\Gamma_{\alpha}$ when $\alpha$ increases, and associated
+    by $\hat{\Gamma}_{\alpha}$ when $\alpha$ increases, and associated
     estimates $\hat{\kk}_{\mathrm{RR},\alpha}$, using the GP enriched
     with 200 additional points minimising the augmented IMSE.}
 \end{figure}
@@ -1033,6 +1048,7 @@ $\hat{\kk}= \argmin_{\kk\in\Kspace} \hat{q}_p(\kk)$. Following the
 notation introduced in the previous chapter, we chose $K_q = 3$.
 With $k=\Phi^{-1}(1 - 0.025)$ the quantile of order \num{0.975} of the
 standard normal distribution, we define
+
 \begin{align}
   \log {\mathfrak{q}}_1 &= \left(m_{\Xi}(\tilde{\kk}, \uu) - k \sigma_{\Xi}(\tilde{\kk}, \uu)\right)_{([n_{\uu}p])} \approx Q_U(m_{\Xi}(\tilde{\kk}, \UU) - k \sigma_{\Xi}(\tilde{\kk}, \UU); p) \\
   \log \mathfrak{q}_2 &= \log \left(\min_{\kk\in\Kspace}\hat{q}^{\mathrm{PI}}_p(\kk) \right) = \log \hat{q}^{\mathrm{PI}}_p(\tilde{\kk}) = \log \hat{\alpha}_p \\
@@ -1045,10 +1061,36 @@ associated with each of those values:
   \mathbb{M}_{\eta}(\mathfrak{q}_l) = \left\{(\kk, \uu) \mid \frac{\eta}{2} \leq \Phi\left(-\frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}\right) \leq 1 - \frac{\eta}{2}\right\}
 \end{equation}
 and sample points in each of those margins, perform a statistical
-reduction method in order to get $K_{\mathbb{M}}$ points for each margin, adjust
-them and finally evaluate the $3\cdot K_{\mathbb{M}}$ points by the objective
-function.
-                         %
+reduction method in order to get $K_{\mathbb{M}}$ points for each
+margin, adjust them and finally evaluate the $3\cdot K_{\mathbb{M}}$
+points by the objective function.
+%
+For $p=0.95$, we got
+\begin{align}
+  \hat{\alpha}_p &= \num{1.3791} \\
+  \interval{\mathfrak{q}_1}{\mathfrak{q}_3} &= \interval{1.36618}{1.391868} \nonumber
+\end{align}
+One main difference between the confidence interval given there, and
+the one given~\cref{eq:max_gamma_alpha} is that the former translates
+the uncertainty originating from the Gaussian Process, while the
+latter accounts for the error in the \emph{sample average
+  approximation} of the probability
+$\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[]{\imgpath hatalphap.png}
+  \caption{\label{fig:hat_alpha_p} Estimation of the threshold
+    $\alpha_p$, depending on the level $p$. The lower and upper bounds
+    $\mathfrak{q}_1$ and $\mathfrak{q}_3$ are also displayed}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[]{\imgpath theta_rr_ap.png}
+  \caption{\label{fig:theta_rr_alpha} Relative-regret based estimates
+    $\hat{\kk}_{\mathrm{RR}, \alpha_p}$, depending on the level $p$}
+\end{figure}
+
 
 
 % In this section, we will fix a level of confidence $p=0.95$, https://p-mckenzie.github.io/2017/12/01/embedding-bokeh-with-github-pages/and look
@@ -1058,7 +1100,7 @@ function.
 % \begin{equation}
 % \max_{\kk\in\Kspace}  \Gamma_{\alpha_p}\left(\kk\right) = \Gamma_{\alpha_p}(\kk_{\mathrm{RR}, \alpha_p}) = p
 % \end{equation}
-
+\clearpage
 \section{Partial conclusion}
 In this chapter, we addressed the problem of calibration under
 uncertainties of the numerical model CROCO.\@ After having defined the
@@ -1082,7 +1124,6 @@ PEI criterion, then in order to get robust estimators of the bottom
 friction, we used two different approach: the stepwise reduction of
 the augmented IMSE, and sampling in the margin of uncertainty for the
 estimation of quantiles of the relative-regret.
-
 % \begin{figure}[ht]
 %   \centering
 %   \input{\imgpath SA_croco.pgf}
