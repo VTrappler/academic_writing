@@ -809,20 +809,22 @@ approximatively $(\num{0.6},\num{0.3})$.
  \caption{\label{fig:contour_Jstar} Conditional minimum $m_{Z^*}(\uu)$
    estimated using the GP $Z$}
 \end{figure}
-Based on these samples, we can also approximate the distribution of the random variable
-$\kk^*(\UU)$ by
-$\kk_Z^*(\UU) = (\kk^{(1) *}_Z(\UU), \kk^{(2) *}_Z(\UU), \kk^{(3) *}_Z(\UU))$.
-\Cref{fig:pairplot} shows the pairwise relations between the components
-of the random variable $\kk^*_Z(\UU)$, based on the samples
-$\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$. On the diagonal plots is
-shown the Kernel Density Estimation of the marginal distributions of
-$\kk^*(\UU)$, and the corresponding sampled $m_{Z^*}(\UU)$. The
-off-diagonal plots show the relations between the components. We can
-then observe a negative correlation between $\kk^{(1) *}_Z(\UU)$ and
-$\kk^{(2) *}_Z$ for instance, indicating that an increase in one of
-those value of the friction is compensated by the decrease in the
-other component.
-\todo{finir commentaire figure}        
+Based on these samples, we can also approximate the distribution of
+the random variable $\kk^*(\UU)$ by
+$\kk_Z^*(\UU) = (\kk^{(1) *}_Z(\UU), \kk^{(2) *}_Z(\UU), \kk^{(3)
+  *}_Z(\UU))$.  \Cref{fig:pairplot} shows the pairwise relations
+between the components of the random variable $\kk^*_Z(\UU)$, based on
+the samples $\kk^*_Z(\uu_i)$ for $1\leq i \leq n_{\uu}$. On the
+diagonal plots is shown the Kernel Density Estimation of the marginal
+distributions of $\kk^*(\UU)$, and the corresponding sampled
+$m_{Z^*}(\UU)$. The off-diagonal plots show the relations between the
+components. We can then observe a negative correlation between
+$\kk^{(1) *}_Z(\UU)$ and $\kk^{(2) *}_Z$ for instance, indicating that
+an increase in one of those value of the friction is compensated by
+the decrease in the other component.  \todo{finir commentaire figure}
+We can also notice that the marginal distribution of the first
+component $\kk_Z^{(1)*}(\UU)$ exhibits two modes: one at \num{-3.6},
+and one at around \num{-3.45}.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath pairplot_800_.png}
@@ -849,8 +851,11 @@ where
 \begin{equation}
   \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU)\right]
 \end{equation}
-is the probability that $\kk$ is $\alpha$-acceptable.
-
+is the probability that $\kk$ is $\alpha$-acceptable.  In the
+following, we will assume also a limited budget of \num{500} runs of
+the forward model, so after the initial design and the initial
+iterations of the PEI criterion, we assume available \num{200}
+additional runs.
 %\begin{figure}[ht]
 %  \centering
 %  \input{\imgpath evo_alpha_p_kp.pgf}
@@ -877,7 +882,7 @@ Maximising this expression yields
 \end{equation}
 In order to get a relevant value of $\hat{\kk}_{\mathrm{RR},\alpha}$,
 we are going to reduce sequentially the augmented IMSE, as introduced
-in~\cref{sec:evaluation_gamma}.\todo{La suite risque de changer}
+in~\cref{sec:evaluation_gamma}.%\todo{La suite risque de changer}
 \paragraph{Stepwise reduction of the augmented IMSE}
 We will first look to improve the estimation of $\Gamma_{\alpha}$, by
 improving the plug-in approximation. We define
@@ -891,14 +896,14 @@ with the value $\alpha=1.3$, meaning that we are looking to maximise
 the probability of being within $30\%$ of the optimal value.
 
 
-To do so, we are going to reduce the augmented IMSE of the random process
-$\Delta_{\alpha}$. The $\mathrm{IMSE}$ associated with the
-GP $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
+To do so, we are going to reduce the augmented IMSE of the random
+process $\Delta_{\alpha}$. Recalling that the $\IMSE$ associated with
+the GP $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
 $\mathcal{X}_n$ is defined as
 \begin{equation}
   \IMSE(\mathcal{X}_n) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
 \end{equation}
-and we select a new point to evaluate as:
+we select the next point to evaluate as:
 \begin{equation}
   (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right]
 \end{equation}
@@ -957,7 +962,16 @@ the metamodel $m_Z$ after the additional iterations.
     of the probability.}
 \end{figure}
 
-
+On~\cref{fig:evo_alphap_kp}, we can see that the estimated components
+of $\hat{\kk}_{\mathrm{RR},\alpha}(\UU)$ stay in a rather small range
+for all $\alpha >1$: $\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}$ seems to
+increase with respect to $\alpha$, from \num{-3.45} to
+\num{-3.38}. For $\kk^{(1)}$, all these values are slightly higher
+than $\hat{\kk}^{(1)}_{\mathrm{opt}}$ found when optimising globally,
+in~\cref{tab:ktruthkopt},~\cpageref{tab:ktruthkopt}. For the second
+and third components, we can see that for
+$\hat{\kk}_{\mathrm{RR},\alpha}$ shows lower values than
+$\hat{\kk}_{\mathrm{opt}}$.
 
 \begin{figure}[ht]
   \centering
@@ -968,13 +982,6 @@ the metamodel $m_Z$ after the additional iterations.
     estimates $\hat{\kk}_{\mathrm{RR},\alpha}$, using the GP enriched
     with 200 additional points minimising the augmented IMSE.}
 \end{figure}
-
-We can observe a gradual shift in those components when increasing the
-threshold $\alpha$, especially for
-$\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}$. This suggests that setting
-$\hat{\kk}^{(1)}$ equal to \num{-3.45} yields better values of the
-objective function but with (relatively) low frequency, while choosing
-\num{-3.4} is a more robust choice.
 
 
 % \paragraph{Sampling in the margin of uncertainty}
@@ -1065,7 +1072,7 @@ reduction method in order to get $K_{\mathbb{M}}$ points for each
 margin, adjust them and finally evaluate the $3\cdot K_{\mathbb{M}}$
 points by the objective function.
 %
-For $p=0.95$, we got
+For $p=0.95$, we have
 \begin{align}
   \hat{\alpha}_p &= \num{1.3791} \\
   \interval{\mathfrak{q}_1}{\mathfrak{q}_3} &= \interval{1.36618}{1.391868} \nonumber

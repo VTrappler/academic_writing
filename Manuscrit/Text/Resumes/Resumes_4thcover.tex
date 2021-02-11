@@ -16,12 +16,11 @@ To understand and to be able to forecast natural phenomena is
 increasingly important nowadays, as those predictions are often the
 basis of many decisions, whether economical or ecological. In order to
 do so, mathematical models are introduced to represent the reality at
-a scale relevant for the foreseen application, and are then
-implemented numerically. However in this process of modelling, many
-complex and subscale phenomena have to be simplified. Instead of being
-completely overlooked, additional parameters are introduced in order
-to account for those unresolved processes, but they need to be
-properly estimated. Classical methods of estimation usually involve
+a specific scale, and are then implemented numerically. However in
+this process of modelling, many complex and subscale phenomena have to
+be simplified, often through the introduction of additional parameters
+in order to account for those unresolved processes, but they need to
+be properly estimated. Classical methods of estimation usually involve
 an objective function, that measures the distance between the
 simulations and some observations, which is then optimised. This
 function requires a run of the numerical model, thus can be expensive
@@ -45,23 +44,24 @@ value for the same environmental variable. This regret (either
 additive or relative) translates a notion of robustness through its
 probability of exceeding a specified threshold. So, by either
 controlling the threshold or the probability, we can define a family
-of estimators based on the regret.
+of estimators based on this regret.
 
-This regret can quickly become expensive to evaluate since it requires
+The regret can quickly become expensive to evaluate since it requires
 an optimisation of the objective for every realisation of the
 environmental variable. We then propose to use Gaussian Processes (GP)
 in order to reduce the computational burden of this evaluation. In
 addition to that, we propose a few adaptive methods in order to
 improve the estimation: the next points to evaluate are chosen
-sequentially, according to a specific criterion, in a Stepwise
+sequentiall according to a specific criterion, in a Stepwise
 Uncertainty Reduction (SUR) strategy.
 
 
 Finally, we are going to apply some of the methods introduced in this
-thesis on an academic problem of parameter estimation. We will
-calibrate the bottom friction of a model of the Atlantic ocean near
-the French coasts, while introducing some uncertainties in the forcing
-of the tide.
+thesis on an academic problem of parameter estimation. We will study
+the calibration of the bottom friction of a model of the Atlantic
+ocean near the French coasts, while introducing some uncertainties in
+the forcing of the tide, and get a robust estimation of this friction
+parameter in a twin experiment setting.
 
 
 
@@ -104,7 +104,7 @@ of the tide.
   \bf Résumé
 \end{center}
 \vspace{0.3cm}
-blablabla
+\todo{à traduire?}
 De nombreux phénomènes physiques sont modélisés afin
 d'en mieux connaître les comportements ou de pouvoir les
 prévoir. Cependant pour ce faire, de nombreux processus doivent être
