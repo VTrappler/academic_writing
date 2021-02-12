@@ -976,10 +976,9 @@ shows lower values than $\hat{\kk}_{\mathrm{opt}}$.
   \centering
   %\input{\imgpath evo_alpha_p_kp.pgf}
   \includegraphics{\imgpath evo_alpha_p_kp_bnd.png}
-  \caption{\label{fig:evo_alphap_kp} Evolution of the maximum reached
-    by $\hat{\Gamma}_{\alpha}$ when $\alpha$ increases, and associated
-    estimates $\hat{\kk}_{\mathrm{RR},\alpha}$, using the GP enriched
-    with 200 additional points minimising the augmented IMSE.}
+  \caption{\label{fig:evo_alphap_kp} Components of
+    $\hat{\kk}_{\mathrm{RR},\alpha}$, using the GP enriched with 200
+    additional points minimising the augmented IMSE.}
 \end{figure}
 
 
@@ -1070,23 +1069,45 @@ and sample points in each of those margins, perform a statistical
 reduction method in order to get $K_{\mathbb{M}}$ points for each
 margin, adjust them and finally evaluate the $3\cdot K_{\mathbb{M}}$
 points by the objective function.
+
+
+Numerically speaking, the margins revealed themselves to be quite
+small, so we chose a level $\eta=0.0005$ in order to increase its
+size.  Also, we chose to change the number of points in each margin
+$K_{\mathbb{M}}$ along the iterations, by starting with a small number
+of points, $K_{\mathbb{M}}=3$, and by increasing it, until
+$K_{\mathbb{M}}=10$. We can see on~\cref{fig:vol_Meta} the estimated
+volume of the margin of uncertainty (\emph{i.e.} its measure according
+to Lebesgue's measure on $\Kspace \times \Uspace$), along with the
+95\% confidence intervals associated with its estimation. We can see
+that first, its volume increases slightly. This is can be seen as an
+exploration phase, where the additional evaluations change the
+hyperparameters of the GP, and affect the estimation of the
+conditional minimums. After enough iterations, the volume of the
+margin decreases, as points are added while the hyperparameters stay
+quite the same.
+
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath volume_margin_uncertainty.png}
-  \caption{\label{fig:vol_Meta}}
+  \caption{\label{fig:vol_Meta} Volume of the margin of uncertainty
+    associated with $\mathfrak{q}_2 = \hat{\alpha}_p$, and 95\%
+    confidence intervals of its estimation}
 \end{figure}
 
-%
-For $p=0.95$, we have
+
+Using the GP conditioned on the final design, for $op=0.95$ we have
 \begin{align}
   \hat{\alpha}_p &= \num{1.3791} \\
   \interval{\mathfrak{q}_1}{\mathfrak{q}_3} &= \interval{1.36618}{1.391868} \nonumber
 \end{align}
-One main difference between the confidence interval given there, and
-the one given~\cref{eq:max_gamma_alpha} is that the former translates
-the uncertainty originating from the Gaussian Process, while the
-latter accounts for the error in the \emph{sample average
-  approximation} of the probability
+and using the same GP,~\cref{fig:hat_alpha_p} shows the estimation of
+the threshold for other values of $p$.  One main difference between
+the confidence interval given there through $\mathfrak{q}_1$ and
+$\mathfrak{q}_3$ and the one given~\cref{eq:max_gamma_alpha} is that
+the former translates the uncertainty originating from the Gaussian
+Process, while the latter accounts for the error in the \emph{sample
+  average approximation} of the probability
 $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$.
 \begin{figure}[ht]
   \centering
@@ -1096,13 +1117,19 @@ $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$.
     $\mathfrak{q}_1$ and $\mathfrak{q}_3$ are also displayed}
 \end{figure}
 
+
+Finally,~\cref{fig:theta_rr_alpha} shows the different components of
+$\hat{\kk}_{\mathrm{RR},\alpha_p}$ for different $p> 0.5$.
 \begin{figure}[ht]
   \centering
   \includegraphics[]{\imgpath theta_rr_ap.png}
   \caption{\label{fig:theta_rr_alpha} Relative-regret based estimates
     $\hat{\kk}_{\mathrm{RR}, \alpha_p}$, depending on the level $p$}
 \end{figure}
-
+Similarly as in~\cref{fig:evo_alphap_kp}, we can see that the first
+component of $\hat{\kk}_{\mathrm{RR}, \alpha_p}$ is slightly larger
+than the one of $\hat{\kk}_{\mathrm{opt}}$. For the third component as
+well, the relative-regret estimates shows lower values than the optimal ones.
 
 
 % In this section, we will fix a level of confidence $p=0.95$, https://p-mckenzie.github.io/2017/12/01/embedding-bokeh-with-github-pages/and look

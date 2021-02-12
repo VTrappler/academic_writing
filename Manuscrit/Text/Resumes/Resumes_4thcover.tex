@@ -8,7 +8,7 @@
 \phantomsection
 \addstarredchapter{Abstracts}
 \begin{center}
-  \bf Abstract
+ \small \bf Abstract
 \end{center}
 \vspace{0.3cm}
 
@@ -52,7 +52,7 @@ environmental variable. We then propose to use Gaussian Processes (GP)
 in order to reduce the computational burden of this evaluation. In
 addition to that, we propose a few adaptive methods in order to
 improve the estimation: the next points to evaluate are chosen
-sequentiall according to a specific criterion, in a Stepwise
+sequentially according to a specific criterion, in a Stepwise
 Uncertainty Reduction (SUR) strategy.
 
 
@@ -101,36 +101,71 @@ parameter in a twin experiment setting.
 \vspace{0.5cm}
 %\todo{à traduire}
 \begin{center}
-  \bf Résumé
+\small  \bf Résumé
 \end{center}
-\vspace{0.3cm}
-\todo{à traduire?}
-De nombreux phénomènes physiques sont modélisés afin
-d'en mieux connaître les comportements ou de pouvoir les
-prévoir. Cependant pour ce faire, de nombreux processus doivent être
-simplifiés, car ils sont souvent trop complexes, ou apparaissent à
-petite échelle. Ces simplifications prennent donc la forme de
-paramètres additionnels qui doivent ensuite être estimés.
+\vspace{0.3cm} \todo{à traduire?}
 
-Les techniques utilisées actuellement
-pour ajuster de tels paramètres se basent sur la minimisation d'une
-fonction mesurant l'erreur entre les observations réelles, et les
-prévisions obtenues grâce au modèle numérique. Cette estimation ne
-prend absolument pas en comptes les incertitudes présentes dans les
-caractéristiques du modèle, augmentant d'autant l'erreur sur cette
-estimation. Estimer ces paramètres en présence d'incertitudes
-nécessite donc un traitement particulier.
+De nombreux phénomènes physiques sont modélisés afin d'en mieux
+connaître les comportements ou de pouvoir les prévoir. Cependant pour
+représenter la réalité, de nombreux processus doivent être simplifiés,
+car ils sont souvent trop complexes, ou apparaissent à échelle bien
+inférieure à celle du maillage. Au lieu de complétement omettre, les
+effets des processus sont souvent retranscrits dans les modèles à
+l'aide de paramétrisations, c'est-à-dire en introduisant des termes
+représentant des caractéristiques physiques, qui doivent être ensuite
+estimées. Les méthodes classiques d'estimation se basent sur la
+définition d'une fonction objectif qui mesure l'écart entre le modèle
+numérique et la réalité, qui est ensuite optimisée.
 
-Dans ce travail, nous proposons un nouveau critère d'optimisation sous
-incertitudes, basé sur le regret-relatif. Nous cherchons donc à
-maximiser la probabilité avec laquelle le regret-relatif reste sous un
-certain seuil, ou inversement, nous cherchons à minimiser le seuil
-atteint par le regret-relatif, à un niveau de confiance donné.  D'un
-point de vue pratique, nous proposons aussi des méthodes itératives
-basées sur les processus Gaussiens, permettant de calculer
-efficacement les quantités liées à ce nouveau critère.  Enfin, nous
-appliquons ces nouvelles méthodes à la calibration sous incertitudes
-d'un modèle océanique côtier, pour trouver un paramètre de friction de
-fond robuste.
+Cependant, d'autres incertitudes peuvent aussi être
+présentes. Celles-ci peuvent représenter des  incontrollables
+
+% iLes techniques utilisées
+% actuellement pour ajuster de tels paramètres se basent sur la
+% minimisation d'une fonction mesurant l'erreur entre les observations
+% réelles, et les prévisions obtenues grâce au modèle numérique. Cette
+% estimation ne prend absolument pas en comptes les incertitudes
+% présentes dans les caractéristiques du modèle, augmentant d'autant
+% l'erreur sur cette estimation. Estimer ces paramètres en présence
+% d'incertitudes nécessite donc un traitement particulier.
+Dans cette thèse, nous nous intéressons plutôt à la notion de regret,
+qui mesure l'écart entre la fonction objectif et la valeur optimale
+qu'elle peut atteindre, étant donné la valeur de la variable
+environementale.  Cette idée de regret, additif ou bien relatif, nous
+pouvons proposer une notion de robustesse à travers l'étude de sa
+probabilité de dépasser un certain seuil, ou inversement à travers le
+calcul de ses quantiles. À l'aide de ce seuil, ou de l'ordre du
+quantile choisi, on peut donc définir une famille d'estimateurs basés
+sur le regret.
+
+Néanmoins, le calcul du regret, et donc des quantités dérivées peut
+vite devenir très coûteux, car il nécessite une optimisation par
+rapport au paramètre de contrôle. Nous proposons donc d'utiliser des
+processus Gaussiens (GP) afin de construire un modèle de substitution,
+et donc de réduire cette contrainte en pratique. Nous proposons aussi
+des méthodes itératives basées notamment sur la stratégie SUR
+(Stepwise Uncertainty Reduction, Réduction d'incertitudes
+séquentielle): le point à évaluer ensuite est choisi selon un critère
+permettant d'améliorer au mieux des quantités associées au
+regret-relatif.
+
+Enfin, nous appliquerons les outils présentés dans cette thèse à un
+problème académique d'estimation de paramètre. Nous étudierons ainsi
+la calibration sous incertitudes du paramètre de friction de fond d'un
+modèle océanique, représentant la façade atlantique des côtes
+françaises, ainsi que la Manche.
+
+
+% Dans ce travail, nous proposons un nouveau critère d'optimisation sous
+% incertitudes, basé sur le regret-relatif. Nous cherchons donc à
+% maximiser la probabilité avec laquelle le regret-relatif reste sous un
+% certain seuil, ou inversement, nous cherchons à minimiser le seuil
+% atteint par le regret-relatif, à un niveau de confiance donné.  D'un
+% point de vue pratique, nous proposons aussi des méthodes itératives
+% basées sur les processus Gaussiens, permettant de calculer
+% efficacement les quantités liées à ce nouveau critère.  Enfin, nous
+% appliquons ces nouvelles méthodes à la calibration sous incertitudes
+% d'un modèle océanique côtier, pour trouver un paramètre de friction de
+% fond robuste.
 %\restoregeometry
 \vfill
