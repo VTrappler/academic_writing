@@ -81,7 +81,7 @@ in~\cref{sec:sensitivity-analysis}.
 Finally using this study, we will reduce significantly the input
 space, and then apply some of the methods proposed in the previous
 chapter, in order to get a robust estimation of the bottom friction
-using Gaussian processes in~\cref{ssec:rr_estimators_croco}.
+using Gaussian processes in~\cref{sec:robust_calibration}.
 
 
 \section{\CROCO\ and bottom friction modelling}
@@ -184,15 +184,16 @@ document, can be interpreted as the size of the turbulent layer at the
 bottom, induced by the asperities of the sediments.
 \cite{boutet_estimation_2015} shows that in a calibration context,
 controlling the rugosity $\zob$ yields better result than controlling
-the drag coefficient $C_d$ due the influence of the water column
+the drag coefficient $C_d$ due to the influence of the water column
 height $H$.
 On~\cref{fig:cd_zob} is shown the drag coefficient $C_d$ as a function
 of the roughness $\zob$ of the ocean floor, for different heights of
 the water column $H$.
 \begin{figure}[ht]
   \centering \input{\imgpath cd_zob.pgf}
-  \caption[Drag coefficient $C_d$ as a function of the height and the roughness]{\label{fig:cd_zob} Drag coefficient $C_d$ as a function of
-    the column water height and the roughness at the bottom}
+  \caption[Drag coefficient $C_d$ as a function of the height and the
+  roughness]{\label{fig:cd_zob} Drag coefficient $C_d$ as a function
+    of the column water height and the roughness at the bottom}
 \end{figure}
 
 
@@ -490,7 +491,7 @@ Here, sensitivity analysis is performed as a dimension-reduction
 method, because it will be used to reduce the input space, based on
 prior assumption that the $\zob$ is considered constant for
 each regions. Indeed, we will make the link between \emph{sensitivity}
-and \emph{identifiability}~\cite{dobre_global_2010}.%, as
+and \emph{identifiability}~\cite{dobre_global_2010}. %, as
 %non-sensitivity implies non-identifiability.
 If a parameter shows a very small influence on the output of the
 objective function, any choice of its value will yield sensibly the
@@ -821,10 +822,18 @@ $m_{Z^*}(\UU)$. The off-diagonal plots show the relations between the
 components. We can then observe a negative correlation between
 $\kk^{(1) *}_Z(\UU)$ and $\kk^{(2) *}_Z$ for instance, indicating that
 an increase in one of those value of the friction is compensated by
-the decrease in the other component.  \todo{finir commentaire figure}
-We can also notice that the marginal distribution of the first
-component $\kk_Z^{(1)*}(\UU)$ exhibits two modes: one at \num{-3.6},
-and one at around \num{-3.45}.
+the decrease in the other component.  We can also notice that the
+marginal distribution of the first component $\kk_Z^{(1)*}(\UU)$ seems
+to exhibit two modes: one at \num{-3.6}, and one at around
+\num{-3.45}, and both are quite close to the value found when
+optimising globally:
+$\hat{\kk}^{(1)}_{\mathrm{opt}}\approx \num{-3.5}$, which make it a
+clear candidate for robust optimisation. For the two other components,
+we can observe that the range values taken by the samples
+$\kk^*_Z(\uu_i)$ for $1 \leq i \leq n_{\uu}$ is larger, indicating
+that for these components, a robust candidate may be less
+\emph{identificable}, as discussed~\cref{sec:MPE},~\cpageref{sec:MPE}.
+
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath pairplot_800_.png}
@@ -947,11 +956,13 @@ are using a plug-in approximation, we overlook the intrinsic
 uncertainty which is represented by the GP, and thus use directly
 $m_Z$ instead of $J$.
 
-\Cref{fig:evo_alphap_kp} shows the maximal probability reached by
-$\hat{\Gamma}^{\mathrm{PI}}_{\alpha}$ as a function of $\alpha$, and
-the different components of the control variable
-$\hat{\kk}_{\mathrm{RR},\alpha}$, all these quantities computed using
-the metamodel $m_Z$ after the additional iterations.
+Even though the design has been enriched for $\alpha=1.3$, the
+resulting GP can be used to evaluate quantities associated with
+other thresholds.~\Cref{fig:evo_alphap_kp} shows the maximal
+probability reached by $\hat{\Gamma}^{\mathrm{PI}}_{\alpha}$ as a
+function of $\alpha$, and the different components of the control
+variable $\hat{\kk}_{\mathrm{RR},\alpha}$, all these quantities
+computed using the metamodel $m_Z$ after the additional iterations.
 
 \begin{figure}[ht]
   \centering
@@ -964,13 +975,15 @@ the metamodel $m_Z$ after the additional iterations.
 
 On~\cref{fig:evo_alphap_kp}, we can see that the estimated components
 of $\hat{\kk}_{\mathrm{RR},\alpha}(\UU)$ stay in a rather small range
-for all $\alpha >1$: $\hat{\kk}^{(1)}_{\mathrm{RR},\alpha}$ seems to
-increase with respect to $\alpha$, from \num{-3.45} to
-\num{-3.38}. For $\kk^{(1)}$, all these values are slightly higher
-than $\hat{\kk}^{(1)}_{\mathrm{opt}}$ found when optimising globally,
-in~\cref{tab:ktruthkopt},~\cpageref{tab:ktruthkopt}. For the second
-and third components, we can see that $\hat{\kk}_{\mathrm{RR},\alpha}$
-shows lower values than $\hat{\kk}_{\mathrm{opt}}$.
+for all $\alpha >1$. Recalling the the global optimiser whose values
+are introduced~\cref{tab:ktruthkopt}~\cpageref{tab:ktruthkopt},
+$\hat{\kk}_{\mathrm{opt}} = (-3.516, -5.078, -6.3459 )$, we can
+observe that $\hat{\kk}^{(1)}_{\mathrm{RR}, \alpha}$ is slightly
+higher than $\hat{\kk}^{(1)}_{\mathrm{opt}}$ for all $\alpha > 1$.
+
+% Regarding the second and third components, we can see that
+% $\hat{\kk}_{\mathrm{RR},\alpha}$ shows lower values than
+% $\hat{\kk}_{\mathrm{opt}}$, but considering the 
 
 \begin{figure}[ht]
   \centering
@@ -1000,7 +1013,8 @@ shows lower values than $\hat{\kk}_{\mathrm{opt}}$.
 %   $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
 %   to the design (as it is easier to classify points either \emph{in}
 %   or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step
-%   can become difficult,\todo{finir}
+                         %                          can become difficult,\todo{finir}
+\clearpage
 \subsubsection{Optimisation of the quantile of the relative-regret}
 \paragraph{Plug-in approximation of the quantile}
 Alternatively, for a level of confidence
@@ -1078,25 +1092,28 @@ $K_{\mathbb{M}}$ along the iterations, by starting with a small number
 of points, $K_{\mathbb{M}}=3$, and by increasing it, until
 $K_{\mathbb{M}}=10$. We can see on~\cref{fig:vol_Meta} the estimated
 volume of the margin of uncertainty (\emph{i.e.} its measure according
-to Lebesgue's measure on $\Kspace \times \Uspace$), along with the
-95\% confidence intervals associated with its estimation. We can see
-that first, its volume increases slightly. This is can be seen as an
-exploration phase, where the additional evaluations change the
-hyperparameters of the GP, and affect the estimation of the
-conditional minimums. After enough iterations, the volume of the
-margin decreases, as points are added while the hyperparameters stay
-quite the same.
+to Lebesgue's measure on $\Kspace \times \Uspace$), using Monte-Carlo
+method, along with the 95\% confidence intervals associated with its
+estimation (Wilson's score method~\cite{wilson_probable_1927} to
+account for the small relative volume of the margin of
+uncertainty). We can see that first, its volume increases
+slightly. This can be seen as an exploration phase, where the
+additional evaluations change the hyperparameters of the GP, which
+affects the estimation of the conditional minimums, and the candidate
+quantiles $\mathfrak{q}_l$, for $1\leq l \leq 3$. After enough
+additional points, the volume of the margin decreases, as points are
+added that do not change significantly the other estimations.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics{\imgpath volume_margin_uncertainty.png}
+  \includegraphics[scale=0.9]{\imgpath volume_margin_uncertainty.png}
   \caption{\label{fig:vol_Meta} Volume of the margin of uncertainty
     associated with $\mathfrak{q}_2 = \hat{\alpha}_p$, and 95\%
     confidence intervals of its estimation}
 \end{figure}
 
 
-Using the GP conditioned on the final design, for $op=0.95$ we have
+Using the GP conditioned on the final design, for $p=0.95$ we can compute
 \begin{align}
   \hat{\alpha}_p &= \num{1.3791} \\
   \interval{\mathfrak{q}_1}{\mathfrak{q}_3} &= \interval{1.36618}{1.391868} \nonumber
@@ -1111,12 +1128,11 @@ Process, while the latter accounts for the error in the \emph{sample
 $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$.
 \begin{figure}[ht]
   \centering
-  \includegraphics[]{\imgpath hatalphap.png}
+  \includegraphics[scale=0.9]{\imgpath hatalphap.png}
   \caption{\label{fig:hat_alpha_p} Estimation of the threshold
     $\alpha_p$, depending on the level $p$. The lower and upper bounds
     $\mathfrak{q}_1$ and $\mathfrak{q}_3$ are also displayed}
 \end{figure}
-
 
 Finally,~\cref{fig:theta_rr_alpha} shows the different components of
 $\hat{\kk}_{\mathrm{RR},\alpha_p}$ for different $p> 0.5$.
@@ -1126,13 +1142,22 @@ $\hat{\kk}_{\mathrm{RR},\alpha_p}$ for different $p> 0.5$.
   \caption{\label{fig:theta_rr_alpha} Relative-regret based estimates
     $\hat{\kk}_{\mathrm{RR}, \alpha_p}$, depending on the level $p$}
 \end{figure}
-Similarly as in~\cref{fig:evo_alphap_kp}, we can see that the first
-component of $\hat{\kk}_{\mathrm{RR}, \alpha_p}$ is slightly larger
-than the one of $\hat{\kk}_{\mathrm{opt}}$. For the third component as
-well, the relative-regret estimates shows lower values than the optimal ones.
+We can notice that similarly as in~\cref{fig:evo_alphap_kp}, the range
+of values taken by each component is rather small. We can however
+notice that the first component of $\hat{\kk}_{\mathrm{RR}, \alpha_p}$
+is again slightly larger than the one the global optimum
+$\hat{\kk}_{\mathrm{opt}}$.
 
 
-% In this section, we will fix a level of confidence $p=0.95$, https://p-mckenzie.github.io/2017/12/01/embedding-bokeh-with-github-pages/and look
+All in all, this study suggests that choosing a value slightly higher
+than the global optimiser for the first component (which corresponds
+to Pebbles) would be more robust, than keeping this
+minimiser. Regarding the other components, their respective influence
+(given by the SA) and the relative-regret estimates would point toward
+a value close or equal to the global optimiser.
+
+
+% In this section, we will fix a level of confidence $p=0.95$, and look
 % to minimise the quantile of the ratio defined in~\cref{eq:RRPI}.  By
 % definition, $\kk_{\mathrm{RR},\alpha_p}$ and $\Gamma_{\alpha_p}$
 % verifies
@@ -1156,13 +1181,18 @@ A similar study has been done in order to reduce the dimension of the
 environmental parameter as well.
 
 Finally, we applied some of the methods that rely on GP as introduced
-in~\cref{chap:adaptative_design_gp}, in order to explore the behaviour
-of the numerical model. First, to have a better estimation of the
-conditional minimum and minimisers we enriched the design using the
-PEI criterion, then in order to get robust estimators of the bottom
-friction, we used two different approach: the stepwise reduction of
-the augmented IMSE, and sampling in the margin of uncertainty for the
-estimation of quantiles of the relative-regret.
+in~\cref{chap:adaptative_design_gp}, in order to explore further the
+behaviour of the numerical model. First, to have a better estimation
+of the conditional minimum and minimisers we enriched the design using
+the PEI criterion. Then, in order to get robust estimators of the
+bottom friction, we used two different approaches to enrich the GP. In
+the first one, we reduced iteratively the augmented IMSE in order to
+improve the plug-in approximation of the probability of exceeding a
+threshold. On the other hand, in order to minimise a specific quantile
+of the relative-regret, we defined and sampled in the margin of
+uncertainty in order to add points by batches. This finally lead to
+relative-regret estimates of the bottom friction, which differ from
+the global minimiser.
 % \begin{figure}[ht]
 %   \centering
 %   \input{\imgpath SA_croco.pgf}

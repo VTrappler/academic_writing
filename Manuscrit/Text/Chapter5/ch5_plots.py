@@ -176,7 +176,7 @@ def main2():
     von_karman = 0.4
 
     def Cb(H, z0b):
-        return (von_karman / (np.log(H / z0b) - 1))**2
+        return (von_karman / (np.log(H / z0b)))**2
     H = 100
     z0b = np.logspace(-6, -1)
     plt.figure(figsize=col_full)
@@ -197,7 +197,7 @@ def main2():
 
     plt.xscale('log')
     plt.ylabel(r'$C_d$')
-    plt.xlabel(r'$z_{0,b}$ (in m)')
+    plt.xlabel(r'$z_{b}$ (in m)')
     plt.title('Bottom friction as a function of the roughness\nand the water column height')
     plt.legend(loc='center left', fontsize=8)
     plt.tight_layout()
@@ -206,5 +206,5 @@ def main2():
 
     
 if __name__ == '__main__':
-    main()                      #
+#    main()                      #
     main2()
