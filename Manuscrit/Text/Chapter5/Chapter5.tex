@@ -51,7 +51,7 @@ rugosity is parametrized at every point of the mesh.
 
 The bottom friction has been identified as a crucial parameter that,
 if ill-specified, limits the accuracy of the
-predictions~\cite{sinha_principal_1997,kreitmair_effect_2019},
+predictions~\citep{sinha_principal_1997,kreitmair_effect_2019},
 especially in shallow water regions; consequently, there has been an
 effort to control this parameter in various
 studies~\cite{das_variational_1992,das_estimation_1991,boutet_estimation_2015}.
@@ -125,7 +125,8 @@ where the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath depth_maps_log.png}
-  \caption[Bathymetry chart of the domain modelled]{\label{fig:depth_maps} Bathymetry used in \CROCO, and
+  \caption[Bathymetry chart of the domain
+  modelled]{\label{fig:depth_maps} Bathymetry used in \CROCO, and
     geographical landmarks. The continental shelf corresponds roughly
     to the area with depth less than \SI{200}{\meter} (green hue),
     while the abyssal plain has a depth larger than \SI{4000}{\meter}
@@ -649,6 +650,7 @@ $\Uspace = \interval{0}{1}^2$.
 
 \section{Robust Calibration of the bottom friction}
 \label{sec:robust_calibration}
+\todo{Ajouter intro}
 \subsection{Objective function and global minimum}
 \label{ssec:glob_mini}
 Based on the sensitivity analysis carried in the previous section, we
@@ -1166,6 +1168,7 @@ a value close or equal to the global optimiser.
 % \end{equation}
 \clearpage
 \section{Partial conclusion}
+\todo{revoir}
 In this chapter, we addressed the problem of calibration under
 uncertainties of the numerical model CROCO.\@ After having defined the
 control and environmental parameters, we performed different studies,

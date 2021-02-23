@@ -22,9 +22,10 @@ be simplified, often through the introduction of additional parameters
 in order to account for those unresolved processes, but they need to
 be properly estimated. Classical methods of estimation usually involve
 an objective function, that measures the distance between the
-simulations and some observations, which is then optimised. This
-function requires a run of the numerical model, thus can be expensive
-to evaluate computational-wise.
+simulations and some observations, which is then optimised. Such an
+optimisation require many runs of the numerical model and possibly the
+computation of its gradient, thus can be expensive to evaluate
+computational-wise.
 
 However, some other uncertainties can also be present, which represent
 some uncontrollable and external factors that affect the
@@ -33,18 +34,18 @@ modelling. Those variables will be qualified as
 objective function is then a random variable as well, that we wish to
 minimise in some sense. Omitting the random nature of the
 environmental variable can lead to localised optimisation, and thus a
-value of the parameter that is optimal only for the fixed nominal
+value of the parameters that is optimal only for the fixed nominal
 value.  To overcome this, the minimisation of the expected value of
 the objective function is often considered in the field of
 optimisation under uncertainty for instance.
 
 In this thesis, we focus instead on the notion of regret, that
 measures the deviation of the objective function from its optimal
-value for the same environmental variable. This regret (either
-additive or relative) translates a notion of robustness through its
-probability of exceeding a specified threshold. So, by either
-controlling the threshold or the probability, we can define a family
-of estimators based on this regret.
+value given a realisation of the environmental variable. This regret
+(either additive or relative) translates a notion of robustness
+through its probability of exceeding a specified threshold. So, by
+either controlling the threshold or the probability, we can define a
+family of estimators based on this regret.
 
 The regret can quickly become expensive to evaluate since it requires
 an optimisation of the objective for every realisation of the
@@ -56,11 +57,11 @@ sequentially according to a specific criterion, in a Stepwise
 Uncertainty Reduction (SUR) strategy.
 
 
-Finally, we are going to apply some of the methods introduced in this
-thesis on an academic problem of parameter estimation. We will study
-the calibration of the bottom friction of a model of the Atlantic
-ocean near the French coasts, while introducing some uncertainties in
-the forcing of the tide, and get a robust estimation of this friction
+Finally, we will apply some of the methods introduced in this thesis on an
+academic problem of parameter estimation. We will study the
+calibration of the bottom friction of a model of the Atlantic ocean
+near the French coasts, while introducing some uncertainties in the
+forcing of the tide, and get a robust estimation of this friction
 parameter in a twin experiment setting.
 
 

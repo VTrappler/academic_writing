@@ -60,7 +60,7 @@ provoquant de la dissipation d'énergie à cause des turbulences
 engendrées. L'estimation de la friction de fond est un problème à
 forts enjeux, notamment dans les régions côtières, du fait de son
 influence sur les courants et de son interaction avec la
-marée~\cite{sinha_principal_1997,boutet_estimation_2015}.
+marée~\citep{sinha_principal_1997,boutet_estimation_2015}.
 
 Cette estimation peut être traitée dans un cadre
 d'assimilation de données avec des méthodes variationelles comme
@@ -104,11 +104,11 @@ Ne pas prendre en compte les incertitudes aléatoires dans l'estimation
 de $\kk$ peut amener à compenser de manière artificielle certains
 aspects physiques dûs à la variable environnementale, et donc amener à
 un comportement analogue au \emph{sur-apprentissage} (overfitting), ou
-\emph{optimisation localisée}~\cite{huyse_probabilistic_2002}: des
+\emph{optimisation localisée}~(terme introduit dans \cite{huyse_probabilistic_2002}): des
 situations où le paramètre estimé n'est optimal que pour la valeur de
 $\uu$ supposée, et pour une autre réalisation de la variable aléatoire
 sous-jacente, le modèle ainsi calibré donne des prédictions
-potentiellement aberrantes~\cite{kuczera_there_2010}.
+potentiellement aberrantes~\citep{kuczera_there_2010}.
 
 On cherche donc à définir une valeur de $\kk$, notée $\hat{\kk}$ de
 manière à ce que $J(\hat{\kk}, \uu)$ reste \emph{acceptable} lorsque
@@ -140,7 +140,7 @@ d'optimisation sous incertitude se basent sur la minimisation des
 moments de la variable aléatoire $J(\mathbf{\cdot}, \UU)$ comme
 dans~\cite{lehman_designing_2004,janusevskis_simultaneous_2010}, ou
 les incorporent dans un problème d'optimisation
-multiobjectif~\cite{baudoui_optimisation_2012,ribaud_krigeage_2018}.
+multiobjectif~\citep{baudoui_optimisation_2012,ribaud_krigeage_2018}.
 
 Dans le cadre de cette thèse, nous proposons une approche basée sur le
 regret, qui consiste à comparer les valeurs de la fonction $J$ avec le
@@ -243,7 +243,7 @@ Les propriétés des GP nous permettrons aussi d'établir des stratégies
 d'enrichissement. En effet, des méthodes existantes dites
 \emph{adaptatives} permettent d'améliorer l'estimation de diverses
 quantités, comme la probabilité de défaillance
-\cite{razaaly_rare_2019,moustapha_quantile-based_2016,bect_sequential_2012},
+\citep{razaaly_rare_2019,moustapha_quantile-based_2016,bect_sequential_2012},
 ou les minimiseurs et minimums conditionnels
 dans~\cite{ginsbourger_bayesian_2014}. Ces méthodes, parfois appelées
 méthodes SUR (\emph{Stepwise Uncertainty Reduction}, réduction
@@ -305,7 +305,7 @@ océanique étudié selon le type de sédiments qui se trouve au
 fond. Afin de quantifier l'influence de chacune des régions délimitées
 par la classe de sédiments, une analyse de sensibilité globale sera
 effectuée, afin de calculer les indices de Sobol'
-correspondants~\cite{sobol_global_2001,iooss_revue_2011}. Une étude
+correspondants~\citep{sobol_global_2001,iooss_revue_2011}. Une étude
 similaire sera menée pour les différentes composantes du paramètre
 représentant les incertitudes $\uu$.
 Enfin, une fois la dimension du problème de calibration réduite
