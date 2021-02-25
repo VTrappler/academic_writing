@@ -73,7 +73,7 @@ comparison usually takes the form of the definition of a misfit
 function $J$ that measures the error between the forecast and the
 observations. This objective function is then minimised with respect to
 some chosen parameters
-$\kk$~\cite{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
+$\kk$~\citep{das_estimation_1991,das_variational_1992,boutet_estimation_2015}
 in order to get a calibrated model. Those parameters will be called
 the \emph{control parameters}.
 
@@ -83,12 +83,12 @@ the \emph{control parameters}.
 However, the parameters introduced are not the only source of errors
 in the modelling.  % Garder ?
 For such complex systems, some additional inputs are subject to
-unrepresented statistical fluctuations~\cite{zanna_ocean_2011},
+unrepresented statistical fluctuations~\citep{zanna_ocean_2011},
 manifesting themselves at the boundary conditions, or in the forcing
 of the model for instance. Such \emph{intrinsic} uncertainties are
 often subject to variability, and neglecting this can lead to further
-errors~\cite{mcwilliams_irreducible_2007}, or aberrant
-predictions~\cite{kuczera_there_2010}.
+errors~\citep{mcwilliams_irreducible_2007}, or aberrant
+predictions~\citep{kuczera_there_2010}.
 We chose to model this
 additional source of uncontrollable uncertainty with a random variable
 $\UU$.  Because of this, the objective function is then a function which
@@ -141,14 +141,14 @@ numerical model of the ocean. The thesis is organised as follows:
   the sense of minimising the probability of exceeding a specified
   threshold, or to minimise one of its quantile, in order to control
   with high enough probability its variations. This work has led to
-  the publication of an article~\cite{trappler_robust_2020}.
+  the publication of an article~\citep{trappler_robust_2020}.
   
 \item The family of criteria introduced in
   \cref{chap:robust_estimators} can be quite expensive to evaluate,
   that is why in~\cref{chap:adaptative_design_gp}, we will discuss the
   use of metamodels, Gaussian Processes especially, in order to choose
   iteratively the new points to evaluate. The process of selection,
-  called \emph{SUR} method~\cite{bect_sequential_2012} (Stepwise
+  called \emph{SUR} method~\citep{bect_sequential_2012} (Stepwise
   Uncertainty Reduction) will depend on the type of robust estimation
   we wish to carry. Different methods will be proposed in order to
   estimate members of the regret-based family of robust
@@ -169,7 +169,7 @@ numerical model of the ocean. The thesis is organised as follows:
   The definition of the problem will require first to segment the
   input space, and to quantify the influence of each input variable,
   using \emph{global sensitivity
-    analysis}~\cite{iooss_revue_2011}. Based on this analysis, The
+    analysis}~\citep{iooss_revue_2011}. Based on this analysis, The
   input space will be reduced, in order to carry a tractable robust estimation, using some of the methods proposed in~\cref{chap:adaptative_design_gp}.
 \end{itemize}
 \markchapterend

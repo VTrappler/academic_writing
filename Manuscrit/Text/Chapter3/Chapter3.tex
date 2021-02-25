@@ -159,7 +159,7 @@ Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihoo
   \max_{(\kk ,\uu) \in \Kspace\times \Uspace} \mathcal{L}(\theta,\uu;y) = \max_{\kk\in \Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
 \end{equation}
 
-The resulting estimator does not take into account the uncertainty upon $\uu$, and can perform quite badly when the likelihood presents sharp ridges~\cite{berger_integrated_1999}.
+The resulting estimator does not take into account the uncertainty upon $\uu$, and can perform quite badly when the likelihood presents sharp ridges~\citep{berger_integrated_1999}.
 
 Another alternative is to define the \emph{integrated}, or \emph{marginalized} likelihood as
 \begin{align}
@@ -213,7 +213,7 @@ Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly. In order
                              &= \int_{\Uspace}p_{\KK \mid Y, \UU}(\kk \mid y, \uu) p_{\UU\mid Y}(\uu \mid y)\,\mathrm{d}u
 \end{align}
 
-We can then define the \emph{marginalized maximum a posteriori} (MMAP)~\cite{doucet_marginal_2002} as the  maximiser of this marginalized posterior:
+We can then define the \emph{marginalized maximum a posteriori} (MMAP)~\citep{doucet_marginal_2002} as the  maximiser of this marginalized posterior:
 \begin{equation}
   \label{eq:def_MMAP}
   \estimtxt{\kk}{MMAP} = \argmax_{\kk\in\Kspace} p_{\KK \mid Y}(\kk\mid y)
@@ -267,7 +267,7 @@ cost function:
   drag in airfoil design optimisation for instance. This general
   problem is sometimes quoted as \emph{Optimisation under
     uncertainties} (OUU)
-  (\cite{cook_effective_2018,seshadri_density-matching_2014})
+  (\citep{cook_effective_2018,seshadri_density-matching_2014})
 
 
 All in all, $J(\kk, \uu)$ represent the cost of taking the decision $\kk\in\Kspace$ when the environmental variable is equal to $\uu$.
@@ -290,7 +290,7 @@ optimisation.
 
 \subsection{Decision under deterministic uncertainty set}
 We will first detail some estimators that can be argued robust, even though the random nature of $\UU$ is not directly taken into account.
-The uncertainty is modelled here by assuming that no information is available on $\uu$, except that $\uu \in \Uspace$. In this paradigm, $\Uspace$ is called the uncertainty set~\cite{bertsimas_theory_2010}.
+The uncertainty is modelled here by assuming that no information is available on $\uu$, except that $\uu \in \Uspace$. In this paradigm, $\Uspace$ is called the uncertainty set~\citep{bertsimas_theory_2010}.
 
 \subsubsection{Global optimisation}
 A global optimisation criterion, as its name suggests, advocates for minimising the cost function over the whole space $\Kspace \times \Uspace$, giving this optimisation problem:
@@ -321,7 +321,7 @@ becomes
 \begin{equation}
   \min_{\kk\in\Kspace} \max_{\uu \in \Uspace} J(\kk,\uu)
 \end{equation}
-This criterion is sometimes called Wald's Minimax criterion~\cite{wald_statistical_1945}, and the associated estimator is
+This criterion is sometimes called Wald's Minimax criterion~\citep{wald_statistical_1945}, and the associated estimator is
 \begin{equation}
   \label{eq:kkwc}
   \estimtxt{\kk}{WC} =  \argmin_{\kk \in \Kspace} \max_{\uu \in \Uspace} J(\kk, \uu)
@@ -337,7 +337,7 @@ considered.
 
 \subsubsection{Regret maximin}
 \label{ssec:regret_savage}
-One other approach, called Savage's maximin regret~\cite{savage_theory_1951} is to compare the current objective to the best performance given the uncertain variable $\uu$. The translated objective is called the \emph{regret} and is defined as
+One other approach, called Savage's maximin regret~\citep{savage_theory_1951} is to compare the current objective to the best performance given the uncertain variable $\uu$. The translated objective is called the \emph{regret} and is defined as
 \begin{equation}
   \label{eq:def_regret_savage}
   r(\kk, \uu) = J(\kk, \uu) - \min_{\kk \in \Kspace} J(\kk, \uu)
@@ -402,7 +402,7 @@ being an obvious candidate, we define the expected objective as
 The expected objective $\mu(\kk)$ is sometimes called the conditional
 mean given $\kk$. Taking the expectation of the objective function is
 very common in many problems of classification and
-regression~\cite{bishop_pattern_2006}.
+regression~\citep{bishop_pattern_2006}.
 
 
 The conditional mean is minimised, giving
@@ -430,7 +430,7 @@ and the minimisation problem
   \min_{\kk\in\Kspace} \frac{1}{n_U}\sum_{i=1}^{n_U} J(\kk, \uu_i)
 \end{equation}
 is called the \emph{sample average
-  problem}~\cite{juditsky_stochastic_2009}, or \emph{empirical risk
+  problem}~\citep{juditsky_stochastic_2009}, or \emph{empirical risk
   minimisation} problem in Machine Learning (see
 e.g.~\cite{vapnik_principles_1992}) Other indicators of central
 tendency can be considered for optimisation, such as the mode or the
@@ -544,7 +544,7 @@ multiobjective problem can then be chosen within the Pareto frontier.
 
 Instead of finding the Pareto frontier, the multiobjective problem is
 often ``scalarized'' by adding the weighted
-objectives~\cite{marler_weighted_2010}, provided that such an
+objectives~\citep{marler_weighted_2010}, provided that such an
 operation makes sense in regards to the units of the quantities,
 justifying the use of the standard deviation instead of the variance.
 \begin{equation}
@@ -556,7 +556,7 @@ where $\lambda \in [0,1]$ is chosen to reflect the preference toward one or anot
 \label{sec:higher_moments}
 Higher moments can also be considered as additional criteria,
 especially in Portfolio optimisation
-\cite{lai_mean-variance-skewness-kurtosis-based_2006,briec_mean-variance-skewness_2007}.
+\citep{lai_mean-variance-skewness-kurtosis-based_2006,briec_mean-variance-skewness_2007}.
 The skewness coefficient measures the asymmetry in the distribution,
 and is the (normalized) centered moment of order $3$:
 \begin{equation}
@@ -591,13 +591,13 @@ In order to have a finer tuning on the ``risk-averse'' or
 propose to directly minimise with respect to $\kk$ the difference
 between the cdf of the r.v. $J(\kk, \UU)$ and a target cdf, giving
 \emph{Horsetail
-  matching}~\cite{cook_extending_2017,cook_effective_2018}.
+  matching}~\citep{cook_extending_2017,cook_effective_2018}.
 
 Other extensions have been developed around the cdf of the random
 variable, especially in portfolio optimisation. Indeed, integrating
 and comparing the cdf allows to introduce a \emph{domination order}
 between random variables. These concepts of Stochastic
-Dominance~\cite{ogryczak_stochastic_1997} are then used to take
+Dominance~\citep{ogryczak_stochastic_1997} are then used to take
 decisions under uncertainties.
 
 
@@ -731,7 +731,7 @@ Kernel:
 $\mathcal{K}_{1\mathrm{D}}(\kk_j) = (2\pi)^{-1/2}\exp(-\kk_j^2
 /2)$. \Cref{fig:theta_star_samples} shows the estimated density
 $\hat{p}_{\kk^*}$ using KDE and Scott's rule for the
-bandwidth~\cite{scott_optimal_1979}, along with the histogram of the
+bandwidth~\citep{scott_optimal_1979}, along with the histogram of the
 minimisers.
 
 
@@ -745,7 +745,7 @@ Finally, when we have an estimation of the density of $\KK^*$, and if it exists,
 \begin{equation}
   \estimtxt{\kk}{MPE} = \argmax_{\kk \in \Kspace} p_{\KK^*}(\kk)
 \end{equation}
-This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\cite{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximisation algorithm introduced~\cite{dempster_maximum_1977}.
+This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\citep{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximisation algorithm introduced in~\cite{dempster_maximum_1977}.
 
 Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is
 ``most often'' the minimiser of the objective function. However, we

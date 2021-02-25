@@ -728,7 +728,7 @@ log-likelihood:
   objective functions. To reduce the sensitivity on outliers, some
   authors such as~\cite{rao_robust_2015} introduce Student or Laplace
   distributed errors, or specifically designed norm such as the Huber
-  norm~\cite{huber_robust_2011}.
+  norm~\citep{huber_robust_2011}.
 
   If the covariance matrix is diagonal, the residual errors are then
   uncorrelated, thus independent due to their Gaussian nature as
@@ -759,7 +759,7 @@ observation (that depends on $\kk$).
 
 The MLE possesses desirable asymptotic properties, such as asymptotic
 normality when the number of observations grows
-large~\cite{reid_aspects_2013}. Those properties permit the
+large~\citep{reid_aspects_2013}. Those properties permit the
 construction of asymptotic confidence interval, and to perform
 hypothesis testing, especially for model selection. This aspect will
 be further developed in \cref{sec:model_selection}.
@@ -861,7 +861,7 @@ A lot of refinement of these methods are available in the literature
 in order to better tackle the high-dimensionality of the parameter
 space, or to improve the mixing of the sampled MC chain. One important
 adaptation to mention is Hamiltonian
-Monte-Carlo~\cite{hanson_markov_2001,betancourt_conceptual_2017}, that
+Monte-Carlo~\citep{hanson_markov_2001,betancourt_conceptual_2017}, that
 improves the performance of the chain by using the value of the
 gradient of the log-posterior distribution. Obtaining this gradient
 (although for a different purpose) is discussed
@@ -883,7 +883,7 @@ a point $\kk \in \Kspace$ that summarizes % as best
 this distribution. Consequently, the chosen estimate is often an
 indicator of the central tendency. In that sense, we wish to get a
 value that is quite close to all sampled values from the
-posterior~\cite{lehmann_theory_2006}.
+posterior~\citep{lehmann_theory_2006}.
 
 Let us define a function $L$ that measures a distance in the parameter
 space: $L:\Kspace\times \Kspace$. For a candidate $\kk^{\prime}$, the
@@ -958,10 +958,10 @@ matrix $\Sigma$, the MAP can be written as
 \end{equation}
 Adding a Gaussian prior for the parameter comes down to adding a $L^2$
 regularization term to the optimisation problem, also called Tikhonov
-regularization~\cite{tikhonov_solutions_1977}. This expression is very
+regularization~\citep{tikhonov_solutions_1977}. This expression is very
 analoguous to the state estimation in the 3D-Var method in Data
 assimilation.  Other choices of priors lead to other regularizations,
-such as the lasso regularization~\cite{tibshirani_regression_2011}
+such as the lasso regularization~\citep{tibshirani_regression_2011}
 that is a consequence for choosing $\kk$ that follows a priori a
 Laplace distribution of mean $0$.
 
@@ -1096,7 +1096,7 @@ model, and implement a dedicated solver for the adjoint variables. A
 more common and way simpler approach is to derive the adjoint
 equations directly from the computer code implemented to solve the
 model, by using Automatic differentiation tools, such as
-\textsc{TAPENADE}~\cite{hascoet_tapenade_2013}. Those programs
+\textsc{TAPENADE}~\citep{hascoet_tapenade_2013}. Those programs
 directly translate the source code into a program that solves the
 original model equations and the adjoint equations, and outputs the
 gradient along with the objective function.
@@ -1161,7 +1161,7 @@ Based on this quantity, we can test whether the smaller model is sufficient to e
 \item The null hypothesis $\mathcal{H}_0$: The two models are statistically equivalent: the difference between the maximal values of the likelihood is not statistically significant. This corresponds to $\Lambda$ close to $1$
 \item  The alternative hypothesis $\mathcal{H}_1$: the two models are statistically different: the larger model performs better than the reduced one. This corresponds to $\Lambda$ significantly smaller than $1$.
 \end{itemize}
-Under the null hypothesis  $\mathcal{H}_0$, $-2 \log \Lambda$ follows asymptotically (as the number of observations grows large) a $\chi^2$ distribution defined in~\cref{ex:chi2}, according to Wilks' theorem~\cite{wilks_large-sample_1938}. The number of degrees of freedom of the $\chi^2$ distribution is given by the difference of dimensionality between the two models:
+Under the null hypothesis  $\mathcal{H}_0$, $-2 \log \Lambda$ follows asymptotically (as the number of observations grows large) a $\chi^2$ distribution defined in~\cref{ex:chi2}, according to Wilks' theorem~\citep{wilks_large-sample_1938}. The number of degrees of freedom of the $\chi^2$ distribution is given by the difference of dimensionality between the two models:
 \begin{equation}
   \label{eq:deviance_asymptotics}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
@@ -1188,7 +1188,7 @@ By reformulating using the log-likelihoods and objective functions $l(\kk;y) = \
 
 
 \label{sec:relative_likelihood}
-Conversely, the rejection region defined above allows us to define an asymptotic confidence interval for the parameter. Let us consider $\Kspace_1 = \Kspace$, and $\Kspace_2 = \{\kk\}$ as in \cref{ex:lrt_mle}, and let us introduce the \emph{Relative Likelihood} (\cite{kalbfleisch_probability_1985}) which is the ratio of the likelihood evaluated at a point $\kk$ to the maximal value of the likelihood:
+Conversely, the rejection region defined above allows us to define an asymptotic confidence interval for the parameter. Let us consider $\Kspace_1 = \Kspace$, and $\Kspace_2 = \{\kk\}$ as in \cref{ex:lrt_mle}, and let us introduce the \emph{Relative Likelihood} \citep{kalbfleisch_probability_1985} which is the ratio of the likelihood evaluated at a point $\kk$ to the maximal value of the likelihood:
 \begin{equation}
   R(\kk) = \frac{\mathcal{L}(\kk;y)}{\mathcal{L}(\estimtxt{\kk}{MLE};y)} = \frac{\mathcal{L}(\kk;y)}{\sup_{\kk^{\prime} \in \Kspace}\mathcal{L}(\kk^{\prime};y)}
 \end{equation}
@@ -1249,7 +1249,7 @@ Another approach is to marginalize the likelihood with respect to the prior dist
 % % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
 % Quite similarly to the BIC and AIC, the logarithm of the Bayes' factor
 % Again, it is usually compared to specific values, allowing us to conclude roughly on how strong does the data favor $\mathfrak{M}_1$. 
-Again, the logarithm of Bayes' factor is compared with specified thresholds~\cite{kass_bayes_1995,burnham_multimodel_2004}.
+Again, the logarithm of Bayes' factor is compared with specified thresholds~\citep{kass_bayes_1995,burnham_multimodel_2004}.
 % Given a model, a criterion is derived either by maximisation (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
 % In both cases, the preference toward one or another model is directly linked to the difference on the logarithms of the densities.
 
@@ -1337,7 +1337,7 @@ $-2\log \Lambda$ will asymptotically have the same distribution as a
 weighted sum of $r$ random variables, where each one have a $\chi^2_1$
 distribution and whose weights are the eigenvalues of a matrix
 involving the Jacobian and the Hessian of the
-log-likelihood~\cite{kent_robust_1982}.
+log-likelihood~\citep{kent_robust_1982}.
 
 
 This random misspecification leads to some issues in the calibration

@@ -2,7 +2,7 @@
 %\pagestyle{empty}
 \vfill
 
-\newgeometry{top=3cm, left=3cm, right=3cm, bottom=3cm}
+\newgeometry{top=1.5cm, left=3cm, right=3cm, bottom=2cm}
 \scriptsize
 % \small
 \phantomsection
@@ -19,13 +19,13 @@ do so, mathematical models are introduced to represent the reality at
 a specific scale, and are then implemented numerically. However in
 this process of modelling, many complex and subscale phenomena have to
 be simplified, often through the introduction of additional parameters
-in order to account for those unresolved processes, but they need to
-be properly estimated. Classical methods of estimation usually involve
-an objective function, that measures the distance between the
-simulations and some observations, which is then optimised. Such an
-optimisation require many runs of the numerical model and possibly the
-computation of its gradient, thus can be expensive to evaluate
-computational-wise.
+in order to account for those unresolved processes, but those
+parameters need to be properly estimated. Classical methods of
+estimation usually involve an objective function, that measures the
+distance between the simulations and some observations, which is then
+optimised. Such an optimisation require many runs of the numerical
+model and possibly the computation of its gradient, thus can be
+expensive to evaluate computational-wise.
 
 However, some other uncertainties can also be present, which represent
 some uncontrollable and external factors that affect the
@@ -95,16 +95,16 @@ parameter in a twin experiment setting.
 %apply some of those techniques on an academic model of a coastal area,
 %in order to find a robust value of the bottom friction.
 
-\vspace{0.5cm}
+\vspace{0.2cm}
 \vfill
 \etoile
 \vfill
-\vspace{0.5cm}
+\vspace{0.2cm}
 %\todo{à traduire}
 \begin{center}
 \small  \bf Résumé
 \end{center}
-\vspace{0.3cm} \todo{à traduire?}
+\vspace{0.3cm} 
 
 De nombreux phénomènes physiques sont modélisés afin d'en mieux
 connaître les comportements ou de pouvoir les prévoir. Cependant pour
@@ -116,10 +116,24 @@ l'aide de paramétrisations, c'est-à-dire en introduisant des termes
 représentant des caractéristiques physiques, qui doivent être ensuite
 estimées. Les méthodes classiques d'estimation se basent sur la
 définition d'une fonction objectif qui mesure l'écart entre le modèle
-numérique et la réalité, qui est ensuite optimisée.
+numérique et la réalité, qui est ensuite optimisée. Une telle
+procédure d'optimisation est souvent coûteuse, car elle demande de
+multiple évaluations de la fonction objectif, d'autant plus si son
+gradient doit être calculé.
 
-Cependant, d'autres incertitudes peuvent aussi être
-présentes. Celles-ci peuvent représenter des  incontrollables
+Cependant, au delà de l'incertitude sur la valeur du paramètre à
+estimer, un autre type d'incertitude peut aussi être présent. Cela
+permet de représenter la variabilité intrinsèque de certains processus
+externes, qui vont avoir un effet sur la modélisation. Ces variables
+vont être qualifiées d'\emph{environnementales}. En les et en les
+modélisant à l'aide d'une variable aléatoire, la fonction objectif
+devient à son tour une variable aléatoire, que l'on va chercher à
+minimiser dans un certain sens. Si on omet ce caractère aléatoire, on
+peut se retrouver avec un paramètre optimal uniquement pour la valeur
+nominale du paramètre environnemental, et le modèle peut s'éloigner de
+la réalité pour d'autres réalisations. Ce problème d'optimisation sous
+incertitudes est souvent abordé en optimisant les premiers moments de
+la variable aléatoire, l'espérance particulièrement.
 
 % iLes techniques utilisées
 % actuellement pour ajuster de tels paramètres se basent sur la
@@ -131,13 +145,13 @@ présentes. Celles-ci peuvent représenter des  incontrollables
 % d'incertitudes nécessite donc un traitement particulier.
 Dans cette thèse, nous nous intéressons plutôt à la notion de regret,
 qui mesure l'écart entre la fonction objectif et la valeur optimale
-qu'elle peut atteindre, étant donné la valeur de la variable
-environementale.  Cette idée de regret, additif ou bien relatif, nous
-pouvons proposer une notion de robustesse à travers l'étude de sa
-probabilité de dépasser un certain seuil, ou inversement à travers le
-calcul de ses quantiles. À l'aide de ce seuil, ou de l'ordre du
-quantile choisi, on peut donc définir une famille d'estimateurs basés
-sur le regret.
+qu'elle peut atteindre, pour la réalisation de la variable
+environnementale donnée. Cette idée de regret, additif ou bien
+relatif, nous pouvons proposer une notion de robustesse à travers
+l'étude de sa probabilité de dépasser un certain seuil, ou inversement
+à travers le calcul de ses quantiles. À l'aide de ce seuil, ou de
+l'ordre du quantile choisi, on peut donc définir une famille
+d'estimateurs basés sur le regret.
 
 Néanmoins, le calcul du regret, et donc des quantités dérivées peut
 vite devenir très coûteux, car il nécessite une optimisation par

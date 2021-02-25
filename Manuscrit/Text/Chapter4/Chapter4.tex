@@ -71,7 +71,7 @@ criteria introduced in the previous chapter.
   \end{itemize}
 \end{definition}
 We will focus exclusively on
-kriging~\cite{krige_statistical_1951,matheron_traite_1962}, also
+kriging~\citep{krige_statistical_1951,matheron_traite_1962}, also
 called Gaussian Process regression, but other methods can be used to
 solve such problems. Polynomial Chaos regression for instance
 \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}. %\todo{motivation choix du krigeage}
@@ -222,7 +222,7 @@ unconditionned GP. When this mean is assumed to be known, the kriging
 procedure is qualified of \emph{Simple Kriging}, otherwise, we often
 talk about \emph{Ordinary Kriging}. Finally, when this mean is a
 deterministic function (that may be estimated), we talk about
-\emph{Universal Kriging}~\cite{le_riche_introduction_2014}. In the
+\emph{Universal Kriging}~\citep{le_riche_introduction_2014}. In the
 following, we consider Simple Kriging.
 
 Using the properties of the multivariate distribution, the GP conditioned on the observations of~\eqref{eq:GP_Z_cond} has mean and covariance function defined by
@@ -386,7 +386,7 @@ $Z \mid \mathcal{X}_0$ and is defined as
 For notational convenience, the conditioning with respect to
 $\mathcal{X}_0$ will be omitted if the experimental design is clear
 from the context.\emph{Stepwise Uncertainty
-  Reduction}~\cite{villemonteix_informational_2006} is based on the
+  Reduction}~\citep{villemonteix_informational_2006} is based on the
 definition of a \emph{criterion} (also called \emph{learning
   function}), say $\kappa$, that measures the uncertainty upon a
 certain objective associated with the GP and with $f$. This criterion
@@ -487,7 +487,7 @@ the samples in $S$: using statistical reduction of the samples, we can
 find a reduced number of points, which are the most representative of
 the $N$ samples. This is usually done by clustering algorithms,
 especially those who have a fixed number of clusters such as the
-KMeans algorithm~\cite{macqueen_methods_1967}, in order to select
+KMeans algorithm~\citep{macqueen_methods_1967}, in order to select
 precisely $K$ points, number chosen in compliance with the wanted
 batch size. For each one of those centroids, we then look for the
 closest sampled point as the centroid can be located in a region of
@@ -568,7 +568,7 @@ The prediction variance is directly given by
 $\sigma^2_{Z\mid \mathcal{X}_n}$ and represents the uncertainty on the
 Gaussian regression. To summarize this uncertainty on the whole space
 $\Xspace$, we define the Integrated Mean Square Error
-(IMSE)\cite{sacks_designs_1989} as
+(IMSE)\citep{sacks_designs_1989} as
 \begin{equation}
   \IMSE(Z \mid \mathcal{X}_n) = \int_{\Xspace} \sigma_{Z\mid\mathcal{X}_n}^2(x)\,\mathrm{d}x
 \end{equation}
@@ -609,7 +609,7 @@ the IMSE, a precise evaluation is quite expensive. A strategy found
 for instance in~\cite{villemonteix_informational_2006} is to take $M$
 possible outcomes for $Z(x)$, corresponding to evenly spaced quantiles
 of its distribution, or using Gauss-Hermite
-quadratures~\cite{bernard_methodes_2019} in order to take advantage of
+quadratures~\citep{bernard_methodes_2019} in order to take advantage of
 the Gaussian nature of $Z(x)$.
 
 The hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.\@
@@ -668,10 +668,10 @@ at the expense of exploration.
 \end{equation}
 \paragraph{Expected improvement and EGO}
 One of the most common criteria for global optimisation is the
-\emph{Expected Improvement} (EI)~\cite{mockus_bayesian_1974}, and the
+\emph{Expected Improvement} (EI)~\citep{mockus_bayesian_1974}, and the
 SUR strategy using it as an enrichment criterion is called
 \emph{Efficient Global Optimisation}
-(EGO)~\cite{jones_efficient_1998}.  Analogously to the probability of
+(EGO)~\citep{jones_efficient_1998}.  Analogously to the probability of
 improvement, we define the improvement $I(x)$ as the random variable
 defined as
 \begin{equation}
@@ -701,7 +701,7 @@ done in~\cite{pardalos_differentiating_2015}.
 \label{ssec:IAGO}
 Another criterion worth mentioning is a criterion based on the
 distribution of the
-minimisers~\cite{villemonteix_informational_2006,hennig_entropy_2011},
+minimisers~\citep{villemonteix_informational_2006,hennig_entropy_2011},
 called IAGO (\emph{Informational Approach to Global Optimisation}) Let
 $z_i$ be a sample path of $Z$, and let $x_i^*$ the global minimiser of
 $z_i$.  We denote then $X^*$ the random variable corresponding to the
@@ -868,9 +868,9 @@ done for the $\IMSE$.
 \end{equation}
 
 Other criteria have also been developed, such as the use of the theory
-of random sets~\cite{el_amri_data-driven_2019}, in order to define a
+of random sets~\citep{el_amri_data-driven_2019}, in order to define a
 measure of uncertainty based on Vorob'ev mean and
-deviation~\cite{vorobyev_new_2003}.
+deviation~\citep{vorobyev_new_2003}.
 
 
 \subsubsection{Sampling in the Margin of uncertainty}
@@ -1488,7 +1488,7 @@ hyperparameters.
 In order to identify the nearby points, we can perform once
 again % \todo{préciser (classification?)}
 a clustering procedure such as Hierarchical
-clustering~\cite{nielsen_hierarchical_2016}, as the number of points
+clustering~\citep{nielsen_hierarchical_2016}, as the number of points
 to consider is much more limited. In contrast with the KMeans
 algorithm, we are using Hierarchical clustering to group together the
 adjusted centroids depending on their distance, and generate clusters
