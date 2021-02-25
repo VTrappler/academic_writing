@@ -349,8 +349,13 @@ defined by
 where $\eta_{t,i}(\kk,\uu)$ is the free surface height of the ocean at
 the mesh point $i$, and at the time-step $t$, obtained using the model
 and the bottom friction associated with $\kk$ and the environmental
-variable $\uu$, and $N_{\mathrm{mesh}} \cdot N_{\mathrm{time}} = N_{\mathrm{obs}}$.
-In this configuration, the number of time-steps considered is \num{48}, 
+variable $\uu$, and
+$N_{\mathrm{mesh}} \cdot N_{\mathrm{time}} = N_{\mathrm{obs}}$.  In
+this configuration, $N_{\mathrm{time}} =\num{49}$, and corresponds to
+the number of records saved. The time step of the simulation in itself
+is \SI{10}{\second}, and its total duration is \SI{24}{\hour}, meaning that the
+water height $\eta$ is saved every \SI{30}{\minute}.
+
 \subsection{Twin experiment setup}
 In a twin experiment setup, the observation $y$ are generated using
 the numerical model, and a predefined truth value
