@@ -137,7 +137,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.552829in,y=0.261578in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Sobol indices}%
+\pgftext[x=1.552829in,y=0.261578in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Sobol' indices}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{0.504745in}{0.548769in}}{\pgfqpoint{2.096168in}{2.664678in}}%
@@ -868,7 +868,7 @@
 \definecolor{textcolor}{rgb}{0.150000,0.150000,0.150000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.426952in,y=0.261578in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Sobol indices}%
+\pgftext[x=4.426952in,y=0.261578in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Sobol' indices}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{3.378868in}{0.548769in}}{\pgfqpoint{2.096168in}{2.664678in}}%

@@ -1,12 +1,17 @@
 % 4e de couverture
 %\pagestyle{empty}
-\vfill
-
-\newgeometry{top=1.5cm, left=3cm, right=3cm, bottom=2cm}
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english, french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[top=2cm, left=3cm, right=3cm, bottom=2cm]{geometry}
+\begin{document}
+\pagestyle{empty}
 \scriptsize
+\vfill
 % \small
-\phantomsection
-\addstarredchapter{Abstracts}
+% \phantomsection
+% \addstarredchapter{Abstracts}
 \begin{center}
  \small \bf Abstract
 \end{center}
@@ -64,7 +69,9 @@ near the French coasts, while introducing some uncertainties in the
 forcing of the tide, and get a robust estimation of this friction
 parameter in a twin experiment setting.
 
-
+\vspace{0.5cm}
+\textbf{Keywords:} Optimisation under uncertainties; Robust
+calibration; Gaussian Processes; Ocean modelling; Regret
 
 %\todo{réécrire complétement}
 %Many physical phenomena are modelled numerically in
@@ -97,7 +104,9 @@ parameter in a twin experiment setting.
 
 \vspace{0.2cm}
 \vfill
-\etoile
+\begin{center}
+* \hspace{2ex}* \hspace{2ex}*
+\end{center}
 \vfill
 \vspace{0.2cm}
 %\todo{à traduire}
@@ -116,16 +125,16 @@ l'aide de paramétrisations, c'est-à-dire en introduisant des termes
 représentant des caractéristiques physiques, qui doivent être ensuite
 estimées. Les méthodes classiques d'estimation se basent sur la
 définition d'une fonction objectif qui mesure l'écart entre le modèle
-numérique et la réalité, qui est ensuite optimisée. Une telle
-procédure d'optimisation est souvent coûteuse, car elle demande de
-multiple évaluations de la fonction objectif, d'autant plus si son
-gradient doit être calculé.
+numérique et la réalité, qui est ensuite optimisée. % Une telle
+% procédure d'optimisation est souvent coûteuse, car elle demande de
+% multiple évaluations de la fonction objectif, d'autant plus si son
+% gradient doit être calculé.
 
 Cependant, au delà de l'incertitude sur la valeur du paramètre à
 estimer, un autre type d'incertitude peut aussi être présent. Cela
 permet de représenter la variabilité intrinsèque de certains processus
 externes, qui vont avoir un effet sur la modélisation. Ces variables
-vont être qualifiées d'\emph{environnementales}. En les et en les
+vont être qualifiées d'\emph{environnementales}. En les % et en les
 modélisant à l'aide d'une variable aléatoire, la fonction objectif
 devient à son tour une variable aléatoire, que l'on va chercher à
 minimiser dans un certain sens. Si on omet ce caractère aléatoire, on
@@ -133,7 +142,7 @@ peut se retrouver avec un paramètre optimal uniquement pour la valeur
 nominale du paramètre environnemental, et le modèle peut s'éloigner de
 la réalité pour d'autres réalisations. Ce problème d'optimisation sous
 incertitudes est souvent abordé en optimisant les premiers moments de
-la variable aléatoire, l'espérance particulièrement.
+la variable aléatoire, l'espérance en particulier.
 
 % iLes techniques utilisées
 % actuellement pour ajuster de tels paramètres se basent sur la
@@ -146,8 +155,8 @@ la variable aléatoire, l'espérance particulièrement.
 Dans cette thèse, nous nous intéressons plutôt à la notion de regret,
 qui mesure l'écart entre la fonction objectif et la valeur optimale
 qu'elle peut atteindre, pour la réalisation de la variable
-environnementale donnée. Cette idée de regret, additif ou bien
-relatif, nous pouvons proposer une notion de robustesse à travers
+environnementale donnée. Cette idée de regret (additif ou bien
+relatif), nous permet de proposer une notion de robustesse à travers
 l'étude de sa probabilité de dépasser un certain seuil, ou inversement
 à travers le calcul de ses quantiles. À l'aide de ce seuil, ou de
 l'ordre du quantile choisi, on peut donc définir une famille
@@ -170,6 +179,12 @@ la calibration sous incertitudes du paramètre de friction de fond d'un
 modèle océanique, représentant la façade atlantique des côtes
 françaises, ainsi que la Manche.
 
+\vspace{0.5cm}
+\textbf{Mots-Clés:} Optimisation sous incertitudes; calibration
+robuste; Processus Gaussiens; Modélisation de l'océan; Regret
+\vfill
+\end{document}
+
 
 % Dans ce travail, nous proposons un nouveau critère d'optimisation sous
 % incertitudes, basé sur le regret-relatif. Nous cherchons donc à
@@ -183,4 +198,4 @@ françaises, ainsi que la Manche.
 % d'un modèle océanique côtier, pour trouver un paramètre de friction de
 % fond robuste.
 %\restoregeometry
-\vfill
+%\vfill

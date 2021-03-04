@@ -40,14 +40,15 @@
 % \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
 In this chapter, we will study the problem of calibration under
-uncertainties of the bottom friction, in a realistic numerical based
+uncertainties of the bottom friction of the ocean, in a realistic numerical based
 on \CROCO{} of the Atlantic French coast.
 
 Since the bottom friction depends directly on the size of the
-asperities on the ocean bed, it is a subgrid phenomenon, meaning that
-the program does not solve the equations of motions of the fluid
-around those asperities. Instead, the dissipation coming from this
-rugosity is parametrized at every point of the mesh.
+asperities on the ocean bed, the length scales involved in this
+process are way smaller than the scales of the modelling. In
+consequence, the program does not solve the equations of motions of
+the fluid around those asperities. Instead, the dissipation coming
+from this rugosity is parametrized at every point of the mesh.
 
 The bottom friction has been identified as a crucial parameter that,
 if ill-specified, limits the accuracy of the
@@ -63,26 +64,26 @@ The deterministic problem of calibration will then be addressed in
 \cref{sec:deterministic_calibration_bott}, by first defining the cost
 function and the input space. We will then calibrate the model without
 external uncertainties using adjoint-based method, in high-dimension
-($\sim$\num{15000}).
+($\approx$\num{15000}).
 
 However for such problems, as the parameter may be spatially
-distributed and thus high-dimensional, any procedure may become
-quickly expensive.  In consequence, instead of considering each grid
-point individually, we will segment the geographical input space in
-different independent regions, which are based on the type of
+distributed and thus high-dimensional, any estimation procedure may
+become quickly expensive.  In consequence, instead of considering each
+grid point individually, we will segment the geographical input space
+in different independent regions, which are based on the type of
 sediments listed at the bottom of the water. In this problem of
 calibration we will assume that the uncertainties take the form of an
 environmental parameter which perturbates the amplitude of some tidal
 constituents.  In order to quantify the influence of each of the
-sediments-based regions and the influence of each of the components of the
-environmental variable, we will carry a global sensitivity analysis,
-in~\cref{sec:sensitivity-analysis}.
+sediments-based regions and the influence of each of the components of
+the environmental variable, we will carry a global sensitivity
+analysis, in~\cref{sec:sensitivity-analysis}.
 
 Finally using this study, we will reduce significantly the input
 space, and then apply some of the methods proposed in the previous
 chapter, in order to get a robust estimation of the bottom friction
 using Gaussian processes in~\cref{sec:robust_calibration}.
-
+\todo{+ d'intro aux challenges}
 
 \section{\CROCO\ and bottom friction modelling}
 \label{sec:croco_bottom_fr}
@@ -93,7 +94,7 @@ motion of the ocean by solving the \emph{primitive equations}, which
 are simplified versions of the Navier-Stokes equations, in order to
 take into account the particular scales at play at the surface of the
 Earth. \CROCO{} has been developed upon
-ROMS\_AGRIF%\footnote{\url{https://www.myroms.org/},\url{http://www-ljk.imag.fr/MOISE/AGRIF/}}
+ROMS\_AGRIF %\footnote{\url{https://www.myroms.org/},\url{http://www-ljk.imag.fr/MOISE/AGRIF/}}
 (Regional Ocean Modeling System, Adaptive Grid Refinement in
 Fortran~\cite{debreu_two-way_2012}), and is designed to be coupled with
 other modelling systems, such as atmospheric, biological or ecosystem
@@ -136,7 +137,8 @@ where the depth is closer to \SI{5000}{\meter}.
 
 \CROCO{} can solve the fluid motion equations in 3D, but in this
 configuration, solves the shallow water equations instead, which are
-obtained by vertically integrating the primitive equations:
+obtained by vertically integrating the primitive equations, leading
+to:
 % \begin{align}
     %     \left\{
     %     \begin{array}{rcl}
@@ -204,7 +206,7 @@ physical properties of the bottom friction and the types of sediments,
 it can be expected that the English Channel, and at a lesser extent
 the rest of the continental shelf are the areas which are the most
 influential for the calibration.
-
+\todo{introduire exp jumelles}
 
 We are going to make the assumption that the size of the turbulent
 layer at the bottom is equal to the size of the sediments there, so
@@ -230,7 +232,12 @@ $\zob^{\mathrm{truth}}$.  % We can see that the rugosity spans several
                                                                                                                                                  \\ \bottomrule
             %             A           & Clay        & $< \SI{0.01}{\milli\metre}$                                    & \bottomrule
   \end{tabular}
-  \caption[Types and sizes of each sediment class]{\label{tab:size_sediments} Type of sediments and size of the majority of particles for each type of sediment. Data source: SHOM, used under \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0} license}
+  \caption[Types and sizes of each sediment
+  class]{\label{tab:size_sediments} Type of sediments and size of the
+    majority of particles for each type of sediment. Data source:
+    SHOM, used under
+    \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA
+      4.0} license}
 \end{table}
 
 Based on the documentation of the SHOM\footnote{Service hydrographique
@@ -242,9 +249,11 @@ appendix~\cref{fig:sediments_full}.
 \begin{figure}[ht]
   \centering
   \includegraphics{\imgpath sediments_reduced.png}
-  \caption[Repartition of the sediments
-    on the ocean floor]{\label{fig:sediments_reduced} Repartition of the sediments
-    on the ocean floor. Data source: SHOM, used under \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0} license}
+  \caption[Repartition of the sediments on the ocean
+  floor]{\label{fig:sediments_reduced} Repartition of the sediments on
+    the ocean floor. Data source: SHOM, used under
+    \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA
+      4.0} license}
 \end{figure}
 
 
@@ -268,7 +277,7 @@ variable $\kk$ as
 \end{equation}
 where $\kk_{\min} = \log(10^{-5}) \approx -11.5$, and
 $\kk_{\max} = \log(5\cdot 10^{-2}) \approx -3$.  The dimension of
-$\Kspace$ will be written $p$, and will be specified later depending on the
+$\Kspace$ is noted $p$, and will be specified later depending on the
 chosen segmentation.
 
 \subsection{Tidal modelling and uncertainties}
@@ -277,9 +286,9 @@ The ocean, especially near the English Channel is driven by tidal
 forces that produce currents at the surface. As a periodic signal, the
 tidal forcing is usually analysed harmonically, in order to separate
 its influence by frequency. In \CROCO, this forcing comes from the
-TPXO model of tides~\citep{egbert_efficient_2002}, and the
-configuration uses the 5 primary harmonic constituents as described
-\cref{tab:tides_components}.
+TPXO model of tides~\citep{egbert_efficient_2002}, and in our
+configuration, we use the 5 primary harmonic constituents
+as described \cref{tab:tides_components}.
 \begin{table}[!h]
   \centering
   % % Chose order from the rank in the TPXO file :
@@ -305,10 +314,10 @@ configuration uses the 5 primary harmonic constituents as described
 \end{table}
 
 By perturbating some properties of those tide components, we can
-introduce some error in the numerical model, \emph{i.e.} a parametric
-misspecification that we will define as the environmental variable. In
-this work, this takes the form of a small multiplicative error on the
-amplitude of the different components of the tide. Let
+artificially introduce some error in the numerical model, \emph{i.e.}
+a parametric misspecification that we will define as the environmental
+variable. In this work, this takes the form of a small multiplicative
+error on the amplitude of the different components of the tide. Let
 $\uu = (\uu_1,\dots,\uu_5)\in \Uspace = \interval{0}{1}^5$ be the
 environmental variable, that will be considered as a random variable
 later, and let $A_k$ be the amplitude of the $k$th component of the
@@ -332,7 +341,10 @@ minimising the objective function using a gradient descent algorithm.
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will first be studied without
 external uncertainties, which corresponds to an unperturbated tidal
-forcing: the environmental variable is set to $\uu^{\mathrm{truth}}$.
+forcing: the environmental variable is set to
+$\uu^{\mathrm{truth}}$. In ocean modelling, one of the easily
+measurable quantity is the water free surface height
+$\eta$.\todo{introduction $eta$}
     %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
 
 Following the notations introduced in~\cref{chap:inverse_problem} for
@@ -418,7 +430,7 @@ procedure is shown~\cref{fig:ctrl_true}.  In the
 appendix~\cref{sec:appendix_truth_optim} is presented the result of
 the optimisation over the whole domain, for other choices of the
 environmental parameter, \emph{i.e.} in a misspecified case.
-
+\todo{commentaire sur la qualité des résultats dans le cas misspécifié}
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
@@ -528,10 +540,11 @@ are the same, justifying their overlook.
 \label{sec:sobol-indices}
 As global SA calls for a probabilistic framework, we are going to
 consider a real-valued random vector $X=(X_1,\cdots X_p)$ whose
-components are independent, which represents the inputs of a real
-function $f: \mathbb{R}^p\rightarrow \mathbb{R}$. As $X$ is a random
-vector, we can introduce $Y$, the real-valued random variable defined
-as $Y=f(X)$.
+components are independent, which represents the inputs (\emph{i.e.}
+$\kk$ and $\uu$) of a real function
+$f: \mathbb{R}^p\rightarrow \mathbb{R}$ (the objective function in the
+following). As $X$ is a random vector, we can introduce $Y$, the
+real-valued random variable defined as $Y=f(X)$.
 
  % \cite{iooss_revue_2011,gilquin_echantillonnages_2016,janon_analyse_2012}
 The $i$-th Sobol' indice of order $1$ is defined
@@ -604,11 +617,12 @@ here comprises \num{7888} points.
 
 We can see that the most influential region is the one defined by the
 pebbles (with code C). More generally, except for the rocks, we can
-see that the shallower the region, the larger impact it has on the
-objective function.  Based on geographic considerations and the result
-of this sensitivity analysis, we can adopt a new segmentation: the
-regions of Pebbles (C), and Gravel (G) will be kept intact, but the
-remaining regions (R, S, SF, Si, V) will be bundled together.
+see that the sediments that lies in shallower regions have a larger
+impact on the objective function.  Based on geographic considerations
+and the result of this sensitivity analysis, we can adopt a new
+segmentation: the regions of Pebbles (C), and Gravel (G) will be kept
+intact, but the remaining regions (R, S, SF, Si, V) will be bundled
+together.
 \subsubsection{SA on the tide components}
 \label{ssec:SA_tide}
 As introduced~\cref{ssec:tidal_modelling}, \CROCO{} incorporates
@@ -625,7 +639,7 @@ truth value, and the sum of squares depends only on $\uu$:
 for $\uu = (\uu_1,\cdots,\uu_5)$, and $\Uspace = \interval{0}{1}^5$.
 Once again, in the SA context, every component is assumed to be
 uniformly distributed on $\interval{0}{1}$ and independent.
-\Cref{fig:SA_tides} shows the Sobol indices of first order (left),
+\Cref{fig:SA_tides} shows the Sobol' indices of first order (left),
 second (right), and the total effect indices, along with bootstrap
 confidence intervals, obtained with a design of experiments of
 \num{2888} points.
@@ -661,9 +675,10 @@ numerical model, on a reduced space, according to the sensitivity
 analysis performed above.  On this reduced space, the objective
 function $J$ will first be optimised globally on
 $\Kspace \times \Uspace$ in~\cref{ssec:glob_mini}, and its results
-will be compared with the truth value (used to generate the
-observations). Then, after having defined the GP $Z$, we estimate the
-conditional minimums and minimisers
+will be compared with the true value (used to generate the
+observations). Then, after having defined the GP $Z$ as introduced
+in~\cref{chap:adaptative_design_gp}, we estimate the conditional
+minimums and minimisers
 in~\cref{ssec:croco_cond_minimum_minimisers}. Finally,
 in~\cref{ssec:rr_estimators_croco}, we compute relative-regret
 estimates using GP enriched with SUR strategies: reduction of the
@@ -699,7 +714,7 @@ As previously, the forward operator of the numerical model gives the sea-surface
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace \times \Uspace &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
-    (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{i,t}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
+    (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{t,i}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
 and the objective function $J$ is the squared difference between the
@@ -746,7 +761,7 @@ $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
 \hat{\uu}_{\mathrm{opt}}$. This can be explained by the choice of
 controlling the parameter on a space of dimension 3, while the truth
 value used to generate the observations can be seen as 6
-dimensional. The difference in the environmental variables $\hat{\uu}^{\mathrm{opt}}$ and
+dimensional. The difference in the environmental variables $\hat{\uu}_{\mathrm{opt}}$ and
 $\uu^{\mathrm{truth}}$ compensates for the
 difference of dimensionality between $\kk\in\Kspace$, the control
 variable, and $\kk^{\mathrm{truth}}$.
@@ -767,7 +782,7 @@ We denote $\mathcal{X}_{\mathrm{LHS}}$ the initial LHS, and $Z$ the
 Gaussian Process constructed and fitted using
 $\mathcal{X}_{\mathrm{LHS}}$.  We will write
 \begin{equation}
-  Z \sim \GP\left(m_Z, C_Z\right) \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
+  Z \sim \GP\left(m_Z, C_Z\right) \quad\text{ and } \quad C_Z((\kk, \uu),(\kk, \uu)) = \sigma^2_Z(\kk, \uu)
 \end{equation}
 We then have, for any $(\kk, \uu) \in \Kspace\times\Uspace$,
 \begin{equation}
@@ -807,12 +822,11 @@ use the GP prediction of $Z$ in order to approximate them:
 \end{align}
 In order to improve the accuracy of those two functions and to ensure
 the positivity of $m_Z$, we are first going to enrich the design using
-the PEI criterion, as detailed \cref{sec:PEI_criterion}
-on~\cpageref{sec:PEI_criterion},
-from~\cite{ginsbourger_bayesian_2014}.  Choosing \num{200} additional
-points this way, the new obtained design is denoted $\mathcal{X}_0$,
-that will serve as the ``initial'' design for the enrichment
-procedures described later.
+the PEI criterion~\citep{ginsbourger_bayesian_2014}, as
+introduced~\cref{sec:PEI_criterion}.  Choosing \num{200}
+additional points this way, the new obtained design is denoted
+$\mathcal{X}_0$, that will serve as the ``initial'' design for the
+enrichment procedures described later.
 
 For the sake of this work, we are going to estimate the conditional
 minimisers as accurately as possible, using in total \num{750}
@@ -854,17 +868,18 @@ clear candidate for robust optimisation. For the two other components,
 we can observe that the range values taken by the samples
 $\kk^*_Z(\uu_i)$ for $1 \leq i \leq n_{\uu}$ is larger, indicating
 that for these components, a robust candidate may be less
-\emph{identificable}, as discussed~\cref{sec:MPE},~\cpageref{sec:MPE}.
+\emph{identifiable}, as discussed~\cref{sec:MPE},~\cpageref{sec:MPE}.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{\imgpath pairplot_800_.png}
+  \includegraphics[width=\textwidth]{\imgpath pairplot_800_again.png}
   \caption[Distribution of the minimisers
   $\kk^*(\UU)$]{\label{fig:pairplot} Estimated distribution of the
     minimisers $\kk^*_Z(\UU)$. The diagonal plots show the KDE of the
-    marginal distributions of the minimisers. The non-diagonal plots
-    show the pairwise relation between the different components of the
-    minimisers }
+    marginal distributions of the minimisers. Each point represents a
+    sample, and its vertical component is the conditional minimum
+    associated. The non-diagonal plots show the pairwise relation
+    between the different components of the minimisers }
 \end{figure}
 
 \clearpage
@@ -923,34 +938,50 @@ $\sigma^2_{\Delta_{\alpha}}: (\kk, \uu) \mapsto
 C_{\Delta_{\alpha}}\big((\kk, \uu), (\kk, \uu) \big)$. In the
 following, we are going to estimate the relative-regret, associated
 with the value $\alpha=1.3$, meaning that we are looking to maximise
-the probability of being within $30\%$ of the optimal value.
+the probability of being within $30\%$ of the optimal value. Such a
+value has been chosen based on a preliminary analysis, using the GP
+constructed on the initial design.
 
 
-To do so, we are going to reduce the augmented IMSE of the random
-process $\Delta_{\alpha}$. Recalling that the $\IMSE$ associated with
-the GP $\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
+We are then going to reduce the augmented IMSE of the random process
+$\Delta_{\alpha}$. Recalling that the $\IMSE$ associated with the GP
+$\Delta_{\alpha}=Z-\alpha Z^*$ constructed using the design
 $\mathcal{X}_n$ is defined as
 \begin{equation}
   \IMSE(\mathcal{X}_n) = \int_{\Kspace \times \Uspace} \sigma^2_{\Delta_{\alpha}}(x) \,\mathrm{d}x
 \end{equation}
 we select the next point to evaluate as:
 \begin{equation}
+  \label{eq:aIMSE_criterion}
   (\kk_{n+1}, \uu_{n+1}) = \argmin_{(\kk,\uu)\in\Kspace\times \Uspace} \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right]
 \end{equation}
 In practice, we will choose the new point $(\kk_{n+1}, \uu_{n+1})$ in
-a stochastic manner: first the IMSE is estimated using a Monte-Carlo
-method:
+a stochastic manner. The augmented IMSE is estimated using a
+Monte-Carlo method. Given the design augmented with
+$ \left((\kk, \uu), z(\kk, \uu)\right)$, in other words by making the
+assumption that the function takes the value $z(\kk, \uu)>0$ at the point
+$(\kk,\uu)$, we note $\sigma_{{\Delta_\alpha} \mid z}^2$ the
+prediction variance associated with this design.
+The estimation of the augmented $\IMSE$ is then
 \begin{align}
-  \IMSE(\mathcal{X}_n) %&= \int_{\Kspace \times\Uspace} \sigma^2_{\Delta_{\alpha}}(\kk, \uu) \,\mathrm{d}\kk\, \mathrm{d}\uu \\
-                       &\approx \frac{1}{n_{\IMSE}} \sum_{i=1}^{n_{\IMSE}} \sigma_{\Delta_{\alpha}}^2(\kk_i, \uu_i)
+  \IMSE(\mathcal{X}_n\cup \left((\kk, \uu), z(\kk, \uu)\right) ) &\approx \frac{1}{n_{\IMSE}} \sum_{i=1}^{n_{\IMSE}} \sigma_{\Delta_{\alpha} \mid z}^2(\kk_i, \uu_i)
 \end{align}
 where the points $(\kk_i, \uu_i)$ for $1\leq i \leq n_{\IMSE}$ are
 resampled each iteration using a LHS on $\Kspace \times \Uspace$ for
-$n_{\IMSE}=100$, and we choose the point with the lowest augmented
-IMSE among \num{100} randomly sampled points of
-$\Kspace\times\Uspace$.
+$n_{\IMSE}=150$.
 
-~\Cref{fig:aIMSE} shows the reduction of the IMSE with the number of
+The expectation operator of~\cref{eq:aIMSE_criterion} is also
+approximated by choosing $z_j(\kk, \uu)$ for $1\leq j \leq n_Z$ as
+different quantiles of $Z(\kk, \uu)$ (which is normally distributed). Finally, we have
+\begin{align}
+  \Ex_{Z(\kk, \uu)}\left[\IMSE(\mathcal{X}_n \cup \left((\kk, \uu), Z(\kk, \uu)\right))\right] &\approx \frac{1}{n_Z} \sum_{j=1}^{n_Z} \frac{1}{n_{\IMSE}} \sum_{i=1}^{n_{\IMSE}} \sigma^2_{\Delta_{\alpha} \mid z_j}(\kk_i, \uu_i) \\
+   &\propto \sum_{j=1}^{n_Z} \sum_{i=1}^{n_{\IMSE}} \sigma^2_{\Delta_{\alpha} \mid z_j}(\kk_i, \uu_i)
+\end{align}
+
+and finally we choose the point with the lowest augmented IMSE among
+\num{100} randomly sampled points in $\Kspace\times\Uspace$.
+
+~\Cref{fig:aIMSE} shows the reduction of the augmented-IMSE with the number of
 additional iterations, until reaching a number of \num{500}
 evaluations of the model in total. Abrupt changes in the IMSE can be
 explained by a significant changes in the hyperparameters of the GP.\@
@@ -968,7 +999,7 @@ $\hat{\Gamma}_{\alpha}^{\mathrm{PI}}$. We chose here
 $n_{\uu}=\num{500}$, and the maximum found is
 \begin{equation}
   \label{eq:max_gamma_alpha}
-  \max_{\kk} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.93\pm 0.0224}
+  \max_{\kk\in\Kspace} \hat{\Gamma}_{\alpha}^{\mathrm{PI}}(\kk) = \num[separate-uncertainty=true]{0.93\pm 0.0224}
 %num[separate-uncertainty=true]{0.848\pm 0.031}
 \end{equation}
 where the given confidence interval is computed using the normal
@@ -1077,7 +1108,7 @@ associated with $\alpha_p$:
 We are now going to treat this problem using a sampling-based method,
 as introduced~\cref{ssec:quantile_qeakmcs}, which is derived
 from~\cite{razaaly_rare_2019}.  The log-normal approximation of the
-relative-regret, as introduced~\cref{ssec:lognormal_approx}, allow us
+relative-regret, as introduced~\cref{ssec:lognormal_approx}, allows us
 to define the random process $\Xi$ as
 \begin{equation}
   \log \frac{Z(\kk, \uu)}{Z^*(\uu)} \approx \Xi(\kk, \uu) \sim \mathcal{N}\left(m_{\Xi}(\kk, \uu),\sigma^2_{\Xi}(\kk, \uu)\right)
