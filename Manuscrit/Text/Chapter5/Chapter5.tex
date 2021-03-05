@@ -206,14 +206,27 @@ physical properties of the bottom friction and the types of sediments,
 it can be expected that the English Channel, and at a lesser extent
 the rest of the continental shelf are the areas which are the most
 influential for the calibration.
-\todo{introduire exp jumelles}
 
-We are going to make the assumption that the size of the turbulent
-layer at the bottom is equal to the size of the sediments there, so
-the rugosity is directly linked to the type of sediment found on the
-ocean bed. \Cref{tab:size_sediments} presents a coarse classification,
-along with the typical size of the sediments that can be found, that
-will serve as a reference value, or \emph{truth value}
+We are now going to develop more precisely which inputs we are going
+to consider for the numerical problem of calibration.
+
+
+\subsection{Definition of the control and environmental parameters}
+\subsubsection{Bottom roughness and sediments size}
+In this work, we are going to use a twin experient setup: the
+calibration will be performed with respect to some observation
+generated using CROCO.  This observation
+$y\in\mathbb{R}^{N_{\mathrm{obs}}}$ is then computed using a specific
+configuration of the forward model, meaning that we are going to
+define a \emph{truth} value for the bottom friction.
+
+
+To do so, we are going to make the assumption that the size of the
+turbulent layer at the bottom is equal to the size of the sediments
+there, so the rugosity is directly linked to the type of sediment
+found on the ocean bed. \Cref{tab:size_sediments} presents a coarse
+classification, along with the typical size of the sediments that can
+be found, that will serve as \emph{truth value}:
 $\zob^{\mathrm{truth}}$.  % We can see that the rugosity spans several
 % order of magnitude, hence it may be worth considering controlling the
 % logarithm of the rugosity instead of the rugosity itself.
@@ -280,7 +293,7 @@ $\kk_{\max} = \log(5\cdot 10^{-2}) \approx -3$.  The dimension of
 $\Kspace$ is noted $p$, and will be specified later depending on the
 chosen segmentation.
 
-\subsection{Tidal modelling and uncertainties}
+\subsubsection{Tidal modelling and uncertainties}
 \label{ssec:tidal_modelling}
 The ocean, especially near the English Channel is driven by tidal
 forces that produce currents at the surface. As a periodic signal, the
@@ -341,10 +354,14 @@ minimising the objective function using a gradient descent algorithm.
 \label{sec:deterministic_calibration_bott}
 The calibration of the bottom friction will first be studied without
 external uncertainties, which corresponds to an unperturbated tidal
-forcing: the environmental variable is set to
-$\uu^{\mathrm{truth}}$. In ocean modelling, one of the easily
-measurable quantity is the water free surface height
-$\eta$.\todo{introduction $eta$}
+forcing. In consequence, the environmental variable is set to
+$\uu^{\mathrm{truth}}$.
+
+In ocean modelling, the free-surface height $\eta$ is often used as an
+observable quantity, because it can be measured either using
+satellites, or using tide gauges near the coasts. We consider then
+$\eta\in \mathbb{N}^{\mathrm{obs}}$ as the output of the numerical
+model.
     %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
 
 Following the notations introduced in~\cref{chap:inverse_problem} for
@@ -369,11 +386,11 @@ is \SI{10}{\second}, and its total duration is \SI{24}{\hour}, meaning that the
 water height $\eta$ is saved every \SI{30}{\minute}.
 
 \subsection{Twin experiment setup}
-In a twin experiment setup, the observation $y$ are generated using
-the numerical model, and a predefined truth value
-$\kk^{\mathrm{truth}}$.  This means that the ``physical model'' is
-defined using the forward operator $\mathscr{M}$, based on the forward
-numerical model, evaluated with the environmental parameter
+Recalling the definition of a twin experiment setup, the observation
+$y$ are generated using the numerical model, and a predefined truth
+value $\kk^{\mathrm{truth}}$.  This means that the ``physical model''
+is defined using the forward operator $\mathscr{M}$, based on the
+forward numerical model, evaluated with the environmental parameter
 $\uu^{\mathrm{truth}}$.
 \begin{equation}
   \label{eq:twin_exp}
@@ -426,26 +443,25 @@ optimisation procedure is stopped after \num{400} iterations, and the
 estimated control parameter is
 shown~\cref{fig:optimization_map_399}. The evolution of the cost
 function and the squared norm of the gradient during the optimisation
-procedure is shown~\cref{fig:ctrl_true}.  In the
-appendix~\cref{sec:appendix_truth_optim} is presented the result of
-the optimisation over the whole domain, for other choices of the
-environmental parameter, \emph{i.e.} in a misspecified case.
-\todo{commentaire sur la qualité des résultats dans le cas misspécifié}
+procedure is shown~\cref{fig:ctrl_true}.
+
 \begin{figure}[ht]
+  \begin{subfigure}{\textwidth}
   \centering
-  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_log_400.png% /home/victor/optimisation_dahu/optim_true/map_150.png
-  }
+  \includegraphics{/home/victor/optimisation_dahu/optim_sediments/map_lognorm_400.png}
   \caption[Optimisation of $\zob$ on the whole
   space]{\label{fig:optimization_map_399} Optimisation of $\zob$ on
     the whole space using gradient obtained via adjoint method, after
     $400$ iterations.}
-\end{figure}
-
-\begin{figure}[ht]
+\end{subfigure}
+\begin{subfigure}{\textwidth}
   \centering
   \input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true400.pgf}
   \caption{\label{fig:ctrl_true} Evolution of the cost function and
     the squared norm of the gradient}
+\end{subfigure}
+\caption{Calibration of the bottom friction using gradient-descent
+  with well-specified environmental variables}
 \end{figure}
 By comparing the result of the
 optimisation~\cref{fig:optimization_map_399} with the sediment
@@ -457,29 +473,70 @@ that the abyssal plain (the deep region off the Bay of Biscay) remains
 mostly unaffected by the optimisation, while the continental shelf,
 except for some parts of the English Channel, is well retrieved.
 
+
+On~\cref{fig:optimisation_type_sediments} is shown the value of the
+optimised control parameter $\kk$, depending on the type of sediment
+associated. Each point on this figure corresponds then to a mesh
+point.
+
+We can see that indeed, as~\cref{fig:optimization_map_399} shows,
+points of the mesh corresponding to sand, \emph{i.e.} most of the
+continental shelf, tends to get closer to the truth value
+$\zob^{\mathrm{truth}}$. For silts and muds however, the procedure
+did not change significantly their roughness, and thus stays close to
+the initial value.
+
 \begin{figure}[ht]
   \centering
-  \includegraphics{\imgpath optimisation_type_sediments.pdf}
-  \caption[Final values of the optimisation procedure, based on the sediment type]{\label{fig:optimisation_type_sediments} Results of the
-    optimisation procedure, depending on the type of sediments. The
-    initial value is \SI{5e-3}{\meter}}
+  \includegraphics[scale=0.9]{\imgpath optimisation_type_sediments.pdf}
+  \caption[Final values of the optimisation procedure, based on the
+  sediment type]{\label{fig:optimisation_type_sediments} Results of
+    the optimisation procedure, depending on the type of
+    sediments. The initial value is \SI{5e-3}{\meter}}
 \end{figure}
 
-On~\cref{fig:optimisation_type_sediments}, we can see that indeed,
-points of the mesh corresponding to sand, \emph{i.e.} most of the
-continental shelf, tends to get closer to the truth value $\zob^{\mathrm{truth}}$.  For
-silts and muds however, the procedure did not change significantly
-their roughness, and thus stays close to the initial value. This can
-be probably explained by the great depth at which those sediments lay,
-and thus it mitigates their influence on the drag coefficient
-per~\cref{eq:quadratic_friction_vonkarman}. In the English Channel,
-the size of the pebbles is quite well retrieved albeit a bit
+
+This can be probably explained by the great depth at which those
+sediments lay, and thus it mitigates their influence on the drag
+coefficient per~\cref{eq:quadratic_friction_vonkarman}. In the English
+Channel, the size of the pebbles is quite well retrieved albeit a bit
 underestimated, but the points mapped to gravel do seem to compensate:
 on the northern part of the channel the size of the gravel is
 overestimated, while it is underestimated on the southern part.
 Finally the rocks appear to be hard to estimate properly: only about
 3\% of the domain is listed as rocks, and their corresponding $\zob$
 is quite large in contrast to the other sediments.
+
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+  \includegraphics{/home/victor/optimisation_dahu/1b/map_lognorm_200.png}
+  \caption[Optimisation of $\zob$ on the whole space,
+  $\uu^b = (0, 0)$]{\label{fig:optimization_1b} $\uu^b=(0, 0)$}
+\end{subfigure}
+\begin{subfigure}{\textwidth}
+  \centering
+  \includegraphics{/home/victor/optimisation_dahu/9b/map_lognorm_200.png}
+  \caption[Optimisation of $\zob$ on the whole
+  space, $\uu^b = (1, 1)$]{\label{fig:optimization_9b} $\uu^b=(1, 1)$}
+\end{subfigure}
+\caption[Optimisation of $\zob$, misspecified case]{Optimisation of $\zob$ on the whole space, with a
+  misspecification of the environmental variable}
+\end{figure}
+
+In the appendix~\cref{sec:appendix_truth_optim} is presented the
+result of the optimisation over the whole domain, for other choices of
+the environmental parameter, \emph{i.e.} in a misspecified case.
+Those figures show that while the Bay of Biscay is left unaffected by
+the optimisation procedure, the values in the English Channel seem be
+well estimated, no matter the misspecification. However, the bottom
+friction near the Celtic Sea seems to compensate the error due to the
+misspecification.
+
+
+
 
 This optimisation showed that all the regions are not crucial for a
 significant reduction of the values of the objective function.
@@ -490,7 +547,7 @@ the influence of the uncertainties defined
 in~\cref{ssec:tidal_modelling} on the output of the objective
 function, by means of sensitivity analysis.
 
-
+\clearpage
 \section{Sensitivity analysis of the objective function}
 \label{sec:sensitivity-analysis}
 Sensitivity analysis (often abbreviated as \emph{SA}), aims at
@@ -842,7 +899,7 @@ approximatively $(\num{0.6},\num{0.3})$.
 
 \begin{figure}[ht]
  \centering
- \includegraphics{\imgpath contour_Jstar_800_.png}
+ \includegraphics{\imgpath contour_Jstar_800_again.png}
  \caption{\label{fig:contour_Jstar} Conditional minimum $m_{Z^*}(\uu)$
    estimated using the GP $Z$}
 \end{figure}
@@ -1128,8 +1185,8 @@ standard normal distribution, we define
   \log \mathfrak{q}_3 &= \left(m_{\Xi}(\tilde{\kk}, \uu) + k \sigma_{\Xi}(\tilde{\kk}, \uu)\right)_{([n_{\uu}p])} \approx Q_U(m_{\Xi}(\tilde{\kk}, \UU) + k \sigma_{\Xi}(\tilde{\kk}, \UU); p)
 \end{align}
 
-We can then define the margin of uncertainty of level $\eta$,
-associated with each of those values:
+We can then define the margin of uncertainty of the relative-regret of
+level $\eta$, associated with each of those values $\mathfrak{q}_l$:
 \begin{equation}
   \mathbb{M}_{\eta}(\mathfrak{q}_l) = \left\{(\kk, \uu) \mid \frac{\eta}{2} \leq \Phi\left(-\frac{m_{\Xi}(\kk, \uu) - \log \mathfrak{q}_l}{\sigma_{\Xi}(\kk, \uu)}\right) \leq 1 - \frac{\eta}{2}\right\}
 \end{equation}
@@ -1140,23 +1197,32 @@ points by the objective function.
 
 
 Numerically speaking, the margins revealed themselves to be quite
-small, so we chose a level $\eta=0.0005$ in order to increase its
-size.  Also, we chose to change the number of points in each margin
-$K_{\mathbb{M}}$ along the iterations, by starting with a small number
-of points, $K_{\mathbb{M}}=3$, and by increasing it, until
-$K_{\mathbb{M}}=10$. We can see on~\cref{fig:vol_Meta} the estimated
-volume of the margin of uncertainty (\emph{i.e.} its measure according
-to Lebesgue's measure on $\Kspace \times \Uspace$), using Monte-Carlo
-method, along with the 95\% confidence intervals associated with its
-estimation (Wilson's score method as introduced~\cite{wilson_probable_1927} to
-account for the small relative volume of the margin of
-uncertainty). We can see that first, its volume increases
-slightly. This can be seen as an exploration phase, where the
-additional evaluations change the hyperparameters of the GP, which
-affects the estimation of the conditional minimums, and the candidate
-quantiles $\mathfrak{q}_l$, for $1\leq l \leq 3$. After enough
-additional points, the volume of the margin decreases, as points are
-added that do not change significantly the other estimations.
+small, so we chose a level $\eta=0.0005$ in order to increase their
+sizes, and thus facilitate sampling.
+
+After the sampling of \num{2000} points in those margins
+$\mathcal{M}_{\eta}(\mathfrak{q}_l)$ for $1\leq l \leq 3$ , we use the
+KMeans clustering algorithm in order to select $K_{\mathbb{M}}$
+\emph{representative} points among those samples.  This number of
+points selected in each margin $K_{\mathbb{M}}$ changes along the
+iterations: it starts with a small number of points,
+$K_{\mathbb{M}}=3$, and increases until $K_{\mathbb{M}}=10$.
+
+
+We can see on~\cref{fig:vol_Meta} the estimated volume of the margin
+of uncertainty (\emph{i.e.} its measure according to Lebesgue's
+measure on $\Kspace \times \Uspace$), using Monte-Carlo method, along
+with the 95\% confidence intervals associated with the Monte-Carlo
+estimation (Wilson's score method as
+introduced~\cite{wilson_probable_1927} to account for the small
+relative volume of the margin of uncertainty).  We can notice that
+first, its volume increases slightly. This can be seen as an
+exploration phase, where the additional evaluations change the
+hyperparameters of the GP, which affects the estimation of the
+conditional minimums, and the candidate quantiles $\mathfrak{q}_l$,
+for $1\leq l \leq 3$. After enough additional points, the volume of
+the margin decreases, as points are added that do not change
+significantly the other estimations.
 
 \begin{figure}[ht]
   \centering
@@ -1212,6 +1278,20 @@ to Pebbles) would be more robust, than keeping this
 minimiser. Regarding the other components, their respective influence
 (given by the SA) and the relative-regret estimates would point toward
 a value close or equal to the global optimiser.
+
+\begin{table}
+  \centering
+  \begin{tabular}{rrl}
+    \toprule
+    Method & Quantity of interest & Required \# of GP predictions\\ \midrule
+    augmented IMSE & Integral in $(1 + \dim \Kspace \times \Uspace)$ dimensions& $\propto N_{\int}\cdot N_{*}$\\
+    Qe-AK MCS & Probability of coverage of $\mathbb{M}_{\eta}(\mathfrak{q})$ & $\propto \mathrm{Vol}(\mathcal{M}_{\eta})^{-1} \cdot N_{*}$\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results}
+  \label{tab:results_croco}
+\end{table}
+
 
 \section{Partial conclusion}
 \label{sec:partial-conclusion}
