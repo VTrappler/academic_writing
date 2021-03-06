@@ -89,10 +89,12 @@
 	\bibliography{../bibzotero}
 
 	%\fullclear
-	\pagestyle{empty} % Disable any style
-        %\cleartoleftpage%
+        % \cleartoleftpage%
+      	% \fullclear
+        \pagestyle{empty} % Disable any style
 	% \subfile{Text/Resumes/Resumes_4thcover.tex}
-        \AtEndDocument{\includepdf[pages=1,pagecommand={}]{Text/Resumes/Resumes_4thcover.pdf}}
+        % \ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
+        \AtEndDocument{\includepdf[pages=1, command={}]{Text/Resumes/Resumes_4thcover.pdf}}
 \end{document}
 
 %%% Local Variables:

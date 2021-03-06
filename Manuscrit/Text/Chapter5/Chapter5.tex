@@ -7,13 +7,6 @@
 \newcommand{\zob}{z_b}
 
 
-\subfileLocal{
-\externaldocument{../../Text/Introduction/build/Introduction}
-\externaldocument{../../Text/Chapter2/build/Chapter2}
-\externaldocument{../../Text/Chapter3/build/Chapter3}
-\externaldocument{../../Text/Chapter4/build/Chapter4}
-\externaldocument{../../Text/Conclusion/build/Conclusion}
-}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CHAPTER TITLE
@@ -36,8 +29,6 @@
 
 \section{Introduction}
 \label{sec:intro_croco}
-
-% \todo{\cite{mcwilliams_irreducible_2007,zanna_ocean_2011}}
 
 In this chapter, we will study the problem of calibration under
 uncertainties of the bottom friction of the ocean, in a realistic numerical based
@@ -984,7 +975,8 @@ Maximising this expression yields
 \end{equation}
 In order to get a relevant value of $\hat{\kk}_{\mathrm{RR},\alpha}$,
 we are going to reduce sequentially the augmented IMSE, as introduced
-in~\cref{sec:evaluation_gamma}.%\todo{La suite risque de changer}
+in~\cref{sec:evaluation_gamma}.
+
 \paragraph{Stepwise reduction of the augmented IMSE}
 We will first look to improve the estimation of $\Gamma_{\alpha}$, by
 improving the plug-in approximation. We define
@@ -1106,25 +1098,6 @@ higher than $\hat{\kk}^{(1)}_{\mathrm{opt}}$ for all $\alpha > 1$.
 \end{figure}
 
 
-% \paragraph{Sampling in the margin of uncertainty}
-
-% In the previous chapter, we defined the probability of coverage of the
-% random set $\{\Delta_\alpha \leq 0\}$ to be
-% \begin{equation}
-%   \pi_{\alpha}(\kk, \uu) = \Phi\left(-\frac{m_{\Delta_{\alpha}}(\kk, \uu)}{\sigma_{\Delta_\alpha}(\kk, \uu)}\right)
-%   \end{equation}
-%   and the margin of uncertainty at the level $\eta$ to be $\mathbb{M}_{\eta}$:
-%   \begin{equation}
-%     \mathbb{M}_{\eta} = \left\{(\kk, \uu)\in \Kspace \times \Uspace \mid \frac{\eta}{2} \leq \pi_{\alpha}(\kk, \uu) \leq 1-\frac{\eta}{2}\right\}
-%   \end{equation}
-%   We can then sample points in this margin, find $K$ centroids that
-%   represent statistically those samples, and adjust them in order to
-%   reduce the most the uncertainty, as explained
-%   in~\cref{alg:sampling_enrichment_star}.  As the margin
-%   $\mathbb{M}_{\eta}$ becomes thinner and thinner when adding points
-%   to the design (as it is easier to classify points either \emph{in}
-%   or \emph{out} of $\{\Delta_{\alpha} \leq 0\}$), the sampling step
-                         %                          can become difficult,\todo{finir}
 \clearpage
 \subsubsection{Optimisation of the quantile of the relative-regret}
 \label{ssec:optim_quantile_rr}
@@ -1279,18 +1252,35 @@ minimiser. Regarding the other components, their respective influence
 (given by the SA) and the relative-regret estimates would point toward
 a value close or equal to the global optimiser.
 
+A comparison of the two methds is summarised in~\cref{tab:results_croco}.
+
 \begin{table}
   \centering
-  \begin{tabular}{rrl}
-    \toprule
-    Method & Quantity of interest & Required \# of GP predictions\\ \midrule
-    augmented IMSE & Integral in $(1 + \dim \Kspace \times \Uspace)$ dimensions& $\propto N_{\int}\cdot N_{*}$\\
-    Qe-AK MCS & Probability of coverage of $\mathbb{M}_{\eta}(\mathfrak{q})$ & $\propto \mathrm{Vol}(\mathcal{M}_{\eta})^{-1} \cdot N_{*}$\\
+  \begin{tabular}{rrr}\toprule
+    Method & augmented IMSE & Qe-AK MCS \\ \midrule
+    Quantity of interest & $\Ex_{Z}[\int_{\Kspace\times\Uspace}\sigma^2_{\Delta_\alpha \mid Z}]$ & $\mathbb{M}_{\eta}(\mathfrak{q}_l)$ \\
+    Type & 1-step & $K$-step \\
+    Main Bottleneck &
+                      \begin{tabular}{@{}r@{}}
+                        Evaluate and optimise integral in \\
+                        $(1 + \dim( \Kspace\times \Uspace))$ dimensions
+                      \end{tabular}
+                      & \begin{tabular}{@{}r@{}}
+                          Sampling in unknown \\
+                          regions in $\dim( \Kspace\times \Uspace)$
+                        \end{tabular} \\
+    Advantage & Optimal criterion of enrichment & $K$ chosen arbitrary \\ \midrule
+    $\hat{\kk}_{\mathrm{RR},\alpha}$ $\alpha=1.3$ & $(\num{-3.43},\num{-5.2},\num{-6.48})$  & $(\num{-3.375},\num{-5.05}, \num{-6.61})$ \\
+    $\hat{\kk}_{\mathrm{RR},\alpha_p}$ $p=0.95$ & $(\num{-3.39},\num{-5.28},\num{-6.5})$  & $(\num{-3.36},\num{-5.10}, \num{-6.63})$ \\
+    $\hat{\kk}_{\mathrm{opt}}$ & \multicolumn{2}{c}{$(-3.516, -5.078, -6.3459 )$} \\
     \bottomrule
   \end{tabular}
-  \caption{Results}
+  \caption{Comparison of methods and numerical results for the robust
+    calibration of CROCO}
   \label{tab:results_croco}
 \end{table}
+
+
 
 
 \section{Partial conclusion}
@@ -1336,19 +1326,36 @@ stepwise or sampling procedures, can quickly become
 non-negligible. Indeed, the estimation of the parameters of the
 distributions of $\Delta_{\alpha}(\kk, \uu)$ and $\Xi(\kk, \uu)$
 require at each point $(\kk, \uu)$ a global optimisation of $m_Z$,
-then the prediction and covariance matrix of this point and the global
-optimiser. In itself, this procedure is not that expensive. However,
-it needs to be performed a large number of times: for a single
-evaluation of the augmented IMSE for instance, estimation of nested
-integrals are needed, thus the number of computations of the
-parameters of $\Delta_{\alpha}$ grows quite large, even more when
-considering an optimisation of the augmented IMSE on
-$\Kspace \times\Uspace$. Similarly, the volume of the margin of
-uncertainty can be very small compared of the volume of the whole
-space $\Kspace \times \Uspace$, thus without specific sampling
-schemes, it can quickly become a computational bottleneck as well,
-even more so when the prediction variance becomes small.
+which can amount to a few hundreds of calls to the surrogate $m_Z$.
 
+In itself, this procedure is not that expensive. However, it needs to
+be performed a large number of times: for a single evaluation of the
+augmented IMSE for instance, estimation of nested integrals are
+needed, thus the number of computations of the parameters of
+$\Delta_{\alpha}$ grows quite large, even more when considering an
+optimisation of the augmented IMSE on $\Kspace
+\times\Uspace$. Similarly, the volume of the margin of uncertainty can
+be very small compared of the volume of the whole space
+$\Kspace \times \Uspace$, thus without specific sampling schemes, it
+can quickly become a computational bottleneck as well, even more so
+when the prediction variance becomes small.
+
+Some improvements can be easily considered: if the gradient of the
+objective function $J$ is available, the global optimisation step,
+\emph{i.e.} the computation of the parameters of $\Delta_\alpha$ or
+$\Xi$ can be sped up, or atleast can give a more precise estimation of
+the conditional minimum $m_{Z^*}$ and minimisers $\kk^*_Z$.
+
+
+A better sampling scheme can also be imagined: the margin of
+uncertainty comprises points $(\kk, \uu)$ for which $\Xi(\kk,\uu)$ is
+``close'' to $\log \mathfrak{q}_l$ (for $1\leq l \leq K_q$), thus for
+importance sampling, we could construct a proposal density which
+consists in first sampling $\uu \sim \UU$, then sampling $\kk$
+``close'' to $\kk^*_Z(\uu)$, for instance by choosing
+$\kk \sim \mathcal{N}(\kk^*_Z(\uu), \gamma^2 I)$, where $I$ is the
+identity matrix in dimension $\dim \Kspace$, and $\gamma$ is chosen
+with respect to the target quantiles $\mathfrak{q}_l$.
 
 
 % END OF CHAPTER --------------------
