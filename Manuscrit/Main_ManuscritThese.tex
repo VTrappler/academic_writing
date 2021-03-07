@@ -93,7 +93,7 @@
       	% \fullclear
         \pagestyle{empty} % Disable any style
 	% \subfile{Text/Resumes/Resumes_4thcover.tex}
-        % \ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
+        \unless\ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
         \AtEndDocument{\includepdf[pages=1, command={}]{Text/Resumes/Resumes_4thcover.pdf}}
 \end{document}
 

@@ -74,7 +74,7 @@ Finally using this study, we will reduce significantly the input
 space, and then apply some of the methods proposed in the previous
 chapter, in order to get a robust estimation of the bottom friction
 using Gaussian processes in~\cref{sec:robust_calibration}.
-\todo{+ d'intro aux challenges}
+
 
 \section{\CROCO\ and bottom friction modelling}
 \label{sec:croco_bottom_fr}
@@ -1309,11 +1309,21 @@ the first one, we reduced iteratively the augmented IMSE in order to
 improve the plug-in approximation of the probability of exceeding a
 threshold. On the other hand, in order to minimise a specific quantile
 of the relative-regret, we defined and sampled in the margin of
-uncertainty in order to add points by batches. This finally lead to
-relative-regret estimates of the bottom friction, which differ from
-the global minimiser: according to this study, taking a value slightly
-larger for the first component of the bottom friction lead seemingly
-to a more robust solution.
+uncertainty in order to add points by batches.
+
+This finally lead to relative-regret estimates of the bottom friction,
+which differ from the global minimiser: according to this study,
+taking a value slightly larger for the first component of the bottom
+friction lead seemingly to a more robust solution.  The small
+variations in the values of $\hat{\kk}_{\mathrm{RR}}$ for the
+different levels of confidence also suggest that the calibration of
+the numerical model under uncertainties is not that problematic in
+this configuration, since the global optimiser
+$\hat{\kk}_{\mathrm{opt}}$ is quite close to the relative-regret
+estimates.
+
+
+
 
 From a performance point of view, GP can indeed reduce the
 computational requirements needed to compute relative-regret
@@ -1327,7 +1337,6 @@ non-negligible. Indeed, the estimation of the parameters of the
 distributions of $\Delta_{\alpha}(\kk, \uu)$ and $\Xi(\kk, \uu)$
 require at each point $(\kk, \uu)$ a global optimisation of $m_Z$,
 which can amount to a few hundreds of calls to the surrogate $m_Z$.
-
 In itself, this procedure is not that expensive. However, it needs to
 be performed a large number of times: for a single evaluation of the
 augmented IMSE for instance, estimation of nested integrals are
@@ -1340,11 +1349,20 @@ $\Kspace \times \Uspace$, thus without specific sampling schemes, it
 can quickly become a computational bottleneck as well, even more so
 when the prediction variance becomes small.
 
-Some improvements can be easily considered: if the gradient of the
-objective function $J$ is available, the global optimisation step,
-\emph{i.e.} the computation of the parameters of $\Delta_\alpha$ or
-$\Xi$ can be sped up, or atleast can give a more precise estimation of
-the conditional minimum $m_{Z^*}$ and minimisers $\kk^*_Z$.
+Some improvements can be considered in order to perform more
+efficiently those estimations. A two-stage approach could be derived,
+in order to first identify a value $\tilde{\kk}$ for which we want to
+reduce the augmented IMSE, and secondly to integrate the augmented
+IMSE over $\tilde{\kk} \times \Uspace$. By doing so, each iteration
+would instead require the optimisation of an integral of dimension
+$1 + \dim \Uspace$, while at the same time focus some computational
+effort toward the estimation of $\hat{\kk}_{\mathrm{RR},\alpha}$, by
+correctly choosing a candidate $\tilde{\kk}$.  Also, instead of
+considering the augmented IMSE, we could instead look for the point
+maximising the prediction variance of $\Delta_{\alpha}$, and
+``adjust'' its $\kk$ component, similarly as proposed for the sampling
+based scheme, bypassing completetly the evaluation of the integral.
+
 
 
 A better sampling scheme can also be imagined: the margin of
@@ -1356,6 +1374,17 @@ consists in first sampling $\uu \sim \UU$, then sampling $\kk$
 $\kk \sim \mathcal{N}(\kk^*_Z(\uu), \gamma^2 I)$, where $I$ is the
 identity matrix in dimension $\dim \Kspace$, and $\gamma$ is chosen
 with respect to the target quantiles $\mathfrak{q}_l$.
+
+
+Both methods introduced in this chapter rely on the ability to compute
+quickly the conditional minimum $m_{Z^*}$ and the conditional
+minimiser $\kk_Z^*$ in order to get the mean and variance of the
+processes $\Delta_\alpha$ and $\Xi$. For each of this optimisation, we
+used a gradient-descent methods, where the starting point is selected
+randomly in the search space each restart, in order to avoid getting
+stuck in a local minimiser. This step could be improved as well, by
+using a directly a global optimisation method.% such as CMA-ES~\citep{hutchison_evaluating_2004} since
+% the evaluation of the function to be minimised is not so expensive.
 
 
 % END OF CHAPTER --------------------
