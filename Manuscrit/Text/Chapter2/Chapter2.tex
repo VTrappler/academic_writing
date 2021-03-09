@@ -92,9 +92,9 @@ spatial points. An important point is that a model is not only the
   \begin{equation}
     \mathfrak{M} = (\mathcal{M}, \Kspace)
   \end{equation}
-  The forwarxd operator is the mathematical representation of the
+  The forward operator is the mathematical representation of the
   physical system, while the parameter space is chosen here to be a
-  subset of a finite dimensional space, so usually $\Kspace$ will be a
+  subset of a finite dimensional space, so usually, $\Kspace$ will be a
   subset of $\mathbb{R}^p$.
 \end{definition}
 As we will usually choose $\Kspace$ as a subset of $\mathbb{R}^p$, for
@@ -133,14 +133,14 @@ satisfying forward operator $\mathcal{M}$.
 \end{equation}
 As said earlier, the forward operator can be a set of ODEs or PDEs,
 discretized or not. The forward problem is then the attempt to link
-the causes, i.e.\ the parameters, to the consequences, i.e.\ the
+the causes, so the parameters, to the consequences, \emph{i.e.} the
 output in the data space.
 
 \subsection{Inverse Problem}
 The inverse problem is the counterpart of the forward problem, and
 consists in trying to gather more information on the parameters, based
-on: the result of the experiment or the observation of the physical
-process and on the knowledge of the forward operator, as illustrated
+on: first the result of the experiment (the observation of the physical
+process), and secondly on the knowledge of the forward operator, as illustrated
 \cref{fig:inv_problem_pple}.
 
 \begin{figure}[ht]
@@ -180,9 +180,9 @@ description.
 \label{sec:notion_prob_theory}
 
 We are first going through some usual notions of probability theory. 
-Let us consider the usual probabilistic space $(\Omega, \mathcal{F}, \Prob)$.
 \begin{definition}[Event probability and conditioning]
   \label{def:prob_event}
+  Let us consider the usual probabilistic space $(\Omega, \mathcal{F}, \Prob)$.
   We call an outcome of a random experiment $\omega$ an element of the
   sample space $\Omega$, and an event $A$ is an element of the
   $\sigma$-algebra $\mathcal{F}$ ($\sigma$-algebra on the set
@@ -301,11 +301,17 @@ $\Prob[X \in S] = 1$, it follows trivially that
 $\int_{S}f(x)\,\mathrm{d}x=1$.  One can verify that if $F_X$ is
 derivable, then its derivative is the density of the r.v.\ :
 \begin{equation}
+  \label{eq:def_pdf_derivative_cdf}
   \frac{\mathrm{d}F_X}{\mathrm{d}x}(x) = p_X(x)
 \end{equation}
 
   \end{itemize}
 \end{definition}
+
+Probability density functions are useful tools to characterize random
+variables, so the assumption of derivability of $F_X$ is sometimes
+relaxed for ease of notation.
+
 \begin{remark}
   When restricting this search to ``classical'' functions, $p_X$ may
   not exist. However, allowing generalized functions such as the
@@ -368,7 +374,7 @@ derivable, then its derivative is the density of the r.v.\ :
   \end{equation}
 \end{definition}
 
-These definition above hold for real-valued random variables, so 1D
+These definitions above hold for real-valued random variables, so 1D
 r.v., but can be extended for random vectors.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -377,7 +383,7 @@ r.v., but can be extended for random vectors.
 
 \begin{definition}[Joint, marginal and conditional densities]
  \label{def:joint_marginal_cond_densities}
- Let $X=(X_1,\cdots,X_p)$ be a random vector from $\Omega \rightarrow S\subseteq\mathbb{R}^p$
+ Let $X=(X_1,\cdots,X_p)$ be a random vector from $\Omega \rightarrow S\subseteq\mathbb{R}^p$.
  The expected value of a random vector is the expectation of the components
  \begin{equation}
 \Ex[X] = \left(\Ex[X_1],\dots,\Ex[X_p]\right)
@@ -396,7 +402,9 @@ The cdf of $X$ at the point $x=(x_1,\dots x_p)$ is
     p_{X}(x)= p_{X_1,\dots, X_p}(x_1,\dots, x_p) =\frac{\partial^p F_X}{\partial x_1 \cdots \partial x_p}(x)
   \end{equation}
   
-  and $\int_{S}p_{X_1,\dots, X_p}(x_1,\dots, x_p)\,\mathrm{d}(x_1,\dots, x_p)=1$
+  and it still integrates to $1$:
+  $\int_{S}p_{X_1,\dots, X_p}(x_1,\dots, x_p)\,\mathrm{d}(x_1,\dots,
+  x_p)=1$
 
   For two random vectors $X$ and $Y$, the (cross-)covariance matrix of
   $X$ and $Y$ is defined as
@@ -465,7 +473,7 @@ be measured with the conditional probabilities. Indeed, if the state
 of information on a random variable does not change when observing
 another one, the observed one carries no information on the
 other. This notion of dependence (and independence) is first defined
-on events and extended to random variables
+on events and then extended to random variables
 \begin{definition}[Independence]
   Let $A,B\in \mathcal{F}$. Those two events are said independent if
   $\Prob[A \cap B] = \Prob[A]\Prob[B]$.  Quite similarly, two
@@ -512,10 +520,23 @@ the Kullback-Leibler divergence.
 \end{definition}
 
 \subsubsection{Important examples of real random variables}
-One of the most well known distribution is the normal distribution,
+
+One of the most important and simple distribution is the uniform
+distribution, translating the idea that the random variable takes a
+value on a given interval almost surely.
+\begin{example}[The uniform distribution]
+  Let $X$ be a r.v. from $\Omega$ to $\mathbb{R}$, and $a < b$.
+  $X$ is said to be uniformly distributed on $\interval{a}{b}$ if
+  \begin{align}
+    p_X(x) = \mathbbm{1}_{\interval{a}{b}}(x)\frac{1}{b-a}
+  \end{align}
+\end{example}
+
+
+One other well-known distribution is the normal distribution,
 also called Gaussian distribution, that appears in various situations,
 but most notably in the central limit theorem.
-\begin{example}[The Normal Distribution]
+\begin{example}[The Normal distribution]
   \label{ex:gaussian_distribution}
   Let $X$ be a r.v.\ from $\Omega$ to $\mathbb{R}$.  If $X$ follow the
   normal distribution of mean $\mu \in \mathbb{R}$ and variance
@@ -722,9 +743,9 @@ log-likelihood:
   Frequentist inference and Maximum Likelihood estimation boils down
   to Generalized non-linear least-square regression, that minimises
   the squared Mahalanobis distance between $\mathcal{M}({\kk})$ and
-  $y$. This is only true as we assumed a Gaussian form of the errors
+  $y$~\citep{mahalanobis_generalized_1936}. This is only true as we assumed a Gaussian form of the errors
   in~\cref{eq:lik_gaussian}. Other choices of the sampling
-  distribution~\cref{eq:lik_gaussian} will result in different
+  distribution will result in different
   objective functions. To reduce the sensitivity on outliers, some
   authors such as~\cite{rao_robust_2015} introduce Student or Laplace
   distributed errors, or specifically designed norm such as the Huber
@@ -760,9 +781,9 @@ observation (that depends on $\kk$).
 The MLE possesses desirable asymptotic properties, such as asymptotic
 normality when the number of observations grows
 large~\citep{reid_aspects_2013}. Those properties permit the
-construction of asymptotic confidence interval, and to perform
-hypothesis testing, especially for model selection. This aspect will
-be further developed in \cref{sec:model_selection}.
+construction of asymptotic confidence intervals, and to test
+hypothesis for model selection. This aspect will be further developed
+in \cref{sec:model_selection}.
 
 % \subsubsection{(Asymptotic) Properties of the MLE \todo{à garder/écrire ?}}
 % \todo{y faire référence, pas de détails}
@@ -783,7 +804,7 @@ be further developed in \cref{sec:model_selection}.
 % \end{equation}
 So far, the only information assumed on $\kk$ is its parameter space
 $\Kspace$. In the case where some belief on $\kk$ is present before
-the calibration, we can incorporate this information through the
+the calibration, we can incorporate this information using the
 Bayesian framework.
 \subsection{Bayesian Inference}
 \label{sec:bayesian_inference_MAP}
@@ -818,7 +839,7 @@ interpretation will be extended in \cref{sec:model_selection}
 \label{def:model_evidence}
 The model evidence, (or marginal likelihood, integrated likelihood) is
 defined as the distribution of the data marginalised over the
-parameters.
+parameters:
   \begin{equation}
     \label{eq:model_evidence}
     p_Y(y) = \int_{\Kspace}p_{Y,\kk}(y,\kk)\,\mathrm{d}\kk = \int_{\Kspace}p_{Y \mid \kk}(y \mid \kk)p_{\kk}(\kk)\,\mathrm{d}\kk
@@ -853,7 +874,7 @@ several techniques have been developed to get samples from a
 unnormalized arbitrary function. One of the most well-known method is
 based on the construction of a Markov-chain whose stationary state is
 the searched posterior. Classical MCMC algorithms such as
-Metropolis-Hastings requires the use of a proposal density, and then
+Metropolis-Hastings require the use of a proposal density, and then
 to accept or reject the proposal based on the posterior distribution
 evaluated at the point.
 
@@ -896,7 +917,7 @@ $\Ex_{\kk\mid Y}\left[L(\kk^{\prime},\kk)\mid y\right]$. A
 Bayesian point estimate is defined as a minimiser of the Bayesian
 risk:
 \begin{equation}
-  \hat{\kk}_{L} = \argmin_{\kk^{\prime} \in \Kspace} \Ex_{\kk\mid Y}\left[L(\kk^{\prime}, \kk) \mid y\right]
+  \kk_{L} = \argmin_{\kk^{\prime} \in \Kspace} \Ex_{\kk\mid Y}\left[L(\kk^{\prime}, \kk) \mid y\right]
 \end{equation}
 
 Obviously, different loss functions will lead to different Bayesian
@@ -904,7 +925,7 @@ point estimates, and we are going to evoke two of them.
 \paragraph{Posterior mean}
 By defining $L$ as the squared error
 $L(\kk^{\prime}, \kk) = (\kk^{\prime} - \kk)^2$ (or $(\kk^{\prime} - \kk)^T(\kk^{\prime} - \kk)$ if $\dim \Kspace > 1$), we can
-define the Mean Squared Error (MSE) as
+define the Mean Squared Error as
 $\mathrm{MSE}: \kk^{\prime}\mapsto\Ex_{\kk\mid
   Y}\left[(\kk^{\prime} - \kk)^2 \mid y\right]$. Finally, the
 value corresponding to the Minimum Mean Squared Error is
@@ -923,7 +944,12 @@ inference, than to solve the minimisation problem
 in~\cref{eq:MMSE_mini}.
 
 \paragraph{Posterior Mode: the MAP}
-Taking $L(\kk^{\prime},\kk) = -\delta_{\kk}(\kk^{\prime})$, the dirac delta function defined in~\cref{eq:def_dirac_delta}, one can show that the minimiser of $\Ex_{\kk\mid Y}\left[L(\kk^{\prime},\kk) \mid y\right]$ is the mode of the posterior distribution, and is called the \emph{Maximum A Posteriori} (MAP):
+By reaching a bit on the notion of function for $L$ and choosing
+$L(\kk^{\prime},\kk) = -\delta_{\kk}(\kk^{\prime})$, the dirac delta
+function defined in~\cref{eq:def_dirac_delta}, one can show that the
+minimiser of $\Ex_{\kk\mid Y}\left[L(\kk^{\prime},\kk) \mid y\right]$
+is the mode of the posterior distribution, and is called the
+\emph{Maximum A Posteriori} (MAP):
 \begin{align}
   \label{eq:def_MAP}
   \estimtxt{\kk}{MAP} &= \argmin_{\kk^{\prime} \in \Kspace}\Ex_{\kk\mid Y}\left[\delta_{\kk}(\kk^{\prime})\mid y\right] = \argmin_{\kk^{\prime} \in \Kspace} -p_{\kk\mid Y}(\kk^{\prime}\mid y) \\
@@ -970,7 +996,7 @@ of the parameter and its point estimation. Where there is no knowledge
 on the parameter beforehand, one can try to choose a non-informative
 prior in order to try to mitigate its effect. One can for instance
 choose a ``flat'' prior over the parameter space, but this can lead to
-\emph{improper prior}, in the sense that they do not integrate to
+\emph{improper priors}, in the sense that they do not integrate to
 $1$. However, improper priors do not necessarily lead to improper
 posterior, allowing for the usual Bayesian analysis of the
 quantity. For instance, if $\Kspace=\mathbb{R}^p$, the prior
@@ -999,28 +1025,29 @@ between $\mathcal{M}(\kk)$ and the observations.
 \label{sec:calibration_adjoint_optimization}
 Point estimates in this context take the form of extremum estimators,
 that is an extremum of some given objective function $J$. This
-function takes the form of the log-likelihood for the MLE, or the
+function is proportional to the log-likelihood for the MLE, or the
 log-posterior for the MAP, but other misfits can be considered, such
 as optimal transport based metrics. The formulation is then quite
 simple, but the problem of efficient optimisation remains. For
 differentiable problems, most of minimisation instances are solved
-using gradient based methods, such as gradient descent, quasi-newton
-methods.  However, this implies to be able to compute efficiently the
-gradient of the objective function $J$ with respect to the parameter:
-$\nabla_{\kk} J$. The straightforward way, is to compute the
-gradient using finite differences. Let us suppose that
-$\kk = (\kk_1,\cdots \kk_p)$, and $e_i$ is 0 for all its
-component except the $i$th one which is $1$. The gradient can be
-approximated by the usual 1st order forward finite-difference scheme,
-as displayed in \cref{eq:finite_diff}.
+using gradient-based methods, such as gradient descent or quasi-Newton
+methods.
+
+This implies to be able to compute efficiently the gradient of the
+objective function $J$ with respect to the parameter:
+$\nabla_{\kk} J$. The straightforward way is to compute the gradient
+using finite differences. Let us suppose that
+$\kk = (\kk_1,\cdots \kk_p)$, and $e_i$ is 0 for all its component
+except the $i$th one which is $1$. The gradient can be approximated by
+the usual 1st order forward finite-difference scheme:
 \begin{equation}
   \label{eq:finite_diff}
   \nabla_{\kk} J  \approx \left[\frac{J(\kk + \epsilon e_1) - J(\kk)}{\epsilon}, \frac{J(\kk + \epsilon e_2) - J(\kk)}{ \epsilon},\dots, \frac{J(\kk + \epsilon e_p)- J(\kk)}{\epsilon} \right] \quad \text{ for } \epsilon \ll 1
 \end{equation}
-In addition to the run of the model at $\kk$, we have to evaluate
-the model $p$ times, for each one of the coordinate of $\kk$. If
-this is feasible in practice for low dimensional problems, this is
-impossible for large problems that cumulate more than hundreds of
+In addition to the run of the model at $\kk$, we have to evaluate the
+model $p$ times, for each one of the coordinate of $\kk$. If this is
+feasible in practice for low-dimensional problems, this is impossible
+for large problems that count more than hundreds of
 parameters. Nevertheless, different methods can be used to compute the
 gradient, at least approximately for optimisation purpose: for
 instance, \cite{boutet_estimation_2015} uses Simultaneous Perturbation
@@ -1028,7 +1055,7 @@ Stochastic Approximation to approximate the gradient using only one
 additional run, indepedently on the number of parameters.
 
 In geophysical applications, parameter estimation and the subsequent
-optimisation is usually performed by deriving the adjoint equation in
+optimisation is usually performed by deriving the adjoint equations in
 order to get the exact gradient for a relatively reasonable cost. This
 gradient is used afterward in optimisation methods such as conjuguate
 gradient, or BFGS for instance. Adjoint methods are thus very popular
@@ -1038,15 +1065,18 @@ short term. This situation is common in data assimilation, as shown
 in~\cite{das_estimation_1991,das_variational_1992,honnorat_identification_2010,couderc_dassfow-shallow_2013},
 or in shape optimisation of airfoils in~\cite{huyse_free-form_2001}.
 
-To derive the adjoint equations, we will first rewrite the objective function as a function of the forward operator and the parameter: $J(\kk) = J(\mathcal{M}(\kk),\kk)$.
-The estimation of the parameter can be written as the following constrained optimisation problem:
+To derive the adjoint equations, we will first rewrite the objective
+function as a function of the forward operator and the parameter:
+$J(\kk) = J(\mathcal{M}(\kk),\kk)$.  The estimation of the parameter
+can be written as the following constrained optimisation problem:
 \begin{equation}
   \begin{aligned}
   \min_{\kk \in \Kspace} J(\kk) &= J(y, \kk) \label{eq:def_J_adjoint} \\
   \text{such that } &\mathcal{F}(y, \kk) = 0 % \label{eq:contraint_adjoint}
   \end{aligned}
 \end{equation}
-where the constraint on $\mathcal{F}$ signifies that the model is admissible, i.e.\ that $y = \mathcal{M}(\kk)\in \Yspace$.
+where the constraint on $\mathcal{F}$ signifies that the model is
+admissible, \emph{i.e.} that $y = \mathcal{M}(\kk)\in \Yspace$.
 
  Differentiating the~\cref{eq:def_J_adjoint} with respect to $\kk$ using the chain rule gives
 \begin{equation}
@@ -1058,18 +1088,18 @@ where the constraint on $\mathcal{F}$ signifies that the model is admissible, i.
 In those equations, the partial derivatives with respect to $\kk$ are quite easily obtainable, while the real challenge is to obtain the derivative with respect to the state variable: $\pfrac{}{y}$.
 
 
-To treat the constrained optimisation in~\cref{eq:def_J_adjoint}, let us introduce the Lagrange multiplier $\lambda \in \Yspace$, so that we can write the Lagrangian $\mathscr{L}$
+To treat the constrained optimisation in~\cref{eq:def_J_adjoint}, let us introduce the Lagrange multiplier $\lambda \in \Yspace$, so that we can write the Lagrangian $\mathscr{L}$:
 \begin{equation}
   \mathscr{L}(\kk, y, \lambda) = J(y,\kk) - \innerprod{\lambda}{\mathcal{F}(y, \kk)}
 \end{equation}
- is then
+and the unconstrained optimisation problem is then
 \begin{equation}
   \min_{\kk,y,\lambda} \mathscr{L}(\kk,y,\lambda)
 \end{equation}
 The first-order condition of optimality for the Lagrangian:
 $\pfrac{\mathscr{L}}{\kk} = \pfrac{\mathscr{L}}{y} =
 \pfrac{\mathscr{L}}{\lambda} = 0$ translates into the optimality
-condition, adjoint equation and the state equation: When
+condition, adjoint equation and the state equation. Indeed, when
 differentiating with respect to the adjoint variable, we retrieve the
 state equation:
 \begin{equation}
@@ -1089,7 +1119,7 @@ Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F
 \end{equation}
 
 So, to get $\nabla_\kk J$, as the partial derivatives with respect
-to the control variable are relatively easy to obtain, the challenge
+to the control variables are relatively easy to obtain, the challenge
 lies in solving the adjoint equation. Albeit tedious, one can derive
 those equations by writing the tangent linear model of the original
 model, and implement a dedicated solver for the adjoint variables. A
@@ -1150,18 +1180,33 @@ One of the most well-known test is the Likelihood-ratio test, that tests if two 
 Let us consider two nested models: $\mathfrak{M}_1 = (\mathcal{M}_1, \Kspace_1)$, $\mathfrak{M}_2= (\mathcal{M}_2,\Kspace_2)$, such that $\mathcal{M}_1=\mathcal{M}_2=\mathcal{M}$ and $\Kspace_2 \subsetneq \Kspace_1$. In this case, $\mathfrak{M}_2$ represents the simpler model, with a reduced parameter space, while $\mathfrak{M}_1$ is the more general model. Recalling the notion of model dimension in~\cref{rmk:model_dimension},  $\mathfrak{M}_1$ has dimension $r$, and $\mathfrak{M}_2$ has dimension $d$ with $r>d$.
 As $\mathfrak{M}_1$ is more general, one can expect better performances.
 
-The likelihood ratio is defined as the ratio of the largest values taken by the likelihood on their respective parameter space, value that is assumed to be attained at $\hat{\kk}_1$ and $\hat{\kk}_2$.
+The likelihood ratio is defined as the ratio of the largest values
+taken by the likelihood on their respective parameter space, value
+that is assumed to be attained at $\hat{\kk}_1$ and $\hat{\kk}_2$.
 % Under the null hypothesis, the two models are equivalent, that is that the ``smaller'' parameter space is enough to represent the inverse problem: $\kk \in \Kspace_2$. The alternative hypothesis is that $\kk \in \Kspace_1$.
 \begin{equation}
   \label{eq:def_lik_ratio}
   \Lambda(y) = \frac{\sup_{\kk \in \Kspace_2} \mathcal{L}(\kk ; y)}{\sup_{\kk \in \Kspace_1} \mathcal{L}(\kk ; y)} = \frac{\mathcal{L}(\hat{\kk}_2 ; y)}{\mathcal{L}(\hat{\kk}_1 ; y)} \leq 1
 \end{equation}
-Based on this quantity, we can test whether the smaller model is sufficient to explain the data as good as the larger model. The two hypothesis for this test are
+Based on this quantity, we can test whether the smaller model is
+sufficient to explain the data as well as the larger model. The two
+hypothesis for this test are
 \begin{itemize}
-\item The null hypothesis $\mathcal{H}_0$: The two models are statistically equivalent: the difference between the maximal values of the likelihood is not statistically significant. This corresponds to $\Lambda$ close to $1$
-\item  The alternative hypothesis $\mathcal{H}_1$: the two models are statistically different: the larger model performs better than the reduced one. This corresponds to $\Lambda$ significantly smaller than $1$.
+\item The null hypothesis $\mathcal{H}_0$: The two models are
+  statistically equivalent: the difference between the maximal values
+  of the likelihood is not statistically significant. This corresponds
+  to $\Lambda$ close to $1$
+\item The alternative hypothesis $\mathcal{H}_1$: the two models are
+  statistically different: the larger model performs better than the
+  reduced one. This corresponds to $\Lambda$ significantly smaller
+  than $1$.
 \end{itemize}
-Under the null hypothesis  $\mathcal{H}_0$, $-2 \log \Lambda$ follows asymptotically (as the number of observations grows large) a $\chi^2$ distribution defined in~\cref{ex:chi2}, according to Wilks' theorem~\citep{wilks_large-sample_1938}. The number of degrees of freedom of the $\chi^2$ distribution is given by the difference of dimensionality between the two models:
+Under the null hypothesis $\mathcal{H}_0$, $-2 \log \Lambda$ follows
+asymptotically (as the number of observations grows large) a $\chi^2$
+distribution introduced in~\cref{ex:chi2}, according to Wilks'
+theorem~\citep{wilks_large-sample_1938}. The number of degrees of
+freedom of the $\chi^2$ distribution is given by the difference of
+dimensionality between the two models:
 \begin{equation}
   \label{eq:deviance_asymptotics}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
@@ -1180,9 +1225,15 @@ By reformulating using the log-likelihoods and objective functions $l(\kk;y) = \
 
 \begin{example}[Likelihood Ratio test for the MLE]
   \label{ex:lrt_mle}
-  Let $\Kspace_1 = \Kspace\subset \mathbb{R}$ and $\Kspace_2 = \{\kk\}\subset \Kspace_1$.
-  We have then $\sup_{\Kspace_1} \mathcal{L} = \mathcal{L}(\estimtxt{\kk}{MLE})$, and $\sup_{\Kspace_2} \mathcal{L} = \mathcal{L}(\kk)$
- The difference of dimensionality is then $r-d=1$ and the .95 quantile of the $\chi^2$ r.v.\ is $\chi^2_1(1-0.05) =3.84$. When the data falls into the rejection region (\emph{i.e.} $J(\kk_2)$ significantly larger than $J({\kk}_1)$), the null hypothesis is rejected, and the models can be asserted significantly different. 
+  Let $\Kspace_1 = \Kspace\subset \mathbb{R}$ and
+  $\Kspace_2 = \{\kk\}\subset \Kspace_1$.  We have then
+  $\sup_{\Kspace_1} \mathcal{L} = \mathcal{L}(\estimtxt{\kk}{MLE})$,
+  and $\sup_{\Kspace_2} \mathcal{L} = \mathcal{L}(\kk)$ The difference
+  of dimensionality is then $r-d=1$ and the .95 quantile of the
+  $\chi^2$ r.v.\ is $\chi^2_1(1-0.05) =3.84$. When the data falls into
+  the rejection region (\emph{i.e.} $J(\kk_2)=J(\kk)$ significantly larger
+  than $J({\kk}_1)=J(\kk_{\mathrm{MLE}})$), the null hypothesis is rejected, and the models
+  can be asserted significantly different.
 \end{example}
 
 
@@ -1193,48 +1244,87 @@ Conversely, the rejection region defined above allows us to define an asymptotic
   R(\kk) = \frac{\mathcal{L}(\kk;y)}{\mathcal{L}(\estimtxt{\kk}{MLE};y)} = \frac{\mathcal{L}(\kk;y)}{\sup_{\kk^{\prime} \in \Kspace}\mathcal{L}(\kk^{\prime};y)}
 \end{equation}
 This ratio allows for comparing the plausibility of the value $\kk$, compared to the MLE.
-The likelihood interval of level $p\in ]0,1]$ is defined as
+The likelihood interval of level $\gamma\in ]0,1]$ is defined as
 \begin{equation}
   \label{eq:def_lik_interval}
-  \mathcal{I}_{\mathrm{Lik}}(p) = \left\{\kk \mid R(\kk)=\frac{\mathcal{L}(\kk;y)}{\mathcal{L}(\estimtxt{\kk}{MLE};y)} \geq p\right\}
+  \mathcal{I}_{\mathrm{Lik}}(\gamma) = \left\{\kk \mid R(\kk)=\frac{\mathcal{L}(\kk;y)}{\mathcal{L}(\estimtxt{\kk}{MLE};y)} \geq \gamma\right\}
 \end{equation}
 
-$p$ can be set to an arbitrary threshold, but it can also be chosen specifically so that $\mathcal{I}_{\mathrm{Lik}}(p)$ is the complement of the rejection region of a likelihood ratio test with certain confidence.
+$\gamma$ can be set to an arbitrary threshold, but it can also be chosen
+specifically so that $\mathcal{I}_{\mathrm{Lik}}(\gamma)$ is the complement
+of the rejection region of a likelihood ratio test with certain
+confidence.
 
-Using the Likelihood ratio test, as in~\cref{ex:lrt_mle}, we can test whether a given value of the parameter $\kk$ performs compared to the MLE by comparing the models $(\mathcal{M}, \{\kk\})$ and $(\mathcal{M},\Kspace)$. Let $R(\kk)$ be the corresponding likelihood ratio. The complement of the rejection region \cref{eq:rejreg_chi2} written using \cref{eq:def_lik_interval} is
+Using the Likelihood ratio test, as in~\cref{ex:lrt_mle}, we can test
+how well a given value of the parameter $\kk$ performs compared to the
+MLE by comparing the models $(\mathcal{M}, \{\kk\})$ and
+$(\mathcal{M},\Kspace)$. Let $R(\kk)$ be the corresponding likelihood
+ratio. The complement of the rejection region \cref{eq:rejreg_chi2}
+written using \cref{eq:def_lik_interval} is
 \begin{equation}
   \label{eq:rel_lik_threshold}
   \mathcal{I}_{\mathrm{Lik}}\left(\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right)\right) = \left\{\kk \mid R(\kk) \geq \exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right) \right\}
 \end{equation}
-The values of the calibrated parameters in this set generate models that are statistically equivalent to the model comprising the MLE as its calibrated parameter.
+The values of the calibrated parameters in this set generate models
+that are statistically equivalent to the model comprising the MLE as
+its calibrated parameter.
 
 
-For $1$ dimensional models, and the confidence level of $.05$, the threshold of \cref{eq:rel_lik_threshold} is $\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right) = \exp\left(-\frac{1}{2}\chi^2_{1}(.95)\right) \approx 0.15$, and at a level $.10$, $\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
+For $1$ dimensional models and the confidence level of $0.05$, the
+threshold of \cref{eq:rel_lik_threshold} is
+$\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right) =
+\exp\left(-\frac{1}{2}\chi^2_{1}(.95)\right) \approx 0.15$, and at a
+level $0.10$,
+$\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
 
 \begin{figure}[ht]
   \centering 
   \input{\imgpath relative_likelihood.pgf}
-  \caption{\label{fig:relative_likelihood} Example of relative likelihood, and associated likelihood interval, for $p=0.15$}
+  \caption{\label{fig:relative_likelihood} Example of relative likelihood, and associated likelihood interval, for $\gamma=0.15$}
 \end{figure}
 
-Due to the likelihood ratio test and the relative likelihood, we can see that even though $\estimtxt{\kk}{MLE}$ is the optimiser of the likelihood function, other values close to it may not be discarded, provided that the value of the log-likelihood does not drop off too much.
+Due to the likelihood ratio test and the relative likelihood, we can
+see that even though $\estimtxt{\kk}{MLE}$ is the optimiser of the
+likelihood function, other values close to it may not be discarded,
+provided that the value of the log-likelihood does not drop off too
+much.
 
 \subsection{Criteria for non-nested model comparison}
 % \todo{revoir}
 \label{sec:criteria_AIC}
-The likelihood ratio test presented above is defined for nested models. In the more general case, we can also associate each model with a single numerical value that measures the balance between ``fit'' and complexity of the model. This takes usually the form of
+The likelihood ratio test presented above is defined for nested
+models. In the more general case, we can also associate each model
+with a single numerical value that measures the balance between
+``fit'' and complexity of the model. This usually takes the form of
 \begin{equation}
   \mathrm{Crit}(\mathfrak{M})=-2 \log \mathcal{L} (\estimtxt{\kk}{MLE}) + \text{Complexity penalization}
 \end{equation}
-where $\mathcal{L}$ is the likelihood function for the model $\mathfrak{M} = (\mathcal{M},\Kspace)$, and $\mathcal{L}(\estimtxt{\kk}{MLE}) = \max \mathcal{L}$. The role of the complexity penalization is to avoid overfitting, and is often directly linked to the dimension of the parameter space $\Kspace$.
-Two quite popular examples of criteria are the AIC (Akaike Information Criterion) introduced in~\cite{akaike_new_1974} and the BIC (Bayesian Information Criterion) in~\cite{schwarz_estimating_1978}.
+where $\mathcal{L}$ is the likelihood function for the model
+$\mathfrak{M} = (\mathcal{M},\Kspace)$, and
+$\mathcal{L}(\estimtxt{\kk}{MLE}) = \max \mathcal{L}$. The role of the
+complexity penalization is to avoid overfitting, and is often directly
+linked to the dimension of the parameter space $\Kspace$.  Two quite
+popular examples of criteria are the AIC (Akaike Information
+Criterion) introduced in~\cite{akaike_new_1974} and the BIC (Bayesian
+Information Criterion) in~\cite{schwarz_estimating_1978}.
 
-Then, to compare two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$, the magnitude of the difference $\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is compared to some thresholds as shown in~\cite{burnham_multimodel_2004}.
-The difference shows whether a model should be preferred, or if no substantial evidence exists for either model.
-These criteria, as well as the likelihood ratio test, are based on the evaluation of the likelihood at its maximal value.
+Then, to compare two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$, the
+magnitude of the difference
+$\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is
+compared to some thresholds as shown
+in~\cite{burnham_multimodel_2004}.  The difference shows whether a
+model should be preferred, or if no substantial evidence exists for
+either model.  These criteria, as well as the likelihood ratio test,
+are based on the evaluation of the likelihood at its maximal value.
 
 
-Another approach is to marginalize the likelihood with respect to the prior distribution of the calibration parameter, giving Bayesian model comparison. The criterion for a model $\mathfrak{M}_1$ is the evidence of model, \emph{i.e.} the pdf of the data given the model $\mathfrak{M}_1$, and $\mathrm{Crit}(\mathfrak{M}_1) = \log \int_\Kspace \mathcal{L}(\kk) p_\kk(\kk)\,\mathrm{d}\kk$.
+Another approach is to marginalize the likelihood with respect to the
+prior distribution of the calibration parameter, giving Bayesian model
+comparison. The criterion for a model $\mathfrak{M}_1$ is the evidence
+of the model, \emph{i.e.} the pdf of the data given the model
+$\mathfrak{M}_1$, and
+$\mathrm{Crit}(\mathfrak{M}_1) = \log \int_\Kspace \mathcal{L}(\kk)
+p_\kk(\kk)\,\mathrm{d}\kk$.
 % % \subsection{Bayesian model comparison}
 % Given a model $\mathfrak{M}$, the model evidence is the likelihood marginalized over the parameter space as introduced in~\cref{def:model_evidence}, and will be written $p_{Y\mid \mathfrak{M}}$. This evidence represents how likely have the data $y$ been generated using the statistical model $\mathfrak{M}$.
 % For two models $\mathfrak{M}_1$ and $\mathfrak{M}_2$ the Bayes' factor is defined as the ratio of the evidence of the two models:
@@ -1249,7 +1339,8 @@ Another approach is to marginalize the likelihood with respect to the prior dist
 % % This factor, as described in~\cite{fragoso_bayesian_2018}, represents how much more evidence does the model $\mathfrak{M}_1$ provides of being ``true'' than $\mathfrak{M}_2$.
 % Quite similarly to the BIC and AIC, the logarithm of the Bayes' factor
 % Again, it is usually compared to specific values, allowing us to conclude roughly on how strong does the data favor $\mathfrak{M}_1$. 
-Again, the logarithm of Bayes' factor is compared with specified thresholds~\citep{kass_bayes_1995,burnham_multimodel_2004}.
+Again, the logarithm of Bayes' factor is compared with specified
+thresholds~\citep{kass_bayes_1995,burnham_multimodel_2004}.
 % Given a model, a criterion is derived either by maximisation (for the likelihood ratio test, and criteria of \cref{sec:criteria_AIC}) and marginalization (for Bayes' factors).
 % In both cases, the preference toward one or another model is directly linked to the difference on the logarithms of the densities.
 
@@ -1258,12 +1349,25 @@ Again, the logarithm of Bayes' factor is compared with specified thresholds~\cit
 We introduced earlier the mathematical model $(\mathcal{M},\Kspace)$, and based our analysis on the fact that the ``target model'', i.e.\ the reality is $(\mathscr{M},\Kspace_{\mathrm{real}} \supseteq \Kspace)$, so the parameter spaces are the same for the two models. However, between the reality and the numerical model, various simplifications are introduced, thus the reality is not often completely \emph{representable} by the numerical model: we have then misspecified models.
 
 \begin{definition}[Misspecified model]
-  Let $Y$ be the random variable associated with the observations, and $p_Y$ its pdf. Let $\{p_{Y \mid \KK} ; \kk \in \Kspace\}$ the parametric family of densities, among which we are looking to find $p_Y$. The model is said to be misspecified, if $p_Y \notin \{p_{Y \mid \KK} ; \kk \in \Kspace\}$.
+  Let $Y$ be the random variable associated with the observations, and
+  $p_Y$ its pdf. Let $\{p_{Y \mid \KK} ; \kk \in \Kspace\}$ the
+  parametric family of densities, among which we are looking to find
+  $p_Y$. The model is said to be misspecified, if
+  $p_Y \notin \{p_{Y \mid \KK} ; \kk \in \Kspace\}$.
 
-  We can also define this misspecification in terms of numerical models defined in this chapter:  
-  let $(\mathscr{M},\Kspace_{\mathrm{real}})$ be the physical system under study and $(\mathcal{M},\Kspace)$ the numerical model that is to be calibrated with respect to the observations $y=\mathscr{M}(\vartheta)$. $(\mathcal{M}, \Kspace)$ is said to be misspecified, if $\vartheta \notin \Kspace$.
+  We can also define this misspecification in terms of numerical
+  models defined in this chapter: let
+  $(\mathscr{M},\Kspace_{\mathrm{real}})$ be the physical system under
+  study and $(\mathcal{M},\Kspace)$ the numerical model that is to be
+  calibrated with respect to the observations
+  $y=\mathscr{M}(\vartheta)$. $(\mathcal{M}, \Kspace)$ is said to be
+  misspecified, if $\vartheta \notin \Kspace$.
 
-  Finally, when we have a family of models $\{(\mathcal{M}(\cdot, \uu),\Kspace) \mid \uu \in\Uspace\}$, where each element depends on some additional parameter, and for all $\uu\in \Uspace$, $\mathcal{M}(\cdot,\uu) \neq \mathscr{M}$, we talk about \emph{parameteric misspecification}.
+  Finally, when we have a family of models
+  $\{(\mathcal{M}(\cdot, \uu),\Kspace) \mid \uu \in\Uspace\}$, where
+  each element depends on some additional parameter, and for all
+  $\uu\in \Uspace$, $\mathcal{M}(\cdot,\uu) \neq \mathscr{M}$, we talk
+  about \emph{parametric misspecification}.
 \end{definition}
 
 In practice, in addition to the simplifications, the parameter space

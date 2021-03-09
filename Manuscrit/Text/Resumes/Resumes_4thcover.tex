@@ -121,14 +121,15 @@ calibration; Gaussian Processes; Ocean modelling; Regret
 De nombreux phénomènes physiques sont modélisés afin d'en mieux
 connaître les comportements ou de pouvoir les prévoir. Cependant pour
 représenter la réalité, de nombreux processus doivent être simplifiés,
-car ils sont souvent trop complexes, ou apparaissent à échelle bien
-inférieure à celle du maillage. Au lieu de complétement omettre, les
-effets des processus sont souvent retranscrits dans les modèles à
-l'aide de paramétrisations, c'est-à-dire en introduisant des termes
-représentant des caractéristiques physiques, qui doivent être ensuite
-estimées. Les méthodes classiques d'estimation se basent sur la
-définition d'une fonction objectif qui mesure l'écart entre le modèle
-numérique et la réalité, qui est ensuite optimisée. % Une telle
+car ils sont souvent trop complexes, ou apparaissent à une échelle
+bien inférieure à celle de l'étude du phénomène. Au lieu de
+complétement les omettre, les effets de ces processus sont souvent
+retranscrits dans les modèles à l'aide de paramétrisations,
+c'est-à-dire en introduisant des termes représentant des
+caractéristiques physiques, qui doivent être ensuite estimées. Les
+méthodes classiques d'estimation se basent sur la définition d'une
+fonction objectif qui mesure l'écart entre le modèle numérique et la
+réalité, qui est ensuite optimisée. % Une telle
 % procédure d'optimisation est souvent coûteuse, car elle demande de
 % multiple évaluations de la fonction objectif, d'autant plus si son
 % gradient doit être calculé.
@@ -159,7 +160,7 @@ Dans cette thèse, nous nous intéressons plutôt à la notion de regret,
 qui mesure l'écart entre la fonction objectif et la valeur optimale
 qu'elle peut atteindre, pour la réalisation de la variable
 environnementale donnée. Cette idée de regret (additif ou bien
-relatif), nous permet de proposer une notion de robustesse à travers
+relatif) nous permet de proposer une notion de robustesse à travers
 l'étude de sa probabilité de dépasser un certain seuil, ou inversement
 à travers le calcul de ses quantiles. À l'aide de ce seuil, ou de
 l'ordre du quantile choisi, on peut donc définir une famille

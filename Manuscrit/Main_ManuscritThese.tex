@@ -85,6 +85,7 @@
 	\fullclear
 	\pagestyle{empty} % Disable any style
 	% \bibliographystyle{alpha}
+        \ad
         \bibliographystyle{apalike}
 	\bibliography{../bibzotero}
 
@@ -94,7 +95,7 @@
         \pagestyle{empty} % Disable any style
 	% \subfile{Text/Resumes/Resumes_4thcover.tex}
         \unless\ifodd\value{page}\phantom{h}\pagestyle{empty}\newpage\fi
-        \AtEndDocument{\includepdf[pages=1, command={}]{Text/Resumes/Resumes_4thcover.pdf}}
+        \AtEndDocument{\includepdf[pages=1, command=\section*{Abstract}\addstarredchapter{Abstract}]{Text/Resumes/Resumes_4thcover.pdf}}
 \end{document}
 
 %%% Local Variables:

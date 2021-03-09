@@ -37,7 +37,7 @@ the numerical model with respect to the reality: $\uu \in
 \Uspace$. Moreover, this misspecification is modelled by a random
 variable $\UU$ with known distribution.  One desirable property is
 that the calibrated model shows relatively good performances when the
-environmental variables varies, or in other words, we want the
+environmental variables vary, or in other words, we want the
 calibrated model to be \emph{robust} with respect to the varying
 environmental parameters. In this chapter, we are going to introduce
 some criteria that aim at solving this \emph{robust optimisation
@@ -58,11 +58,24 @@ uncertainty on the environmental parameter is seen as a nuisance.
 In that context, the very notion of uncertainty can be roughly split
 in two, as described in~\cite{walker_defining_2003}:
 \begin{itemize}
-\item Aleatoric uncertainties, coming from the inherent variability of a phenomenon, \emph{e.g.} intrinsic randomness of some environmental variables
-\item Epistemic uncertainties coming from a lack of knowledge about the properties and conditions of the phenomenon underlying the behaviour of the system under study
+\item Aleatoric uncertainties, coming from the inherent variability of
+  a phenomenon, \emph{e.g.} intrinsic randomness of some environmental
+  variables
+\item Epistemic uncertainties coming from a lack of knowledge about
+  the properties and conditions of the phenomenon underlying the
+  behaviour of the system under study
 \end{itemize}
-According to this distinction,  the epistemic uncertainty can be reduced by investigating the effect of the calibration parameter $\kk$ upon the physical system, and choose it accordingly to an objective function.
-The uncertain variable $\uu$ on the other hand is uncertain in the aleatoric sense, and cannot be controlled directly, as its value is doomed to change. This is why we model it using a random variable $\UU$. This distinction illustrated~\cref{fig:sources_uncertainties} is a bit simplistic, as~\cite{kiureghian_aleatory_2009} points out that deciding the type of uncertainties is up to the modeller, who decides on which parameters inference is worth doing.
+According to this distinction, the epistemic uncertainty can be
+reduced by investigating the effect of the calibration parameter $\kk$
+upon the physical system, and choose it accordingly to an objective
+function.  The uncertain variable $\uu$ on the other hand is uncertain
+in the aleatoric sense, and cannot be controlled directly, as its
+value is destined to change. This is why we model it using a random
+variable $\UU$. This distinction, illustrated
+in~\cref{fig:sources_uncertainties}, is a bit simplistic,
+as~\cite{kiureghian_aleatory_2009} points out that deciding the type
+of uncertainties is up to the modeller, who decides on which
+parameters inference is worth doing.
 
 \begin{figure}[ht]
   \begin{center}
@@ -75,8 +88,16 @@ The uncertain variable $\uu$ on the other hand is uncertain in the aleatoric sen
 \end{figure}
 
 \subsection{Robustness and/or reliability}
-The notion of \emph{robustness} is dependent on the context in which it is used. In this work, the term ``robust'' qualifies a model that behaves still nicely under uncertainties, or to put it in an other way, that is insensitive up to certain extent to some perturbations.
-Moreover, robustness is often linked and sometimes confused to the semantically close notion of \emph{reliability}. In~\cite{lelievre_consideration_2016} we can find summarized in~\cref{tab:lelievre} the difference between these notions, by defining optimality as the deterministic counterpart of robustness, and admissibility as the counterpart of reliability.
+The notion of \emph{robustness} is dependent on the context in which
+it is used. In this work, the term ``robust'' qualifies a model that
+behaves still nicely under uncertainties, or to put it in an other
+way, that is insensitive up to a certain extent to some perturbations.
+Moreover, robustness is often linked and sometimes confused to the
+semantically close notion of
+\emph{reliability}. In~\cite{lelievre_consideration_2016} we can find
+summarized in~\cref{tab:lelievre} the difference between these
+notions, by defining optimality as the deterministic counterpart of
+robustness, and admissibility as the counterpart of reliability.
 
 \begin{table}[htb]
 \centering
@@ -122,29 +143,59 @@ Given a family of models $\left\{\left(\mathcal{M}(\cdot, \uu), \Theta\right), \
 % This uncertain parameter is modelled by a random variable $\UU$.
 
 
-Not taking into account the uncertainty on $\uu$ may be an issue in the modelling, especially if the influence of this variable is non-negligible.
-Choosing a specific $\uu \in \Uspace$ leads to \emph{localized optimisation} \citep{huyse_free-form_2001} and \emph{overcalibration}, that is choosing a value $\hat{\kk}$ that is optimal for the given situation (which is induced by $\uu$). This value does not carry the optimality to other situations, or in Layman's term according to~\cite{andreassian_all_2012}, being lured by ``fool's gold''.
-In geophysics and especially in hydrological models, this overcalibration may lead to the appearance of abberations in the predictions as those uncertainties become prevalent sources of errors. In hydrology, uncertainties are the principal culprit of the existence of  ``Hydrological monsters''~\citep{kuczera_there_2010}, that are calibrated models that perform really badly.
+Not taking into account the uncertainty on $\uu$ may be an issue in
+the modelling, especially if the influence of this variable is
+non-negligible.  Choosing a specific $\uu \in \Uspace$ leads to
+\emph{localized optimisation} \citep{huyse_free-form_2001} and
+\emph{overcalibration}, that is choosing a value $\hat{\kk}$ that is
+optimal for the given situation (which is induced by $\uu$). This
+value does not carry the optimality to other situations, or in
+Layman's term according to~\cite{andreassian_all_2012}, being lured by
+``fool's gold''.  In geophysics and especially in hydrological models,
+this overcalibration may lead to the appearance of aberrations in the
+predictions as those uncertainties become prevalent sources of
+errors. In hydrology, uncertainties are the principal culprit of the
+existence of ``Hydrological monsters''~\citep{kuczera_there_2010},
+that are calibrated models that perform really badly.
 
 
-There are two main ways to tackle this problem. Since the environmental parameter is random by nature with known distribution, we can introduce it directly in the probabilistic inference framework, by appending $\uu$ to the calibration parameter and to consider $(\kk, \uu)$ for the inference. This will be treated~\cref{sec:nuisance_parameters}. In this context, the additional environmental variables are usually called \emph{nuisance parameters}. 
+There are two main ways to tackle this problem. Since the
+environmental parameter is random by nature with a known distribution,
+we can introduce it directly in the probabilistic inference framework,
+by appending $\uu$ to the calibration parameter and to consider
+$(\kk, \uu)$ for the inference. This will be
+treated in~\cref{sec:nuisance_parameters}. In this context, the
+additional environmental variables are usually called \emph{nuisance
+  parameters}.
 
-Another way, that we are calling the \emph{variational} approach, is to consider instead the objective function $(\kk, \uu) \mapsto J(\kk, \uu)$ that we want to minimise, as introduced in the previous chapter. Due to the uncertainty on $\uu$, we can then study the family of random variables indexed by $\kk \in \Kspace: \{J(\kk, \UU); \kk\in\Kspace\}$. This will be addressed~\cref{sec:J_rv}.
+Another way, that we are calling the \emph{variational} approach, is
+to consider instead the objective function
+$(\kk, \uu) \mapsto J(\kk, \uu)$ that we want to minimise, as
+introduced in the previous chapter. Due to the uncertainty on $\uu$,
+we can then study the family of random variables indexed by
+$\kk \in \Kspace: \{J(\kk, \UU); \kk\in\Kspace\}$. This will be
+addressed in~\cref{sec:J_rv}.
 
 \section{Probabilistic inference}
 \label{sec:nuisance_parameters}
-In probabilistic inference, the environmental parameters are sometimes called \emph{nuisance} parameters, and different ways have been studied to remove their influence.
-We will first detail likelihood-based methods and then the extension to Bayesian framework.
+In probabilistic inference, the environmental parameters are sometimes
+called \emph{nuisance} parameters, and different ways have been
+studied to remove their influence.  We will first detail
+likelihood-based methods and then the extension to Bayesian framework.
 \subsection{Frequentist approach}
-From a frequentist approach, we define the joint likelihood $\mathcal{L}(\theta, u ;y) = p_{Y\mid \KK,\UU}(y \mid \kk, \uu)$.
-Under a Gaussian assumption, the sampling distribution, $Y\mid \KK, \UU$ is 
+From a frequentist approach, we define the joint likelihood
+$\mathcal{L}(\theta, u ;y) = p_{Y\mid \KK,\UU}(y \mid \kk, \uu)$.
+Under a Gaussian assumption, the sampling distribution,
+$Y\mid \KK, \UU$ is
 \begin{equation}
 Y \mid \KK, \UU \sim \mathcal{N}(\mathcal{M}(\KK, \UU), \Sigma)
 \end{equation}
 where $\Sigma$ is a covariance matrix.
 
-There are two common ways to get rid of the nuisance parameters: one by \emph{profiling}, one by \emph{marginalization}.
-Profiling implies to perform first a maximisation of the likelihood with respect to the nuisance parameters:
+There are two common ways to get rid of the nuisance parameters: one
+by \emph{profiling}, one by \emph{marginalization}.  Profiling implies
+to perform first a maximisation of the likelihood with respect to the
+nuisance parameters:
 \begin{equation}
   \label{eq:def_profile_lik}
   \mathcal{L}_{\mathrm{profile}}(\theta;y) = \max_{\uu \in \Uspace} \mathcal{L}(\theta,u;y)
@@ -153,13 +204,19 @@ and
 \begin{equation}
   \estimtxt{\kk}{prMLE} = \argmax_{\kk\in\Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
 \end{equation}
-In other words, considering the most favorable case of the likelihood given the nuisance parameters.
-Comparing the MLE over $\Kspace \times \Uspace$ for the original joint likelihood and the profile MLE on $\Kspace$ for the profile likelihood, it is straightforward to verify that their components on $\Kspace$ coincide as
+In other words, considering the most favorable case of the likelihood
+given the nuisance parameters.  Comparing the MLE over
+$\Kspace \times \Uspace$ for the original joint likelihood and the
+profile MLE on $\Kspace$ for the profile likelihood, it is
+straightforward to verify that their components on $\Kspace$ coincide
+as
 \begin{equation}
   \max_{(\kk ,\uu) \in \Kspace\times \Uspace} \mathcal{L}(\theta,\uu;y) = \max_{\kk\in \Kspace} \mathcal{L}_{\mathrm{profile}}(\theta;y)
 \end{equation}
 
-The resulting estimator does not take into account the uncertainty upon $\uu$, and can perform quite badly when the likelihood presents sharp ridges~\citep{berger_integrated_1999}.
+The resulting estimator does not take into account the uncertainty
+upon $\uu$, and can perform quite badly when the likelihood presents
+sharp ridges~\citep{berger_integrated_1999}.
 
 Another alternative is to define the \emph{integrated}, or \emph{marginalized} likelihood as
 \begin{align}
@@ -197,8 +254,12 @@ unique maximum, attained for $\estimtxt{\kk}{intMLE} \approx 0.8$.
 % Choosing a certain way of treating the nuisance parameters leads to different estimates in the end.
 
 \subsection{Bayesian approach}
-Similarly as in~\cref{sec:bayesian_inference_MAP}, we can incorporate information on $\kk$ by introducing a prior distribution $p_{\kk}$, and we can derive the posterior distribution using Bayes' theorem. We assume that $\UU$ and $\KK$ are independent: $p_{\KK, \UU} = p_{\KK}\cdot p_{\UU}$.
-The likelihood of the data given $\kk$ and $\uu$ is
+Similarly as in~\cref{sec:bayesian_inference_MAP}, we can incorporate
+information on $\kk$ by introducing a prior distribution $p_{\kk}$,
+and we can derive the posterior distribution using Bayes' theorem. We
+assume that $\UU$ and $\KK$ are independent:
+$p_{\KK, \UU} = p_{\KK}\cdot p_{\UU}$.  The likelihood of the data
+given $\kk$ and $\uu$ is
 \begin{equation}
   \mathcal{L}(\kk,\uu;y) = p_{Y \mid \KK, \UU}(y\mid \kk,\uu)
 \end{equation}
@@ -207,31 +268,55 @@ The joint posterior distribution can be written as:
   p_{\KK,\UU \mid Y}(\kk,\uu \mid y) &= \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu) \frac{1}{p_Y(y)} \\
   &\propto \mathcal{L}(\kk,\uu;y)p_{\KK}(\kk)p_{\UU}(\uu)
 \end{align}
-Here, the posterior is used to do inference on $\kk$ and $\uu$ jointly. In order to suppress the dependency in $u$, we integrate with respect to $\UU$ and get the marginalized posterior $p_{\theta \mid Y}$:
+Here, the posterior is used to do inference on $\kk$ and $\uu$
+jointly. In order to suppress the dependency in $u$, we integrate with
+respect to $\UU$ and get the marginalized posterior
+$p_{\theta \mid Y}$:
 \begin{align}
   p_{\KK \mid Y}(\kk \mid y) &= \int_{\Uspace} p_{\KK,\UU\mid Y}(\kk,\uu\mid y)\,\mathrm{d}u \label{eq:marg_MMAP}\\
                              &= \int_{\Uspace}p_{\KK \mid Y, \UU}(\kk \mid y, \uu) p_{\UU\mid Y}(\uu \mid y)\,\mathrm{d}u
 \end{align}
 
-We can then define the \emph{marginalized maximum a posteriori} (MMAP)~\citep{doucet_marginal_2002} as the  maximiser of this marginalized posterior:
+We can then define the \emph{marginalized maximum a posteriori}
+(MMAP)~\citep{doucet_marginal_2002} as the maximiser of this
+marginalized posterior:
 \begin{equation}
   \label{eq:def_MMAP}
   \estimtxt{\kk}{MMAP} = \argmax_{\kk\in\Kspace} p_{\KK \mid Y}(\kk\mid y)
 \end{equation}
-or, by taking the negative logarithm to get a minimisation problem, can be written
+or, by taking the negative logarithm to get a minimisation problem,
+another writing is
 \begin{equation}
 \estimtxt{\kk}{MMAP} = \argmin_{\kk\in\Kspace} -\log  p_{\KK\mid Y}(\kk\mid y)
 \end{equation}
-Unfortunately, neither the integration with respect to the nuisance parameter in~\eqref{eq:marg_MMAP} nor the subsequent optimisation is analytically easy.
-Assuming that we are able to get i.i.d.\ samples $\{(\kk_i, \uu_i)\}_{1\leq i \leq n_{\mathrm{samples}}}$ from the posterior distribution using MCMC methods for instance, by discarding the $\uu$ components, the samples $\{\kk_i\}_{1 \leq i\leq n_{\mathrm{samples}}}$ are distributed according to the marginal posterior $p_{\KK \mid Y}$, and thus can be used to get the MMAP. More direct techniques, such as~\cite{doucet_marginal_2002}, introduce methods in order to estimate iteratively the MMAP, through sampling of the joint posterior.
+Unfortunately, neither the integration with respect to the nuisance
+parameter in~\eqref{eq:marg_MMAP} nor the subsequent optimisation is
+analytically easy.  Assuming that we are able to get i.i.d.\ samples
+$\{(\kk_i, \uu_i)\}_{1\leq i \leq n_{\mathrm{samples}}}$ from the
+posterior distribution using MCMC methods for instance, by discarding
+the $\uu$ components, the samples
+$\{\kk_i\}_{1 \leq i\leq n_{\mathrm{samples}}}$ are distributed
+according to the marginal posterior $p_{\KK \mid Y}$, and thus can be
+used to get the MMAP. More direct techniques, such
+as~\cite{doucet_marginal_2002}, introduce methods in order to estimate
+iteratively the MMAP, through sampling of the joint posterior.
 \begin{example}
-  Using the same data as in~\cref{ex:profile_int_lik}, we add a prior distribution of $\KK$ as a centered normal distribution, truncated on $\Kspace$. On~\cref{fig:profile_integrated_lik} we can see the influence of the prior distribution, as it nudges the MMAP $\estimtxt{\kk}{MMAP}$ toward $0$, compared to the integrated likelihood.
+  Using the same data as in~\cref{ex:profile_int_lik}, we add a prior
+  distribution of $\KK$ as a centered normal distribution, truncated
+  on $\Kspace$. On~\cref{fig:profile_integrated_lik} we can see the
+  influence of the prior distribution, as it nudges the MMAP
+  $\estimtxt{\kk}{MMAP}$ toward $0$, compared to the integrated
+  likelihood.
 \end{example}
 \begin{figure}[ht]
   \centering
   % \input{\imgpath profile_integrated_lik.pgf}
   \includegraphics{\imgpath profile_integrated_lik.png}
-  \caption[Joint likelihood and posterior distribution]{\label{fig:profile_integrated_lik} Joint likelihood and posterior (left). Profile and integrated likelihood for an uniform nuisance parameter and marginal posterior distribution (right)}
+  \caption[Joint likelihood and posterior
+  distribution]{\label{fig:profile_integrated_lik} Joint likelihood
+    and posterior (left). Profile and integrated likelihood for an
+    uniform nuisance parameter and marginal posterior distribution
+    (right)}
 \end{figure}
 Those three estimators appear quite naturally in the probabilistic
 formulations. The main difference between the MMAP and the integrated
@@ -258,39 +343,44 @@ cost function:
     \end{array}
   \end{equation}
   
-  This function, in a calibration context, is measuring the misfit
+  This function in a calibration context is measuring the misfit
   between the data $y$ and the forward operator, and can be written as
-  the negative log-likelihood, or the negative log posterior
+  the negative log-likelihood, or the negative log-posterior
   distribution. Still, the objectives and criteria introduced in the
   following are not specific to this context, and $J$ can represent
-  other properties that ought to be reduced such as instability or
-  drag in airfoil design optimisation for instance. This general
-  problem is sometimes quoted as \emph{Optimisation under
-    uncertainties} (OUU)
-  (\citep{cook_effective_2018,seshadri_density-matching_2014})
+  other properties that ought to be reduced such as a loss or some
+  unwanted physical properties such as the drag in airfoil design
+  optimisation. This general problem is sometimes quoted as
+  \emph{Optimisation under uncertainties} (OUU)
+  \citep{cook_effective_2018,seshadri_density-matching_2014}
 
 
-All in all, $J(\kk, \uu)$ represent the cost of taking the decision $\kk\in\Kspace$ when the environmental variable is equal to $\uu$.
-We are going to make several assumptions on this function:
+All in all, $J(\kk, \uu)$ represents the cost of taking the decision
+$\kk\in\Kspace$ when the environmental variable is equal to $\uu$.  We
+are going to make several assumptions:
 \begin{itemize}
 \item $\Kspace$ is convex and bounded 
 \item For all $\kk \in \Kspace$ and $\uu \in \Uspace$, $J(\kk, \uu)>0$
 \item For all $\kk \in \Kspace$, $J(\kk, \cdot)$ is measurable
-\item For all $\kk \in \Kspace$, $J(\kk, \UU) \in L^p(\Prob_{\UU})$ and $p \geq 2$. So for each $\kk$, mean and variance exist and are finite.
+\item For all $\kk \in \Kspace$, $J(\kk, \UU) \in L^s(\Prob_{\UU})$
+  and $s \geq 2$. So for each $\kk$, mean and variance exist and are
+  finite.
 \end{itemize}
 
 As the function represents a cost, \emph{i.e.} an undesirable
 property, we are interested in minimising in some sense this random
-variable, which depends on $\kk$.  Most of existing methods to
-approach such a problem require first to remove the dependency on the
-uncertain variable, by defining a \emph{robust} counterpart of the
-minimisation problem, which implies to remove the dependence on the
-uncertain variable $\UU$, that we can solve using classical methods of
-optimisation.
+variable, which depends on $\kk$.  Most of existing methods rely on
+the definition of a \emph{robust} counterpart of the minimisation
+problem, which implies to remove the dependence on the uncertain
+variable $\UU$. This counterpart being a deterministic optimisation
+problem, we can solve it using classical methods of minimisation.
 
 \subsection{Decision under deterministic uncertainty set}
-We will first detail some estimators that can be argued robust, even though the random nature of $\UU$ is not directly taken into account.
-The uncertainty is modelled here by assuming that no information is available on $\uu$, except that $\uu \in \Uspace$. In this paradigm, $\Uspace$ is called the uncertainty set~\citep{bertsimas_theory_2010}.
+We will first introduce some estimators that can be argued robust, even
+though the random nature of $\UU$ is not directly taken into account.
+The uncertainty is modelled here by assuming that no information is
+available on $\uu$, except that $\uu \in \Uspace$. In this paradigm,
+$\Uspace$ is called the uncertainty set~\citep{bertsimas_theory_2010}.
 
 \subsubsection{Global optimisation}
 A global optimisation criterion, as its name suggests, advocates for minimising the cost function over the whole space $\Kspace \times \Uspace$, giving this optimisation problem:
@@ -304,7 +394,7 @@ Rearranging slightly this problem, the $\theta$-component of the minimiser can b
 \end{equation}
 
 The global minimum is the equivalent of profile likelihood
-maximisation~\cref{eq:def_profile_lik}, when $J$ is the negative
+maximisation defined~\cref{eq:def_profile_lik}, when $J$ is the negative
 log-likelihood. This method exhibits some flaws: we are optimising the
 cost function only over the most favourable cases of the environmental
 parameter, thus there is no guarantee on the behaviour of $J$ outside
@@ -337,7 +427,10 @@ considered.
 
 \subsubsection{Regret maximin}
 \label{ssec:regret_savage}
-One other approach, called Savage's maximin regret~\citep{savage_theory_1951} is to compare the current objective to the best performance given the uncertain variable $\uu$. The translated objective is called the \emph{regret} and is defined as
+One other approach, called Savage's maximin
+regret~\citep{savage_theory_1951} is to compare the current objective
+to the best performance given the uncertain variable $\uu$. The
+translated objective is called the \emph{regret} and is defined as
 \begin{equation}
   \label{eq:def_regret_savage}
   r(\kk, \uu) = J(\kk, \uu) - \min_{\kk \in \Kspace} J(\kk, \uu)
@@ -363,7 +456,11 @@ focuses on the absolute objective.
 \begin{figure}[ht]
   \centering
   \input{\imgpath decision_under_uncertainty.pgf}
-  \caption[Robust optimisation under uncertainty set]{\label{fig:decision_under_uncertainty} Illustration of global optimisation, worst-case, and regret worst-case. The red points on the contour of the cost function correspond to the minimisers of $J$ at each $\uu$ fixed}
+  \caption[Robust optimisation under uncertainty
+  set]{\label{fig:decision_under_uncertainty} Illustration of global
+    optimisation, worst-case, and regret worst-case. The red points on
+    the contour of the cost function correspond to the minimisers of
+    $J$ at each $\uu$ fixed}
 \end{figure}
 
 So far, we did not use the fact that $\uu$ was a realisation of a
@@ -386,15 +483,16 @@ integration with respect to the uncertain variable, in order to get an
 \emph{aggregated objective}, which is a deterministic function that
 depends only on $\kk$.  An example of this aggregation is the
 integration of the successive powers of the cost function, in order to
-get the moments of the associated random variable, that we will
-detail~\cref{sec:exp_loss_minimization,sec:multiobjective_optimization,sec:higher_moments} % we can account for dispersion through the centered moments of the random variable $J(\kk, \UU)$, as we are going to see next.
+get the moments of the associated random variable, that we will detail
+in~\cref{sec:exp_loss_minimization,sec:multiobjective_optimization,sec:higher_moments}.
 The aggregated objective is then minimised with respect to the control
 variable.
 \subsubsection{Expected loss minimisation, central tendency}
 \label{sec:exp_loss_minimization}
 One of the simplest approach when facing such a problem is to look to
 optimise a central tendency of those random variables. The mean value
-being an obvious candidate, we define the expected objective as
+being an obvious candidate, we define the expected objective (or
+expected loss) as
 \begin{equation}
   \label{eq:mean_objective}
   \mu(\kk) = \Ex_\UU\left[J(\kk,\UU)\right] =\int_{\Uspace} J(\kk,\uu)p_\UU(\uu)\,\mathrm{d}\uu
@@ -415,17 +513,17 @@ $J(\kk, \uu) \propto - \log \mathcal{L}(\kk,\uu;y)$, we have
 \end{align}
 
 Taking the average of an objective function is the basis of
-\emph{stochastic programming}.  However, the integral
-\cref{eq:mean_objective} is intractable analytically, so instead of
-computing it exactly, one usually resorts to minimising the empirical
-mean risk. For $1\leq i \leq n_U$, let $\uu_i$ be i.i.d.\ samples from
-$\UU$. We can then use those samples to approximate $\mu$: the
-empirical mean is
+\emph{stochastic programming}.  However, the integral of
+\cref{eq:mean_objective} is often intractable analytically, so instead
+of computing it exactly, one usually resorts to minimising the
+empirical mean risk. For $1\leq i \leq n_U$, let $\uu_i$ be i.i.d.\
+samples from $\UU$. We can then use those samples to approximate
+$\mu$: the empirical mean is
 \begin{equation}
   \label{eq:emp_mean_objective}
   \mu^{\mathrm{emp}}(\kk) = \frac{1}{n_U}\sum_{i=1}^{n_U} J(\kk, \uu_i)
 \end{equation}
-and the minimisation problem
+and the minimisation problem defined as
 \begin{equation}
   \min_{\kk\in\Kspace} \frac{1}{n_U}\sum_{i=1}^{n_U} J(\kk, \uu_i)
 \end{equation}
@@ -440,22 +538,27 @@ Despite some similarities with the integrated likelihood introduced
 \cref{eq:def_int_lik}, $\estimtxt{\kk}{mean}$ and
 $\estimtxt{\kk}{intMLE}$ are not equal in general, as shown
 \cref{fig:difference_arithmetic_geometric_mean} for the likelihood
-introduced~\cref{ex:profile_int_lik} and
+introduced in~\cref{ex:profile_int_lik} and
 \cref{fig:profile_integrated_lik}.
 
 \begin{figure}[ht]
   \centering
   \input{\imgpath integrated_lik_average_costfunction.pgf}
-  \caption[Difference between integrated likelihood and mean loss]{\label{fig:difference_arithmetic_geometric_mean} Difference between the negative logarithm of the integrated likelihood defined~\cref{eq:def_int_lik}, and the mean loss of $J = -\log \mathcal{L}$ defined~\cref{eq:mean_objective} and the subsequent difference in estimators}
+  \caption[Difference between integrated likelihood and mean
+  loss]{\label{fig:difference_arithmetic_geometric_mean} Difference
+    between the negative logarithm of the integrated likelihood
+    defined in~\cref{eq:def_int_lik}, and the mean loss of
+    $J = -\log \mathcal{L}$ defined in~\cref{eq:mean_objective} and the
+    subsequent difference in estimators}
 \end{figure}
 
 
 
 A low expected value is to be taken with caution, as it refers to a
-behaviour \emph{in the long run}. Indeed, the mean values is
-equivalent to averaging over all the outcomes, but there can be a
-compensation effect, where ``good surprises'' balance the ``bad
-surprises''.  An example is the following problem:
+behaviour \emph{in the long run}. Indeed, the mean value is equivalent
+to averaging over all the outcomes, but there can be a compensation
+effect, where ``good surprises'' balance the ``bad surprises''.  An
+example is the following problem:
 \begin{align}
   J(\kk_1, \UU) &\sim \mathcal{N}(2, 2^2) \\
   J(\kk_2, \UU) & \sim \mathcal{N}(3, 1^2)
@@ -468,13 +571,13 @@ the decision $\estimtxt{\kk}{} = \kk_2$ leads to less extreme values:
   \Prob_{U}[J(\kk_1, \UU) > 5] = 0.06681> \Prob_{U}[J(\kk_2, \UU) > 5] = 0.02275
 \end{align}
 Depending on the application, such a behaviour could be prohibitive.
-This difference in these probabilities is explained by the difference
+The difference in these probabilities is explained by the difference
 in the variance of the random variable $J(\kk, \UU)$.  Accounting for
 the variance in the objective function is discussed
 in~\cref{sec:multiobjective_optimization}.
 
 \subsubsection{Variance optimisation}
-In \cref{sec:exp_loss_minimization}, we used the mean as a measure of
+In~\cref{sec:exp_loss_minimization}, we used the mean as a measure of
 the central tendency that we want to minimise. Jointly with the
 central tendency, information about the dispersion of the random
 variable may also be relevant, in order to predict how much deviation
@@ -485,10 +588,12 @@ objective function:
 \end{equation}
 and minimising this variance yields
 \begin{equation}
-  \estimtxt{\kk}{var} = \min_{\kk \in \Kspace} \sigma^2(\kk)
+  \estimtxt{\kk}{var} = \min_{\kk \in \Kspace} \sigma^2(\kk) =  \min_{\kk \in \Kspace} \sigma(\kk)
 \end{equation}
-As the exact variance computation require the evaluation of an
-expensive integral, this problem can be tackled using sample
+Depending on the application, the equivalent formulation using the
+standard deviation may be used instead of the variance. In both
+formulations, such a computation requires the evaluation
+of an expensive integral, this problem can be tackled using sample
 averaging, and the minimisation problem becomes
 \begin{equation}
   \min_{\kk\in \Kspace} \frac{1}{n_{\UU}-1} \sum_{i=1}^{n_{\UU}} \left(J(\kk, \uu_i) - \mu^{\mathrm{emp}}(\kk)\right)^2
@@ -527,10 +632,10 @@ objective vectors $(\mu(\kk_i),\sigma(\kk_i))$ for $i=1,2$. If
 $\mu(\kk_1) \leq \mu(\kk_2)$ and $\sigma(\kk_1) \leq \sigma(\kk_2)$,
 $\kk_2$ is said to be \emph{dominated} by $\kk_1$. The Pareto frontier
 is defined as the set of points in $\Kspace$ that cannot be dominated
-by any other points. For points on this front, you cannot decrease
+by any other points. For points on this front, one cannot decrease
 further one of the objective without increasing the other.
-On~\cref{fig:pareto} is illustrated the Pareto frontier for a
-multiobjective problem \cref{eq:multiobj_e_var}. The red point
+On~\cref{fig:pareto} is illustrated the Pareto frontier for the
+multiobjective problem of~\cref{eq:multiobj_e_var}. The red point
 corresponding to $\kk_1$ is dominated by the green point $\kk_0$ on
 the frontier, but not by the green point of $\kk_2$. A solution of the
 multiobjective problem can then be chosen within the Pareto frontier.
@@ -543,9 +648,9 @@ multiobjective problem can then be chosen within the Pareto frontier.
 \end{figure}
 
 Instead of finding the Pareto frontier, the multiobjective problem is
-often ``scalarized'' by adding the weighted
+often ``scalarized'' by summing the weighted
 objectives~\citep{marler_weighted_2010}, provided that such an
-operation makes sense in regards to the units of the quantities,
+operation makes sense with regards to the units of the quantities,
 justifying the use of the standard deviation instead of the variance.
 \begin{equation}
   \min_{\kk\in\Kspace} \lambda \mu(\kk) + (1- \lambda)\sigma(\kk) =   \min_{\kk\in\Kspace} \lambda \Ex_{\UU}[J(\kk,\UU)] + (1- \lambda)\sqrt{\Var[J(\kk,\UU)]}
@@ -557,8 +662,10 @@ where $\lambda \in [0,1]$ is chosen to reflect the preference toward one or anot
 Higher moments can also be considered as additional criteria,
 especially in Portfolio optimisation
 \citep{lai_mean-variance-skewness-kurtosis-based_2006,briec_mean-variance-skewness_2007}.
-The skewness coefficient measures the asymmetry in the distribution,
-and is the (normalized) centered moment of order $3$:
+For a real random variable $X \in L^3$ (with respect to Lebesgue's
+measure on $\mathbb{R}$), the skewness coefficient measures the
+asymmetry in the distribution, and is the (normalized) centered moment
+of order $3$:
 \begin{equation}
   \mathrm{sk}\left[X\right] = \Ex\left[\left(\frac{X - \mu}{\sigma}\right)^3\right]
 \end{equation}
@@ -586,12 +693,12 @@ surprise''.
   \caption[Influence of the skewness]{\label{fig:skewness_example} Pdf and cdf of random variables with same mean, variance but different skewness}
 \end{figure}
 
-In order to have a finer tuning on the ``risk-averse'' or
-``risk-seeking'' properties of the wanted solution, some authors
-propose to directly minimise with respect to $\kk$ the difference
-between the cdf of the r.v. $J(\kk, \UU)$ and a target cdf, giving
-\emph{Horsetail
-  matching}~\citep{cook_extending_2017,cook_effective_2018}.
+% In order to have a finer tuning on the ``risk-averse'' or
+% ``risk-seeking'' properties of the wanted solution, some authors
+% propose to directly minimise with respect to $\kk$ the difference
+% between the cdf of the r.v. $J(\kk, \UU)$ and a target cdf, giving
+% \emph{Horsetail
+%   matching}~\citep{cook_extending_2017,cook_effective_2018}.
 
 Other extensions have been developed around the cdf of the random
 variable, especially in portfolio optimisation. Indeed, integrating
@@ -631,7 +738,7 @@ on~\cite{trappler_robust_2020}.
 % \end{figure}
 
 
-\subsection{Conditional minimimum and minimiser}
+\subsection{Conditional minimum and minimiser}
 \label{sec:MPE}
 We assume that $\UU$ is a continuous random variable, with a compact
 support.
@@ -657,7 +764,7 @@ describing the best performances of the calibration, if we could
 optimise the objective function for each realization of $\UU$.
 
 Similarly, let us assume that the conditional minimiser is well
-defined for all $\uu\in \Uspace$. We can study the image random
+defined for all $\uu\in \Uspace$. We can study the image of the random
 variable through this mapping, that we will denote $\kk^*(\UU)$.  This
 random variable in itself gives already information on the
 ``identifiability'' of a robust estimate, depending on the information
@@ -687,13 +794,14 @@ better affinity of being a minimiser than the other.
 In general, this random variable cannot be classified as continuous or
 discrete without further study. However, in the following, we are
 going to assume that it is a \emph{continuous random variable}.  The
-entropy of the random variable $\kk^*(\UU)$ defined
-\cref{def:KL_entropy} can be seen as a measure of the sensitivity of
-the calibration when the environmental variable varies. If the support
-of the random variable $\kk^*(\UU)$ is bounded, the distribution with
-the highest entropy on this support is a uniform distribution.  Per
-the continuity assumption, this entropy can be estimated by various
-methods (see for instance~\cite{beirlant_nonparametric_1997}).
+entropy of the random variable $\kk^*(\UU)$
+(see~\cref{def:KL_entropy}) can be seen as a measure of the
+sensitivity of the calibration when the environmental variable
+varies. If the support of the random variable $\kk^*(\UU)$ is bounded,
+the distribution with the highest entropy on this support is a uniform
+distribution.  Per the continuity assumption, this entropy can be
+estimated by various methods (see for
+instance~\cite{beirlant_nonparametric_1997}).
 
 
 This distribution of the minimisers and its entropy can be used for
@@ -705,23 +813,22 @@ the infinite product is discussed:
   p_{\KK^*}(\kk) = \int_{\Uspace} p_{\UU}(\uu)\prod_{\substack{\tilde{\kk}\in \Kspace\\\tilde{\kk}\neq \kk}} \mathbbm{1}_{\{J(\tilde{\kk},\uu) > J(\kk, \uu)\}}\,\mathrm{d}\uu
 \end{equation}
 
-However, except for simple analytical problems, this pdf cannot be
-obtained analytically, and needs to be estimated.
-
-The estimation of $p_{\KK^*}$ can be performed by different methods,
-depending on the assumptions we can make upon $\kk^*(\UU)$. Let
-$\{\uu_i\}_{1\leq i \leq n_{\UU}}$ be $n_{\UU}$ i.i.d.\ samples of
-$\UU$, and $\{\kk^*(\uu_i)\}_{1\leq i \leq n_{\UU}}$ the corresponding
+However, except for simple analytical problems, the pdf $p_{\KK^*}$
+cannot be obtained analytically, and needs to be estimated. This can
+be done by different methods, depending on the assumptions we can make
+upon $\kk^*(\UU)$. Let $\{\uu_i\}_{1\leq i \leq n_{\UU}}$ be $n_{\UU}$
+i.i.d.\ samples of $\UU$, and
+$\{\kk^*(\uu_i)\}_{1\leq i \leq n_{\UU}}$ the corresponding
 minimisers, as defined \cref{eq:def_kstar}. Among the methods of
 density estimation, one of the easiest to implement and widespread
-methods is \emph{Kernel Density Estimation} (KDE).  Given the samples
+method is \emph{Kernel Density Estimation} (KDE).  Given the samples
 $\uu_i$ and the minimisers $\kk^*(\uu_i)$ for $1\leq i \leq n_{\UU}$,
 the isotropic KDE is given by
 \begin{equation}
   \hat{p}_{\KK^*}(\kk^*) = \frac{1}{n_{\UU} h^{\dim \Kspace}} \sum_{i=1}^{n_{\UU}} \mathcal{K}\left(\frac{\kk^* - \kk^*(\uu_i)}{h}\right)
 \end{equation}
 where $h>0$ is the bandwidth (that measures the influence of each
-sample), and $\mathcal{K}$ is a kernel of dimension $n=\dim \Kspace$,
+sample), and $\mathcal{K}$ is a kernel of dimension $p=\dim \Kspace$,
 usually defined as the product of one-dimensional kernels
 $\mathcal{K}_{1\mathrm{D}}$:
 $\mathcal{K}(\kk) = \prod_{j=1}^{\dim
@@ -741,18 +848,23 @@ minimisers.
   \caption{\label{fig:theta_star_samples} Density estimation of the minimisers of $J$}
 \end{figure}
 
-Finally, when we have an estimation of the density of $\KK^*$, and if it exists, we can compute its mode, that we are going to call the \emph{Most Probable estimator}:
+Finally, when we have an estimation of the density of $\KK^*$, and if
+it exists, we can compute its mode, that we are going to call the
+\emph{Most Probable estimator}:
 \begin{equation}
   \estimtxt{\kk}{MPE} = \argmax_{\kk \in \Kspace} p_{\KK^*}(\kk)
 \end{equation}
-This mode can be sought directly using appropriate algorithms, such as the Mean-shift algorithm~\citep{yizong_cheng_mean_1995}, based on the KDE, or clustering methods, such as the Expectation-Maximisation algorithm introduced in~\cite{dempster_maximum_1977}.
+This mode can be sought directly using appropriate algorithms, such as
+the Mean-shift algorithm~\citep{yizong_cheng_mean_1995}, based on the
+KDE, or clustering methods, such as the Expectation-Maximisation
+algorithm introduced in~\cite{dempster_maximum_1977}.
 
 Choosing $\estimtxt{\kk}{MPE}$ means to select the value that is
 ``most often'' the minimiser of the objective function. However, we
-have no indications on its performances when it is \emph{not} optimal,
+have no indication on its performances when it is \emph{not} optimal,
 and how often this non-optimality happens.  In \cref{sec:regret}, we
 are going to introduce the notions of regret (additive and relative),
-in order to try to be ``near optimal'' with high probability.
+in order to try to be ``almost optimal'' with high probability.
 
 
 \subsection{Regret and model selection}
@@ -767,7 +879,8 @@ Let the objective function be the negative log-likelihood:
   J(\kk, \uu) = - \log p_{Y\mid \KK, \UU}(y \mid \kk, \uu) = -\log \mathcal{L}(\kk,\uu)
 \end{equation}
 
-We can then link the notion of Wald's regret introduced earlier in~\cref{eq:def_regret_savage} to the likelihood ratio test:
+We can then link the notion of Wald's regret introduced earlier
+in~\cref{eq:def_regret_savage} to the likelihood-ratio test:
   \begin{align}
     r(\kk,\uu_0) &= J(\kk, \uu_0) - \min_{\kk^{\prime}\in\Kspace}J(\kk^{\prime}, \uu_0) = J(\kk,\uu_0) - J^*(\uu_0)  \\
                  &= \max_{\kk^{\prime}\in\Kspace} \log \mathcal{L}(\kk^{\prime}, \uu_0) - \log \mathcal{L}(\kk, \uu_0) \\
@@ -776,14 +889,14 @@ We can then link the notion of Wald's regret introduced earlier in~\cref{eq:def_
 
   
   As the model $(\mathcal{M}(\cdot, \uu_0), \Kspace)$ is misspecified,
-  we can apply the misspecified ratio test, and for a candidate
-  $\kk\in \Kspace$ we can test for the following hypotheses:
+  we can apply the misspecified likelihood-ratio test, and for a
+  candidate $\kk\in \Kspace$ we can test for the following hypotheses:
  \begin{itemize}
  \item $\mathcal{H}_0$: the model $\left(\mathcal{M}(\cdot, \uu_0), \{\kk\}\right)$ is statistically equivalent to $\left\{\mathcal{M}(\cdot, \uu_0), \Kspace\right\}$
  \item $\mathcal{H}_1$: the models are statistically different
  \end{itemize}
- regret $r$ is to be compared with half the quantile of the r.v.\
- $X(\uu_0)$ defined as
+ The statistic of the test, \emph{i.e.} the regret $r$ is to be
+ compared with half the quantile of the r.v.\ $X(\uu_0)$ defined as
   \begin{equation}
     \label{eq:sumchi2}
 X(\uu_0)=\sum_{i=1}^{\dim \Kspace} c_i(\uu_0) \Xi_i \quad \text{ with } \Xi_i \sim \chi^2_1 \text{ i.i.d.}
@@ -806,14 +919,14 @@ in~\cref{sec:model_misspecification}.
   \end{equation}
   So, for $\kk \in \mathcal{I}_{\mathrm{Lik}}(\uu_0;\beta)$, the model
   $(\mathcal{M}(\cdot, \uu_0),\{\kk\})$ is acceptable at the
-  $\eta$-level, per the Likelihood ratio test.
+  $\eta$-level, per the likelihood-ratio test.
 
   
   From a computational point of view, the coefficients
   $\{c_i(\uu_0)\}$ are hard to obtain, and depend on $\uu_0$. A first
   approximation would be to suppose that
   $X(\uu_0) \sim \chi^2_{\dim \Kspace}$, \emph{i.e.} to apply the
-  ``well-specified'' likelihood ratio test. In the more general case,
+  ``well-specified'' likelihood-ratio test. In the more general case,
   we can choose $\beta>0$ in a more arbitrary way in order to avoid
   the computations of the coefficients $\{c_i(\uu_0)\}_i$, as we are
   going to see~\cref{ssec:general_cost_prob}.
@@ -849,8 +962,8 @@ for those environmental variables are plotted below the curves.
   \caption{\label{fig:lik_interval_threshold} Different acceptable regions corresponding to different $\uu \in \Uspace$}
 \end{figure}
 
-Now, for a given $\kk$, we can define the set of $\uu\in \Uspace$ such
-that $\kk \in \mathcal{I}_{\beta}(\uu)$, i.e.\
+Now, for a given $\kk\in\Kspace$, we can define the set of
+$\uu\in \Uspace$ such that $\kk \in \mathcal{I}_{\beta}(\uu)$, i.e.\
   \begin{align}
     R_{\beta}(\kk) &= \left\{\uu\in \Uspace \mid \kk \in \mathcal{I}_{\beta}(\uu) \right\} \\
            &= \left\{\uu\in \Uspace \mid J(\kk, \uu)  \leq J^*(\uu) + \beta \right\}
@@ -865,10 +978,9 @@ that $\kk \in \mathcal{I}_{\beta}(\uu)$, i.e.\
   probability that the model $(\mathcal{M}(\cdot, \UU), \{\kk\})$ is
   ``statistically equivalent'' to the ``full model''
   $\left(\mathcal{M}(\cdot, \UU), \Kspace)\right)$, at a certain level
-  linked to the value of $\beta$.
-
-  \Cref{fig:gamma_beta_increasing} shows the regions of acceptability
-  for different $\beta$, and the associated $\Gamma_{\beta}$.
+  linked to the value of $\beta$.~\Cref{fig:gamma_beta_increasing}
+  shows the regions of acceptability for different $\beta$, and the
+  associated $\Gamma_{\beta}$.
 
 \begin{figure}[ht]
   \centering
@@ -981,14 +1093,14 @@ $R_{\alpha}(\kk)$ is a measurable subset of $\Uspace$, and by integrating this s
 the probability of being $\alpha$-acceptable. Using this function, we
 can define an estimator as the value which maximises this
 probability. And by varying the threshold $\alpha$, we get the family
-of Relative-regret estimators.
+of relative-regret estimators.
 
 
 \begin{definition}[Relative-regret family of estimators]
   \label{def:RR_family}
   Given $\alpha$, the value of $\kk$ that maximises the probability of
   being $\alpha$-acceptable is called the relative-regret (RR)
-  estimator $\hat{\kk}_{\mathrm{RR},\alpha}$.
+  estimator ${\kk}_{\mathrm{RR},\alpha}$.
   
   We define the family of relative regret estimators as the set of
   those estimators:
@@ -997,7 +1109,7 @@ of Relative-regret estimators.
     \left\{\estimtxt{\kk}{RR,\alpha} = \argmax_{\kk\in\Kspace} \Gamma_{\alpha}(\kk)\mid \alpha > 1\right\}
     \end{equation}
     For different increasing $\alpha$, the corresponding regions of
-    acceptability are represented~\cref{fig:gamma_alpha_increasing},
+    acceptability are represented in~\cref{fig:gamma_alpha_increasing},
     along with the functions $\Gamma_{\alpha}$.
   \end{definition}
 
@@ -1060,8 +1172,8 @@ additive or relative.
     regions}
 \end{figure}
 
-For both regret-based approach, the interval of acceptability at a
-fixed $\uu$ grows with the threshold, and the sharper the minimum is
+For both regret-based approaches, the interval of acceptability at a
+fixed $\uu\in\Uspace$ grows with the threshold, and the sharper the minimum is
 (in the sense of a large curvature), the faster it grows.  A more
 telling illustration of the differences between relative and additive
 regret is shown~\cref{fig:illustration_region_regret}.  The regions of
@@ -1099,25 +1211,22 @@ associated treshold $\alpha$, but similar arguments can be made for
 the absolute regret and the threshold $\beta$.
 
 In order to have an insight on the potential robustness of an
-estimator $\estimtxt{\kk}{AR,\alpha}$ both values can be studied
+estimator $\estimtxt{\kk}{RR,\alpha}$ both values can be studied
 together: the threshold $\alpha$ and the maximal probability reached
-$\max \Gamma_\alpha$
-
-  
-  Finding a relevant threshold can be a thorny issue, especially with
-  no further information on $J$. Setting it too large will lead to
-  large $\alpha$-acceptable intervals, and $\Gamma_\alpha$ may reach
-  $1$ for several different values. On the other hand, choosing a
-  threshold too small may give a maximal acceptability probability too
-  low to assess the robustness of the chosen solution.  summarize, we
-  can contemplate three starting points:
+$\max \Gamma_\alpha$. Finding a relevant threshold can be a thorny
+issue, especially with no further information on $J$. Setting it too
+large will lead to large $\alpha$-acceptable intervals, and
+$\Gamma_\alpha$ may reach $1$ for several different values. On the
+other hand, choosing a threshold too small may give a maximal
+acceptability probability too low to assess the robustness of the
+chosen solution. We can contemplate three starting points:
  \begin{itemize}
  \item Set a relaxation parameter $\alpha > 1$. From this, the maximal
    probability is
    $p_{\alpha} = \max_{\kk\in\Kspace} \Gamma_{\alpha} =
    \max_{\kk\in\Kspace} \Prob_{\UU}\left[J(\kk, \UU) \leq \alpha
      J^*(\UU)\right]$. This task can be seen as the estimation and
-   optimisation of a well chosen probability.
+   optimisation of a specific probability.
 
    
 \item Set a probability $0< p\leq 1 $ we want to reach, and define
@@ -1147,12 +1256,11 @@ $q(\kk)$ is the quantile of order $p$ of the r.v. $r(\kk, \UU)$.
 \end{itemize}
 
 Specific techniques may be applied in order to perform the first two
-approaches efficiently, and some will be introduced in the next
+approaches efficiently, which will be introduced in the next
 chapter. The third one however requires the knowledge of the objective
 function on the whole joint space $\Kspace \times \Uspace$, in order
-to compute $\max \Gamma$ for a various number of thresholds, thus may
+to compute $\max \Gamma_{\alpha}$ for a various number of thresholds, thus may
 not be adapted for costly computer simulations.
-
 
 
 \section{Partial Conclusion}
@@ -1160,17 +1268,17 @@ not be adapted for costly computer simulations.
 As shown through this chapter, when optimising under uncertainties, a
 lot of criteria can be defined in order to satisfy the idea of
 \emph{robustness}, depending on the interpretation of this term. A
-summary of those introduced can be
+summary of those introduced here can be
 found~\cref{tab:summary_robust}. Some criteria are commonly
 encountered in optimisation under uncertainty, such as expected loss
-minimisation. We introduce also new families of estimators, which aim
+minimisation. We introduced also new families of estimators, which aim
 at maximising a probability based on the regret, either additive or
 relative.
 \begin{table}[ht]
   \centering
   \begin{tabular}{ll}
     \toprule
-    Objective name                & Objective to \emph{minimise} wrt $\kk$                                                                                 \\ \midrule
+    Objective name                & Objective to \emph{minimise} with respect to  $\kk$                                                                                 \\ \midrule
     Profile Likelihood            & $-\log \left(\max_{\uu \in \Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)\right)$                                       \\
     Integrated Likelihood         & $-\log \int_{\Uspace} p_{Y \mid \KK, \UU}(y \mid \kk, \uu)p_{\UU}(\uu) \,\mathrm{d}\uu=-\log p_{Y\mid \KK}(y\mid \kk)$ \\
     Marginal maximum a posteriori & $-\log p_{\KK\mid Y}(\kk \mid y)$                                                                                      \\ \midrule
@@ -1198,20 +1306,17 @@ as in \cite{lehman_designing_2004}:
 \end{align*}
 
 All of the criteria introduced above require costly numerical
-procedure, such as integration and optimisation. Solving these robust
+procedures, such as integration and optimisation. Solving these robust
 estimation problems is then expensive in term of computer resources,
 as one would need to run the forward model a very large number of
-times, in order to get accurate numerical integration or
+times in order to get accurate numerical integration or
 optimisation. In the next chapter we will discuss methods based on
 surrogate modelling, that can be used to solve efficiently such
-problems, in order to avoid make the best use of evaluations of the
+problems, in order to make the best of the evaluations of the
 numerical model $\mathcal{M}$ on the space $\Kspace \times\Uspace$.
 
 \markchapterend
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% BIB
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subfileLocal{
 	\pagestyle{empty}
 	\bibliographystyle{alpha}

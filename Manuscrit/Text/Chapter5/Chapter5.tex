@@ -1314,13 +1314,15 @@ uncertainty in order to add points by batches.
 This finally lead to relative-regret estimates of the bottom friction,
 which differ from the global minimiser: according to this study,
 taking a value slightly larger for the first component of the bottom
-friction lead seemingly to a more robust solution.  The small
+friction lead seemingly to a more robust solution. The small
 variations in the values of $\hat{\kk}_{\mathrm{RR}}$ for the
-different levels of confidence also suggest that the calibration of
+different levels of confidence also suggest that 
+
+that the calibration of
 the numerical model under uncertainties is not that problematic in
 this configuration, since the global optimiser
 $\hat{\kk}_{\mathrm{opt}}$ is quite close to the relative-regret
-estimates.
+estimates. 
 
 
 
@@ -1328,7 +1330,7 @@ estimates.
 From a performance point of view, GP can indeed reduce the
 computational requirements needed to compute relative-regret
 estimates. However as mentioned before, GP do not scale particularly
-well for problem of more than a dozen input variables, rendering a
+well for problems of more than a dozen input variables, rendering a
 dimension reduction almost mandatory for tractability.
 
 The computational cost of the enrichment process, either using
