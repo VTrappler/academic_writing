@@ -76,13 +76,14 @@ called Gaussian Process regression, but other methods can be used to
 solve such problems. Polynomial Chaos regression for instance
 \cite{wiener_homogeneous_1938,xiu_wiener--askey_2002,sudret_polynomial_2015,miranda_adjoint-based_2016}. %\todo{motivation choix du krigeage}
 
-Those surrogates (as their name indicate) can then be used directly
-instead of $f$ in a \emph{plug-in} approach.
+Those surrogates then be used directly instead of $f$ in a
+\emph{plug-in} approach.
+
 \begin{definition}[Plug-in method]
   \label{def:plugin}
   In this work, we will use the term \emph{plug-in} as the fact of
   using directly an estimated quantity, such as a surrogate $g$
-  instead of the expensive-to-evaluate original function $f$, in
+  instead of the expensive-to-evaluate original function $f$ in
   computations.
 \end{definition}
 
@@ -98,13 +99,13 @@ estimates introduced before, especially regret-based estimators.
 
 % Surrogate models are often built using initial evaluations of $f$.
 \section{Gaussian process regression}
-In the following, we will introduce a generic function $f$, that maps
+In the following, we will consider a generic function $f$, that maps
 a space $\Xspace$ to $\mathbb{R}$. Depending on the application,
 $\Xspace = \Kspace$ or $\Xspace = \Kspace \times \Uspace$. This
 function is unknown, and expensive to evaluate.
 
 \subsection{Random processes}
-Let us assume that we have a map $f$ from a $p$ dimensional space to $\mathbb{R}$:
+Let us assume that we have a map $f$ from a $p$-dimensional space to $\mathbb{R}$:
 \begin{align}
   \begin{array}{rrcl}
     f: & \mathbb{X} \subset \mathbb{R}^p& \longrightarrow & \mathbb{R} \\
@@ -120,14 +121,15 @@ $x\in \mathcal{X}$ if $(x, f(x)) \in \mathcal{X}$, \textit{i.e.} if
 the point $x$ has been evaluated by $f$.  As this function is unknown,
 there is uncertainty on the values outside the initial design, which
 can be classified as \emph{epistemic} since it can be reduced by
-directly evaluating the function.  This uncertainty on the value taken
-by the function leads us to the definition of random processes:
+directly evaluating the function (see \cref{sec:def_robustness}).
+This uncertainty on the value taken by the function leads us to the
+definition of random processes:
 \begin{definition}[Random process]
   Let $(\Omega, \mathcal{F}, \Prob)$ be a probability space, and
   $\Xspace\subset \mathbb{R}^p$.  A random process $Z$ is a collection
   of random variables indexed on $\Xspace$, so for each
-  $x \in \Xspace$, $Z(x)$ is a real random variable (\textit{i.e.} $Z(x):\Omega \rightarrow \mathbb{R}$)% \todo{notation?}
-  ):
+  $x \in \Xspace$, $Z(x)$ is a real random variable (\textit{i.e.}
+  $Z(x):\Omega \rightarrow \mathbb{R}$):
  \begin{equation}
   \begin{array}{rcl}
     Z: \mathbb{X} & \longrightarrow & \left(\Omega \rightarrow \mathbb{R} \right)\\
@@ -211,7 +213,7 @@ an unobserved point $x \in \Xspace$:
     \end{pmatrix}
 \right)
 \end{equation}
-where $\mathbf{x} = (x_1,\dots,x_n)$, $x_i\in\mathcal{X}$, $\forall 1\leq i\leq n$ are the points of the design and
+where $\mathbf{x} = (x_1,\dots,x_n)$, $x_i\in\mathcal{X}$, for $ 1\leq i\leq n$ are the points of the design and
 \begin{align}
    Z(\mathbf{x}) &= (Z({x}_1),\dots,Z({x}_n)) \\
   K_{\mathcal{X}}(x) &= \left(C_Z(x, x_1),C_Z(x, x_2),\dots,C_Z(x,x_n)\right)^T \\
@@ -225,7 +227,9 @@ deterministic function (that may be estimated), we talk about
 \emph{Universal Kriging}~\citep{le_riche_introduction_2014}. In the
 following, we consider Simple Kriging.
 
-Using the properties of the multivariate distribution, the GP conditioned on the observations of~\eqref{eq:GP_Z_cond} has mean and covariance function defined by
+Using the properties of the multivariate distribution, the GP
+conditioned on the observations of~\eqref{eq:GP_Z_cond} has mean and
+covariance function defined by
 \begin{align}
   m_{Z \mid \mathcal{X}}(x) &= m_Z(x) + K_{\mathcal{X}}(x)^T \mathbf{K}_{\mathcal{X}}^{-1}(f(\mathbf{x}) - \mu_Z ) \\
   C_{Z\mid \mathcal{X}}(x, x^\prime) &= C_Z(x, x^\prime)  - K_{\mathcal{X}}(x)^T\mathbf{K}_{\mathcal{X}}^{-1}K_{\mathcal{X}}(x^\prime)
@@ -299,8 +303,8 @@ parameter $s^2$.  $l$ is called the \emph{length scale} and quantify
 the radius of influence of an evaluation along the different input
 variables. If the length scales are all equals, the covariance kernel
 is said \emph{isotropic}. Otherwise, the kernel is \emph{anisotropic}.
-
-A few common stationary $1D$-covariance functions are introduced~\cref{tab:common_cov_fc}.
+A few common stationary $1D$-covariance functions are
+introduced~\cref{tab:common_cov_fc}.
 
   \begin{table}[ht]
     \centering 
@@ -334,11 +338,11 @@ A few common stationary $1D$-covariance functions are introduced~\cref{tab:commo
 
 \subsection{Initial design and validation}
 
-The $(p + 1)$ hyperparameters of the covariance: the length scales
-$(l_1,\dots,l_{p})$ and the variance parameter $s$ have to be
-estimated based on the training set $\mathcal{X}$. This is usually
-done by MLE~(see for instance~\cite{ribaud_robustness_2019}), or by
-cross-validation (see~\cite{ginsbourger_note_2009}).
+The $(p + 1)$ hyperparameters of the covariance, \textit{i.e.} the
+length scales $(l_1,\dots,l_{p})$ and the variance parameter $s$ have
+to be estimated based on the training set $\mathcal{X}$. This is
+usually done by MLE~(see for instance~\cite{ribaud_robustness_2019}),
+or by cross-validation (see~\cite{ginsbourger_note_2009}).
 
 In order to construct a Gaussian process, or a general metamodel for
 that matter, the model must first be evaluated on the initial design
@@ -385,19 +389,26 @@ $Z \mid \mathcal{X}_0$ and is defined as
 \end{equation}
 For notational convenience, the conditioning with respect to
 $\mathcal{X}_0$ will be omitted if the experimental design is clear
-from the context.\emph{Stepwise Uncertainty
-  Reduction}~\citep{villemonteix_informational_2006} is based on the
-definition of a \emph{criterion} (also called \emph{learning
+from the context.
+
+In order to enrich the design of experiments sequentially, we can
+adopt a \emph{Stepwise Uncertainty Reduction}
+strategy~\citep{villemonteix_informational_2006}, which is based on
+the definition of a \emph{criterion} (also called \emph{learning
   function}), say $\kappa$, that measures the uncertainty upon a
 certain objective associated with the GP and with $f$. This criterion
 implicitly depends on the GP and thus the design used to construct it.
 
-To select the next point to evaluate with $f$, this criterion is maximised on $\Xspace$.
-This procedure is then repeated at each iteration: at the iteration $n$, with the set of evaluated points $\mathcal{X}_n$, the next point is chosen as
+To select the next point to evaluate with $f$, this criterion is
+maximised on $\Xspace$.  This procedure is then repeated at each
+iteration: at the iteration $n$, with the set of evaluated points
+$\mathcal{X}_n$, the next point is then chosen as
 \begin{equation}
   x_{n+1} = \argmax_{x\in\Xspace} \kappa(x) = \argmax_{x\in\Xspace} \kappa(x; Z \mid \mathcal{X}_n)
 \end{equation}
-The GP is updated according to the new evaluation which is added to the design. The general principle of this strategy is summarized in~\cref{alg:SUR_strat}
+The GP is updated according to the new evaluation which is added to
+the design. The general principle of this strategy is summarized
+in~\cref{alg:SUR_strat}
 % This new point is then evaluated by $f$, and the pair is added to the design: $\mathcal{X} \gets \mathcal{X} \cup \{(x_{n+1}, f(x_{n+1}))\}$.
 
 \begin{algorithm}
@@ -422,7 +433,7 @@ The GP is updated according to the new evaluation which is added to the design. 
 
 Due to the structure of many computer codes, it may sometimes be
 beneficial to evaluate a batch of points, instead of selecting a
-unique point at each step of the procedure. The SUR strategies
+unique point at each step of the procedure. SUR strategies as
 introduced before require the optimisation of a criterion function to
 select a single point, but in~\cite{ginsbourger_kriging_2010}, the
 authors introduce a few ways to transform the criterion in order to be
@@ -462,18 +473,21 @@ able to select $K$ points that will be evaluated by the true function.
 % despite avoiding the successive integrals, the optimisations can be
 % expensive.
 
-Instead of adapting a 1-step criterion, we can rely on sampling in order
-to get $K$ points of $\Xspace$ to evaluate.  This technique, named
-AK-MCS in~\cite{echard_ak-mcs_2011}, which stands for
-\emph{Adaptive-Kriging Monte Carlo Sampling} is described
+Instead of adapting a 1-step criterion, we can rely on sampling in
+order to get $K$ points of $\Xspace$ to evaluate.  This technique,
+named AK-MCS in~\cite{echard_ak-mcs_2011}, which stands for
+\emph{Adaptive-Kriging Monte-Carlo Sampling} is described
 in~\cite{dubourg_reliability-based_2011}, and has been applied and
 refined more recently
 in~\cite{schobi_rare_2017,razaaly_quantile-based_2020,razaaly_rare_2019}
-for extreme quantile and small probability estimation.
+for the estimation of extreme quantiles and small probabilities.
 
-The main idea behind % \todo{anglais ?}
-is to sample a large number of points from a given density.  Let
-$\kappa$ be a 1-step criterion, and let
+Those are qualified as Monte-Carlo sampling methods, as they rely on
+obtaining samples drawn from a given distribution which represent
+points whose evaluation could be interesting with regards to the
+problem at stake. % \todo{anglais ?}
+
+Let $\kappa$ be a 1-step criterion, and let
 $\bar{\kappa}(x) =
 \frac{\kappa(x)}{\int_{\Xspace}\kappa(u)\,\mathrm{d}u}$ be the
 normalized criterion, so that $\int_{\Xspace} \bar{\kappa}=1$. In this
@@ -495,14 +509,14 @@ low or even zero $\bar{\kappa}$. Finally, the closest sampled points
 can then be considered to be evaluated.  Additional filtering can then
 be performed in order to avoid numerical issues, if the chosen points
 are too close to each other or to points of the design.  The principle
-of AK-MCS is described~\cref{alg:sampling_enrichment}.
+of AK-MCS (using KMeans) is described~\cref{alg:sampling_enrichment}.
 
 \begin{algorithm}
 \caption{AK-MCS: enrichment of the design using sampling}
 \label{alg:sampling_enrichment}
 \begin{algorithmic}
-  \REQUIRE Initial design $\mathcal{X}_0$, normalized criterion function $\bar{\kappa}$
-  \REQUIRE number of points to evaluate each iterations $K$, number of samples $N$
+  \REQUIRE Initial design $\mathcal{X}_0$, Sampler according to $\bar{\kappa}$
+  \REQUIRE Batch size $K$, number of samples $N$
 \STATE Fit $Z$, a GP using the design $\mathcal{X}_0$
 \STATE $n \leftarrow 0$
 \WHILE{Stopping criterion not met or max budget evaluation not reached} 
@@ -511,7 +525,7 @@ of AK-MCS is described~\cref{alg:sampling_enrichment}.
 \FOR{$j=1$ to $K$} % \COMMENT{Find the $N_s$ closest points}
 \STATE $x_{n+j}=\argmin_{x \in S \setminus \{x_{n+1}, \dots, x_{n+j-1}\}} \|x - x_j^{\mathrm{center}} \|$
 \ENDFOR
-\STATE Evaluate $f(x_{n+1}),\dots f(x_{n+K})$
+\STATE Evaluate $f(x_{n+1}),\dots, f(x_{n+K})$
 \STATE $\mathcal{X}_{n+K} \leftarrow \mathcal{X}_n \cup \left\{\left(x_{n+1}, f(x_{n+1})\right),\dots,  \left(x_{n+K}, f(x_{n+K})\right)\right\}$
 \STATE Condition the GP according to $\mathcal{X}_{n+K}$
 \STATE $n \leftarrow n + K$
@@ -543,9 +557,9 @@ different problems involving an unknown function $f$:
 \label{sec:exploration_criteria}
 We are going to introduce first some common criteria of enrichment,
 that aim at exploring the input space $\Xspace$.  We suppose that the
-current GP has been conditioned of the design $\mathcal{X}_n$,
+current GP has been conditioned with the design $\mathcal{X}_n$,
 composed of the points $x_i$ and their evaluations $f(x_i)$ for
-$1\leq n$.
+$1\leq i \leq n$.
 
 \paragraph{Maximum of variance}
 A measure of uncertainty on the GP is
@@ -568,7 +582,7 @@ The prediction variance is directly given by
 $\sigma^2_{Z\mid \mathcal{X}_n}$ and represents the uncertainty on the
 Gaussian regression. To summarize this uncertainty on the whole space
 $\Xspace$, we define the Integrated Mean Square Error
-(IMSE)\citep{sacks_designs_1989} as
+(IMSE)~\citep{sacks_designs_1989} as
 \begin{equation}
   \IMSE(Z \mid \mathcal{X}_n) = \int_{\Xspace} \sigma_{Z\mid\mathcal{X}_n}^2(x)\,\mathrm{d}x
 \end{equation}
@@ -579,7 +593,7 @@ subset $\mathfrak{X}\subset \mathcal{X}_n$ that yields
 \end{equation}
 For notational convenience, when the GP considered is clear from the
 context, only the design used to fit it will be an argument:
-$\IMSE(Z \mid \mathcal{X}_n) = \IMSE(\mathcal{X_n}$.  Unfortunatley, 
+$\IMSE(Z \mid \mathcal{X}_n) = \IMSE(\mathcal{X}_n)$.  Unfortunatley, 
 exact evaluation of this integral is impossible, so it needs to be
 approximated using numerical integration, such as Monte-carlo or
 quadrature rules such as Gaussian, or Hermite rule to cite a
@@ -589,32 +603,35 @@ few.% that take the form
 % \end{equation}
 % for $n_{\mathrm{quad}}$ quadrature points $x_i$ associated with weights $w_i$, both given by 
 
-
-For a given $x\in \Xspace$ and an outcome $z=f(x)\in \mathbb{R}$, the
-augmented design is defined as
+We can then study how adding a certain point would affect the
+$\IMSE$. For a given $x\in \Xspace$ and an outcome
+$z=f(x)\in \mathbb{R}$, the \emph{augmented design} is defined as
 $\mathcal{X}_n \cup \left\{(x, z)\right\}$, and the IMSE of the
 augmented design is
-$\IMSE\left(\mathcal{X}_n \cup \left\{(x, z)\right\} \right)$.
-Before the actual experiment though, $z$ is unknown, but we can model
-it by its distribution given by the GP (per~\cref{eq:ZgivenXGP}). So
-for a given candidate $x$, the IMSE when evaluating the point $x$ will
-be on average
+$\IMSE\left(\mathcal{X}_n \cup \left\{(x, z)\right\} \right)$.  Before
+the actual experiment though, $z$ is unknown, but we can model it by
+its distribution given by the GP (per~\cref{eq:ZgivenXGP}). So for a
+given candidate $x$, the IMSE when evaluating the point $x$ will be on
+average
 \begin{equation}
   \label{eq:IMSE_augmented}
   \Ex_{Z(x)}\Big[\IMSE\big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
 where the expectation is to be taken with respect to the random
-variable $Z(x)$. As each scenario requires to fit a GP, and to compute
-the IMSE, a precise evaluation is quite expensive. A strategy found
-for instance in~\cite{villemonteix_informational_2006} is to take $M$
+variable $Z(x)$. The expression of~\cref{eq:IMSE_augmented} requires then the evaluation of an integral in dimension $1+\dim \mathbb{X}$ .
+
+As each outcome of $Z(x)$ requires to fit a GP, and to compute the
+IMSE, a precise evaluation is quite expensive. A strategy found for
+instance in~\cite{villemonteix_informational_2006} is to take $M$
 possible outcomes for $Z(x)$, corresponding to evenly spaced quantiles
 of its distribution, or using Gauss-Hermite
-quadratures~\citep{bernard_methodes_2019} in order to take advantage of
-the Gaussian nature of $Z(x)$.
+quadratures~\citep{bernard_methodes_2019} in order to take advantage
+of the Gaussian nature of $Z(x)$.  The hyperparameters of the GP
+should not be reevaluated when augmenting the design, in order to get
+comparable values for the IMSE.\@
 
-The hyperparameters of the GP should not be reevaluated when augmenting the design, in order to get comparable values for the IMSE.\@
-
-Finally, we can maximise a criterion which is the opposite of the expression in~\cref{eq:IMSE_augmented} to enrich the design:
+Finally, we can maximise a criterion which is the opposite of the
+expression in~\cref{eq:IMSE_augmented} to enrich the design:
 \begin{equation}
   x_{n+1} = \argmax_{x\in \Xspace}-\Ex_{Z(x)}\Big[\mathrm{IMSE} \big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
@@ -629,10 +646,10 @@ Finally, we can maximise a criterion which is the opposite of the expression in~
 
 \subsection{Criteria for optimisation of the objective function}
 \label{sec:GP_optimization_criteria}
-The criteria we detailed above aim at reducing the epistemic
-uncertainty modelled through the Gaussian Process. In other words, we
-try to improve our knowledge on the unknown function globally. We are
-now going to evoke a few criteria which are driven by the global
+The criteria detailed above aim at reducing the epistemic uncertainty
+modelled through the Gaussian Process. In other words, we try to
+improve our knowledge on the unknown function globally. We are now
+going to evoke a few criteria which are driven by the global
 optimisation of the function.
 
 Those methods usually aim at striking a balance between the

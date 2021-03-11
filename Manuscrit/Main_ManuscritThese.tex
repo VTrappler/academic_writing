@@ -32,8 +32,8 @@
         
 	%\cleartoleftpage %% On veut que les pages du sommaires de fassent face
 
-        \phantomsection % Pour que hyperref pointe sur la page
-	\addstarredchapter{\contentsname}
+        % \phantomsection % Pour que hyperref pointe sur la page
+	% \addstarredchapter{\contentsname}
         \setcounter{tocdepth}{2}
 	\ForceEmptyStyle{\tableofcontents}
 	
@@ -85,7 +85,6 @@
 	\fullclear
 	\pagestyle{empty} % Disable any style
 	% \bibliographystyle{alpha}
-        \ad
         \bibliographystyle{apalike}
 	\bibliography{../bibzotero}
 

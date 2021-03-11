@@ -776,21 +776,21 @@ observations $y$ and the forward operator.
 For the sake of the study, the original function $J$ has been
 optimised over $\Kspace\times\Uspace$, giving
 \begin{equation}
-  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = J(\hat{\kk}_{\mathrm{opt}}, \hat{\uu}_{\mathrm{opt}})= \num{29.749}
+  \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = J(\hat{\kk}_{\mathrm{global}}, \hat{\uu}_{\mathrm{global}})= \num{29.749}
 \end{equation}
 for
 \begin{align}
-  \hat{\kk}_{\mathrm{opt}}                     & = (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442})                                                                                                            \\\hat{\uu}_{\mathrm{opt}} & = (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
+  \hat{\kk}_{\mathrm{global}}                     & = (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442})                                                                                                            \\\hat{\uu}_{\mathrm{global}} & = (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
 \end{align}
 In order to compare the result of this optimisation with the truth
 value,~\cref{tab:ktruthkopt} shows the different values of the
 different components of $\kk^{\mathrm{truth}}$ and
-$\hat{\kk}_{\mathrm{opt}}$.
+$\hat{\kk}_{\mathrm{global}}$.
 
 \begin{table}[!h]
   \centering
   \begin{tabular}{rrrr}\toprule
-   Component              & $\kk^{\mathrm{truth}}$                                                                                                                                                                                                                                                                      & Component                & $\hat{\kk}_{\mathrm{opt}}$                                              \\ \midrule
+   Component              & $\kk^{\mathrm{truth}}$                                                                                                                                                                                                                                                                      & Component                & $\hat{\kk}_{\mathrm{global}}$                                              \\ \midrule
     $\kk_{\mathrm{C}}$    & \num[round-mode=places,round-precision=4]{-3.68887}                                                                                                                                                                                                                                         & $\kk^{(1)}$                  & \num[round-mode=places,round-precision=4]{-3.5161661}                   \\
     $\kk_{\mathrm{G}}$    & \num[round-mode=places,round-precision=4]{-4.96184}                                                                                                                                                                                                                                         & $\kk^{(2)}$                  & \num[round-mode=places,round-precision=4]{-5.07764701}                  \\
     $\kk_{\mathrm{R}}$    & \num[round-mode=places,round-precision=4]{-2.99573}                                                                                                                                                                                                                                         & \multirow{4}{*}{$\left. \vphantom{\begin{tabular}{c}3\\3\\3\\3\end{tabular}}\right\}\kk^{(3)}$} & \multirow{4}{*}{\num[round-mode=places,round-precision=4]{-6.34588442}} \\
@@ -806,10 +806,10 @@ $\hat{\kk}_{\mathrm{opt}}$.
 \end{table}
 We can also notice that
 $\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
-\hat{\uu}_{\mathrm{opt}}$. This can be explained by the choice of
+\hat{\uu}_{\mathrm{global}}$. This can be explained by the choice of
 controlling the parameter on a space of dimension 3, while the truth
 value used to generate the observations can be seen as 6
-dimensional. The difference in the environmental variables $\hat{\uu}_{\mathrm{opt}}$ and
+dimensional. The difference in the environmental variables $\hat{\uu}_{\mathrm{global}}$ and
 $\uu^{\mathrm{truth}}$ compensates for the
 difference of dimensionality between $\kk\in\Kspace$, the control
 variable, and $\kk^{\mathrm{truth}}$.
@@ -911,7 +911,7 @@ marginal distribution of the first component $\kk_Z^{(1)*}(\UU)$ seems
 to exhibit two modes: one at \num{-3.6}, and one at around
 \num{-3.45}, and both are quite close to the value found when
 optimising globally:
-$\hat{\kk}^{(1)}_{\mathrm{opt}}\approx \num{-3.5}$, which make it a
+$\hat{\kk}^{(1)}_{\mathrm{global}}\approx \num{-3.5}$, which make it a
 clear candidate for robust optimisation. For the two other components,
 we can observe that the range values taken by the samples
 $\kk^*_Z(\uu_i)$ for $1 \leq i \leq n_{\uu}$ is larger, indicating
@@ -1079,13 +1079,13 @@ On~\cref{fig:evo_alphap_kp}, we can see that the estimated components
 of $\hat{\kk}_{\mathrm{RR},\alpha}(\UU)$ stay in a rather small range
 for all $\alpha >1$. Recalling the the global optimiser whose values
 are introduced~\cref{tab:ktruthkopt}~\cpageref{tab:ktruthkopt},
-$\hat{\kk}_{\mathrm{opt}} = (-3.516, -5.078, -6.3459 )$, we can
+$\hat{\kk}_{\mathrm{global}} = (-3.516, -5.078, -6.3459 )$, we can
 observe that $\hat{\kk}^{(1)}_{\mathrm{RR}, \alpha}$ is slightly
-higher than $\hat{\kk}^{(1)}_{\mathrm{opt}}$ for all $\alpha > 1$.
+higher than $\hat{\kk}^{(1)}_{\mathrm{global}}$ for all $\alpha > 1$.
 
 % Regarding the second and third components, we can see that
 % $\hat{\kk}_{\mathrm{RR},\alpha}$ shows lower values than
-% $\hat{\kk}_{\mathrm{opt}}$, but considering the 
+% $\hat{\kk}_{\mathrm{global}}$, but considering the 
 
 \begin{figure}[ht]
   \centering
@@ -1242,7 +1242,7 @@ We can notice that similarly as in~\cref{fig:evo_alphap_kp}, the range
 of values taken by each component is rather small. We can however
 notice that the first component of $\hat{\kk}_{\mathrm{RR}, \alpha_p}$
 is again slightly larger than the one the global optimum
-$\hat{\kk}_{\mathrm{opt}}$.
+$\hat{\kk}_{\mathrm{global}}$.
 
 
 All in all, this study suggests that choosing a value slightly higher
@@ -1272,7 +1272,7 @@ A comparison of the two methds is summarised in~\cref{tab:results_croco}.
     Advantage & Optimal criterion of enrichment & $K$ chosen arbitrary \\ \midrule
     $\hat{\kk}_{\mathrm{RR},\alpha}$ $\alpha=1.3$ & $(\num{-3.43},\num{-5.2},\num{-6.48})$  & $(\num{-3.375},\num{-5.05}, \num{-6.61})$ \\
     $\hat{\kk}_{\mathrm{RR},\alpha_p}$ $p=0.95$ & $(\num{-3.39},\num{-5.28},\num{-6.5})$  & $(\num{-3.36},\num{-5.10}, \num{-6.63})$ \\
-    $\hat{\kk}_{\mathrm{opt}}$ & \multicolumn{2}{c}{$(-3.516, -5.078, -6.3459 )$} \\
+    $\hat{\kk}_{\mathrm{global}}$ & \multicolumn{2}{c}{$(-3.516, -5.078, -6.3459 )$} \\
     \bottomrule
   \end{tabular}
   \caption{Comparison of methods and numerical results for the robust
@@ -1311,18 +1311,21 @@ threshold. On the other hand, in order to minimise a specific quantile
 of the relative-regret, we defined and sampled in the margin of
 uncertainty in order to add points by batches.
 
-This finally lead to relative-regret estimates of the bottom friction,
-which differ from the global minimiser: according to this study,
-taking a value slightly larger for the first component of the bottom
-friction lead seemingly to a more robust solution. The small
+This finally leads to relative-regret estimates of the bottom
+friction, which differ from the global minimiser: according to this
+study, taking a value slightly larger for the first component of the
+bottom friction lead seemingly to a more robust solution. The small
 variations in the values of $\hat{\kk}_{\mathrm{RR}}$ for the
-different levels of confidence also suggest that 
+different levels of confidence also suggest that a compromise between
+performances and robustness is easily reachable. Indeed, in this
+configuration and given the study on the conditional minimisers, we
+can see that the calibration problem behaves ``nicely'' under
+uncertainties.\todo{finir}
 
-that the calibration of
-the numerical model under uncertainties is not that problematic in
-this configuration, since the global optimiser
-$\hat{\kk}_{\mathrm{opt}}$ is quite close to the relative-regret
-estimates. 
+% that the calibration of the
+% numerical model under uncertainties is not that problematic in this
+% configuration, since the global optimiser $\hat{\kk}_{\mathrm{opt}}$
+% is quite close to the relative-regret estimates.
 
 
 
@@ -1385,7 +1388,8 @@ processes $\Delta_\alpha$ and $\Xi$. For each of this optimisation, we
 used a gradient-descent methods, where the starting point is selected
 randomly in the search space each restart, in order to avoid getting
 stuck in a local minimiser. This step could be improved as well, by
-using a directly a global optimisation method.% such as CMA-ES~\citep{hutchison_evaluating_2004} since
+using directly a global optimisation
+method.% such as CMA-ES~\citep{hutchison_evaluating_2004} since
 % the evaluation of the function to be minimised is not so expensive.
 
 

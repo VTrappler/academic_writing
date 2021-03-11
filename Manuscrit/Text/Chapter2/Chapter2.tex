@@ -1085,10 +1085,14 @@ admissible, \emph{i.e.} that $y = \mathcal{M}(\kk)\in \Yspace$.
     \nabla_\kk \mathcal{F} &= \pfrac{\mathcal{F}}{y} \pfrac{y}{\kk} + \pfrac{\mathcal{F}}{\kk}
   \end{aligned} \label{eq:aze}
 \end{equation}
-In those equations, the partial derivatives with respect to $\kk$ are quite easily obtainable, while the real challenge is to obtain the derivative with respect to the state variable: $\pfrac{}{y}$.
+In those equations, the partial derivatives with respect to $\kk$ are
+quite easily obtainable, while the real challenge is to obtain the
+derivative with respect to the state variable: $\pfrac{}{y}$.
 
 
-To treat the constrained optimisation in~\cref{eq:def_J_adjoint}, let us introduce the Lagrange multiplier $\lambda \in \Yspace$, so that we can write the Lagrangian $\mathscr{L}$:
+To treat the constrained optimisation in~\cref{eq:def_J_adjoint}, let
+us introduce the Lagrange multiplier $\lambda \in \Yspace$, so that we
+can write the Lagrangian $\mathscr{L}$:
 \begin{equation}
   \mathscr{L}(\kk, y, \lambda) = J(y,\kk) - \innerprod{\lambda}{\mathcal{F}(y, \kk)}
 \end{equation}
@@ -1109,7 +1113,12 @@ When differentiating with respect to the state variable, the equation that verif
 \begin{equation}
   \pfrac{\mathscr{L}}{y} = \pfrac{J}{y} - \innerprod{\lambda}{\pfrac{\mathcal{F}}{y}}= 0  \tag{Adjoint equation}
 \end{equation}
-Finally, when $\lambda$ verifies the adjoint equation: $ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda= \left(\pfrac{J}{y}\right)^T$, the gradient of the objective function can be expressed using the partial derivative \emph{with respect to $\kk$} of the objective function and of the forward model, and the adjoint variable:
+Finally, when $\lambda$ verifies the adjoint equation:
+$ \left(\pfrac{\mathcal{F}}{y}\right)^T\lambda=
+\left(\pfrac{J}{y}\right)^T$, the gradient of the objective function
+can be expressed using the partial derivative \emph{with respect to
+  $\kk$} of the objective function and of the forward model, and the
+adjoint variable:
 
 \begin{equation}
     \pfrac{\mathscr{L}}{\kk} = \nabla_\kk J %  &= \pfrac{J}{\kk}(y,\kk) - \innerprod{\lambda}{\pfrac{\mathcal{F}}{\kk}(y,\kk)} \\
@@ -1167,20 +1176,42 @@ More complex models usually provide a better fit of the model but to the cost of
 \end{figure}
 
 
-We can then look to reduce the complexity of the model, without decreasing significantly its performance.
+We can then look to reduce the complexity of the model, without
+decreasing significantly its performance.
 
-We are first going to consider the case of nested models: models that share the same forward model, but whose parameter spaces are nested. Model selection in this case is a way to reduce the dimension of the model, by reducing the parameter space.
+We are first going to consider the case of nested models: models that
+share the same forward model, but whose parameter spaces are
+nested. Model selection in this case is a way to reduce the dimension
+of the model, by reducing the parameter space.
 
-Finally, tools introduced in this section bring up model comparison. A calibrated model $(\mathcal{M},\{\hat{\kk}\})$ is optimal given an objective function, but we can show that values close to the calibrated value $\hat{\kk}$ may also be of interest, as the decrease of performance may not be statistically significant. The ``perturbed'' model $(\mathcal{M}, \{\hat{\kk} + \varepsilon\})$ for small $\varepsilon$ may accurately describe the data as well.
+Finally, tools introduced in this section bring up model comparison. A
+calibrated model $(\mathcal{M},\{\hat{\kk}\})$ is optimal given an
+objective function, but we can show that values close to the
+calibrated value $\hat{\kk}$ may also be of interest, as the decrease
+of performance may not be statistically significant. The
+``perturbated'' model $(\mathcal{M}, \{\hat{\kk} + \varepsilon\})$ for
+small $\varepsilon$ may accurately describe the data as well.
 
 \subsection{Likelihood ratio test and relative likelihood}
 \label{sec:likelihood_ratio_test}
-Generally speaking, more complex models have a better ability to represent the data, but all the parameters included in the model may not be relevant for the modelling. It can be interesting to test if a ``simpler'' model would give similar performances, or at least show a decrease in performances that is not statistically significant.
-One of the most well-known test is the Likelihood-ratio test, that tests if two \emph{nested models} are equivalent:
-Let us consider two nested models: $\mathfrak{M}_1 = (\mathcal{M}_1, \Kspace_1)$, $\mathfrak{M}_2= (\mathcal{M}_2,\Kspace_2)$, such that $\mathcal{M}_1=\mathcal{M}_2=\mathcal{M}$ and $\Kspace_2 \subsetneq \Kspace_1$. In this case, $\mathfrak{M}_2$ represents the simpler model, with a reduced parameter space, while $\mathfrak{M}_1$ is the more general model. Recalling the notion of model dimension in~\cref{rmk:model_dimension},  $\mathfrak{M}_1$ has dimension $r$, and $\mathfrak{M}_2$ has dimension $d$ with $r>d$.
-As $\mathfrak{M}_1$ is more general, one can expect better performances.
+Generally speaking, more complex models have a better ability to
+represent the observations, but all the parameters included in the model may
+not be relevant for the modelling. It can be interesting to test if a
+``simpler'' model would give similar performances, or at least show a
+decrease in performances that is not statistically significant.  One
+of the most well-known test is the likelihood-ratio test, that tests
+if two \emph{nested models} are equivalent: Let us consider two nested
+models: $\mathfrak{M}_1 = (\mathcal{M}_1, \Kspace_1)$,
+$\mathfrak{M}_2= (\mathcal{M}_2,\Kspace_2)$, such that
+$\mathcal{M}_1=\mathcal{M}_2=\mathcal{M}$ and
+$\Kspace_2 \subsetneq \Kspace_1$. In this case, $\mathfrak{M}_2$
+represents the simpler model, with a reduced parameter space, while
+$\mathfrak{M}_1$ is the more general model. Recalling the notion of
+model dimension in~\cref{rmk:model_dimension}, $\mathfrak{M}_1$ has
+dimension $r$, and $\mathfrak{M}_2$ has dimension $d$ with $r>d$.  As
+$\mathfrak{M}_1$ is more general, one can expect better performances.
 
-The likelihood ratio is defined as the ratio of the largest values
+The likelihood-ratio is defined as the ratio of the largest values
 taken by the likelihood on their respective parameter space, value
 that is assumed to be attained at $\hat{\kk}_1$ and $\hat{\kk}_2$.
 % Under the null hypothesis, the two models are equivalent, that is that the ``smaller'' parameter space is enough to represent the inverse problem: $\kk \in \Kspace_2$. The alternative hypothesis is that $\kk \in \Kspace_1$.
@@ -1189,8 +1220,8 @@ that is assumed to be attained at $\hat{\kk}_1$ and $\hat{\kk}_2$.
   \Lambda(y) = \frac{\sup_{\kk \in \Kspace_2} \mathcal{L}(\kk ; y)}{\sup_{\kk \in \Kspace_1} \mathcal{L}(\kk ; y)} = \frac{\mathcal{L}(\hat{\kk}_2 ; y)}{\mathcal{L}(\hat{\kk}_1 ; y)} \leq 1
 \end{equation}
 Based on this quantity, we can test whether the smaller model is
-sufficient to explain the data as well as the larger model. The two
-hypothesis for this test are
+sufficient to explain the observations as well as the larger
+model. The two hypothesis for this test are
 \begin{itemize}
 \item The null hypothesis $\mathcal{H}_0$: The two models are
   statistically equivalent: the difference between the maximal values
@@ -1211,19 +1242,23 @@ dimensionality between the two models:
   \label{eq:deviance_asymptotics}
   - 2 \log \Lambda(y) \xrightarrow[]{\mathrm{d}} \chi^2_{r-d}
 \end{equation}
-By denoting $\chi^2_{r-d}(1-\nu)$ the quantile of order $1-\nu$ of the $\chi^2$ distribution with $r-d$ degrees of freedom, the asymptotic rejection region of the null hypothesis at level $\nu$ is:
+By denoting $\chi^2_{r-d}(1-\nu)$ the quantile of order $1-\nu$ of the
+$\chi^2$ distribution with $r-d$ degrees of freedom, the asymptotic
+rejection region of the null hypothesis at level $\nu$ is:
 \begin{align}
   \mathrm{RejReg}_{\nu} &= \left\{y \mid -2 \log \Lambda(y) > \chi^2_{r-d}(1-\nu) \right\} \label{eq:LRT_rej_reg}
 \end{align}
-So if the data $y \in \mathrm{RejReg}_{\nu}$, we reject $\mathcal{H}_0$ at the $\nu$-level, thus we accept $\mathcal{H}_1$.
-By reformulating using the log-likelihoods and objective functions $l(\kk;y) = \log \mathcal{L}(\kk;y) = - J(\kk)$
+So if the data $y \in \mathrm{RejReg}_{\nu}$, we reject
+$\mathcal{H}_0$ at the $\nu$-level, thus we accept $\mathcal{H}_1$.
+By reformulating using the log-likelihoods and objective functions
+$l(\kk;y) = \log \mathcal{L}(\kk;y) = - J(\kk)$
 \begin{align}
   \mathrm{RejReg}_{\nu} &= \left\{ y \mid (\sup_{\kk\in\Kspace_1} l(\kk;y) - \sup_{\kk\in\Kspace_2} l(\kk;y)) > \frac12 \chi^2_{r-d}(1-\nu) \right\} \\
                              &= \left\{ y \mid J(\kk_2) - J(\kk_1) >  \frac12 \chi^2_{r-d}(1-\nu) \right\} \label{eq:rejreg_chi2}
 \end{align}
 
 
-\begin{example}[Likelihood Ratio test for the MLE]
+\begin{example}[Likelihood-ratio test for the MLE]
   \label{ex:lrt_mle}
   Let $\Kspace_1 = \Kspace\subset \mathbb{R}$ and
   $\Kspace_2 = \{\kk\}\subset \Kspace_1$.  We have then
@@ -1252,15 +1287,15 @@ The likelihood interval of level $\gamma\in ]0,1]$ is defined as
 
 $\gamma$ can be set to an arbitrary threshold, but it can also be chosen
 specifically so that $\mathcal{I}_{\mathrm{Lik}}(\gamma)$ is the complement
-of the rejection region of a likelihood ratio test with certain
+of the rejection region of a likelihood-ratio test with certain
 confidence.
 
-Using the Likelihood ratio test, as in~\cref{ex:lrt_mle}, we can test
+Using the likelihood-ratio test, as in~\cref{ex:lrt_mle}, we can test
 how well a given value of the parameter $\kk$ performs compared to the
 MLE by comparing the models $(\mathcal{M}, \{\kk\})$ and
-$(\mathcal{M},\Kspace)$. Let $R(\kk)$ be the corresponding likelihood
-ratio. The complement of the rejection region \cref{eq:rejreg_chi2}
-written using \cref{eq:def_lik_interval} is
+$(\mathcal{M},\Kspace)$. Let $R(\kk)$ be the corresponding
+likelihood-ratio. The complement of the rejection region
+\cref{eq:rejreg_chi2} written using \cref{eq:def_lik_interval} is
 \begin{equation}
   \label{eq:rel_lik_threshold}
   \mathcal{I}_{\mathrm{Lik}}\left(\exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right)\right) = \left\{\kk \mid R(\kk) \geq \exp\left(-\frac{1}{2}\chi^2_{\mathrm{dim}(\Kspace)}(1-\nu)\right) \right\}
@@ -1283,7 +1318,7 @@ $\exp\left(-\frac{1}{2}\chi^2_{1}(.90)\right) \approx 0.26$.
   \caption{\label{fig:relative_likelihood} Example of relative likelihood, and associated likelihood interval, for $\gamma=0.15$}
 \end{figure}
 
-Due to the likelihood ratio test and the relative likelihood, we can
+Due to the likelihood-ratio test and the relative likelihood, we can
 see that even though $\estimtxt{\kk}{MLE}$ is the optimiser of the
 likelihood function, other values close to it may not be discarded,
 provided that the value of the log-likelihood does not drop off too
@@ -1292,7 +1327,7 @@ much.
 \subsection{Criteria for non-nested model comparison}
 % \todo{revoir}
 \label{sec:criteria_AIC}
-The likelihood ratio test presented above is defined for nested
+The likelihood-ratio test presented above is defined for nested
 models. In the more general case, we can also associate each model
 with a single numerical value that measures the balance between
 ``fit'' and complexity of the model. This usually takes the form of
@@ -1314,7 +1349,7 @@ $\mathrm{Crit}(\mathfrak{M}_1) - \mathrm{Crit}(\mathfrak{M}_2)$ is
 compared to some thresholds as shown
 in~\cite{burnham_multimodel_2004}.  The difference shows whether a
 model should be preferred, or if no substantial evidence exists for
-either model.  These criteria, as well as the likelihood ratio test,
+either model.  These criteria, as well as the likelihood-ratio test,
 are based on the evaluation of the likelihood at its maximal value.
 
 
