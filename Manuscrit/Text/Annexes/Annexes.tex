@@ -173,13 +173,52 @@
 % Conservative rule of thumb: if $\mu_Y/\sigma_Y \leq 0.09$ and $\mu_X / \sigma_X > 0.19$
 \newpage
 \section{Full sediment repartition in the Bay of Biscay and the English Channel}
- \label{sec:sediments_full}
+\label{sec:sediments_full}
+In~\cref{chap:croco}, we used the data from the SHOM in order to
+derive a reduced sediment repartition
+in~\cref{fig:sediments_reduced}. The original repartition is
+reproduced here in~\cref{fig:sediments_full}, and the correspondence
+table between the reduced and full repartition is
+given~\cref{tab:full_sediments_correspondence}.
 \begin{figure}[ht]
   \centering
   \includegraphics{/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/sediments_full.png}
-  \caption{\label{fig:sediments_full} Full sediments
+  \caption[Full sediments repartition]{\label{fig:sediments_full} Full sediments
     repartition. Source: SHOM, under CC BY-SA-4.0 license}
 \end{figure}
+\begin{table}[ht]
+  \resizebox{\textwidth}{!}{
+  \centering
+  \begin{tabular}[t]{ll}
+    \toprule
+    Full repartition & Reduced repartition \\ \midrule
+    Rocks & Rocks \\    \midrule
+    C, Grits & \multirow{2}{*}{Pebbles} \\
+    CG, Grits and gravel & \\ \midrule
+    G, Gravel & \multirow{3}{*}{Gravels} \\
+    GC, Gravel and grits& \\
+    GS, Sandy gravels & \\ \midrule
+    S, Sands& \multirow{5}{*}{Sands} \\
+    SC, Sands and grits& \\
+    SG, Gravely sand& \\
+    SGV, Gravely muddy sand& \\
+    SV, Muddy sands& \\ \bottomrule
+  \end{tabular}
+  \begin{tabular}[t]{ll}\toprule
+    Full repartition & Reduced repartition \\ \midrule
+    SF, Fine sands & \multirow{2}{*}{Fine Sands} \\
+    SFV, Fine and muddy sands& \\ \midrule
+    Si, Silts & \multirow{1}{*}{Silts} \\ \midrule
+    V, Muds & \multirow{4}{*}{Muds} \\
+    VS, Sandy mud& \\
+    VSF, Mud and fine sand& \\ \bottomrule
+  \end{tabular}
+}
+\caption{\label{tab:full_sediments_correspondence}Correspondence
+  between the full sediments repartition classes and the segmentation
+  used in~\cref{chap:croco}}
+\end{table}
+
  %\footnotetext{\url{https://creativecommons.org/licenses/by-sa/4.0/}}
 \section{Misspecified deterministic calibration}
 In the next pages are shown the results of different optimisation on
@@ -190,13 +229,14 @@ carried using the cost function defined as
   J(\kk) = \|\mathcal{M}(\kk, \uu^b) - y \|^2_2 = \|\mathcal{M}(\kk, \uu^b) - \mathcal{M}(\kk^{\mathrm{truth}},\uu^{\mathrm{truth}})\|_2^2
 \end{equation}
 and on \num{200} iterations. $\uu^b\in \interval{0}{1}^2$ represents
-the environmental conditions, while $\uu^{\mathrm{truth}}=(0.5, 0.5)$ is the value used for the observations.% . On
+the environmental conditions, while $\uu^{\mathrm{truth}}=(0.5, 0.5)$
+is the value used for the observations.% . On
 % \cpageref{sec:appendix_truth_optim}, is shown the result of the
 % optimisation when $\uu^b=\uu^{\mathrm {truth}}$, as
 % in~\cref{ssec:optim_gradient}
 
 \clearpage
-\subsection*{$\uu^b=(0, 0)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(0, 0)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering

@@ -469,7 +469,6 @@ On~\cref{fig:optimisation_type_sediments} is shown the value of the
 optimised control parameter $\kk$, depending on the type of sediment
 associated. Each point on this figure corresponds then to a mesh
 point.
-
 We can see that indeed, as~\cref{fig:optimization_map_399} shows,
 points of the mesh corresponding to sand, \emph{i.e.} most of the
 continental shelf, tends to get closer to the truth value
@@ -499,34 +498,40 @@ Finally the rocks appear to be hard to estimate properly: only about
 is quite large in contrast to the other sediments.
 
 
+
+The optimisation procedure has been done also in the misspecified
+case, \emph{i.e.} when
+$\uu^b \neq \uu^{\mathrm{truth}}$.
+
 \begin{figure}[ht]
   \centering
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.9\textwidth}
     \centering
   \includegraphics{/home/victor/optimisation_dahu/1b/map_lognorm_200.png}
   \caption[Optimisation of $\zob$ on the whole space,
   $\uu^b = (0, 0)$]{\label{fig:optimization_1b} $\uu^b=(0, 0)$}
 \end{subfigure}
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.9\textwidth}
   \centering
   \includegraphics{/home/victor/optimisation_dahu/9b/map_lognorm_200.png}
   \caption[Optimisation of $\zob$ on the whole
   space, $\uu^b = (1, 1)$]{\label{fig:optimization_9b} $\uu^b=(1, 1)$}
 \end{subfigure}
-\caption[Optimisation of $\zob$, misspecified case]{Optimisation of $\zob$ on the whole space, with a
+\caption[Optimisation of $\zob$, misspecified case]{\label{fig:optim_croco_misspecified} Optimisation of $\zob$ on the whole space, with a
   misspecification of the environmental variable}
 \end{figure}
 
-In the appendix~\cref{sec:appendix_truth_optim} is presented the
-result of the optimisation over the whole domain, for other choices of
-the environmental parameter, \emph{i.e.} in a misspecified case.
-Those figures show that while the Bay of Biscay is left unaffected by
-the optimisation procedure, the values in the English Channel seem be
-well estimated, no matter the misspecification. However, the bottom
-friction near the Celtic Sea seems to compensate the error due to the
-misspecification.
 
-
+~\Cref{fig:optim_croco_misspecified}
+shows the resulting optimisation for $\uu^b=(0, 0) $ and for
+$\uu^b=(1, 1)$. We can see that while the Bay of Biscay is
+left unaffected by the optimisation procedure, the values in the
+English Channel seem be well estimated, no matter the
+misspecification. However, the bottom friction near the Celtic Sea
+seems to compensate the error due to the misspecification. In the
+appendix~\cref{sec:appendix_truth_optim} is presented the result of
+the optimisation over the whole domain, for other choices of the
+environmental parameter.
 
 
 This optimisation showed that all the regions are not crucial for a
@@ -1134,7 +1139,7 @@ associated with $\alpha_p$:
 \begin{equation}
   \hat{\kk}_{\mathrm{RR},\alpha_p} = \argmin_{\kk \in \Kspace} \hat{q}^{\mathrm{PI}}_p(\kk) = (\hat{\kk}^{(1)}_{\mathrm{RR},\alpha_p}, \hat{\kk}^{(2)}_{\mathrm{RR},\alpha_p},\hat{\kk}^{(3)}_{\mathrm{RR},\alpha_p})
 \end{equation}
-\paragraph{Sampling-based method for the estimation of the quantile}
+\paragraph{Sampling-based method for the estimation of the quantile: QeAK-MCS}
 We are now going to treat this problem using a sampling-based method,
 as introduced~\cref{ssec:quantile_qeakmcs}, which is derived
 from~\cite{razaaly_rare_2019}.  The log-normal approximation of the
@@ -1252,7 +1257,7 @@ minimiser. Regarding the other components, their respective influence
 (given by the SA) and the relative-regret estimates would point toward
 a value close or equal to the global optimiser.
 
-A comparison of the two methds is summarised in~\cref{tab:results_croco}.
+A comparison of the two methdos is summarised in~\cref{tab:results_croco}.
 
 \begin{table}
   \centering
@@ -1318,9 +1323,8 @@ bottom friction lead seemingly to a more robust solution. The small
 variations in the values of $\hat{\kk}_{\mathrm{RR}}$ for the
 different levels of confidence also suggest that a compromise between
 performances and robustness is easily reachable. Indeed, in this
-configuration and given the study on the conditional minimisers, we
-can see that the calibration problem behaves ``nicely'' under
-uncertainties.\todo{finir}
+configuration, we can see that the calibration problem behaves
+``nicely'' under uncertainties: there does not seem to be a lot of interactions
 
 % that the calibration of the
 % numerical model under uncertainties is not that problematic in this
