@@ -38,45 +38,6 @@
 \label{chap:appendix}
 \pagestyle{appendixStyle}
 \minitoc
-% \section{Likelihood ratio test for misspecified nested models}
-% This section follows the proofs of~\cite{white_maximum_1982}. The observations $Y$ are following the law
-% with true density $p_Y$, and $n$ samples are available $y=\{y_i\}$.
-% We have a family of distributions $\{p_{Y\mid \KK}\}$.  The quasi
-% log-likelihood is
-%   \begin{equation}
-%     \mathcal{L}(\kk; y) = \frac{1}{n}\sum_{i=1}^{n} \log p_{Y \mid \KK}(y;\kk)
-%   \end{equation}
-
-%   \begin{align}
-%     A_n(\kk) = \frac{1}{n} \sum_{i=0}^n \frac{\partial^2 \log p_{Y \mid \KK}(y\mid\kk)}{\partial \kk_i \partial \kk_j} \\
-%     B_n(\kk) = \frac{1}{n} \sum_{i=0}^n \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_i} \pfrac{p_{Y\mid \KK}(y \mid \kk)}{\kk_j}
-%   \end{align}
-
-%   \begin{align}
-%     A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right]\\
-%     B(\kk) &= \Ex\left[\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}\pfrac{\log p_{Y\mid \KK}(y \mid \kk)}{\kk}^T\right]
-%   \end{align}
-
-%   If the model is well-specified, in other words if there exists $\kk_0$ such that $p_Y = p_{Y\mid \KK}(\cdot \mid\kk_0)$, $A(\kk) = -B(\kk)$:
-%   \begin{align}
-%     \frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2} &= \pfrac{}{\kk}\left(\frac{1}{p}\pfrac{p}{\kk}\right) \\
-%     &= \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \frac{1}{p^2}\left(\pfrac{p}{\kk}\right)^2 = \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} - \left(\pfrac{\log p}{\kk}\right)^2
-%   \end{align}
-%   Taking the expectation, we have
-%   \begin{align}
-%     A(\kk) &= \Ex\left[\frac{\partial^2 \log p_{Y\mid \KK}(y \mid \kk)}{\partial \kk^2}\right] \\
-%            &= -\Ex\left[\left(\pfrac{\log p}{\kk}\right)^2\right] + \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right]
-%   \end{align}
-%   and the last term is
-%   \begin{align}
-%      \Ex\left[\frac{1}{p}\frac{\partial^2 p}{\partial \kk^2}\right] = \int_{\Yspace} \frac{1}{p}\frac{\partial^2 p}{\partial \kk^2} p_{Y}(y) \,\mathrm{d}y
-%   \end{align}
-%   If the inverse exist,
-%   then
-%   \begin{align}
-%     C_n(\kk) &= A_n(\kk)^{-1} B_n(\kk) A_n(\kk) \\
-%     C(\kk) &= A(\kk)^{-1}B(\kk)A(\kk)
-%   \end{align}
 
   \section{Lognormal approximation of the ratio of normal random variables}
   \label{sec:lognorm_ratio}
@@ -96,7 +57,10 @@
       \rho\sigma_X \sigma_Y & \sigma^2_Y
     \end{bmatrix} \right)
   \end{align}
-  Let us assume that both random variable are positive with high probability, then the ratio $T=X/Y$ is defined and positive with high probability. We will first rewrite $T$ using the centered random variables $X_0=X-\mu_X$ and $Y_0 = Y-\mu_Y$:
+  Let us assume that both random variable are positive with high
+  probability, so that the ratio $T=X/Y$ is defined and positive with
+  high probability.  We will first rewrite $T$ using the centered
+  random variables $X_0=X-\mu_X$ and $Y_0 = Y-\mu_Y$:
   \begin{equation}
     T = \frac{\mu_X}{\mu_Y}\frac{1 + \frac{X_0}{\mu_X}}{1 + \frac{Y_0}{\mu_Y}}
   \end{equation}
@@ -105,7 +69,9 @@
     \log T = \log\left(\frac{\mu_X}{\mu_Y}\right) + \log\left(1 + \frac{X_0}{\mu_X}\right) -\log\left(1 + \frac{Y_0}{\mu_Y}\right)
   \end{equation}
   
-  So if $X_0 / \mu_X$ and $Y_0/ \mu_Y$ are small, i.e.\ if $\mu_X \gg \sigma_X$ and $\mu_Y \gg \sigma_Y$, by Taylor's expansion of the $\log$, we have
+  So if $X_0 / \mu_X$ and $Y_0/ \mu_Y$ are small, i.e.\ if
+  $\mu_X \gg \sigma_X$ and $\mu_Y \gg \sigma_Y$, by Taylor's expansion
+  of the $\log$, we have
   \begin{align}
     \log T & \approx \log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{X_0}{\mu_X} - \frac{Y_0}{\mu_Y}
 % \\
@@ -155,8 +121,12 @@
   
   A first approximation is then to consider the ratio to be log-normally distributed, and
   \begin{equation}
-    \log T \sim \mathcal{N}\left(\log \frac{\mu_X}{\mu_Y}; \frac{\sigma^2_X}{\mu_X^2} + \frac{\sigma^2_Y}{\mu_Y^2} - 2 \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \right)
+    \log T \sim \mathcal{N}\left(\log \left(\frac{\mu_X}{\mu_Y}\right); \frac{\sigma^2_X}{\mu_X^2} + \frac{\sigma^2_Y}{\mu_Y^2} - 2 \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \right)
   \end{equation}
+
+  The correlation term can also be possibly dropped from the approximation,
+  as $\rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y}$ can be very close to
+  zero.
   
   % \begin{align}
   %   \Ex[T] &= \exp\left(\log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{1}{2}\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2} \right)\right)\\
@@ -193,25 +163,41 @@ given~\cref{tab:full_sediments_correspondence}.
     \toprule
     Full repartition & Reduced repartition \\ \midrule
     Rocks & Rocks \\    \midrule
-    C, Grits & \multirow{2}{*}{Pebbles} \\
-    CG, Grits and gravel & \\ \midrule
-    G, Gravel & \multirow{3}{*}{Gravels} \\
-    GC, Gravel and grits& \\
-    GS, Sandy gravels & \\ \midrule
-    S, Sands& \multirow{5}{*}{Sands} \\
-    SC, Sands and grits& \\
-    SG, Gravely sand& \\
-    SGV, Gravely muddy sand& \\
-    SV, Muddy sands& \\ \bottomrule
+    % C, 
+    Grits & \multirow{2}{*}{Pebbles} \\
+    % CG, 
+    Grits and gravel & \\ \midrule
+    % G, 
+    Gravel & \multirow{3}{*}{Gravels} \\
+    % GC,
+    Gravel and grits& \\
+    % GS, 
+    Sandy gravels & \\ \midrule
+    % S, 
+    Sands& \multirow{5}{*}{Sands} \\
+    % SC,
+    Sands and grits& \\
+    % SG, 
+    Gravely sand& \\
+    % SGV, 
+    Gravely muddy sand& \\
+    % SV,
+    Muddy sands& \\ \bottomrule
   \end{tabular}
   \begin{tabular}[t]{ll}\toprule
     Full repartition & Reduced repartition \\ \midrule
-    SF, Fine sands & \multirow{2}{*}{Fine Sands} \\
-    SFV, Fine and muddy sands& \\ \midrule
-    Si, Silts & \multirow{1}{*}{Silts} \\ \midrule
-    V, Muds & \multirow{4}{*}{Muds} \\
-    VS, Sandy mud& \\
-    VSF, Mud and fine sand& \\ \bottomrule
+    % SF, 
+    Fine sands & \multirow{2}{*}{Fine Sands} \\
+    % SFV, 
+    Fine and muddy sands& \\ \midrule
+    % Si, 
+    Silts & \multirow{1}{*}{Silts} \\ \midrule
+    % V, 
+    Muds & \multirow{4}{*}{Muds} \\
+    % VS, 
+    Sandy mud& \\
+    % VSF, 
+    Mud and fine sand& \\ \bottomrule
   \end{tabular}
 }
 \caption{\label{tab:full_sediments_correspondence}Correspondence
@@ -221,20 +207,21 @@ given~\cref{tab:full_sediments_correspondence}.
 
  %\footnotetext{\url{https://creativecommons.org/licenses/by-sa/4.0/}}
 \section{Misspecified deterministic calibration}
-In the next pages are shown the results of different optimisation on
-the whole domain, similarly as
+In the next pages are shown the results of different optimisation
+procedures on the whole domain, similarly as
 in~\cref{ssec:optim_gradient}. However, the optimisation will be
-carried using the cost function defined as
+carried using the objective function defined as
 \begin{equation}
-  J(\kk) = \|\mathcal{M}(\kk, \uu^b) - y \|^2_2 = \|\mathcal{M}(\kk, \uu^b) - \mathcal{M}(\kk^{\mathrm{truth}},\uu^{\mathrm{truth}})\|_2^2
+  \kk \mapsto J(\kk, \uu^b) = \|\mathcal{M}(\kk, \uu^b) - y \|^2_2 = \|\mathcal{M}(\kk, \uu^b) - \mathcal{M}(\kk^{\mathrm{truth}},\uu^{\mathrm{truth}})\|_2^2
 \end{equation}
 and on \num{200} iterations. $\uu^b\in \interval{0}{1}^2$ represents
-the environmental conditions, while $\uu^{\mathrm{truth}}=(0.5, 0.5)$
-is the value used for the observations.% . On
-% \cpageref{sec:appendix_truth_optim}, is shown the result of the
-% optimisation when $\uu^b=\uu^{\mathrm {truth}}$, as
-% in~\cref{ssec:optim_gradient}
-
+the environmental conditions, which can be misspecified, while
+$\uu^{\mathrm{truth}}=(0.5, 0.5)$ is the value used to generate the
+observations.  The top figures show the estimated roughness $z_b$, and
+the relative difference of the control variable $\kk$ with the truth
+value $\kk^{\mathrm{truth}}$. The bottom plots show the evolution of
+the objective function and the squared norm of the gradient of the
+objective function depending on the iteration during the optimisation.
 \clearpage
 \subsection*{Misspecified environmental parameter: $\uu^b=(0, 0)$}
 \begin{figure}[ht]
@@ -246,7 +233,7 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/1b/ctrl_true.pgf}}
-  \caption{Cost function evolution along the iterations}
+  \caption{Objective function evolution along the iterations}
 \end{subfigure}
 \caption{Optimisation on the whole space, $\uu^b=(0, 0)$}
 \end{figure}
@@ -255,7 +242,7 @@ is the value used for the observations.% . On
 %   \includegraphics[scale=0.7]{/home/victor/optimisation_dahu/1b/optimisation_type_sediments.pdf}
 % \end{figure}
 \clearpage
-\subsection*{$\uu^b=(0, 0.5)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(0, 0.5)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -265,12 +252,12 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
     \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/2b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
   \end{subfigure}
   \caption{Optimisation on the whole space, $\uu^b=(0, 0.5)$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(0, 1)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(0, 1)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -280,12 +267,12 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/3b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
 \end{subfigure}
 \caption{Optimisation on the whole space, $\uu^b=(0, 1)$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(0.5, 0)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(0.5, 0)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -295,12 +282,12 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/4b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
 \end{subfigure}
 \caption{Optimisation on the whole space, $\uu^b=(0.5, 0)$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(0.5, 0.5) = \uu^{\mathrm{truth}}$}
+\subsection*{Well-specified environmental parameter $\uu^b=(0.5, 0.5) = \uu^{\mathrm{truth}}$}
 \label{sec:appendix_truth_optim}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
@@ -311,13 +298,13 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/optim_sediments/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
   \end{subfigure}
   % \includegraphics{/home/victor/optimisation_dahu/5b/ctrl_plot.png}
   \caption{Optimisation on the whole space, $\uu^b=(0.5, 0.5) = \uu^{\mathrm{truth}}$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(0.5, 1)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(0.5, 1)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -327,13 +314,13 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/6b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
   \end{subfigure}
   \caption{Optimisation on the whole space, $\uu^b=(0.5, 1)$}
 \end{figure}
 \clearpage
 
-\subsection*{$\uu^b=(1, 0)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(1, 0)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -343,12 +330,12 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/7b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
 \end{subfigure}
 \caption{Optimisation on the whole space, $\uu^b=(1, 0)$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(1, 0.5)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(1, 0.5)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -358,13 +345,13 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/8b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
   % \includegraphics{/home/victor/optimisation_dahu/8b/ctrl_plot.png}
   \end{subfigure}
   \caption{Optimisation on the whole space, $\uu^b=(1, 0.5)$}
 \end{figure}
 \clearpage
-\subsection*{$\uu^b=(1, 1)$}
+\subsection*{Misspecified environmental parameter: $\uu^b=(1, 1)$}
 \begin{figure}[ht]
   \begin{subfigure}{\textwidth}
   \centering
@@ -374,7 +361,7 @@ is the value used for the observations.% . On
 \begin{subfigure}{\textwidth}
   \centering
   \resizebox{1\textwidth}{!}{\input{/home/victor/optimisation_dahu/9b/ctrl_true.pgf}}
-    \caption{Cost function evolution along the iterations}
+    \caption{Objective function evolution along the iterations}
 \end{subfigure}
 \caption{Optimisation on the whole space, $\uu^b=(1, 1)$}
 \end{figure}
