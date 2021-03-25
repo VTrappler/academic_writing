@@ -1,0 +1,427 @@
+\documentclass[11pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{animate}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{subfig}
+\usepackage{mathrsfs}
+\usepackage{pgfplots}
+\usepackage{natbib}
+\pgfplotsset{compat=newest}
+\usepackage{multimedia}
+%\usepackage{booktabs}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\GP}{\mathsf{GP}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}^{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\newcommand{\kk}{\theta}
+\newcommand{\uu}{u}
+\newcommand{\UU}{U}
+
+\newcommand{\Uspace}{\mathbb{U}}
+\newcommand{\Kspace}{\Theta}
+\usepackage[duration=10, lastminutes=1]{pdfpcnotes}
+\newcommand\manupath{/home/victor/acadwriting/Manuscrit/Text/}
+\usepackage{adjustbox}
+\usetikzlibrary{positioning}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+\graphicspath{{../Figures/}}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+
+\definecolor{darkcyan}{rgb}{0.0, 0.55, 0.55}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{Maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{Black}{cmyk}{0, 0, 0, 0}
+\definecolor{blueGreen}{HTML}{4CA6A7}
+\definecolor{blueGreenN2}{HTML}{3964B4}
+% Using colorbrewer, 1 is lightest colour, 4 is darkest
+\definecolor{brewsuperlight}{HTML}{F0F9E8}
+\definecolor{brewlight}{HTML}{BAE4BC}
+\definecolor{brewdark}{HTML}{7BCCC4}
+\definecolor{brewsuperdark}{HTML}{2B8CBE}
+
+
+\colorlet{cfgHeaderBoxColor}{blueGreen} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{blueGreen} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{blueGreen}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{blueGreen} % vLionel : blueGreenN2
+
+%%% VICTOR COLORS ----------------------------------------
+\colorlet{cfgHeaderBoxColor}{brewsuperdark} %{green!50!blue!70}
+\colorlet{cfgCiteColor}{RoyalBlue} % vLionel : RoyalBlue
+\colorlet{cfgUrlColor}{RoyalBlue}  % vLionel : RoyalBlue
+\colorlet{cfgLinkColor}{RoyalBlue} % vLionel : blueGreenN2
+
+\setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = blkcol!50}
+
+\setbeamerfont{author}{size=\footnotesize}
+
+\title{Parameter control in the presence of uncertainties}
+%\subtitle{Robust Estimation of bottom friction}
+\author{{\large \bf Victor Trappler} \hfill \texttt{victor.trappler@univ-grenoble-alpes.fr} \\
+  É. Arnaud, L. Debreu, A. Vidard \hfill \texttt{vtrappler.github.io} \\
+  AIRSEA Research team (Inria)\hfill \texttt{team.inria.fr/airsea/en/}\\
+  Laboratoire Jean Kuntzmann}
+
+
+\institute{\begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}}
+
+\date{\today}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+% \begin{frame}
+%   \maketitle
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Uncertainties in the modelling}
+%  %  \begin{center}
+% %   \scalebox{1}{\input{../Figures/flowchart_modelling_uncertainties_vert}}
+% % \end{center}  
+%   % Uncertainties and errors are introduced at each stage of the modelling, by simplifications, parametrizations\dots
+
+%   % In the end, we have a set of parameters we want to calibrate, but how can we be sure that this calibration is acting upon the errors of the modelling, and does not compensate the effect of the natural variability of the physical system?
+
+% % \fbox{
+%   \begin{center}
+%   \begin{adjustbox}{clip, trim=36cm 0cm 0cm 0cm, max width=\textwidth, center}
+% \input{\manupath Chapter3/img/modelling_uncertainties.pgf}
+% \end{adjustbox}
+% \end{center}
+
+% Does reducing the error on the parameters leads to the compensation of the unaccounted natural variability of the physical processes ?
+
+\begin{frame}[t]
+  \frametitle{Contact informations}
+  {\large \bf Victor Trappler} \hfill  \\
+  PhD Candidate in Airsea (Inria team) and UGA \\
+  Title: \emph{Parameter control in the presence of uncertainties}
+
+  with É. Arnaud, L. Debreu, A. Vidard
+  \begin{center}
+\includegraphics[scale=0.20]{INRIA_SCIENTIFIQUE_UK_CMJN}
+\includegraphics[scale=0.20]{ljk}
+\end{center}
+
+  Contact:
+  \begin{itemize}
+  \item \texttt{victor.trappler@univ-grenoble-alpes.fr}
+  \item \texttt{vtrappler.github.io}
+  \end{itemize}
+  
+\end{frame}
+
+
+% \metroset{sectionpage=progressbar, subsectionpage=none}
+
+
+% \begin{frame}
+%   \frametitle{Short resume}
+%   \begin{itemize}
+%   \item 2017--2021 \textbf{UGA/Airsea (Inria)} PhD Candidate:
+    
+%     \emph{Control of parameters in the presence of uncertainties}
+
+
+%     with É. Arnaud, L. Debreu, A. Vidard
+%   \item 2015--2017 \textbf{Danmarks Tekniske Universitet}
+%   \item 2013--2015 \textbf{École Centrale Lyon}
+%   \end{itemize}
+% \end{frame}
+
+
+\begin{frame}
+  \frametitle{Research topics}
+  \begin{itemize}
+  \item Optimisation under Uncertainties
+    \begin{itemize}
+    \item Notions of robustness in a calibration context
+    \item Regret-based family of estimators
+    \end{itemize}
+
+
+    
+  \item Adaptive Strategies using GP for the estimation
+    \begin{itemize}
+    \item GP formulation of the regret
+    \item SUR (Stepwise Uncertainty Reduction) strategies of design enrichment
+    \item AK-MCS (Adaptive Kriging Monte Carlo Sampling) for batch selection of points
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{Computer code and inverse problem}
+\begin{itemize}
+	\item[Input] 
+	\begin{itemize}
+		\item $\kk$: Control parameter
+		\item $\uu$: Environmental variables, realisations of r.v.\ $\UU$
+	\end{itemize}
+	\item[Output] \begin{itemize}
+          \item $\mathcal{M}(\kk,\uu)$: Quantity to be compared to observations%Sea surface height, at predetermined time of the simulation and at certain location
+	\end{itemize}
+      \end{itemize}
+      \vfill
+% \only<1>{\input{../Figures/comp_code.pgf}}
+% \only<1>{\input{../Figures/inv_prob.pgf}}
+      {\input{../Figures/comp_code_unc_inv_noalert.pgf}}
+    \end{frame}
+
+% \begin{frame}{Embedded Animation}
+%   \animategraphics[loop,controls,width=0.7\linewidth]{10}{/home/victor/robustGP/robustGP/dump/EIVAR_stepwise}{00}{16}
+% \end{frame}
+
+
+\begin{frame}[t]
+  \frametitle{Regret-based formulations}
+  \begin{itemize}
+  \item $(\kk,\uu) \longmapsto J(\kk, \uu)$ objective function, \emph{strictly positive}
+  \item Best performance given $\uu$: $J^*: \uu \mapsto \min_{\kk \in \Kspace} J(\kk, \uu) $
+  % \item Best estimation given $\uu$: $ \kk^*: \uu  \mapsto \argmin_{\kk \in \Kspace} J(\kk, \uu)$
+  \item[$\rightarrow$] Find $\hat{\kk}$ such that $J(\hat{\kk},\UU)$ ``close to'' $J^*(\UU)=J(\kk^*(\UU), \UU)$ with high enough probability 
+  \end{itemize}
+  \only<2>{  \begin{itemize}
+  \item We define the regret as $r(\kk, \uu) = J(\kk, \uu) - J^*(\uu)$ or $r(\kk, \uu) = \frac{J(\kk, \uu)}{J^*(\uu)}$
+  \item $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[r(\kk, \UU) \leq \alpha\right]$: Probability that the regret is below a level $\alpha$
+    \begin{block}{Regret-based family of
+        estimators~\citep{trappler_robust_2020}}
+  \begin{equation*}
+   \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
+  \end{equation*}
+\end{block}
+  \end{itemize}
+  }
+\end{frame}
+
+
+
+% \begin{frame}
+%   \frametitle{Relative-regret: illustration}
+
+%   \begin{columns}
+%     \begin{column}{0.45\textwidth}
+%       \vfill
+%       \only<1>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_1.pgf}}}%
+%       \only<2>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_2.pgf}}}%
+%       \only<3>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_3.pgf}}}
+%       \only<4>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_4.pgf}}}%
+%       \vfill
+% \end{column}
+% \begin{column}{.6\textwidth}
+%   \begin{itemize}
+%   \item<1-> Sample $\uu\sim\UU$, and solve
+%     $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$
+%   \item<2->Set of conditional minimisers: $\{(\kk^*(\uu), \uu) \mid \uu \in \Uspace\}$
+%   \item<3-> Set $\alpha \geq 1$
+%   \item<4> $R_{\alpha}(\kk) = \{\uu \mid J(\kk,\uu) \leq \alpha J^*(\uu) \}$
+%   \item<4> $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[\UU\in R_{\alpha}(\kk) \right]$
+%   % \onslide<5->{\item How to choose $\alpha$? When $\max_{\kk} \Gamma_\alpha(\kk)$ reaches fixed levels}
+%   \end{itemize}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+% \begin{frame}
+  
+%   \frametitle{Getting an estimator}
+%   $\Gamma_{\alpha}(\kk)$: probability that the cost (thus $\kk$) is $\alpha$-acceptable
+%   \begin{itemize}
+%   \item If $\alpha$ known, maximize the probability that $\kk$ gives acceptable values:
+%     \begin{equation}
+%       \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \max_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
+%     \end{equation}
+%   \item Set a target probability $1-\eta$, and find the smallest $\alpha$.
+%     \begin{equation}
+%       \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq 1 - \eta \}
+%     \end{equation}
+%   \end{itemize}
+
+%   \begin{block}{Relative-regret family of estimators~\citep{trappler_robust_2020}}
+%   \begin{equation}
+%    \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
+%   \end{equation}
+% \end{block}
+
+% \end{frame}
+
+
+\begin{frame}[t]
+  \frametitle{Adaptive strategies for the estimation of $\Gamma_{\alpha}$}
+  Let $Z \sim \mathrm{GP}(m_Z, \sigma_Z^2)$ be a GP constructed on $\Kspace \times \Uspace$ based on $J$.
+  We use $Z$ to estimate $\Gamma_{\alpha}$
+
+  \begin{itemize}
+  \item Reduction of the \emph{augmented} IMSE of $\Delta = Z - \alpha Z^*$
+  \item Improve estimation of the set $\{\Delta \leq 0\}$, using probability of coverage
+  \end{itemize}
+  \begin{itemize}
+  \item Sampling in the margin of uncertainty of $\{\Delta \leq 0\}$,
+    and transformations to get a batch of points (AK-MCS)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adaptive strategies for the quantile of the regret}
+  Under certain conditions, the ratio $Z/Z^*$ is approximately
+  log-normally distributed.  Let us define $\Xi = \log Z/ Z^*$
+
+  \begin{itemize}
+  \item Reduction of the augmented IMSE of $\Xi$
+  \end{itemize}
+  \begin{itemize}
+  \item Sampling in regions of interest, and transformations (QeAK-MCS \citep{razaaly_rare_2019})
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Summary}
+\begin{block}{Wrapping up}
+\begin{itemize}
+\item Formulation of a notion of robustness using the regret
+\item 
+\item Strategies rely heavily on surrogate models, to embed aleatoric
+  uncertainties directly in the modelling 
+\end{itemize}
+\end{block}
+
+
+\begin{block}{Perspectives}
+\begin{itemize}
+\item Cost of computer evaluations $\rightarrow$ limited number of runs?
+\item In low dimension, CROCO very well-behaved.
+\item Dimensionality of the input space $\rightarrow$ reduction of the input space?
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+\bibliographystyle{apalike}
+\bibliography{/home/victor/acadwriting/bibzotero.bib}
+\end{frame}
+
+
+\appendix
+
+\frame{
+  \frametitle{``Most Probable Estimate'', and relaxation}%
+
+
+  Given $\uu \sim \UU$, the optimal value is $J^*(\uu)$, attained at
+  $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$.
+  \pause
+    % \begin{columns}
+    %   \begin{column}{0.6\textwidth}
+
+  
+      The minimizer can be seen as a random variable:
+      \begin{equation*}
+        \kk^*(\UU) = \argmin_{\kk\in\Kspace} J(\kk,\alert<1>{\UU})
+      \end{equation*}
+      $\longrightarrow$ estimate its density (how often is the value $\kk$ a minimizer)
+      \begin{align*}
+        p_{\kk^*}(\kk)%\,\mathrm{d} \kk & = \Prob\left[\kk^* \in \left[\kk,\kk+\mathrm{d}\kk \right]\right] \\
+                                        %        & =\Prob\left[\argmin J(\kk, \uu) \in \left[\kk,\kk+\mathrm{d}\kk \right]\right] \\
+                                               &= "\Prob_{\UU}\left[J(\kk,\UU)= J^*(\UU) \right]"                                               % & \Prob\left[ J(\uu) \leq J(\kk, \uu) \forall \kk \in \left[\kk,\kk+\mathrm{d}\kk \right]\right]
+      \end{align*}
+      \pause
+      How to take into account values not optimal, but not too far either
+      $\longrightarrow$ relaxation of the equality with $\alpha> 1$:
+      \begin{equation*}
+        \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
+      \end{equation*}
+      % \begin{align*}
+      %   R(\kk) & = \Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
+      %   \only<1>{\phantom{R_{\alpha}(\kk)} & = \Prob_{\uu}\left[J(\kk,\uu) \leq \phantom{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
+      %                                           \only<2>{R_{\alert{\alpha}}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alert{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
+      %          \end{align*}%
+             % \begin{align*}
+             %            R(\kk) &=\Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
+             %            R_{\alpha}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alpha\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]
+             %          \end{align*}
+             %        }
+               % \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
+                  % \end{column}%
+                  % \begin{column}{0.5\textwidth}
+                  %   \begin{center}
+                  %     \includegraphics[scale=0.3]{summary_criteria}
+                  %   \end{center}
+                  %   % \pause
+                  %   % Idea: Relaxation of the constraint:
+                  %   % \begin{equation*}
+                  %   %   R_{\alpha}(\kk) = \Prob\left[J(\kk,\uu) \leq \alpha \min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right],\quad \alpha \geq 1
+                  %   % \end{equation*}
+                  %   % and increase $\alpha$ until $\max_{\kk} R_{\alpha}(\kk)$ reaches a level of confidence.
+                  % \end{column}
+                % \end{columns}   %
+    }
+
+
+\begin{frame}
+  \frametitle{Why the relative regret ?}
+
+
+  
+  \renewcommand\rmfamily{\sffamily}
+  \begin{center}
+  \resizebox{.6\textwidth}{!}{\input{\manupath Chapter3/img/illustration_region_regret.pgf}}
+\end{center}
+  \begin{itemize}
+  \item Relative regret
+    \begin{itemize}
+    \item $\alpha$-acceptability regions large for flat and bad situations ($J^*(\uu)$ large)
+    \item Conversely, puts high confidence when $J^*(\uu)$ is small
+    \item No units $\rightarrow$ ratio of costs
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Notions of regret}
+  Let $J^*(\uu) = \min_{\kk \in \Kspace} J(\kk, \uu)$ and $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk, \uu)$.
+  The regret $r$:
+  \begin{align}
+    r(\kk, \uu) = J(\kk, \uu) - J^*(\uu) &= -\log \left(\frac{e^{-J(\kk, \uu)}}{\max_{\kk}\{   e^{-J(\kk, \uu)}\}}\right) \\
+                                         &= - \log \left(\frac{\mathcal{L}(\kk, \uu)}{\max_{\kk\in\Kspace} \mathcal{L}(\kk, \uu)}\right)
+  \end{align}
+  $\rightarrow$ linked to misspecified LRT: maximize the probability of keeping $\mathcal{H}_0$: $\kk$ valid instead of $\argmax \mathcal{L}$.
+\end{frame}
+\begin{frame}
+  \frametitle{PEI criterion}
+  $Y \sim \GP(m_Y(\cdot), C_Y(\cdot, \cdot))$ on $\Kspace \times \Uspace$
+  \begin{equation}
+    \mathsf{PEI}(\kk, \uu) = \Ex_{Y}\left[ \left[f_{\min}(\uu) - Y(\kk, \uu)\right]_+\right]
+  \end{equation}
+where $f_{\min}(\uu) = \max\left\{\min_i J(\kk_i, \uu_i), \min_{\kk\in\Kspace} m_Y(\kk, \uu)\right\}$
+  
+\end{frame}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
