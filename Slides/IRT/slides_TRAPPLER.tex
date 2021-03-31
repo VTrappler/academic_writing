@@ -154,7 +154,7 @@
 
 \begin{frame}
   \frametitle{Research topics}
-  \begin{itemize}
+  \begin{enumerate}
   \item Optimisation under Uncertainties
     \begin{itemize}
     \item Notions of robustness in a calibration context
@@ -162,14 +162,18 @@
     \end{itemize}
 
 
-    
+
   \item Adaptive Strategies using GP for the estimation
     \begin{itemize}
     \item GP formulation of the regret
     \item SUR (Stepwise Uncertainty Reduction) strategies of design enrichment
     \item AK-MCS (Adaptive Kriging Monte Carlo Sampling) for batch selection of points
     \end{itemize}
-  \end{itemize}
+
+
+    
+  \item Application: robust calibration of CROCO
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}[t]
@@ -204,7 +208,7 @@
   \item[$\rightarrow$] Find $\hat{\kk}$ such that $J(\hat{\kk},\UU)$ ``close to'' $J^*(\UU)=J(\kk^*(\UU), \UU)$ with high enough probability 
   \end{itemize}
   \only<2>{  \begin{itemize}
-  \item We define the regret as $r(\kk, \uu) = J(\kk, \uu) - J^*(\uu)$ or $r(\kk, \uu) = \frac{J(\kk, \uu)}{J^*(\uu)}$
+  \item Regret: $r(\kk, \uu) = J(\kk, \uu) - J^*(\uu)$ or $r(\kk, \uu) = \frac{J(\kk, \uu)}{J^*(\uu)}$
   \item $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[r(\kk, \UU) \leq \alpha\right]$: Probability that the regret is below a level $\alpha$
     \begin{block}{Regret-based family of
         estimators~\citep{trappler_robust_2020}}
@@ -218,59 +222,11 @@
 
 
 
-% \begin{frame}
-%   \frametitle{Relative-regret: illustration}
-
-%   \begin{columns}
-%     \begin{column}{0.45\textwidth}
-%       \vfill
-%       \only<1>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_1.pgf}}}%
-%       \only<2>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_2.pgf}}}%
-%       \only<3>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_3.pgf}}}
-%       \only<4>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_4.pgf}}}%
-%       \vfill
-% \end{column}
-% \begin{column}{.6\textwidth}
-%   \begin{itemize}
-%   \item<1-> Sample $\uu\sim\UU$, and solve
-%     $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$
-%   \item<2->Set of conditional minimisers: $\{(\kk^*(\uu), \uu) \mid \uu \in \Uspace\}$
-%   \item<3-> Set $\alpha \geq 1$
-%   \item<4> $R_{\alpha}(\kk) = \{\uu \mid J(\kk,\uu) \leq \alpha J^*(\uu) \}$
-%   \item<4> $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[\UU\in R_{\alpha}(\kk) \right]$
-%   % \onslide<5->{\item How to choose $\alpha$? When $\max_{\kk} \Gamma_\alpha(\kk)$ reaches fixed levels}
-%   \end{itemize}
-% \end{column}
-% \end{columns}
-% \end{frame}
-
-% \begin{frame}
-  
-%   \frametitle{Getting an estimator}
-%   $\Gamma_{\alpha}(\kk)$: probability that the cost (thus $\kk$) is $\alpha$-acceptable
-%   \begin{itemize}
-%   \item If $\alpha$ known, maximize the probability that $\kk$ gives acceptable values:
-%     \begin{equation}
-%       \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \max_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
-%     \end{equation}
-%   \item Set a target probability $1-\eta$, and find the smallest $\alpha$.
-%     \begin{equation}
-%       \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq 1 - \eta \}
-%     \end{equation}
-%   \end{itemize}
-
-%   \begin{block}{Relative-regret family of estimators~\citep{trappler_robust_2020}}
-%   \begin{equation}
-%    \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
-%   \end{equation}
-% \end{block}
-
-% \end{frame}
-
 
 \begin{frame}[t]
-  \frametitle{Adaptive strategies for the estimation of $\Gamma_{\alpha}$}
-  Let $Z \sim \mathrm{GP}(m_Z, \sigma_Z^2)$ be a GP constructed on $\Kspace \times \Uspace$ based on $J$.
+  \frametitle{Adaptive strategies for the
+   estimation of $\Gamma_{\alpha}$}
+  Let $Z \sim \mathrm{GP}(m_Z, C_Z^2)$ be a GP constructed on $\Kspace \times \Uspace$ based on $J$.
   We use $Z$ to estimate $\Gamma_{\alpha}$
 
   \begin{itemize}
@@ -279,7 +235,7 @@
   \end{itemize}
   \begin{itemize}
   \item Sampling in the margin of uncertainty of $\{\Delta \leq 0\}$,
-    and transformations to get a batch of points (AK-MCS)
+    and transformations to get a batch of points (AK-MCS \citep{dubourg_reliability-based_2011})
   \end{itemize}
 \end{frame}
 
@@ -292,32 +248,32 @@
   \item Reduction of the augmented IMSE of $\Xi$
   \end{itemize}
   \begin{itemize}
-  \item Sampling in regions of interest, and transformations (QeAK-MCS \citep{razaaly_rare_2019})
+  \item Sampling in regions of interest, and subsequent transformations (QeAK-MCS \citep{razaaly_rare_2019})
   \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Summary}
-\begin{block}{Wrapping up}
+\begin{block}{Research topics}
 \begin{itemize}
 \item Formulation of a notion of robustness using the regret
-\item 
-\item Strategies rely heavily on surrogate models, to embed aleatoric
-  uncertainties directly in the modelling 
+\item Adaptive methods using GP for the estimation of $\Gamma_{\alpha}$
+\item Application to the numerical model CROCO: robust estimation of the bottom friction
 \end{itemize}
 \end{block}
 
 
-\begin{block}{Perspectives}
+\begin{block}{In progress}
 \begin{itemize}
-\item Cost of computer evaluations $\rightarrow$ limited number of runs?
-\item In low dimension, CROCO very well-behaved.
-\item Dimensionality of the input space $\rightarrow$ reduction of the input space?
+\item Adaptive strategies for the \emph{optimisation} (2-stage methods)
+\item Python package for adaptive methods (with scikit-learn)
+\item Improve scalability for CROCO
 \end{itemize}
 \end{block}
 \end{frame}
-
 \begin{frame}[allowframebreaks]
+  \renewcommand{\bibsection}{}
+
   \frametitle{References}
 \bibliographystyle{apalike}
 \bibliography{/home/victor/acadwriting/bibzotero.bib}
@@ -326,7 +282,8 @@
 
 \appendix
 
-\frame{
+
+\begin{frame}
   \frametitle{``Most Probable Estimate'', and relaxation}%
 
 
@@ -353,32 +310,56 @@
       \begin{equation*}
         \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
       \end{equation*}
-      % \begin{align*}
-      %   R(\kk) & = \Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
-      %   \only<1>{\phantom{R_{\alpha}(\kk)} & = \Prob_{\uu}\left[J(\kk,\uu) \leq \phantom{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
-      %                                           \only<2>{R_{\alert{\alpha}}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alert{\alpha}\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]}
-      %          \end{align*}%
-             % \begin{align*}
-             %            R(\kk) &=\Prob_{\uu}\left[\kk = \argmin_{\tilde{\kk}} J(\tilde{\kk},\uu) \right] \\
-             %            R_{\alpha}(\kk) & = \Prob_{\uu}\left[J(\kk,\uu) \leq \alpha\min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right]
-             %          \end{align*}
-             %        }
-               % \onslide<2>{$\longrightarrow$ Relaxation of the constraint with $\alpha\geq1$}
-                  % \end{column}%
-                  % \begin{column}{0.5\textwidth}
-                  %   \begin{center}
-                  %     \includegraphics[scale=0.3]{summary_criteria}
-                  %   \end{center}
-                  %   % \pause
-                  %   % Idea: Relaxation of the constraint:
-                  %   % \begin{equation*}
-                  %   %   R_{\alpha}(\kk) = \Prob\left[J(\kk,\uu) \leq \alpha \min_{\tilde{\kk}} J(\tilde{\kk},\uu)\right],\quad \alpha \geq 1
-                  %   % \end{equation*}
-                  %   % and increase $\alpha$ until $\max_{\kk} R_{\alpha}(\kk)$ reaches a level of confidence.
-                  % \end{column}
-                % \end{columns}   %
-    }
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{Relative-regret: illustration}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \vfill
+      \only<1>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_1.pgf}}}%
+      \only<2>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_2.pgf}}}%
+      \only<3>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_3.pgf}}}
+      \only<4>{\resizebox{\linewidth}{!}{\input{/home/victor/Bureau/tmp/relaxation_tuto_4.pgf}}}%
+      \vfill
+\end{column}
+\begin{column}{.6\textwidth}
+  \begin{itemize}
+  \item<1-> Sample $\uu\sim\UU$, and solve
+    $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$
+  \item<2->Set of conditional minimisers: $\{(\kk^*(\uu), \uu) \mid \uu \in \Uspace\}$
+  \item<3-> Set $\alpha \geq 1$
+  \item<4> $R_{\alpha}(\kk) = \{\uu \mid J(\kk,\uu) \leq \alpha J^*(\uu) \}$
+  \item<4> $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[\UU\in R_{\alpha}(\kk) \right]$
+  % \onslide<5->{\item How to choose $\alpha$? When $\max_{\kk} \Gamma_\alpha(\kk)$ reaches fixed levels}
+  \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+  
+  \frametitle{Getting an estimator}
+  $\Gamma_{\alpha}(\kk)$: probability that the cost (thus $\kk$) is $\alpha$-acceptable
+  \begin{itemize}
+  \item If $\alpha$ known, maximize the probability that $\kk$ gives acceptable values:
+    \begin{equation}
+      \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \max_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
+    \end{equation}
+  \item Set a target probability $1-\eta$, and find the smallest $\alpha$.
+    \begin{equation}
+      \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq 1 - \eta \}
+    \end{equation}
+  \end{itemize}
+
+  \begin{block}{Relative-regret family of estimators~\citep{trappler_robust_2020}}
+  \begin{equation}
+   \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
+  \end{equation}
+\end{block}
+\end{frame}
 
 \begin{frame}
   \frametitle{Why the relative regret ?}
@@ -412,13 +393,26 @@
 \end{frame}
 \begin{frame}
   \frametitle{PEI criterion}
-  $Y \sim \GP(m_Y(\cdot), C_Y(\cdot, \cdot))$ on $\Kspace \times \Uspace$
+  $Z \sim \GP(m_Z, C_Z)$ on $\Kspace \times \Uspace$
   \begin{equation}
-    \mathsf{PEI}(\kk, \uu) = \Ex_{Y}\left[ \left[f_{\min}(\uu) - Y(\kk, \uu)\right]_+\right]
+    \mathsf{PEI}(\kk, \uu) = \Ex_{Z(\kk, \uu)}\left[ \left[f_{\min}(\uu) - Z(\kk, \uu)\right]_+\right]
   \end{equation}
-where $f_{\min}(\uu) = \max\left\{\min_i J(\kk_i, \uu_i), \min_{\kk\in\Kspace} m_Y(\kk, \uu)\right\}$
-  
+where $f_{\min}(\uu) = \max\left\{\min_i J(\kk_i, \uu_i), \min_{\kk\in\Kspace} m_Z(\kk, \uu)\right\}$
+% \href{run:/home/victor/robustGP/robustGP/dump/PEI_animation.gif}{PEI_animation.gif}
+
 \end{frame}
+\begin{frame}
+  \frametitle{Illustration of the PEI}
+  \resizebox{\textwidth}{!}{
+    \input{\manupath/Chapter4/img/PEI_example.pgf}
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Principle of AK-MCS}
+    \includegraphics[width=\textwidth]{\manupath/Chapter4/img/margin_unc.pdf}
+\end{frame}
+
 \end{document}
 
 %%% Local Variables:

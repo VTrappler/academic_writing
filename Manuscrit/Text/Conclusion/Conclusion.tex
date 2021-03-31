@@ -64,15 +64,14 @@ the calibration problem as an optimisation problem by introducing an
 objective function, that we wish to minimise with respect to the
 control parameter $\kk$.
 
-However, due to the presence of some random environmental variables
+However, due to the presence of some random environmental variable
 $\UU$ in the study, a plain minimisation of the objective function is
-not completely relevant, as its result will depend on the realisation of this
-random variable assumed.  By
-taking into account the random nature of the {environmental
-  parameters}, the calibration can be seen as a problem of
-\emph{optimisation under uncertainties}, and many specific methods and
-criteria can be defined to treat accordingly this new problem of
-\emph{robust} calibration.
+not completely relevant, as its result will depend on the value taken
+by this random variable.  Considering the random nature of
+the {environmental parameters}, the calibration can be seen as a
+problem of \emph{optimisation under uncertainties}, and many specific
+methods and criteria can be defined to treat accordingly this new
+problem of \emph{robust} calibration.
 
 
 Some classical criteria are first introduced
@@ -123,9 +122,9 @@ optimised.
 Throughout this thesis, we assumed that the forward operator was a
 deterministic black-box, or \emph{deterministic simulator}, in the
 sense that the uncertainties in the modelling are ``controlled'' by
-the modeller. \emph{Stochastic simulator} in contrast do not take an
-environmental parameter as parameter, so each evaluation of the
-forward operator can be seen as a realisation of a random
+the modeller. A \emph{stochastic simulator} in contrast does not take an
+environmental parameter as input, so each evaluation of the
+forward operator can be seen as sampling a specific random
 variable. This may be the case when the environmental variables are
 not easily parametrised, such as in the presence of functional
 inputs~\citep{el_amri_analyse_2019}. In this case, it is not possible
@@ -229,7 +228,7 @@ distribution of $J^*(\UU)$ and the distribution of $J(\hat{\kk},\UU)$
 (the objective function of the model calibrated with $\hat{\kk}$) may
 be worth exploring. Horsetail matching for
 instance~\citep{cook_extending_2017,cook_horsetail_2018} could be used
-so that the a metric between cdf of the two distribution is minimised.
+so that the a metric between cdf of the two distributions is minimised.
 \thispagestyle{plain}
 \markchapterend
 \subfileLocal{

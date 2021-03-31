@@ -16,15 +16,23 @@
 
 
 \begin{document}
-% \subfileLocal{\dominitoc}
-% \subfileLocal{\setcounter{chapter}{4}}
-% \subfileLocal{\chapter{Application to the numerical coastal model CROCO}}
+% \subfileLocal{\dominitoc} \subfileLocal{\setcounter{chapter}{4}}
+% \subfileLocal{\chapter{Application to the numerical coastal model
+% CROCO}}
 \chapter{Application to the numerical coastal model \CROCO}
 \label{chap:croco}
 \minitoc
 \newpage
 \subfileLocal{\pagestyle{contentStyle}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% La section 4.5 est un peu mieux introduite qu’avant mais ça reste
+% assez difficile à suivre. Bon c’est un peu normal, c’est dense.
+
+% Je ne sais si une sorte de diagramme permettrait de bien expliquer
+% ce qui va être fait dans cette sous-section, les outils math qui
+% vont être utilisés, à quel niveau …
+
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Introduction}
@@ -33,45 +41,48 @@
 In this chapter, we will study the problem of calibration under
 uncertainties of the bottom friction of the ocean bed off the coast of
 France, from the English Channel to the Bay of Biscay. This will be
-realised using a realistic numerical model based on CROCO.
+realised using a realistic numerical model based on
+CROCO\footnotemark[1] (Coastal and Regional Ocean COmmunity model).
 
 Since the bottom friction depends directly on the size of the
 asperities on the ocean bed, the length scales involved in this
-process are way smaller than the scales of the modelling. In
-consequence, the program does not solve the equations of motions of
-the fluid around those asperities. Instead, the dissipation coming
-from this rugosity is parametrized at every point of the mesh.
+process are way smaller than the scales of the computational grid. In
+consequence, the numerical model does not solve the equations of
+motions of the fluid around those asperities. Instead, the dissipation
+coming from the associated rugosity is parametrized at every cell of
+the mesh.
 
 The bottom friction has been identified as a crucial parameter that,
 if ill-specified, limits the accuracy of the
 predictions~\citep{sinha_principal_1997,kreitmair_effect_2019},
-especially in shallow regions; consequently, there has been an
-effort to control this parameter in various
-studies, for instance in~\cite{das_variational_1992,das_estimation_1991,boutet_estimation_2015}.
+especially in shallow regions; consequently, there has been an effort
+to control this parameter in various studies, for instance
+in~\cite{das_variational_1992,das_estimation_1991,boutet_estimation_2015}.
 We will detail how bottom friction affects the oceanic circulation
 in~\cref{ssec:modelling_bottom}, in order to get a first insight on
 the regions that may influence the most the calibration.
 
 The deterministic problem of calibration will then be addressed in
-\cref{sec:deterministic_calibration_bott}, by first defining the objective
-function and the input space. We will then calibrate the model without
-external uncertainties using adjoint-based gradient, in high-dimension
-($\approx$\num{15000}).
+\cref{sec:deterministic_calibration_bott}, by first defining the
+objective function and the input space. We will then calibrate the
+model without external uncertainties using adjoint-based gradient, in
+high-dimension ($\approx$\num{15000}).
 
 However for such problems, as the parameter may be spatially
 distributed and thus high-dimensional, any estimation procedure may
 become quickly expensive.  In consequence, instead of considering each
-grid point individually, we will segment the geographical input space
+grid cell individually, we will segment the geographical input space
 in different independent regions, which are based on the type of
-sediments listed at the bottom of the water. In this problem of
-calibration we will assume that the uncertainties take the form of an
-environmental parameter which perturbates the amplitude of some tidal
-constituents.  In order to quantify the influence of each of the
-sediment-based regions and the influence of each of the components of
-the environmental variable, we will carry a global sensitivity
-analysis in~\cref{sec:sensitivity-analysis}.
+sediments listed at the bottom of the water.
 
-Finally using this study, we will reduce significantly the input
+In this problem of calibration we will assume that the uncertainties
+take the form of an environmental parameter which perturbates the
+amplitude of some tidal constituents.  In order to quantify the
+influence of each of the sediment-based regions and the influence of
+each of the components of the environmental variable, we will carry a
+global sensitivity analysis in~\cref{sec:sensitivity-analysis}.
+
+Finally based on this study, we will reduce significantly the input
 space, and then apply some of the methods proposed in the previous
 chapter, in order to get a robust estimation of the bottom friction
 using Gaussian processes in~\cref{sec:robust_calibration}.
@@ -81,23 +92,24 @@ using Gaussian processes in~\cref{sec:robust_calibration}.
 \label{sec:croco_bottom_fr}
 \CROCO{}\footnote{\CROCO\ and CROCO\_TOOLS are provided by
   \url{https://www.croco-ocean.org}} (Coastal and Regional Ocean
-COmmunity model) is a program written in Fortran that describes the
-motion of the ocean by solving the \emph{primitive equations}, which
-are simplified versions of the Navier-Stokes equations, in order to
-take into account the particular scales at play at the surface of the
-Earth. \CROCO{} has been developed upon
+COmmunity model) is a numerical model that describes the motion of the
+ocean by solving the \emph{primitive equations}, which are simplified
+versions of the Navier-Stokes equations, taking into account the
+particular scales at play at the surface of the Earth. \CROCO{} has
+been developed upon
 ROMS\_AGRIF %\footnote{\url{https://www.myroms.org/},\url{http://www-ljk.imag.fr/MOISE/AGRIF/}}
 (Regional Ocean Modeling System, Adaptive Grid Refinement in
-Fortran~\cite{debreu_two-way_2012}), and is designed to be coupled with
-other modelling systems, such as atmospheric, biological or ecosystem
-models.
+Fortran~\cite{debreu_two-way_2012}), and is designed to be coupled
+with other modelling systems, such as atmospheric, biological or
+ecosystem models.
 
-% gradually including algorithms from MARS3D (sediments) and
-% HYCOM (vertical coordinates). An important objective for \CROCO\ is to
+% gradually including algorithms from MARS3D (sediments) and HYCOM
+% (vertical coordinates). An important objective for \CROCO\ is to
 % resolve very fine scales (especially in the coastal area), and their
 % interactions with larger scales. It is the oceanic component of a
-% complex coupled system including various components, e.g., atmosphere,
-% surface waves, marine sediments, biogeochemistry and ecosystems.
+% complex coupled system including various components, e.g.,
+% atmosphere, surface waves, marine sediments, biogeochemistry and
+% ecosystems.
 
 
 \subsection{Parameters and configuration of the model}
@@ -105,19 +117,19 @@ models.
 
 The configuration used in this thesis is based on the one used
 in~\cite{boutet_estimation_2015}. The spatial domain ranges from
-\ang{9}W to \ang{1}E and from \ang{43}N to \ang{51}N, and spans most
-of the Bay of Biscay, the English Channel and the eastern part of the
-Celtic Sea.  The resolution is \SI{1/14}{\degree}, which leads to a
-mesh size between \SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The
-bathymetry map and the spatial domain is
-shown~\cref{fig:depth_maps}. The ocean can be split roughly in two
-regions, based on its depth : the region near the coasts which
-corresponds to the continental shelf, where the water depth is less
-than \SI{200}{\meter}, and the offshore region of the Bay of Biscay,
-where the depth is closer to \SI{5000}{\meter}.
+\ang{9}W to \ang{1}E (comprising \num{139} internal points in this
+direction) and from \ang{43}N to \ang{51}N (\num{164} in this
+direction), and spans most of the Bay of Biscay, the English Channel
+and the eastern part of the Celtic Sea.  The resolution is
+\SI{1/14}{\degree}, which leads to a mesh size between
+\SI{5}{\kilo\metre} and \SI{6}{\kilo\metre}. The bathymetry map and
+the spatial domain is shown~\cref{fig:depth_maps}. The ocean can be
+split roughly in two regions, based on its depth : the region near the
+coasts which corresponds to the continental shelf, where the water
+depth is less than \SI{200}{\meter}, and the offshore region of the
+Bay of Biscay, where the depth is closer to \SI{5000}{\meter}.
 \begin{figure}[ht]
-  \centering
-  \includegraphics{\imgpath depth_maps_log.png}
+  \centering \includegraphics{\imgpath depth_maps_log.png}
   \caption[Bathymetry chart of the domain
   modelled]{\label{fig:depth_maps} Bathymetry used in \CROCO, and
     geographical landmarks. The continental shelf corresponds roughly
@@ -128,33 +140,28 @@ where the depth is closer to \SI{5000}{\meter}.
 
 
 \CROCO{} can solve the fluid motion equations in 3D, but in this
-configuration, solves the shallow water equations instead, which are
-obtained by vertically integrating the primitive equations, leading
-to:
-% \begin{align}
-    %     \left\{
-    %     \begin{array}{rcl}
-    %     \frac{\partial u}{\partial t} + \nabla \cdot \left(\vec{v}u\right) - fv &=& -\frac{\partial \phi}{\partial x} + \mathcal{F}_{u} + \mathcal{D}_u \\
-    %     \frac{\partial v}{\partial t} + \nabla \cdot \left(\vec{v}v\right) + fv &=& -\frac{\partial \phi}{\partial y} + \mathcal{F}_{v} + \mathcal{D}_v
-                                                                                      %   \end{array}
-                                                                                      %                                                                                       \right.
-                                                                                      %   \end{align}
+configuration, solves the rotating shallow water equations instead,
+which are obtained by vertically averaging the primitive equations,
+leading to:
 \begin{align}
   \left\{
   \begin{array}{lll}
     \pfrac{\mathbf{v}}{t} + (\mathbf{v} \cdot \nabla )\mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} & = & -g\nabla H + \frac{\bm{\tau}_b}{\rho H} + F \\
-    \pfrac{H}{t} + \nabla (H \cdot \mathbf{v})                                                     & = & 0
+    \pfrac{\zeta}{t} + \nabla (H \cdot \mathbf{v})                                                     & = & 0
   \end{array}
                                                    \right.
 \end{align}
 where $\mathbf{v} = (v_x,v_y)$ is the velocity field of the fluid,
-$\bm{\Omega}$ is the rotational angular vector of Earth, $H$ is the
-water column height, $g$ is the gravitational constant, $\rho$ is the
-fluid density, and $\bm{\tau}_b$ is the shear stress at the
-bottom. Finally, $F$ represents the forcing of the model, in this case
-the influence of the tides.  The bottom friction affects the
-circulation through $\bm{\tau}_b$, and different parameterizations of
-this stress can be derived.
+$\bm{\Omega}$ is the rotational angular vector of Earth. $H$, the
+total water column height and $\zeta$, the free-surface height
+(relative to the geoid) satisfy the relation $H = \zeta + b$ where $b$
+is the bathymetry.  The effect of the bottom topography and the
+friction are modelled using $g$ the gravitational constant, $\rho$ the
+fluid density, and $\bm{\tau}_b$ the shear stress at the
+bottom. Finally, $F$ represents the external forcing of the model.
+The forcing due to the tides is done at the boundaries. The bottom
+friction affects the circulation through $\bm{\tau}_b$, and different
+parameterizations of this stress can be derived.
 
 \subsection{Modelling of the bottom friction}
 \label{ssec:modelling_bottom}
@@ -209,7 +216,7 @@ to consider for the numerical problem of calibration.
 In this work, we are going to use a twin experiment setup: the
 calibration will be performed with respect to some observation
 generated using CROCO.  This observation
-$y\in\mathbb{R}^{N_{\mathrm{obs}}}$ is then computed using a specific
+$y\in\mathbb{R}^{N_{\mathrm{obs}}}$ is computed using a specific
 configuration of the forward model, meaning that we are going to
 define a \emph{truth} value for the bottom friction.
 
@@ -291,7 +298,7 @@ chosen segmentation.
 The ocean, especially near the English Channel is driven by tidal
 forces that produce currents at the surface. As a periodic signal, the
 tidal forcing is usually analysed harmonically, in order to separate
-its influence by frequency. In \CROCO, this forcing comes from the
+its influence by frequency. In \CROCO, this forcing can come from the
 TPXO model of tides~\citep{egbert_efficient_2002}, and in our
 configuration, we use the 5 primary harmonic constituents
 as described \cref{tab:tides_components}.
@@ -350,37 +357,38 @@ external uncertainties, which corresponds to an unperturbated tidal
 forcing. In consequence, the environmental variable is set to
 $\uu^{\mathrm{truth}}$.
 
-In ocean modelling, the free-surface height $\eta$ is often used as an
-observable quantity, because it can be measured using satellites or
+In ocean modelling, the free-surface height $\zeta$ is often used as
+an observable quantity, because it can be measured using satellites or
 tide gauges near the coasts. We consider then
-$\eta\in \mathbb{N}^{\mathrm{obs}}$ as the output of the numerical
+$\zeta\in \mathbb{N}^{\mathrm{obs}}$ as the output of the numerical
 model.
-    %     $N_{\mathrm{obs}} = N_{\mathrm{mesh}}\cdot N_{\mathrm{time}}$
 
 Following the notations introduced in~\cref{chap:inverse_problem} for
 the model, let us define
 $(\mathcal{M}(\cdot,\uu^{\mathrm{truth}}),\Kspace)$ as the numerical
-model to calibrate. The forward operator $\mathcal{M}(\cdot, \uu^{\mathrm{truth}})$ is
-defined by
+model to calibrate. The forward operator
+$\mathcal{M}(\cdot, \uu^{\mathrm{truth}})$ is defined by
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace  &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
-    \kk & \longmapsto & \mathcal{M}(\kk, \uu^{\mathrm{truth}}) = \left(\eta_{t,i}(\kk, \uu^{\mathrm{truth}})\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
+    \kk & \longmapsto & \mathcal{M}(\kk, \uu^{\mathrm{truth}}) = \left(\zeta_{t,i}(\kk, \uu^{\mathrm{truth}})\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
-where $\eta_{t,i}(\kk,\uu)$ is the free surface height of the ocean at
-the mesh point $i$, and at the time-step $t$, obtained using the model
-and the bottom friction associated with $\kk$ and the environmental
-variable $\uu$, and
-$N_{\mathrm{mesh}} \cdot N_{\mathrm{time}} = N_{\mathrm{obs}}$.  In
-this configuration, $N_{\mathrm{time}} =\num{49}$, and corresponds to
-the number of records saved. The time step of the simulation in itself
-is \SI{10}{\second}, and its total duration is \SI{24}{\hour}, meaning that the
-water height $\eta$ is saved every \SI{30}{\minute}.
+where $\zeta_{t,i}(\kk,\uu)$ is the free-surface height of the ocean
+at the mesh point $i$, and at the time-step $t$, obtained using the
+model and the bottom friction associated with $\kk$ and the
+environmental variable $\uu$, and
+$N_{\mathrm{mesh}} \cdot N_{\mathrm{time}} = N_{\mathrm{obs}}$. In this configuration,
+$N_{\mathrm{time}} =\num{49}$, and corresponds to the number of
+records saved, while $N_{\mathrm{mesh}}=\num{15684}$ is the number of
+cells of the computational grid not located on land. The time step of
+the simulation in itself is \SI{10}{\second}, and its total duration
+is \SI{24}{\hour}, meaning that the water height $\zeta$ is saved
+every \SI{30}{\minute}.
 
 \subsection{Twin experiment setup}
 Recalling the definition of a twin experiment setup, the observation
-$y$ are generated using the numerical model, and a predefined truth
+$y$ is generated using the numerical model, and a predefined truth
 value $\kk^{\mathrm{truth}}$.  This means that the ``physical model''
 is defined using the forward operator $\mathscr{M}$, based on the
 forward numerical model, evaluated with the environmental parameter
@@ -409,7 +417,7 @@ Once the observation $y \in \mathbb{R}^{N_{\mathrm{obs}}}$ has been generated, w
 define the objective function $J$:
 \begin{align}
   \label{eq:cost_fun_definition}
-  J(\kk) &= \sum_{t=1}^{ N_{\mathrm{time}}}\sum_{i=1}^{N_{\mathrm{mesh}}}  \left(\eta_{t,i}(\kk,\uu^{\mathrm{truth}}) - y_{t, i}\right)^2 \\
+  J(\kk) &= \sum_{t=1}^{ N_{\mathrm{time}}}\sum_{i=1}^{N_{\mathrm{mesh}}}  \left(\zeta_{t,i}(\kk,\uu^{\mathrm{truth}}) - y_{t, i}\right)^2 \\
          &= \|\mathcal{M}(\kk,\uu^{\mathrm{truth}}) - y\|_2^2
 \end{align}
 Equivalently, as mentioned in~\cref{chap:inverse_problem}, by assuming
@@ -431,10 +439,11 @@ finite-difference method to get the gradient is unfeasible. Instead,
 Tapenade~\citep{hascoet_tapenade_2013}, an Automatic Differentiation
 tool has been used in order to get the gradient (with respect to
 $\kk$) of the cost function $J$ using the adjoint method, as
-described~\cref{sec:calibration_adjoint_optimization}. The
-optimisation procedure is stopped after \num{400} iterations, and the
-estimated control parameter is
-shown~\cref{fig:optimization_map_399}. The evolution of the cost
+described~\cref{sec:calibration_adjoint_optimization}. The starting
+point of the optimisation is $\kk^b = \log \num{5e-3}$, and the
+procedure is stopped after \num{400} iterations. The estimated control
+parameter (\emph{i.e.} the minimiser found) is
+shown~\cref{fig:optimization_map_399}.  The evolution of the cost
 function and the squared norm of the gradient during the optimisation
 procedure is shown~\cref{fig:ctrl_true}.
 
@@ -468,7 +477,7 @@ except for some parts of the English Channel, is well retrieved.
 
 
 On~\cref{fig:optimisation_type_sediments} is shown the value of the
-optimised control parameter $\kk$, depending on the type of sediment
+optimised rugosity $\zob$, depending on the type of sediment
 associated. Each point on this figure corresponds then to a mesh
 point.
 We can see that indeed, as~\cref{fig:optimization_map_399} shows,
@@ -484,7 +493,8 @@ the initial value.
   \caption[Final values of the optimisation procedure, based on the
   sediment type]{\label{fig:optimisation_type_sediments} Results of
     the optimisation procedure, depending on the type of
-    sediments. The initial value is \SI{5e-3}{\meter}}
+    sediments. The starting value in the optimisation procedure for
+    $\zob$ is \SI{5e-3}{\meter}}
 \end{figure}
 
 
@@ -502,10 +512,13 @@ is quite large in contrast to the other sediments.
 
 \clearpage
 The optimisation procedure has been done also in the misspecified
-case, \emph{i.e.} when
-$\uu^b \neq \uu^{\mathrm{truth}}$.~\Cref{fig:optim_croco_misspecified}
-shows the resulting optimisation for $\uu^b=(0, 0) $ and for
-$\uu^b=(1, 1)$.
+case, \emph{i.e.}
+$\uu^b \neq \uu^{\mathrm{truth}}=(\num{0.5}, \num{0.5})$ where the
+first component refers to the error on $M_2$, and the second on $S_2$
+(the others are supposed to be well-specified).
+
+~\Cref{fig:optim_croco_misspecified} shows the resulting optimisation
+for $\uu^b=(0, 0) $ and for $\uu^b=(1, 1)$. \todo{meme echelle 4.6 et 4.4 ? cartes zb(ub) - zb(utruth)}
 \begin{figure}[ht]
   \centering
   \begin{subfigure}{0.9\textwidth}
@@ -730,15 +743,24 @@ analysis performed before. On this reduced space, the objective
 function $J$ will first be optimised globally on
 $\Kspace \times \Uspace$ in~\cref{ssec:glob_mini}, and its results
 will be compared with the true value (used to generate the
-observations). Then after having defined $Z$ as introduced
-in~\cref{chap:adaptative_design_gp}, a Gaussian Process (GP) emulating
-$J$, we estimate the conditional minimums and minimisers
+observations). Then after having defined $Z$, a Gaussian Process (GP)
+emulating $J$ as introduced in~\cref{chap:adaptative_design_gp}, we
+estimate the conditional minimums and minimisers
 in~\cref{ssec:croco_cond_minimum_minimisers}.  Finally,
 in~\cref{ssec:rr_estimators_croco}, we compute some relative-regret
-estimates using GP, enriched beforehand with SUR strategies: reduction of the
-augmented IMSE in~\cref{ssec:optim_prob_threshold}, and sampling in
-the margin of uncertainty for the estimation of the quantile of the
-relative-regret in~\cref{ssec:optim_quantile_rr}.
+estimates using GP, enriched beforehand with adaptive strategies:
+reduction of the augmented IMSE in~\cref{ssec:optim_prob_threshold},
+and sampling in the margin of uncertainty for the estimation of the
+quantile of the relative-regret in~\cref{ssec:optim_quantile_rr}. The approach we present here is summarised~\cref{fig:diagram_recap}.
+
+\begin{figure}[ht]
+  \centering
+  \input{\imgpath schema_robust.pgf}
+  \caption{\label{fig:diagram_recap} Representation of the different
+    steps for the robust calibration of the numerical model using
+    relative-regret estimates}
+\end{figure}
+
 
 \subsection{Objective function and global minimum}
 \label{ssec:glob_mini}
@@ -765,11 +787,11 @@ amplitude of the $M_2$ and the $S_2$ tide constituents:
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
 As previously, the forward operator of the numerical model yield the
-sea-surface height $\eta$:
+sea-surface height $\zeta$:
 \begin{equation}
   \begin{array}{rcl}
     \mathcal{M}: \Kspace \times \Uspace &\longrightarrow& \mathbb{R}^{N_{\mathrm{obs}}} \\
-    (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\eta_{t,i}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
+    (\kk, \uu)& \longmapsto & \mathcal{M}(\kk, \uu) = \left(\zeta_{t,i}(\kk, \uu)\right)_{\substack{1 \leq i \leq N_{\mathrm{mesh}} \\ 1 \leq t \leq N_{\mathrm{time}}}} \\ 
   \end{array}
 \end{equation}
 and the objective function $J$ is the squared difference between the
@@ -780,8 +802,15 @@ observations $y$ and the forward operator.
     (\kk, \uu) & \longmapsto & \|\mathcal{M}(\kk, \uu) - y \|^2_2
   \end{array}
 \end{equation}
-For the sake of the study, the original function $J$ has been
-optimised over $\Kspace\times\Uspace$, giving
+
+For the sake of the study, we can optimise the original function $J$
+over
+$\Kspace\times \Uspace = \interval{\kk_{\min}}{\kk_{\max}}^3 \times
+\interval{0}{1}^2$.  Because we are controlling the calibration
+parameter on a space of dimension 3 while the observation $y$ has been
+generated without the dimension reduction, the result of the
+optimisation can be different from the truth values.
+ 
 \begin{equation}
   \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = J(\hat{\kk}_{\mathrm{global}}, \hat{\uu}_{\mathrm{global}})= \num{29.749}
 \end{equation}
@@ -789,6 +818,14 @@ for
 \begin{align}
   \hat{\kk}_{\mathrm{global}}                     & = (\num[round-mode=places,round-precision=4]{-3.5161661} , \num[round-mode=places,round-precision=4]{-5.07764701}, \num[round-mode=places,round-precision=4]{-6.34588442})                                                                                                            \\\hat{\uu}_{\mathrm{global}} & = (\num[round-mode=places,round-precision=4]{0.6347829},\num[round-mode=places,round-precision=4]{0.29890637})
 \end{align}
+We can then indeed notice that
+$\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
+\hat{\uu}_{\mathrm{global}}$. The difference in the environmental
+variables $\hat{\uu}_{\mathrm{global}}$ and $\uu^{\mathrm{truth}}$
+compensates for the difference of dimensionality between
+$\kk\in\Kspace$, the control variable, and $\kk^{\mathrm{truth}}$.
+
+
 In order to compare the result of this optimisation with the truth
 value,~\cref{tab:ktruthkopt} shows the different values of the
 different components of $\kk^{\mathrm{truth}}$ and
@@ -811,15 +848,7 @@ $\hat{\kk}_{\mathrm{global}}$.
     $\kk^{(3)}$ is the union of the regions defined with code R, S,
     SF, Si and V.}
 \end{table}
-We can also notice that
-$\uu^{\mathrm{truth}}=(\num{0.5},\num{0.5}) \neq
-\hat{\uu}_{\mathrm{global}}$. This can be explained by the choice of
-controlling the parameter on a space of dimension 3, while the truth
-value used to generate the observations can be seen as 6
-dimensional. The difference in the environmental variables $\hat{\uu}_{\mathrm{global}}$ and
-$\uu^{\mathrm{truth}}$ compensates for the
-difference of dimensionality between $\kk\in\Kspace$, the control
-variable, and $\kk^{\mathrm{truth}}$.
+
 
 As mentioned in the previous chapter, $J$ can be expensive to evaluate
 computational-wise, so we propose to use GP in order to model it, and
@@ -875,7 +904,7 @@ use the GP prediction of $Z$ in order to approximate them:
   m_{Z^*}: \uu\mapsto &\min_{\kk \in \Kspace} m_Z(\kk, \uu) \\
   \kk^*_{Z}: \uu  \mapsto &\argmin_{\kk \in \Kspace} m_{Z^*}(\uu)
 \end{align}
-In order to improve the accuracy of those two functions and to ensure
+As mentioned before, in order to improve the accuracy of those two functions and to ensure
 the positivity of $m_Z$, we are first going to enrich the design using
 the PEI criterion~\citep{ginsbourger_bayesian_2014}, as
 introduced~\cref{sec:PEI_criterion}.  Choosing \num{200}

@@ -1,0 +1,50 @@
+\usetikzlibrary{calc, arrows, decorations.markings}
+\definecolor{brewsuperlight}{HTML}{F0F9E8}
+\definecolor{brewlight}{HTML}{BAE4BC}
+\definecolor{brewdark}{HTML}{7BCCC4}
+\definecolor{brewsuperdark}{HTML}{2B8CBE}
+
+\begin{tikzpicture}[decoration = {markings,
+    mark = at position 0.5 with {\arrow[>=stealth]{>}}
+  }, node distance= 35ex, text centered
+  ]
+\node (initcrit) at (4,0.2) [rectangle, fill=brewsuperlight, minimum height=70, minimum width=380] {};
+\node (inidesign) at (0, 0) [rectangle, text width=100, fill=brewdark] {Initial Design \\ $\mathcal{X}_{\mathrm{LHS}}=\{(\theta_i, u_i),J(\theta_i, u_i)\}$};
+\node (betterini) at (4.5, 0) [rectangle, fill=brewdark, text width=50] {GP $Z \mid \mathcal{X}_{\mathrm{LHS}}$};
+\node (postPEI) at (9, 0) [rectangle, fill=brewdark, text width=50] {GP $Z \mid \mathcal{X}_{0}$};
+\node[anchor=north east,inner sep=3pt] at (initcrit.north east) 
+    {Initialisation of the GP (with PEI enrichment for positivity)};
+
+\draw[->] (inidesign.east) to node [midway, above] {fit GP} (betterini.west) ;
+\draw[->] (betterini.east) to node [midway, above] {PEI} (postPEI.west) ;
+
+
+
+\node (surstrat) at (4,-2.8) [rectangle, fill=brewsuperlight, minimum height=60, minimum width=380] {};
+\node[anchor=north east,inner sep=3pt] at (surstrat.north east) 
+    {Enrichment of the design};
+\node (mid1) at (4.5, -1.36) {};
+\node (Gplhs) at (1, -3) [rectangle, fill=brewdark, text width=50] {GP $Z\mid \mathcal{X}_{0}$};
+\draw[->] (postPEI.south) |- (mid1.east) -|(Gplhs.north) ;
+
+\node (Gpn) at (7, -3) [rectangle, fill=brewdark, text width=50] {GP $Z\mid \mathcal{X}_n$};
+\draw[->] (Gplhs.east) to node [midway, above] {Adaptive strategy} (Gpn.west) ;
+
+\node (mid2) at (4.5, -4.36) {};
+
+\node (plugin) at (4, -5.8) [rectangle, fill=brewsuperlight, minimum height=60, minimum width=380] {};
+\node[anchor=north east,inner sep=3pt] at (plugin.north east) 
+    {Plug-in estimation of quantities to optimise};
+\node (Gplhs) at (0, -6) [rectangle, fill=brewdark, text width=50] {GP $Z\mid \mathcal{X}_{n}$};
+\draw[->] (Gpn.south) |- (mid2.east) -|(Gplhs.north) ;
+
+\node (surrogate) at (4.5, -6) [rectangle, fill=brewdark, text width=50] {Surrogate $m_Z$};
+\draw[->] (Gplhs.east) to node [midway, above] {Plug-in} (surrogate.west) ;
+\node (qoi) at (9, -6) [rectangle, fill=brewdark, text width=50] {$\hat{\Gamma}_{\alpha}$ or $\hat{q}_p$};
+\draw[->] (surrogate.east) to node [midway, above] {Monte-Carlo} (qoi.west) ;
+
+
+\node (optim) at (9, -9) [rectangle, fill=brewdark, text width=50] {$\hat{\theta}_{\mathrm{RR},\alpha}$ or $\hat{\theta}_{\mathrm{RR},\alpha_p}$};
+\draw[->] (qoi.south) to node [midway, left] {Optimisation} (optim.north) ;
+
+\end{tikzpicture}
