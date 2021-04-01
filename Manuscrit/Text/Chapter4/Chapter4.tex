@@ -253,11 +253,27 @@ In addition to that interpolation property, for points not in the design, we hav
 
 From a computational point of view, GP are relatively cheap to handle:
 \begin{itemize}
-\item If the covariance function $C_Z$ is known, the most expensive step in the estimation of $m_{Z\mid \mathcal{X}}$ and $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the points $x$ where we wish to evaluate $m_{Z\mid \mathcal{X}}$, thus its inversion needs only to be performed once. However, if there is a very large number of points in the design, and thus a very large matrix $\mathbf{K}_{\mathcal{X}}$, this inversion can reveal itself numerically complicated in practice. % \todo{ça s'adapte à des pbs de taille moyenne}
-\item In order to get a sample path from this GP, one need to be able to sample from a multivariate normal distribution, and thus only need to compute the Cholesky decomposition of the conditioned covariance matrix.
+\item If the covariance function $C_Z$ is known, the most expensive
+  step in the estimation of $m_{Z\mid \mathcal{X}}$ and
+  $C_{Z \mid \mathcal{X}}$ is the inversion of the matrix
+  $\mathbf{K}_{\mathcal{X}}$. This matrix does not depend on the
+  points $x$ where we wish to evaluate $m_{Z\mid \mathcal{X}}$, thus
+  its inversion needs only to be performed once. However, if there is
+  a very large number of points in the design, and thus a very large
+  matrix $\mathbf{K}_{\mathcal{X}}$, this inversion can reveal itself
+  numerically complicated in practice. This renders GP suited for
+  problems involving only a moderate number of
+  dimensions % \todo{ça s'adapte à des pbs de taille moyenne}
+\item In order to get a sample path from this GP, one need to be able
+  to sample from a multivariate normal distribution, and thus only
+  need to compute the Cholesky decomposition of the conditioned
+  covariance matrix.
 \end{itemize}
-However, if some points of the design are very close to each other, the covariance matrix can be ill-conditioned. In this case,
-for numerical stability, we can add a \emph{nugget} effect to $\mathbf{K}_{\mathcal{X}}$, and~\eqref{eq:GP_joint_distrib_nugget} becomes:
+However, if some points of the design are very close to each other,
+the covariance matrix can be ill-conditioned. In this case, for
+numerical stability, we can add a \emph{nugget} effect to
+$\mathbf{K}_{\mathcal{X}}$, and~\eqref{eq:GP_joint_distrib_nugget}
+becomes:
 \begin{equation}
   \label{eq:GP_joint_distrib_nugget}
   \begin{pmatrix}
@@ -1283,9 +1299,10 @@ Let consider $\alpha\geq 1$ fixed. In order to compute
 $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimise the
 function $\Gamma_{\alpha}$. For that purpose, we are going to explore
 the space to improve the estimation of $\Gamma_{\alpha}$, and once
-sufficient knowledge is acquired, use the plug-in % \todo{definir}
-estimate $\hat{\Gamma}_{\alpha}$ for the optimisation, to get the
-wanted estimator.
+sufficient knowledge is acquired, use the plug-in% \todo{definir}
+estimate $\hat{\Gamma}_{\alpha}$ (\emph{i.e.} the one obtained by
+replacing $J$ by $m_Z$) for the optimisation, to get
+$\hat{\kk}{\mathrm{RR},\alpha}$.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
 
