@@ -518,7 +518,7 @@ first component refers to the error on $M_2$, and the second on $S_2$
 (the others are supposed to be well-specified).
 
 ~\Cref{fig:optim_croco_misspecified} shows the resulting optimisation
-for $\uu^b=(0, 0) $ and for $\uu^b=(1, 1)$. \todo{meme echelle 4.6 et 4.4 ? cartes zb(ub) - zb(utruth)}
+for $\uu^b=(0, 0) $ and for $\uu^b=(1, 1)$. % \todo{meme echelle 4.6 et 4.4 ? cartes zb(ub) - zb(utruth)}
 \begin{figure}[ht]
   \centering
   \begin{subfigure}{0.9\textwidth}
@@ -743,15 +743,38 @@ analysis performed before. On this reduced space, the objective
 function $J$ will first be optimised globally on
 $\Kspace \times \Uspace$ in~\cref{ssec:glob_mini}, and its results
 will be compared with the true value (used to generate the
-observations). Then after having defined $Z$, a Gaussian Process (GP)
-emulating $J$ as introduced in~\cref{chap:adaptative_design_gp}, we
-estimate the conditional minimums and minimisers
-in~\cref{ssec:croco_cond_minimum_minimisers}.  Finally,
-in~\cref{ssec:rr_estimators_croco}, we compute some relative-regret
-estimates using GP, enriched beforehand with adaptive strategies:
-reduction of the augmented IMSE in~\cref{ssec:optim_prob_threshold},
-and sampling in the margin of uncertainty for the estimation of the
-quantile of the relative-regret in~\cref{ssec:optim_quantile_rr}. The approach we present here is summarised~\cref{fig:diagram_recap}.
+observations).
+
+Afterwards, we are going to estimate relative-regret based estimates
+of the bottom friction as described in the previous chapters. The
+general approach is summarised~\cref{fig:diagram_recap}.  We are first
+going to define and fit a Gaussian Process $Z$ with respect to an
+initial design evaluated by the objective function $J$,
+as introduced in~\cref{chap:adaptative_design_gp}.  As $J$ is supposed to
+be positive, we are first going to ensure that the surrogate
+constructed using $J$, namely $m_Z$ is positive as well, by enriching
+the design using the PEI
+criterion in~\cref{ssec:croco_cond_minimum_minimisers}. This will allow
+us to estimate the conditional minimums and conditional minimisers.
+This initialisation step is repreented as the top row
+of~\cref{fig:diagram_recap}.
+
+The second row of the figure represents the enrichment step, which
+consists in adding points to the design according to some adaptive
+strategies. These strategies are implemented in order to improve the
+estimation of some quantities of interest linked to the
+relative-regret estimates: estimation of $\Gamma_{\alpha}$ using the
+augmented IMSE in~\cref{ssec:optim_prob_threshold}, and sampling in
+the margins of uncertainty for $q_p$ in~\cref{ssec:optim_quantile_rr}.
+
+Finally, using the Gaussian Process $Z$ constructed using this final enriched
+design, we then use the associated surrogate $m_Z$ to emulate $J$ and
+to compute the estimations of $\Gamma_{\alpha}$ or $q_p$, and
+optimise them to get the members of the relative-regret family of
+estimators (as summarised in the last row of~\cref{fig:diagram_recap}).
+
+
+%The approach we present here is summarised~\cref{fig:diagram_recap}.
 
 \begin{figure}[ht]
   \centering
@@ -786,7 +809,7 @@ amplitude of the $M_2$ and the $S_2$ tide constituents:
 \begin{equation}
   \UU = (\UU_1,\UU_2), \quad \UU_i \sim \mathcal{U}(\interval{0}{1}) \text{ for } i=1,2
 \end{equation}
-As previously, the forward operator of the numerical model yield the
+As previously, the forward operator of the numerical model yields the
 sea-surface height $\zeta$:
 \begin{equation}
   \begin{array}{rcl}
