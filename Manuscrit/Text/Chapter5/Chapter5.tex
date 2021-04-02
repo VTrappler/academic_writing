@@ -440,7 +440,7 @@ Tapenade~\citep{hascoet_tapenade_2013}, an Automatic Differentiation
 tool has been used in order to get the gradient (with respect to
 $\kk$) of the cost function $J$ using the adjoint method, as
 described~\cref{sec:calibration_adjoint_optimization}. The starting
-point of the optimisation is $\kk^b = \log \num{5e-3}$, and the
+point of the optimisation is $\kk = \log \num{5e-3}$, and the
 procedure is stopped after \num{400} iterations. The estimated control
 parameter (\emph{i.e.} the minimiser found) is
 shown~\cref{fig:optimization_map_399}.  The evolution of the cost
@@ -756,7 +756,7 @@ constructed using $J$, namely $m_Z$ is positive as well, by enriching
 the design using the PEI
 criterion in~\cref{ssec:croco_cond_minimum_minimisers}. This will allow
 us to estimate the conditional minimums and conditional minimisers.
-This initialisation step is repreented as the top row
+This initialisation step is represented as the top row
 of~\cref{fig:diagram_recap}.
 
 The second row of the figure represents the enrichment step, which
@@ -767,11 +767,12 @@ relative-regret estimates: estimation of $\Gamma_{\alpha}$ using the
 augmented IMSE in~\cref{ssec:optim_prob_threshold}, and sampling in
 the margins of uncertainty for $q_p$ in~\cref{ssec:optim_quantile_rr}.
 
-Finally, using the Gaussian Process $Z$ constructed using this final enriched
-design, we then use the associated surrogate $m_Z$ to emulate $J$ and
-to compute the estimations of $\Gamma_{\alpha}$ or $q_p$, and
-optimise them to get the members of the relative-regret family of
-estimators (as summarised in the last row of~\cref{fig:diagram_recap}).
+Finally, using the Gaussian Process $Z$ fitted based on this final
+enriched design, we then construct the associated surrogate $m_Z$ to
+emulate $J$ and to compute the estimations of $\Gamma_{\alpha}$ or
+$q_p$, and optimise them to get the members of the relative-regret
+family of estimators (as summarised in the last row
+of~\cref{fig:diagram_recap}).
 
 
 %The approach we present here is summarised~\cref{fig:diagram_recap}.
@@ -833,7 +834,7 @@ $\Kspace\times \Uspace = \interval{\kk_{\min}}{\kk_{\max}}^3 \times
 parameter on a space of dimension 3 while the observation $y$ has been
 generated without the dimension reduction, the result of the
 optimisation can be different from the truth values.
- 
+ We obtain:
 \begin{equation}
   \min_{(\kk,\uu) \in \Kspace \times \Uspace} J(\kk, \uu) = J(\hat{\kk}_{\mathrm{global}}, \hat{\uu}_{\mathrm{global}})= \num{29.749}
 \end{equation}
@@ -1353,8 +1354,8 @@ A comparison of the two methods is summarised in~\cref{tab:results_croco}.
 In this chapter, we addressed the problem of calibration under
 uncertainties of the numerical model CROCO.\@ After having defined the
 control and environmental parameters, we performed different studies,
-in order to have a better understanding of the behaviour of model at
-stake.
+in order to have a better understanding of the behaviour of the model
+at stake.
 
 First, we optimised the objective function on a high-dimensional input
 space, but without external uncertainties. We chose then to segment
@@ -1433,7 +1434,7 @@ correctly choosing a candidate $\tilde{\kk}$.  Also, instead of
 considering the augmented IMSE, we could instead look for the point
 maximising the prediction variance of $\Delta_{\alpha}$, and
 ``adjust'' its $\kk$ component, similarly as proposed for the sampling
-based scheme, bypassing completetly the evaluation of the integral.
+based scheme, bypassing completely the evaluation of the integral.
 
 
 

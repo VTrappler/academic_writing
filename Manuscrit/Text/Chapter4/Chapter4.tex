@@ -639,7 +639,11 @@ average
   \Ex_{Z(x)}\Big[\IMSE\big(\mathcal{X}_n \cup \left\{(x, Z(x))\right\} \big)\Big]
 \end{equation}
 where the expectation is to be taken with respect to the random
-variable $Z(x)$. The expression of~\cref{eq:IMSE_augmented} requires then the evaluation of an integral in dimension $1+\dim \mathbb{X}$ .
+variable $Z(x)$. The expression of~\cref{eq:IMSE_augmented} requires
+then the evaluation of an integral in dimension $1+\dim \mathbb{X}$.
+We then use the term \emph{augmented} to signal that a quantity has
+been evaluated with an augmented design, and the output have been
+averaged in this fashion.
 
 As each outcome of $Z(x)$ requires to fit a GP and to compute the
 IMSE, a precise evaluation is quite expensive. A strategy found for
@@ -647,8 +651,8 @@ instance in~\cite{villemonteix_informational_2006} is to take $M$
 possible outcomes for $Z(x)$, corresponding to evenly spaced quantiles
 of its distribution, or using Gauss-Hermite
 quadratures~\citep{bernard_methodes_2019} in order to take advantage
-of the Gaussian nature of $Z(x)$.  The hyperparameters of the GP
-should not be reevaluated when augmenting the design, in order to get
+of the Gaussian nature of $Z(x)$. The hyperparameters of the GP should
+not be reevaluated when augmenting the design, in order to get
 comparable values for the IMSE.\@
 
 Finally, we can maximise a criterion which is the opposite of the
@@ -946,19 +950,20 @@ classification of the point $x$.
 
 Finally, using this indicator function,~\cref{alg:sampling_enrichment}
 can be applied to enrich the design, by adding a batch of $K$ points
-at each iterations.  The margin of uncertainty, samples
-in this margin and the centroids that represent statistically this set
-of samples are shown~\cref{fig:margin_unc}. The samples have been
-obtained using an acceptance-rejection method, since the pdf of the
-sampling distribution is an indicator function. The $K=\num{10}$
-centroids have been computed using the KMeans algorithm.
+at each iterations.  Using an acceptance-rejection method (since the
+pdf of the sampling distribution is an indicator function), we can
+easily obtain samples within the margin of uncertainty: they are shown
+on the right plot of~\cref{fig:margin_unc}, with the frontiers of the
+margin.  Using the KMeans algorithm, we can compute $K=\num{10}$
+centroids, which represent statistically the samples (red stars on the
+figure). We can then see that they are located close to the true
+leve-set of the function in this case.
 
-We can see that the centroids are located close to the true level-set of the function in this case.
-%\todo{batch + centroids + samples}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{\imgpath margin_unc.pdf}
-  \caption[Samples in the margin of uncertainties and centroids]{\label{fig:margin_unc} Margin of uncertainty, and
+  \caption[Samples in the margin of uncertainties and
+  centroids]{\label{fig:margin_unc} Margin of uncertainty, and
     construction of the $K$ points of the batch to be evaluated, using
     samples and centroids}
 \end{figure}
@@ -1041,7 +1046,7 @@ For other robust estimators, such as the minimum of the expectation
 $\estimtxt{\kk}{mean}$, other strategies have been derived, which
 consist first in removing the dependency on $\UU$. For instance
 in~\cite{janusevskis_simultaneous_2010}, the authors integrate
-directly the GP with respect to $\UU$, in order to get another GP,
+directly the GP with respect to $\UU$ in order to get another GP,
 which models the function
 $\kk\mapsto \Ex_{\UU}\left[J(\kk, \UU)\right]$. This integrated GP
 will then be used to select a point $\tilde{\kk}$, and then a couple
@@ -1299,10 +1304,10 @@ Let consider $\alpha\geq 1$ fixed. In order to compute
 $\estimtxt{\kk}{RR, \alpha}$, we need to estimate and optimise the
 function $\Gamma_{\alpha}$. For that purpose, we are going to explore
 the space to improve the estimation of $\Gamma_{\alpha}$, and once
-sufficient knowledge is acquired, use the plug-in% \todo{definir}
-estimate $\hat{\Gamma}_{\alpha}$ (\emph{i.e.} the one obtained by
-replacing $J$ by $m_Z$) for the optimisation, to get
-$\hat{\kk}{\mathrm{RR},\alpha}$.
+sufficient knowledge is acquired, use the plug-in estimate
+$\hat{\Gamma}_{\alpha}$ (\emph{i.e.} the one obtained by replacing $J$
+by $m_Z$) for the optimisation, to get
+$\hat{\kk}_{\mathrm{RR},\alpha}$.
 
 \subsubsection{Estimation of $\Gamma_{\alpha}$}
 
@@ -1559,14 +1564,14 @@ to consider is much more limited, and only a labelling is needed.
 \end{figure}
 
 For each point in each cluster, as they are in close vicinity, we can
-assume that their uncertainty on the conditional minimiser
+assume that their uncertainties on the conditional minimiser
 $\alpha^2\sigma^2_{Z^*}$ are sensibly the same. So instead, we are
 going to make the adjustment described \cref{eq:adjust_centroid} only
 for the point which presents the smallest $\sigma^2_Z$.  The whole
 algorithm is described~\cref{alg:sampling_enrichment_star}, and the
 double adjustment is described schematically
 in~\cref{fig:schema_double_adj}. In the end, the points added to the
-design are the points labeled ``Adjusted centroids 2''.
+design are those labeled ``Adjusted centroids 2''.
 
 
 
@@ -1600,8 +1605,12 @@ We apply an iteration of this method on the real function,
 in~\cref{fig:adjusted_centroids}. At first, the $K=10$ centroids
 obtained by KMeans are represented with the red stars. As the measured
 uncertainty is due to the conditional minimisers, all the centroids
-are adjusted, yielding the blue stars near the locus of the conditional minimisers. At
-$\uu \approx \num{0.6}$, $\uu\approx\num{0.4}$ and $\uu\approx \num{0.15}$, the hierarchical clustering
+are adjusted, yielding the blue stars near the locus of the
+conditional minimisers. At $\uu \approx \num{0.6}$,
+$\uu\approx\num{0.4}$ and $\uu\approx \num{0.15}$, the hierarchical
+clustering step detects close points, and a second adjustment is made,
+giving (back) the point at approximatively $(0.8, 0.6)$, and
+$(0.95, 0.15)$ for instance.
 
 \begin{figure}[ht]
   \centering
@@ -1828,8 +1837,8 @@ $\Ex_{Z}\left[Q_{\UU}\left(\frac{Z(\kk,
       \uu)}{Z^*(\uu)};p\right)\right]$ for comparison.  We can see
 that this method is able to reduce steadily the error on the
 estimation of the quantile of order $p=0.95$ in this case. The large
-discontinuities in the error are probably due to the evaluation points
-in a region previously unexplored, and/or the effect of a significant
+discontinuities in the error are probably due to the evaluation of points
+in regions previously unexplored, and/or the effect of a significant
 change in the hyperparameters of the GP.
 \begin{figure}[ht]
   \centering
@@ -1839,7 +1848,7 @@ change in the hyperparameters of the GP.
 
 Each step of this method requires the optimisation of the expected
 IMSE described~\cref{eq:aIMSE_Xi}, which can become expensive. We can also
-define a sampling based method, which is based on plausible values of
+define a sampling-based method, which is based on plausible values of
 the quantile of order $p$.
 
 \subsubsection{Sampling-based method, adaptation of the QeAK-MCS}

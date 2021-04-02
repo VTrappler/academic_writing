@@ -124,23 +124,13 @@
     \log T \sim \mathcal{N}\left(\log \left(\frac{\mu_X}{\mu_Y}\right); \frac{\sigma^2_X}{\mu_X^2} + \frac{\sigma^2_Y}{\mu_Y^2} - 2 \rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y} \right)
   \end{equation}
 
-  The correlation term can also be possibly dropped from the approximation,
-  as $\rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y}$ can be very close to
-  zero.
+  The correlation term can also be possibly dropped from the
+  approximation, as $\rho \frac{\sigma_X \sigma_Y}{\mu_X \mu_Y}$ can
+  be very close to zero. Moreover, as this term is positive, if
+  omitted, this would increase slightly the variance of the log-ratio
+  and thus increase a bit the uncertainty which can be beneficial in
+  some applications.
   
-  % \begin{align}
-  %   \Ex[T] &= \exp\left(\log\left(\frac{\mu_X}{\mu_Y}\right) + \frac{1}{2}\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2} \right)\right)\\
-  %          &=\left(\frac{\mu_X}{\mu_Y}\right) \exp\left(\frac{\sigma_X^2}{2\mu_X^2}+\frac{\sigma_Y^2}{2\mu_Y^2}\right) \\
-  %   \Var[T] &= \left(\exp\left(\frac{\sigma_X^2}{\mu_X^2}+\frac{\sigma_Y^2}{\mu_Y^2}\right)-1 \right)\Ex[T]^2
-  % \end{align}
-
-%   \subsection{Transformation}
-%   \cite{hayya_note_1975}
-% \begin{align}
-%   t =\frac{\mu_Y T - \mu_X}{\sqrt{\sigma^2_X - 2T\rho\sigma_Y\sigma_X + T^2\sigma_Y^2}} \sim \mathcal{N}(0, 1)
-% \end{align}
-
-% Conservative rule of thumb: if $\mu_Y/\sigma_Y \leq 0.09$ and $\mu_X / \sigma_X > 0.19$
 \newpage
 \section{Full sediment repartition in the Bay of Biscay and the English Channel}
 \label{sec:sediments_full}
