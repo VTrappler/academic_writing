@@ -3,22 +3,22 @@
 #+email: victor.trappler@univ-grenoble-alpes.fr
 #+OPTIONS: toc:nil
 #+LaTeX_HEADER: \usepackage[margin=3cm]{geometry}
+#+LaTeX_HEADER: :results output silent :headers '("\\usepackage{tikz}")
+This portfolio has been made in the context of the Research and
+Teaching label of the [[https://doctorat.univ-grenoble-alpes.fr/fr/pendant-la-these/la-formation-durant-la-these/parcours-labels/label-res-recherche-et-enseignement-superieur-577252.htm][Université Grenoble Alpes]], often shortened as
+*RES label* in french.
 
 * Introduction
-This portfolio has been made in the context of the Research and
-Teaching label of the [[https://doctorat.univ-grenoble-alpes.fr/fr/pendant-la-these/la-formation-durant-la-these/parcours-labels/label-res-recherche-et-enseignement-superieur-577252.htm][Université Grenoble
-Alpes]],
-often shortened as *RES label* in french. Labels of the UGA were
-implemented in order to offer a coherent set of courses, tutorial and
-formal training to PhD students for their future career whether in
-academia or in the industry.  This portfolio is a personal document,
-that aims at describing what "teaching" means to me, and how the
-actual hours spent in the classroom and in training shaped my way of
-teaching, either volontarily, or not.  From september 2017 to december
-2019, my teaching load summed to 136 hours in L1 and L2 (first and
-second year students at the university), and are summarized in the
-table below. A more precise feedback on those courses will be
-introduced later.
+ Labels of the UGA were implemented in order to offer a coherent set
+of courses, tutorial and formal training to PhD students for their
+future career whether in academia or in the industry.  This portfolio
+is a personal document, that aims at describing what "teaching" means
+to me, and how the actual hours spent in the classroom and in training
+shaped my way of teaching, either volontarily, or not.  From september
+2017 to december 2019, my teaching load summed to 136 hours in L1 and
+L2 (first and second year students at the university), and are
+summarized in the table below. A more precise feedback on those
+courses will be introduced later.
 
 |----------------+-------------------------------------------------------------+-------|
 | Term           | Formation name                                              | Hours |
@@ -32,12 +32,10 @@ introduced later.
 |                | Total                                                       |   138 |                                                             |       |
 
 
-
-All my teaching has been about mathematics and statistics, sometimes
-applied on computers thus probably introducing a bias of some form in
-my experience as a teacher.  In addition to the courses, I
-participated in different doctoral training, directly linked to the
-teaching methods.
+As shown in the table above, all my teaching has been about
+mathematics and statistics. In addition to the courses, I participated
+in different doctoral training, directly linked to the teaching
+methods.
 
 |---------------------------------------------------------+-------|
 | Training                                                | Hours |
@@ -45,20 +43,24 @@ teaching methods.
 | Teaching and Dominations                                |    18 |
 | An introduction to the teacher-researcher job (Autrans) |    21 |
 | Dealing with different behaviours in the classroom      |    21 |
+|---------------------------------------------------------+-------|
 
 In this portfolio, I will first discuss the role of the
 teacher/lecturer at the university from my personal
-experience. Afterward,
+experience. Afterward, I will describe more precisally
 
 * Teaching from a personal point of view
 
 ** Teaching ?
-What does it mean to teach students ? For me, the definition would be:
-As a "specialist" in a certain field, how to transmit the essential
-elements of a certain curriculum so that the students are competent
-enough to get a passing grade for the course and be able to tackle
-autonomously harder challenges of the curriculum".  This definition
-highlights two different objectives, often linked:
+
+  What does it mean to teach students ? For me, the definition would
+take this form:
+
+As a "specialist" in a certain field, how to transmit
+the essential elements of a certain curriculum so that the students
+are competent enough to get a passing grade for the course and be able
+to tackle autonomously harder challenges of the curriculum".  This
+definition highlights two different objectives, often linked:
 
   + Courses at the university have to be graded in order to measure in
     a sense the level of knowledge acquired by the students.
@@ -75,15 +77,96 @@ well.
 One particular fact about my own experience, is that before enrolling
 as a PhD student at the UGA, I have never been part of the classical
 french university. After my Baccalauréat, I spent two years in CPGE,
-then two years in an "École d'Ingénieurs". Afterward, to complete my
+then two years in an "École d'Ingénieurs" (ECL). Afterward, to complete my
 engineering degree, I enrolled for a double-degree at DTU (Danmarks
 Tekniske Universitet) in Denmark. Those three different establishments
-carried three different teaching methods
-
+carried three different teaching methods: 
+ - One approach very similar to high-school (CPGE).
+ - One approach closer to french higher-education system (ECL).
+ - One approach that I will qualify as discussion-based (DTU).
 ** Different teaching methods
+ The first approach can be described as very school-like, with precise
+ school classes, and few interactions between them. Due to the nature
+ of the curriculum, especially with the regular oral interrogation
+ sessions, each student could get quickly a feedback on its work and
+ its progression. Keeping the same teachers for the whole year also
+ means that students could adapt to the different teaching methods.
 
 
+ In engineering school, the teachings are much more specialized,
+ spanning a lot more subjects. This leads to a high number of teachers
+ (in charge of lectures and tutorial/exercise sessions), and a high
+ number of teaching assistants (in charge of tutorial/exercise
+ sessions). From my own point-of-view, this led to gap between
+ lectures and exercises. Most often than not, I recall that the TA had
+ to recap the lectures, as students had a hard time distinguishing
+ what was crucial for the tests, and what was out of scope. Of course,
+ the sheer number of students enrolled renders an approach with closer
+ feedback and links between lectures and exercises impossible.
 
+ Finally, in Denmark, the organisation was slightly different. Most of
+ the courses were scheduled in blocks of four hours, where the first
+ two were dedicated to lectures, and the remaining was dedicated to an
+ exercise session. During those sessions, the students were in fact
+ almost completely autonomous, but could require help from the
+ lecturer or from the teaching assistants at any point, if needed. I
+ noticed that this autonomy helped some students, that could leave the
+ class early if they felt like it, or could engage with the teacher or
+ TA in some discussions. Those discussions felt very gratifying, as we
+ could directly clarify some points in the lectures, or discuss some
+ related topics.
+** Some observations drawn from these experiences
+
+From these experiences, I gathered that the engagement of the students
+is very important in teaching, and that this engagement can come from
+regular two-way feedbacks.
+
+ For the teacher, it is important as it helps to see where the
+students stand with respect to their comprehension of the curriculum,
+or if they feel left behind or bored, and thus disengaging. More
+precisely, the teacher can gauge if some points have been
+misunderstood, or if some topics raise the curiosity of some students,
+that could help motivate them.
+
+
+From a student point of view, regular feedback from the teacher can
+help to see if they are on track to pass the course, and if the
+teacher takes into account those feedbacks, it can help improve the
+teaching experience for everyone involved.
+
+* 
+As said earlier, I was a TA in some courses for exercises and lab
+sessions. For one of those courses, it was an exercise session and a
+lecture combined. All of those were with groups of approximately 30
+students.
+
+** Feedback on lectures
+For my teaching in MAT104, where I was doing lectures and exercises
+session (4h per week), I gave a feedback sheet at around midterm,
+which is displayed Fig.ref:questionnaire
+On ref:feedback_results is shown the repartition of answers: 
+Among other results, a few can be singled out:
+ + About a third of students felt that the lectures were going too fast (Q1)
+ + For Q5, it seems that most of the students felt comfortable asking
+   questions, either for a better understanding, or in order to go
+   further in the topic.
+ + Also, about a third of the students did not seem confident for the
+   rest of the term in this course.
+
+ #+CAPTION: Example of feedback sheet given in MAT104
+ #+NAME:   questionnaire
+ [[./questionnaire_mat104.png]]
+
+#+ATTR_LATEX: :float wrap :width 0.45\textwidth :placement {l}{0.5\textwidth}
+#+CAPTION: Results of the feedback sheet
+#+NAME: feedback_results
+ [[./results_questionnaire.png]]
+
+
+** Optional exercises
+
+
+** Optional "Discussion session"
 
 * Portfolio: Label RES
 ** Définition de preuve

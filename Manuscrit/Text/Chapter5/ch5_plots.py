@@ -18,7 +18,7 @@ exec(open('/home/victor/acadwriting/Manuscrit/plots_settings.py').read())
 
 
 plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
+plt.rc('font', family='sans-serif')
 plt.rc('font', size=10.0)
 plt.rc('legend', fontsize=10.0)
 plt.rc('font', weight='normal')
@@ -107,7 +107,7 @@ def main():
     ax1.set_title('Bathymetry chart of domain')
     add_all_decorations(ax1)
     plt.tight_layout()
-    plt.savefig('./img/depth_maps_log.png', dpi=400)
+    plt.savefig('./img/depth_maps_log_sserif.png', dpi=400)
     plt.close()
 
     
@@ -206,5 +206,5 @@ def main2():
 
     
 if __name__ == '__main__':
-#    main()                      #
-    main2()
+    main()                      #
+#    main2()
