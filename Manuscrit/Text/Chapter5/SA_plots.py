@@ -38,33 +38,51 @@ def read_csv_sobolrep(filenames, variable_name, order = ['1', '2', 'T']):
 # plt.show()
 
 
-def make_plot_sobol(df, variable_name, figname=None, dollar=False):
+def make_plot_sobol(df, variable_name,
+                    variable_name_reduced=None,
+                    figname=None,
+                    dollar=False):
+
+    if variable_name_reduced is None:
+        variable_name_reduced = variable_name
+
     x = np.arange(len(df[df['order'] == '1']['Variable']))
+    print(x)
     width = 0.35
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=col_full)
 
-    rects1 = ax1.barh(x - width / 2, df[df['order'] == '1']['Sobol'], width, label='First order',
+    rects1 = ax1.barh(x - width / 2,
+                      df[df['order'] == '1']['Sobol'], width,
+                      label='First order',
                       xerr=df[df['order'] == '1']['CI'])
-    rectsT = ax1.barh(x + width / 2, df[df['order'] == 'T']['Sobol'], width, label='Total order',
+    rectsT = ax1.barh(x + width / 2,
+                      df[df['order'] == 'T']['Sobol'], width,
+                      label='Total order',
                       xerr=df[df['order'] == 'T']['CI'])
+
     ax1.set_xlabel("Sobol indices")
     ax1.set_title('First and Total order indices')
     ax1.set_yticks(x)
-    ax1.set_yticklabels(df['Variable'])
+    print(df['Variable'])
+    # ax1.set_yticklabels(df['Variable'])
+    ax1.set_yticklabels(variable_name)
     ax1.legend(loc='lower right')
     ax1.set_xlim(left=0)
     ax1.invert_yaxis()
-    x2 = np.arange( int(len(x) * (len(x) - 1) / 2))
+    x2 = np.arange(int(len(x) * (len(x) - 1) / 2))
 
     rects2 = ax2.barh(x2, df[df['order'] == '2']['Sobol'], label='Second order',
                       xerr=df[df['order'] == '2']['CI'], color=colors[2])
+
     ax2.set_xlim([0, 1])
     inde = [(int(xij[1]) - 1, int(xij[2]) - 1)
             for xij in df[df['order'] == '2']['Variable'].values]
     if dollar:
-        xt = ['${}\\times {}$'.format(variable_name[i][1:-1], variable_name[j][1:-1]) for i, j in inde]
+        xt = ['${}\\times {}$'.format(variable_name_reduced[i][1:-1],
+                                      variable_name_reduced[j][1:-1]) for i, j in inde]
     else:
-        xt = ['{} $\\times$ {}'.format(variable_name[i], variable_name[j]) for i, j in inde]
+        xt = ['{} $\\times$ {}'.format(variable_name_reduced[i],
+                                       variable_name_reduced[j]) for i, j in inde]
 
     ax2.set_title(r'Second order indices')
     ax2.set_yticks(x2)
@@ -82,19 +100,20 @@ def make_plot_sobol(df, variable_name, figname=None, dollar=False):
 
 
 if __name__ == '__main__':
-    tides_names = [r'$M_2$', r'$S_2$', r'$N_2$', r'$K_2$', r'$O_1$']
-    filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/tides_{}.csv'.format(filen)
-             for filen in ['S', 'S2', 'T']]
-    df_tides = read_csv_sobolrep(filenames, variable_name=tides_names)
-    make_plot_sobol(df_tides, variable_name=tides_names, dollar=True,
-                    figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_tides.pgf')
+    # tides_names = [r'$M_2$', r'$S_2$', r'$N_2$', r'$K_2$', r'$O_1$']
+    # filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/tides_{}.csv'.format(filen)
+    #              for filen in ['S', 'S2', 'T']]
+    # df_tides = read_csv_sobolrep(filenames, variable_name=tides_names)
+    # make_plot_sobol(df_tides, variable_name=tides_names, dollar=True,
+    #                 figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_tides.pgf')
 
-    sed_names = ['R', 'C', 'G', 'S', 'SF', 'Si,V']
+    sed_names = ['Rocks', 'Pebbles', 'Gravels', 'Sands', 'Fine Sands', 'Silts, Muds']
     filenames = ['/home/victor/acadwriting/Manuscrit/Text/Chapter5/sed_{}.csv'.format(filen)
                  for filen in ['S', 'S2', 'T']]
     df_sed = read_csv_sobolrep(filenames, variable_name=sed_names)
     make_plot_sobol(df_sed, variable_name=sed_names,
-                    figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_sediments.pgf')
+                    variable_name_reduced=['R', 'C', 'G', 'S', 'SF', 'Si,V'],
+                    figname='/home/victor/acadwriting/Manuscrit/Text/Chapter5/img/SA_sediments_slides.pgf')
 
 
 # EOF ----------------------------------------------------------------------

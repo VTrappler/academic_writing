@@ -1,9 +1,13 @@
+
+\newcommand{\turb}[2]
+{\draw [domain=0:25.1327,variable=\t,smooth,samples=75, -Latex]
+        plot ({\t r}: {0.002*\t*\t});}
+
 \begin{tikzpicture}
 \usetikzlibrary{decorations.pathmorphing}
-
 \definecolor{copper}{rgb}{0.69, 0.25, 0.21}
 \definecolor{tin}{rgb}{0.7, 0.7, 0.7}
-\definecolor{water}{HTML}{AFEEEE}
+\definecolor{water}{HTML}{BAE4BC}
 \tikzset{
   rugous1/.style = {black, thick,
     decoration={random steps,segment length=0.05cm,amplitude=.1cm}
@@ -35,12 +39,12 @@
 \draw[rugous3, decorate](2.4,0.8) -- (5,0.5);
 
 \draw[->] (-5,0) -- (5,0);
-\draw (0,0) node[below] {$x$};
+%\draw (0,0) node[below] {$x$};
 
 
 
 \draw[->] (-5,0) -- (-5,3);
-\draw[<->, red, very thick] (-5, {0.5*sin(-5 r)+2.5}) -- (-5, {0.5*sin(-5 r)+1.5}) node[midway,left] {$f(\mathbf{u})$};
+%\draw[<->, red, very thick] (-5, {0.5*sin(-5 r)+2.5}) -- (-5, {0.5*sin(-5 r)+1.5}) node[midway,left] {$f(\mathbf{u})$};
 \
 % \draw[->] (0,0.5) -- (0,2);
 % \draw (0, 1.25) node[left] {$h(x,t)$} ; %

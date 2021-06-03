@@ -13,7 +13,6 @@
   \end{beamercolorbox}
 }
 \makeatother
-
 \setbeamercolor{section in head/foot}{fg=normal text.bg, bg=structure.fg}
 
 \AtBeginSection{
@@ -23,7 +22,7 @@
   }
 }
 
-
+\setcounter{tocdepth}{2}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
@@ -112,7 +111,7 @@
 
 \usepackage{appendixnumberbeamer}
 \metroset{progressbar=foot,
-  numbering=fraction}
+  numbering=fraction, subsectionpage=none}
 
 
 
@@ -161,87 +160,105 @@
 %   % {\bf } \today
 % }
 \date{}
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{3}
 
 \begin{document}
+\AtBeginSection{}
 \begin{frame}
   \pnote{Thank you for the introduction, and thank you to the jury for
     being here today.
 
-    My name is Victor Trappler, and I'm going to present some of the
-    work done during my phd, which is named ``Parameter control in the
+    My name is Victor Trappler, and I'm going to defend my PhD, which is named ``Parameter control in the
     presence of uncertainties''
 
-    For my PhD, I've been part of the AIRSEA team, here in Grenoble,
-    and have been under the supervision of Élise Arnaud, Arthur Vidard
-    and Laurent Debreu}
+    This work has been realized in the AIRSEA team, here in Grenoble,
+    under the supervision of Élise Arnaud, Arthur Vidard and Laurent
+    Debreu}
   \maketitle
 \end{frame}
-\AtBeginSection{
-  % \frame{
-  %   \sectionpage
-  %   \tableofcontents[currentsection]
-  % }
-}
+
 \section{Introduction}
+
 \begin{frame}{Why do we need models ?}
-  \pnote{Modelling a natural phenomenon, such as the weather often
-    starts with}
-  The ability to understand  is essential in order to forecast, and to take decisions.
+  \pnote{the Reality is often very complex to understand, so it is
+    even more difficult to be able to predict, and take decisions
+    which have environmental, societal or economic impact. A telling
+    recent example is the propagation of a well-known virus.
+
+    
+    As you cannot take into account and track the behaviour of every
+    single person, a lot of things have to simplified. This is where
+    mathematics comes into play, allowing to express and to study the
+    relationships between observable quantities
+
+    Based on those imperfect representations, but simpler
+    representation, we can then simulate natural phenomena, and
+    forecast them }
+
+  The ability to understand is
+  essential in order to forecast, and to take decisions.
   \begin{itemize}
   \item Natural phenomenon are often very complex to understand in their entirety
   \item Mathematical models are \alert{simplified} versions, which
     allow to study the relationships between some observed (or not) quantities
-  \item The mathematical models can be used to construct numerical
+  \item Mathematical models can be used to construct numerical
     models, which are used for forecasts
   \end{itemize}
   % \includegraphics[scale=0.015]{france_satellite.jpg}
 \end{frame}
 
-\begin{frame}{Parametrization}
-  A lot of choices are required to construct models, which depends on
-  the scale we wish to represent
-  
-    \begin{itemize}
-    \item Physical parameters, which represent some physical properties
-    that influence the model. 
-  \item Additional parameters, introduced for numerical reasons
-  \end{itemize}
+% \begin{frame}{Parametrization}
 
-    \begin{center}
+%   \begin{itemize}
+%     \item Physical parameters, which represent some physical properties
+%     that influence the model. 
+%   \item Additional parameters, introduced for numerical reasons
+%   \end{itemize}
+
+%   % Does reducing the error on the parameters leads to the compensation
+%   % of the unaccounted natural variability of the physical processes ?
+
+  
+%   \pnote{During the whole process of the modelling of a physical
+%     system, that is from the observation of a natural phenomenon, to
+%     the simulation using numerical methods, we introduce
+%     uncertainties.  Those uncertainties take the form of errors
+%     introduced by the simplifications, discretizations and
+%     parametrizations needed to represent things numerically.
+
+%     In the end, we have a set of parameters, that we need to
+%     calibrate, but during this phase of calibration, how can we be
+%     sure that we try to act only the error due to the parametrization,
+%     and are not compensating errors coming from others sources.}
+  
+% \end{frame}
+
+\begin{frame}{An example of simplification: parametrization}
+  A lot of choices/simplifications are required to construct models, which depends on
+  the scale we wish to represent: 
+
+  \begin{block}{Example: the bottom friction}
+    \begin{itemize}
+    \item Bottom of the ocean is not completely smooth
+    \item Energy is dissipated through turbulences because of the asperities
+    \item The water current at the surface is affected
+    \end{itemize}
+  \end{block}
+  \begin{center}
+    \scalebox{.9}{\input{../Figures/hauteureau.tikz}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{The modelling process}
+  \begin{center}
     \begin{adjustbox}{clip,
         trim=33cm 0cm 0cm 0cm,
-        max width=0.6\textwidth, center}
+        max width=0.9\textwidth, center}
     \input{\manupath Chapter3/img/modelling_uncertainties.pgf}
     \end{adjustbox}
   \end{center}
 
-  % Does reducing the error on the parameters leads to the compensation
-  % of the unaccounted natural variability of the physical processes ?
-
-  
-  \pnote{During the whole process of the modelling of a physical
-    system, that is from the observation of a natural phenomenon, to
-    the simulation using numerical methods, we introduce
-    uncertainties.  Those uncertainties take the form of errors
-    introduced by the simplifications, discretizations and
-    parametrizations needed to represent things numerically.
-
-    In the end, we have a set of parameters, that we need to
-    calibrate, but during this phase of calibration, how can we be
-    sure that we try to act only the error due to the parametrization,
-    and are not compensating errors coming from others sources.}
-  
-\end{frame}
-
-\begin{frame}{Uncertainties in the modelling}
-
-\end{frame}
-
-\begin{frame}{A fine tuning needed}
-
-  $\rightarrow$ How well does the simulation using a set of parameters
-  match the observations ?
+  $\rightarrow$ How well can we tune the parameters, so that the model depicts \emph{accurately} the reality ?
 \end{frame}
 
 
@@ -249,9 +266,12 @@
 \AtBeginSection{
   \frame{
     \sectionpage
-    \tableofcontents[currentsection,currentsubsection]
+    \tableofcontents[currentsection,currentsubsection]% ,hideothersubsections, 
+    % sectionstyle=show/hide, 
+    % subsectionstyle=show/shaded]
   }
 }
+
 \begin{frame}[t]{Computer code and inverse problem}
   \begin{itemize}
   \item[Input]
@@ -283,8 +303,7 @@
   % We have
   % $\yobs = \mathcal{M}(\kk_{\mathrm{obs}},\uu_{\mathrm{obs}})$ with
   % $\uu_{\mathrm{obs}} = \uu$
-  Let $\uu \in \Uspace$. By defining a notion of distance between
-  $\mathcal{M}(\kk, \uu)$ and $y$:
+  Let $\uu \in \Uspace$, assumed fixed and known
   \begin{block}{Objective function}
     We define $J$ as the squared difference between the output of the
     model and the observations
@@ -293,7 +312,7 @@
     \end{equation}
     \alert<1>{$\rightarrow$ the smaller $J$ is, the better the fit is}
   \end{block}
-\onslide<2->{We can get an estimate by solving
+\onslide<2->{We can get an estimate by solving an optimisation problem:
   \begin{equation}
     \min_{\kk\in\Kspace} J(\kk, \uu) = J(\hat{\kk},\uu)
   \end{equation}
@@ -302,7 +321,7 @@
   % \item Possibly add regularization
   % \item Classical methods: Adjoint gradient and Gradient-descent
   % \end{enumerate}
-  \begin{itemize}
+  \begin{itemize} %A: Mettre en valeur
   \item \alert{$\hat{\kk}$ depends inherently on $\uu$}
   \item What if $\uu$ does not reflect accurately the observations?
   \item Does $\hat{\kk}$ then compensate the errors brought by this random
@@ -324,30 +343,78 @@
     observations. The minimisation procedure is supposed to correct
     the error on theta but will it try to compensate too much ? }
 \end{frame}
+\begin{frame}{Misspecification of $u$: twin experiment setup }
+  
+  Minimization performed on $\log z_b = \kk\mapsto J\left(\kk,\uu\right)$, for
+  different $\uu$:
+  $\uu=\only<1>{(0.0, 0.0)}%
+  \only<2>{(0.0, 0.5)}%
+  \only<3>{(0.0, 1.0)}%
+  \only<4>{(0.5, 0.0)}%
+  \only<5>{(0.5, 0.5)}%
+  \only<6>{(0.5, 1.0)}%
+  \only<7>{(1.0, 0.0)}%
+  \only<8>{(1.0, 0.5)}%
+  \only<9>{(1.0, 1.0)}%
+  $
+  \vfill % \only<2>{Well-specified model} \only<3>{1\%
+  %   error on the amplitude of the M2 tide} \only<4>{1\% error on the
+  %   amplitude of the M2 tide}
+  % % \only<5>{0.5\% error on the amplitude of the M2 tide, starting at
+  % % the truth}
+  \begin{center}
+    \includegraphics<1>[scale=.9]{/home/victor/optimisation_dahu/1b/map_lognorm_200.png}%
+    \includegraphics<2>[scale=.9]{/home/victor/optimisation_dahu/2b/map_lognorm_200.png}%
+    \includegraphics<3>[scale=.9]{/home/victor/optimisation_dahu/3b/map_lognorm_200.png}%
+    \includegraphics<4>[scale=.9]{/home/victor/optimisation_dahu/4b/map_lognorm_200.png}%
+    \includegraphics<5>[scale=.9]{/home/victor/optimisation_dahu/optim_sediments/map_lognorm_200.png}%
+    \includegraphics<6>[scale=.9]{/home/victor/optimisation_dahu/6b/map_lognorm_200.png}%
+    \includegraphics<7>[scale=.9]{/home/victor/optimisation_dahu/7b/map_lognorm_200.png}%
+    \includegraphics<8>[scale=.9]{/home/victor/optimisation_dahu/8b/map_lognorm_200.png}%
+    \includegraphics<9>[scale=.9]{/home/victor/optimisation_dahu/9b/map_lognorm_200.png}%
+  \end{center}
+  \pnote{ To have a first look at the problem of misspecification, we
+    try to calibrate the bottom friction on this domain in a twin
+    experiment setup, with or without misspecification. This figures
+    shows the truth value of the bottom friction.
+
+    
+    When optimizing without misspecification, we can see that the
+    region of the english channel is able to retrieve the truth value,
+    while the regions farther from the coast, in the bay of biscay,
+    stay quite unaffected by the procedure. So far so good.
+
+    When we introduce a 1\% error in the amplitude of the M2 tide, we
+    can see more variations, especially in the english channel, as it
+    compensate the misspecification of the tide.
+
+    The estimation of theta is sensitive to the value of the
+    environmental parameter. So the question that arise is ``how to
+    get a value of theta, which shows robust properties when the
+    environmental parameter varies ?''  }
+\end{frame}
+
+\begin{frame}{Robustness}
+  \pnote{ So that is how we define robustness in this work: So
+    basically, we have two main objectives: - First to find some
+    criteria of robustness to estimate theta - Be able to compute
+    those estimates quickly }
+  
+  \begin{block}{Robustness}
+    $\hat{\kk}$ can be considered ``robust'', if $J(\hat{\kk}, \uu)$
+    gives ``good enough'' performances when $\uu$ varies
+  \end{block}
+
+  \textbf{Main objectives:}
+  \begin{itemize}
+  \item Define quantitative criteria of robustness
+  \item Develop methods in order to compute robust estimates efficiently
+  \item Apply those methods to the robust calibration of CROCO 
+  \end{itemize}
+\end{frame}
+
 
 %%%%
-\begin{frame}{Context}
-  \begin{itemize}
-  \item The friction $\kk$ of the ocean bed has an influence on the
-    water circulation
-  \item Depends on the type and/or characteristic length of the
-    asperities
-  \item Subgrid phenomenon
-  \item $\uu$ parametrizes the BC
-  \end{itemize}
-  \begin{center}
-    \scalebox{.9}{\input{../Figures/hauteureau.tikz}}
-  \end{center}
-  \pnote{ In order to have an idea of such parameters, the case study
-    for us is the estimation of the bottom friction.  The bottom
-    friction theta has an influence on the oceanic circulation, as it
-    dissipates some energy by turbulences and it depends on the type
-    of soil, and on the characteristic length of the
-    asperities. Something that is hard to observe directly.
-    % In oceans modelling, this is a subgrid phenomenon.
-    The environmental variable u parametrizes the BC, for instance the
-    relative amplitude of tidal components.  }
-\end{frame}
 
 \begin{frame}{Outline}
   \tableofcontents
@@ -357,17 +424,15 @@
     in practice using surrogate models }
 \end{frame}
 
-
-
-\subsection{Random parameteric misspecifications}
+\section{Robustness in calibration}
 \begin{frame}{Different types of uncertainties}
   \begin{block}{Epistemic or aleatoric
       uncertainties?~\citep{walker_defining_2003}}
     \begin{itemize}
     \item Epistemic uncertainties: From a lack of knowledge, that can
       be reduced with more research/exploration
-    \item Aleatoric uncertainties: From the inherent variability of
-      the system studied, operating conditions
+    \item Aleatoric uncertainties: Inherent variability of the system
+      studied, operating conditions that we cannot afford to research
     \end{itemize}
   \end{block}
   $\rightarrow$ But where to draw the line?
@@ -395,9 +460,10 @@
   Instead of considering $\uu$ fixed, we consider that $\uu\sim \UU$  r.v.\ (with known pdf $\pi(\uu)$), and the output of the model depends on its realization. \\
   \vfill \only<1>{
     \begin{center}
-      \input{../Figures/inv_prob.pgf}
+      \input{../Figures/inv_prob.pgf}%
     \end{center}
-  } \only<2>{
+  }%
+  \only<2>{
     \begin{center}
       \input{../Figures/comp_code_unc_inv.pgf}
     \end{center}
@@ -412,85 +478,27 @@
 \begin{frame}{The cost function as a random variable}
   \begin{itemize}
   \item The computer code is deterministic, and takes $\kk$ and $\uu$
-    as input:
+    as inputs (from the user):
     \begin{equation*}
       \mathcal{M}(\kk,\alert{\uu})
     \end{equation*}
-  \item The deterministic quadratic error is now
+  \item Due to the previous assumptions, the quadratic error $J$ is
+    now considered as a random variable, indexed by $\kk$
     \begin{equation*}
-      J(\kk,\alert{\uu}) =  \frac12\|\mathcal{M}(\kk,\alert{\uu}) - \yobs\|^2
+      J(\kk,\alert{\UU}) =  \frac12\|\mathcal{M}(\kk,\alert{\UU}) - \yobs\|^2
     \end{equation*}
   \end{itemize}
 
-\begin{equation*}
-  ''\hat{\kk} = \argmin_{\kk\in\Kspace} J(\kk,\alert{\uu})'' \text{ but what can we do about } \uu ?
-\end{equation*}
 \pnote{ In our study, the model is completely deterministic, so we can
   control its inputs The cost function, becomes then a function of two
   theta and u. We still wish to minimise with respect to theta, but
   what can we do for u ?  }
 \end{frame}
 
-\begin{frame}{Misspecification of $u$: twin experiment setup }
-  
-  Minimization performed on $\kk\mapsto J\left(\kk,\uu\right)$, for
-  different $\uu$: \vfill % \only<2>{Well-specified model} \only<3>{1\%
-  %   error on the amplitude of the M2 tide} \only<4>{1\% error on the
-  %   amplitude of the M2 tide}
-  % % \only<5>{0.5\% error on the amplitude of the M2 tide, starting at
-  % % the truth}
-  \begin{center}
-    % \includegraphics<2>[width=\textwidth]{/home/victor/optimisation_dahu/optim_true/map_155.png}
-    % \includegraphics<3>[width=\textwidth]{/home/victor/optimisation_dahu/optim_1_001/map_150.png}
-    % \includegraphics<4>[width=\textwidth]{/home/victor/optimisation_dahu/optim_0_001/map_160.png}
-    % \includegraphics<5>[width=\textwidth]{/home/victor/optimisation_dahu/optim_025_001_frtr/map_199.pdf}
-    \includegraphics<2>[scale=.9]{/home/victor/optimisation_dahu/1b/map_lognorm_200.png}%
-    \includegraphics<3>[scale=.9]{/home/victor/optimisation_dahu/2b/map_lognorm_200.png}%
-    \includegraphics<4>[scale=.9]{/home/victor/optimisation_dahu/3b/map_lognorm_200.png}%
-    \includegraphics<5>[scale=.9]{/home/victor/optimisation_dahu/4b/map_lognorm_200.png}%
-    \includegraphics<6>[scale=.9]{/home/victor/optimisation_dahu/optim_sediments/map_lognorm_200.png}%
-    \includegraphics<7>[scale=.9]{/home/victor/optimisation_dahu/6b/map_lognorm_200.png}%
-    \includegraphics<8>[scale=.9]{/home/victor/optimisation_dahu/7b/map_lognorm_200.png}%
-    \includegraphics<9>[scale=.9]{/home/victor/optimisation_dahu/8b/map_lognorm_200.png}%
-    \includegraphics<10>[scale=.9]{/home/victor/optimisation_dahu/9b/map_lognorm_200.png}%
-  \end{center}
-  \pnote{ To have a first look at the problem of misspecification, we
-    try to calibrate the bottom friction on this domain in a twin
-    experiment setup, with or without misspecification. This figures
-    shows the truth value of the bottom friction.
-
-    
-    When optimizing without misspecification, we can see that the
-    region of the english channel is able to retrieve the truth value,
-    while the regions farther from the coast, in the bay of biscay,
-    stay quite unaffected by the procedure. So far so good.
-
-    When we introduce a 1\% error in the amplitude of the M2 tide, we
-    can see more variations, especially in the english channel, as it
-    compensate the misspecification of the tide.
-
-    The estimation of theta is sensitive to the value of the
-    environmental parameter. So the question that arise is ``how to
-    get a value of theta, which shows robust properties when the
-    environmental parameter varies ?''  }
-\end{frame}
-
-\begin{frame}{Robustness and estimation of parameters}
-  \pnote{ So that is how we define robustness in this work: So
-    basically, we have two main objectives: - First to find some
-    criteria of robustness to estimate theta - Be able to compute
-    those estimates quickly } {\textbf{Robustness}}: get good
-  performances when the environmental parameter varies
-
-  \begin{itemize}
-  \item Define criteria of robustness, based on $J(\kk,\uu)$, that
-    will depend on the final application
-  \item Be able to compute them in a reasonable time
-  \end{itemize}
-\end{frame}
 
 
-\section{Robustness in calibration}
+
+% \subsection{Definitions of robustness}
 \begin{frame}{Robust objectives of the objective function}
   \pnote{ I'm going to present very quickly some estimates that can be
     considered robust, but will focus mainly on the last one.  First
@@ -512,22 +520,22 @@
   \item Worst case~\citep{marzat_worst-case_2013}:
     $$ \min_{\kk \in \Kspace} \left\{\max_{\uu \in \Uspace}
       J(\kk,\uu)\right\}$$
-  \item M-robustness~\citep{lehman_designing_2004}:
-    $$\min_{\kk\in\Kspace} \Ex_{\UU}\left[J(\kk,\UU)\right]$$
-  \item V-robustness~\citep{lehman_designing_2004}:
-    $$\min_{\kk\in\Kspace} \Var_{\UU}\left[J(\kk,\UU)\right]$$
+  \item M-robustness, V-robustness~\citep{lehman_designing_2004}:
+    $$\min_{\kk\in\Kspace} \Ex_{\UU}\left[J(\kk,\UU)\right], \min_{\kk\in\Kspace} \Var_{\UU}\left[J(\kk,\UU)\right]$$
   \item Multiobjective~\citep{baudoui_optimisation_2012}:
-    $$ \text{Pareto frontier} $$
+    $$\text{Pareto frontier of } (\Ex_{\UU}\left[J(\kk,\UU)\right],\Var_{\UU}\left[J(\kk,\UU)\right])$$
+    \item Reliability
+      $$ \min_{\kk\in\Kspace} Q_{\UU}(J(\kk, \UU); p) $$
   % \item Region of failure given by
   %   $J(\kk,\uu)>T$~\cite{bect_sequential_2012}:
   %   $$\max_{\kk \in \Kspace} R(\kk) = \max_{\kk\in \Kspace}
   %   \Prob_{\uu}\left[J(\kk,\uu) \leq T \right]$$
-\item Best performance achievable given $\uu \sim \UU$
+\item \alert{Best performance achievable given $\uu \sim \UU$}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{``Most Probable Estimate'', and relaxation}%
+\begin{frame}{Introducing the regret}%
   \pnote{ The main idea is that we want to consider individually all
     situations induced by the value of the environmental variable.
     Basically, once a value u is sampled, the problem is
@@ -564,13 +572,13 @@
   \begin{align*}
     p_{\kk^*}(\kk) &= "\Prob_{\UU}\left[J(\kk,\UU)= J^*(\UU) \right]"
   \end{align*}
-  \pause How to take into account values not optimal, but not too far
-  either $\longrightarrow$ relaxation of the equality with
+  \pause In order to take into account values \alert{nearly} optimal
+
+  $\longrightarrow$ relaxation of the equality with
   $\alpha> 1$:
   \begin{equation*}
     \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
   \end{equation*}
-\cite{trappler_robust_2020}
 \end{frame}
 
  
@@ -637,52 +645,35 @@
     by setting a bigger relaxation.  }  $\Gamma_{\alpha}(\kk)$:
   probability that the cost (thus $\kk$) is $\alpha$-acceptable
   \begin{itemize}
-  \item If $\alpha$ known, maximize the probability that $\kk$ gives
-    acceptable values:
+  \item If $\alpha$ known, \alert<1>{maximize the probability that $\kk$ gives
+    acceptable values}:
     \begin{equation}
       \max_{\kk\in\Kspace} \Gamma_{\alpha}(\kk) = \max_{\kk\in\Kspace}\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]
     \end{equation}
-  \item Set a target probability $1-\eta$, and find the smallest
-    $\alpha$.
+  \item Set a target probability $p$, \alert<2>{find the smallest $\alpha$ such the probability $p$ is reached}
     \begin{equation}
-      \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq 1 - \eta \}
+      \inf\{ \alpha \mid \max_{\kk\in\Kspace}\Gamma_{\alpha}(\kk) \geq p \}
     \end{equation}
   \end{itemize}
 
-  \begin{block}{Relative-regret family of estimators}
+  \begin{block}{Relative-regret family of estimators \citep{trappler_robust_2020}}
     \begin{equation}
       \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
     \end{equation}
+    Depending on the formulation:
+    \begin{itemize}
+    \item Maximization of a probability if $\alpha$ fixed:
+      $\Prob_{\UU}\left[J(\kk, \UU) \leq \alpha J^*(\UU)\right]$
+    \item Minimization of a quantile of order $p$:
+      $Q_{\UU}(J(\kk, \UU)/J^*(\UU);p)$
+    \end{itemize}
   \end{block}
 
 \end{frame}
 
-\begin{frame}{Relative or additive regret}
-  \pnote{we discussed so far the relative regret, that takes the form
-    of a multiplicative relaxation. Why this over the additive regret
-    ?
 
-    Relative regret takes better into account the magnitude of the
-    cost function, as the region of acceptability grows with alpha AND
-    Jstar. When the situation is already bad, we don't want to put
-    much effort to stay close to the minimum theta star of u. On the
-    other hand, for Jstar close to 0, }
-
+\begin{frame}{Choice of $\alpha$}
   
-  \renewcommand\rmfamily{\sffamily}
-  \begin{center}
-    \resizebox{.6\textwidth}{!}{\input{\manupath
-        Chapter3/img/illustration_region_regret.pgf}}
-  \end{center}
-  \begin{itemize}
-  \item Relative regret
-    \begin{itemize}
-    \item $\alpha$-acceptability regions large for flat and bad
-      situations ($J^*(\uu)$ large)
-    \item Conversely, puts high confidence when $J^*(\uu)$ is small
-    \item No units $\rightarrow$ ratio of costs
-    \end{itemize}
-  \end{itemize}
 \end{frame}
 
 
@@ -707,19 +698,22 @@
   \item[$\rightarrow$] Take into account the uncertainty on the estimation
   \end{itemize}
     \end{itemize}
-  $\Rightarrow$ require a lot of computational effort (\emph{i.e.} extensive number of calls to $J$)
+  $\Rightarrow$ requires a lot of computational effort (\emph{i.e.} extensive number of calls to $J$)
 \end{frame}
 
 \begin{frame}{Surrogates and cost function}
+  Given a set comprising points and their evaluations
+  $\mathcal{X} = \{(x_i,f(x_i))\}_{1 \leq i \leq n}$ (\textit{training set}), we can construct
+  an \alert{approximation} of the expensive function $J$
 
   
-  \begin{itemize}
-  \item Replace expensive model by a computationally cheap metamodel
+  $\rightarrow$ Polynomial interpolation, \alert<2>{Gaussian Process Regression (Kriging)}, Polynomial Chaos Expansion
+\onslide<2>{\begin{itemize}
+  \item It replaces the expensive original function $J$ by a computationally cheap surrogate
     ($\sim$ plug-in approach)
-  \item Adapted sequential procedures e.g. EGO
+  \item It can be adapted for sequential strategies
   \end{itemize}
-  $\rightarrow$ Kriging (Gaussian Process Regression)~
-  % \item Polynomial Chaos
+}  % \item Polynomial Chaos
   %   Expansion~\cite{xiu_wiener--askey_2002,sudret_polynomial_2015}
   % \end{itemize}
   \pnote{We choose Gaussian Process regression as a metamodel, as it
@@ -767,37 +761,66 @@
   \item Construct GP of interest using $\mathcal{X}_n$
   \item Define a criterion $\kappa:\Xspace \rightarrow \mathbb{R}$
     which quantify the interest of evaluating a specific point
-  \begin{itemize}
-  \item Optimize the criterion and add the optimizer to the design
-  \item Sample and cluster according to select a batch of points to evaluate
-  \end{itemize}
+    \begin{itemize}
+    \item Choose the next point through optimization (1-step)
+    \item Choose the next point\alert{s} by sampling and clustering (AK-MCS)
+    \end{itemize}
+  % \begin{itemize}
+  % \item Optimize the criterion and add the optimizer to the design
+  % \item Sample and cluster according to select a batch of points to evaluate
+  % \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{1-step criteria}
-  \begin{align}
-    x_{n+1} &= \argmax_{x \in \Xspace} \kappa(x) \\
+  Let $\kappa$ be such a criterion:
+  \begin{itemize}
+  \item $\kappa$ is constructed using the properties of the GP
+  \item $\kappa(x)$ measures how \emph{interesting} would be the
+    evaluation of $x$
+  \end{itemize}
+  \begin{block}{Selection of the next point and update of the design}
+      Given a GP $Z$, constructed using
+      $\mathcal{X}_n = \{(x_i, f(x_i))\}_{1\leq i \leq n}$
+      \begin{align}
+    x_{n+1} &= \argmax_{x \in \Xspace} \kappa(x) = \argmax_{x \in \Xspace} \kappa(x; \alert{Z; \mathcal{X}_n}) \\
     \mathcal{X}_{n+1} &= \mathcal{X}_n \cup \{(x_{n+1},f(x_{n+1})) \}
   \end{align}
+\end{block}
+\pause
+  Different criteria caters to different objectives
   \begin{itemize}
-  \item Optimization: PEI, EGO
+  \item Optimization: PI, EGO \citep{jones_efficient_1998,hernandez-lobato_predictive_2014}
   \item Exploration: prediction variance, aIMSE
-  \item Contour/levelsets estimation: reliability index
-  \item \alert{${PEI}$}
+  \item Contour/levelsets estimation: reliability index \citep{bect_sequential_2012,picheny_adaptive_2010}
   \end{itemize}
 \end{frame}
-\begin{frame}{Estimation of $\kk^*$, $J^*(\uu)$}
+
+\begin{frame}{Example: Estimation of $\kk^*(\uu)$, $J^*(\uu)$ with the PEI}
   \pnote{One of the first problem we encountered is the computation of
     the conditional minimum and minimisers.  Using Gaussian processes,
     and an enrichment criterion called the Profile Expected
     Improvement, we can reconstruct the Jstar and theta star function
     iteratively, and then use the kriging prediction as a surrogate
     since Jstar is well approximated}
+  Recalling that: $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk, \UU) \leq \alert{J^*(\UU)}\right]$
   
+  $\rightarrow$ Need to have a good approximation of the conditional minimum and minimisers:
+  $\left\{
+  \begin{array}{l}
+    J^*(\uu) = \min_{\kk\in\Kspace}J(\kk, \uu)\\
+    \kk^*(\uu) = \argmin_{\kk\in \Kspace}J(\kk, \uu)
+  \end{array}
+  \right.$ 
   \begin{columns}
-    \begin{column}{0.45\textwidth}
-  Estimation of $J^*(\uu)$ and $\kk^*(\uu)$: Enrich the design
-  according to PEI criterion~\cite{ginsbourger_bayesian_2014}.
+    \begin{column}{0.55\textwidth}
+      \begin{block}{PEI~\citep{ginsbourger_bayesian_2014}}
+        Profile Expected Improvement:
+        $\kappa(\kk, \uu) = \Ex_{Z(\kk, \uu)}\left[
+          \left(f_{\min}(\uu) - Z(\kk, \uu)\right)_+\right]$ and close
+        form available due to the GP properties of $Z$
+      \end{block}
+The design can be enriched iteratively using the PEI criterion, one point at a time
 \end{column}
 \begin{column}{0.45\textwidth}
   \begin{center}
@@ -808,17 +831,26 @@
 \end{frame}
 
 
-\begin{frame}{AK-MCS: Sampling-based methods}
+\begin{frame}{Sampling-based methods} %
+    Given $g$ $(= \kappa / \int \kappa)$ a sampling density on  $\Xspace$ 
   \begin{columns}
     \begin{column}{0.5\textwidth}
+    \begin{block}{Selection of the next $K$ points and update of the design}
       \begin{itemize}
-      \item<1-> Define sampling criterion (margin of uncertainty)
-      \item<2-> Get Samples 
-      \item<3-> Cluster the samples
-      \item<4-> Find closest sample to cluster centers, and add those
+      \item<2-> Sample points according to the sampling density $g$
+      \item<3-> Cluster the samples into $K$ clusters (KMeans)
+      \item<4-> For each cluster, select the sample which is closest to the cluster center
+      \item<5-> Evaluate the chosen samples and update the design
       \end{itemize}
+    \end{block}
     \end{column}
     \begin{column}{0.5\textwidth}
+      Example: estimation of the level-set $\{J = 2\}$:
+      $\kappa(x) =
+      \left\{\begin{array}{l}
+              1 \text{ if } \Prob_{Z(x)}[Z(x) < 2] \in [\eta, 1-\eta] \\
+              0 \text{ elsewhere}
+      \end{array} \right.$
       \foreach\y in{1,...,7}{
         \includegraphics<\y>[width=\textwidth]{AKMCS_\y.png}
       }
@@ -844,10 +876,9 @@
   %   $J - J^*$
   %   \cite{razaaly_quantile-based_2020,quagliarella_optimization_2014}
   % \end{itemize}
-  With
-  \begin{equation}
-    Z \sim \GP\left(m_Z; C_Z\right) \text{ on } \Kspace \times \Uspace
-  \end{equation}
+  Let
+  $Z \sim \GP\left(m_Z; C_Z\right) \text{ on } \Kspace \times \Uspace$, constructed using $\left\{\left(\kk_i,\uu_i), J(\kk_i, \uu_i)\right)\right\}$
+
   We define $Z^*(\uu)=Z(\kk^*_Z(\uu), \uu)$, with $\kk^*_Z(\uu) = \min_{\kk} m_Z(\kk, \uu)$,
   and $\Delta_{\alpha} = Z - \alpha Z^*$:
   \begin{block}{The GP $\Delta_\alpha$}
@@ -868,49 +899,63 @@
     \begin{align}
       \Xi(\kk, \uu) &\sim \mathcal{N}\left(m_\Xi(\kk,\uu), \sigma^2_\Xi(\kk, \uu) \right) \\
       m_\Xi(\kk, \uu) &= \log \frac{m_Z(\kk, \uu)}{m_Z^*(\uu)} \\
-      \sigma^2_\Xi(\kk, \uu) &= \frac{\sigma^2_{Z}(\kk, \uu)}{m_{Z}(\kk,\uu)^2} + \frac{\sigma^2_{Z^*}(\uu)}{m_{Z^*}(\uu)^2} - 2 \frac{\Cov[Z(\kk, \uu), Z^*(\uu)]}{m_Z(\kk, \uu)m_{Z^*}(\uu)} 
+      \sigma^2_\Xi(\kk, \uu) &= \frac{\sigma^2_{Z}(\kk, \uu)}{m_{Z}(\kk,\uu)^2} + \alert<2>{\frac{\sigma^2_{Z^*}(\uu)}{m_{Z^*}(\uu)^2}} - 2 \frac{\Cov[Z(\kk, \uu), Z^*(\uu)]}{m_Z(\kk, \uu)m_{Z^*}(\uu)} 
     \end{align}
   \end{block}
 \end{frame}
 
 \begin{frame}{Computations using $\Delta_{\alpha}$ or $\Xi$}
-  \begin{block}{Plug-in approximation}
-    Instead of using directly $\Delta_{\alpha}$ or $\Xi$, $m_\Delta$ and $m_{\Xi}$ used instead
-  \end{block}
+  Recalling that $\Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk, \UU) - \alpha J^*(\UU) \leq 0\right] = \Prob_{\UU}\left[\frac{J(\kk, \UU)}{J^*(\UU)} \leq \alpha\right]$
 
-  \begin{align}
-      \Gamma_{\alpha}(\kk) &= \Prob_{\UU}\left[J(\kk, \UU) - \alpha J^*(\UU) \leq 0\right] \\
-                              &\approx \Prob_{\UU}\left[m_{\Delta_{\alpha}}(\kk, \UU) \leq 0 \right] \\
-                              &\approx \Prob_{\UU}\left[m_\Xi(\kk, \UU) \leq \alpha \right]=F_{m_{\Xi}(\kk,\UU)}(\alpha)  \\
-  \end{align}
-  
-  Estimate the ``probability of
-  failure''~\cite{bect_sequential_2012,echard_ak-mcs_2011}
-  $\Prob_{\UU}\left[J(\kk, \UU) - \alpha J^*(\UU) \leq 0\right]
-  \approx \Prob_{\UU}\left[\Prob_Z\left[\Delta_{\alpha} \leq
-      0\right]\right]$
+  \begin{block}{Plug-in approximation}    
+  \begin{itemize}
+  \item $J$ is replaced by $m_Z$
+  \item $J - \alpha J^*$ is replaced by $m_{\Delta_\alpha}$
+    $\rightarrow$ $\alpha$ fixed, estimation of probability
+  \item $\frac{J}{J^*}$ is replaced by $m_{\Xi}$ $\rightarrow$ $p$
+    fixed, estimation of quantile
+  \end{itemize}
+    \begin{align}
+      {\Gamma}% ^{\mathsf{PI}}
+      _{\alpha}(\kk) % &\approx \Prob_{\UU}\left[m_Z(\kk, \UU) - \alpha m_{Z^*}(\UU) \leq 0\right] \\
+                                           &\approx \Prob_{\UU}\left[m_{\Delta_{\alpha}}(\kk, \UU) \leq 0\right] \\
+                                           &\approx \Prob_{\UU}\left[m_{\Xi}(\kk,\UU) \leq \log\alpha \right]
+    \end{align}
+    The outer probability can be approximated using Monte-Carlo since
+    $m_{\Delta}$ and $m_\Xi$ are cheaper to evaluate than $J$.
+  \end{block}
+\onslide<2>{$\rightarrow$ We can use \alert{sequential strategies} to improve the estimation of $\Delta_{\alpha}$ or $\Xi$ and then improve the estimation of $\Gamma_{\alpha}(\kk)$}
+
+  % Estimate the ``probability of
+  % failure''~\cite{bect_sequential_2012,echard_ak-mcs_2011}
+  % $\Prob_{\UU}\left[J(\kk, \UU) - \alpha J^*(\UU) \leq 0\right]
+  % \approx \Prob_{\UU}\left[\Prob_Z\left[\Delta_{\alpha} \leq
+  %     0\right]\right]$
 \end{frame}
 
 \begin{frame}{Improving the plug-in estimation}
-  Use sequential strategies to improve the estimation of $\Delta_{\alpha}$ or $\Xi$
+  Let $\Phi \sim \GP(m_\Phi, C_\Phi)$, and associated variance $\sigma^2_{\Phi}$ ($\Phi= \Delta_{\alpha}$ or $\Xi$)
+
+  
+  Use sequential strategies to improve \alert{globally} the accuracy of $m_\Phi$.
+  \begin{block}{Integrated Mean Square Error}
+    $\mathsf{IMSE}(\mathcal{X}_n) = \int_{\Xspace}
+    \sigma^2_{\Phi}(x)\,\mathrm{d}x$ is a measure of the uncertainty
+    associated with the design $\mathcal{X}_n$ and the GP $\Phi$
+  \end{block}
+  After having chosen \emph{and evaluated} the next point $x_{+}$, we want the $\mathsf{IMSE}$ to be as small as possible
+  \begin{equation}
+    \min_{x_{+}} \onslide<3->{\Ex_{Z(x_+)}\bigg[}\mathsf{IMSE}\left(\mathcal{X}_n \cup \{(x_{+}, \only<1>{\underbrace{f(x_{+})}_{\text{unknown}}} \only<2->{\underbrace{Z(x_+)}_{\text{r.v.}}})\}\right) \onslide<3->{\bigg]} \onslide<3>{= \min_{x_+} \kappa(x_{+})}
+  \end{equation}
+  \onslide<3>{$x_{n+1}$ presents the smallest IMSE on average once evaluated}
 \end{frame}
 
-\begin{frame}{Joint space or objective-oriented exploration}
-  Because of $J^*(\uu)$, it is often not enough to select the point
-  where the uncertainty is high.  Generally, two main approaches can
-  be considered
+\begin{frame}{Objective-oriented exploration: 2-stages methods}
+  
+  Instead of reducing \emph{globally} the uncertainty, we can look directly to optimize $\Gamma_{\alpha}$
   \begin{itemize}
-  \item Estimate the region
-    $\{(\kk, \uu) \mid J(\kk,\uu) \leq \alpha J^*(\uu)\}$, then use
-    the surrogate as a plug-in estimate to compute and maximize
-    $\Gamma_{\alpha}$
-
-    $\rightarrow$ reduce uncertainty on the whole space
-  \item Select a candidate $\tilde{\kk}$, such that uncertainty on the
-    estimation of $\Gamma_{\alpha}(\tilde{\kk})$ is reduced
-
-    $\rightarrow$ reduce uncertainty on
-    $\{\tilde{\kk}\}\times\Uspace$, with $\tilde{\kk}$ well-chosen.
+  \item Select a candidate $\tilde{\kk}$ with ``high potential'' to optimize $\Gamma_{\alpha}$ 
+  \item $(\kk_{n+1},\uu_{n+1}) = \argmin \kappa((\kk, \uu); \tilde{\kk})$
   \end{itemize}
 \end{frame}
 % \begin{frame}
@@ -926,10 +971,10 @@
 %   \end{itemize}
 
 % \end{frame}
-\section{Calibration of a numerical model: Application to CROCO}
+\section{Robust calibration: Application to CROCO}
 \begin{frame}{The numerical model CROCO}
   \begin{columns}
-    \begin{column}{0.55\textwidth}
+    \begin{column}{0.50\textwidth}
      {
       \textbf{C}oastal and \textbf{R}egional \textbf{O}cean \textbf{CO}mmunity model
       \begin{itemize}
@@ -937,12 +982,17 @@
       \item Solves the Shallow Water equations
       \item Grid resolution of 1/\ang{14} (\SI{5.5}{\kilo\metre})
       \item \num{15684} cells located in the ocean
+      \item Twin experiment setup:
+        \begin{itemize}
+        \item Observation $y$ generated using the numerical model $\mathcal{M}$
+        \item $J(\kk, \uu) = \frac{1}{2}\|\mathcal{M}(\kk, \uu) - y \|^2$
+        \end{itemize}
       \end{itemize}
     }
 \end{column}
-\begin{column}{0.45\textwidth}
+\begin{column}{0.50\textwidth}
       \includegraphics<1>[width=\textwidth]{\manupath Chapter5/img/depth_maps_log_sserif.png}
-      \includegraphics<2>[width=\textwidth]{\manupath Chapter5/img/sediments_reduced.png}
+      % \includegraphics<2>[width=\textwidth]{\manupath Chapter5/img/sediments_reduced_SA.png}
     \end{column}
   \end{columns}
 \end{frame}
@@ -952,15 +1002,89 @@
     \begin{equation}
     \tau_b = -C_d \|v_b \| v_b, \quad\text{ with }\quad C_d = \left(\frac{\kappa}{\log\left(\frac{H}{\alert{z_b}}\right) - 1 }\right)^2
   \end{equation}
-  and we define the control parameter $\kk = \log z_b$
-  \end{block}
+  and we define the control parameter as $\alert{\kk = \log z_b}$
+\end{block}
+\begin{itemize}
+\item The effect on the water circulation (through $\tau_b$) depends
+  also on the water height $H$
+\item We assume that the friction is uniform and constant for each of
+  the sediment type
+\end{itemize}
+Due to the water height, influence of each sediment type is not the same $\Rightarrow$ Sensitivity analysis
 \end{frame}
 
-\begin{frame}{SA on sediments}
-\inputpgf[0.5\textwidth]{\manupath Chapter5/img/SA_sediments.pgf}
+\begin{frame}{Sensitivity analysis on the friction associated with the sediments}
+  Global sensitivity Analysis: Sobol'
+  indices~\citep{sobol_global_2001,sobol_sensitivity_1993}: quantify
+  the influence of each input variable on $J$
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \inputpgf[\textwidth]{\manupath Chapter5/img/SA_sediments_slides.pgf}
+    \end{column}
+    % \begin{overlayarea}{\textwidth}{\textheight}
+    \begin{column}{0.5\textwidth}
+      \only<1>{\includegraphics[width=\textwidth]{\manupath Chapter5/img/sediments_reduced_sserif.png}}%
+      \only<2>{\includegraphics[width=\textwidth]{\manupath Chapter5/img/sediments_reduced_SA_sserif.png}}%
+    \end{column}
+% \end{overlayarea}
+  \end{columns}
+  \onslide<2>{
+    The control variable is then $\kk = (\kk^{(1)}, \kk^{(2)}, \kk^{(3)})$ where
+    \begin{itemize}
+      \item $\kk^{(1)}$: Pebbles
+      \item $\kk^{(2)}$: Gravels
+      \item $\kk^{(3)}$: Other sediments (in deeper water)
+      \end{itemize}}
+\end{frame}
+
+\begin{frame}{Environmental variables}
+  \begin{itemize}
+  \item In this case, we assume that
+    $\uu \sim \mathcal{U}\left([0,1]^2\right)$
+\item $\uu$ parametrizes the error on the amplitude of the $M_2$ and
+  $S_2$ tide components.
+\item $\uu^{\mathsf{truth}} = (0.5, 0.5)$ is the value used to generate the observations
+\end{itemize}
+In order to ensure strict positivity of $J^*$, design first enriched using the PEI criterion
+\begin{center}
+ \includegraphics[scale=0.45]{\manupath Chapter5/img/contour_Jstar_800_again.png}
+\end{center}
+Global minimum not attained at the truth value of the environmental parameter
 \end{frame}
 
 
+
+\begin{frame}{Numerical results}
+  \begin{center}
+  \begin{tabular}{rrr}\toprule
+    Method & augmented IMSE & Qe-AK MCS \\ \midrule
+    % Quantity of interest & $\Ex_{Z}[\int_{\Kspace\times\Uspace}\sigma^2_{\Delta_\alpha \mid Z}]$ & $\mathbb{M}_{\eta}(\mathfrak{q}_l)$ \\
+    Type & 1-step & $K$-step \\
+    Main Bottleneck &
+                      \begin{tabular}{@{}r@{}}
+                        Evaluate and optimise integral in \\
+                        $(1 + \dim( \Kspace\times \Uspace))$ dimensions
+                      \end{tabular}
+                      & \begin{tabular}{@{}r@{}}
+                          Sampling in unknown \\
+                          regions in $\dim( \Kspace\times \Uspace)$
+                        \end{tabular} \\
+    Advantage & Optimal criterion of enrichment & $K$ chosen arbitrary \\ \midrule
+    $\hat{\kk}_{\alpha}$, $\alpha=1.3$ & $(\num{-3.43},\num{-5.20},\num{-6.48})$  & $(\num{-3.38},\num{-5.05}, \num{-6.61})$ \\
+    $\hat{\kk}_{\alpha_p}$, $p=0.95$ & $(\num{-3.39},\num{-5.28},\num{-6.50})$  & $(\num{-3.36},\num{-5.10}, \num{-6.63})$ \\
+    $\hat{\kk}_{\mathsf{global}}$ & \multicolumn{2}{c}{$(-3.516, -5.078, -6.346 )$} \\
+    ${\kk}^{\mathsf{truth}}$ & \multicolumn{2}{c}{$(-3.689, -4.962, \mathsf{n.a.})$} \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+In this case:
+\begin{itemize}
+\item $\hat{\kk}^{(1)}> \hat{\kk}_{\mathsf{global}}^{(1)} > \kk^{\mathsf{truth}, (1)}$
+\item $\hat{\kk}^{(2)} \lesssim \hat{\kk}_{\mathsf{global}}^{(2)} < \kk^{\mathsf{truth}, (2)}$
+\item $\hat{\kk}^{(3)}< \hat{\kk}_{\mathsf{global}}^{(3)}$
+\end{itemize}
+
+\end{frame}
 % \begin{frame}
 %   \frametitle{Application to CROCO: Dimension reduction}
 %   \begin{center}
@@ -979,30 +1103,30 @@
 %   Ad-hoc segmentation according to the depth, and sensitivity
 %   analysis: only the shallow coastal regions seem to have an
 %   influence.
-% \end{frame}
-\begin{frame}
-  \frametitle{Robust optimization}
-  \begin{center}
-    \begin{columns}
-      \begin{column}{.5\textwidth}
-        % \includegraphics[width=\textwidth]{\manupath
-        % Chapter5/img/gaussian_english_channel.png}
-      \end{column}
-      \begin{column}{.5\textwidth}
-        \includegraphics[width=\textwidth]{croco.png}
-      \end{column}
-    \end{columns}
-  \end{center}
+% % \end{frame}
+% \begin{frame}
+%   \frametitle{Robust optimization}
+%   \begin{center}
+%     \begin{columns}
+%       \begin{column}{.5\textwidth}
+%         % \includegraphics[width=\textwidth]{\manupath
+%         % Chapter5/img/gaussian_english_channel.png}
+%       \end{column}
+%       \begin{column}{.5\textwidth}
+%         \includegraphics[width=\textwidth]{croco.png}
+%       \end{column}
+%     \end{columns}
+%   \end{center}
 
-  \begin{itemize}
-  \item $\UU\sim \mathsf{U}[-1, 1]$ uniform r.v.\ that models the
-    percentage of error on the amplitude of the M2 component of the
-    tide
-  \item The ``truth'' ranges from $8$mm to $13$mm.
-  \item $11.0$mm leads to a cost which deviates less than $1\%$ from
-    the optimal value with probability $0.77$
-  \end{itemize}
-\end{frame}
+%   \begin{itemize}
+%   \item $\UU\sim \mathsf{U}[-1, 1]$ uniform r.v.\ that models the
+%     percentage of error on the amplitude of the M2 component of the
+%     tide
+%   \item The ``truth'' ranges from $8$mm to $13$mm.
+%   \item $11.0$mm leads to a cost which deviates less than $1\%$ from
+%     the optimal value with probability $0.77$
+%   \end{itemize}
+% \end{frame}
 
 
 
@@ -1010,24 +1134,22 @@
 
 \begin{frame}[label=conclusion]{Conclusion}
   
-  \begin{block}{Wrapping up}
+  \begin{block}{Wrapping-up}
     \begin{itemize}
-    \item Problem of a \emph{good} definition of robustness
-    \item Tuning $\alpha$ or $\eta$ reflects risk-seeking or
-      risk-adverse strategies
-    \item Strategies rely heavily on surrogate models, to embed
-      aleatoric uncertainties directly in the modelling
+    \item Robustness can have a lot of different meaning
+    \item Relative-regret estimates control the deviation from the optimal value 
+    \item $\alpha$ can reflect risk-adverse or risk-seeking preferences
+    \item GP can be used in order to add sequentially points to the design
     \end{itemize}
   \end{block}
 
 
   \begin{block}{Perspectives}
     \begin{itemize}
-    \item Cost of computer evaluations $\rightarrow$ limited number of
-      runs?
-    \item In low dimension, CROCO very well-behaved.
-    \item Dimensionality of the input space $\rightarrow$ reduction of
-      the input space?
+    \item Dimension of the input space $\Kspace \times \Uspace$ can be limiting
+    \item Adaptive methods still require expensive or difficult tasks (optimization, sampling, integration)
+    \item Continue study of 2-stages criterion
+    \item Study of CROCO with different settings
     \end{itemize}
   \end{block}
 \end{frame}
@@ -1040,6 +1162,35 @@
 \end{frame}
 
 \appendix
+
+\begin{frame}{Relative or additive regret}
+  \pnote{we discussed so far the relative regret, that takes the form
+    of a multiplicative relaxation. Why this over the additive regret
+    ?
+
+    Relative regret takes better into account the magnitude of the
+    cost function, as the region of acceptability grows with alpha AND
+    Jstar. When the situation is already bad, we don't want to put
+    much effort to stay close to the minimum theta star of u. On the
+    other hand, for Jstar close to 0, }
+
+  
+  \renewcommand\rmfamily{\sffamily}
+  \begin{center}
+    \resizebox{.5\textwidth}{!}{\input{\manupath
+        Chapter3/img/illustration_region_regret.pgf}}
+  \end{center}
+  \begin{itemize}
+  \item Relative regret
+    \begin{itemize}
+    \item $\alpha$-acceptability regions large for flat and bad
+      situations ($J^*(\uu)$ large)
+    \item Conversely, puts high confidence when $J^*(\uu)$ is small
+    \item No units $\rightarrow$ ratio of costs
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 
 \end{document}
 
