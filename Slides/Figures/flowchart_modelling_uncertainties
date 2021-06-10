@@ -9,7 +9,7 @@
  \draw  node[rectangle, fill=blkcol, right of = y] (z) {Computer code};
   \draw[postaction = decorate, very thick] (x) to node[midway, below, text width=20ex](az) {Simplifications, parametrizations} (y)  ;
   \draw[postaction = decorate, very thick] (y) to node[midway, below, text width=20ex] {Discretization implementation}(z);
-\draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Error on the parameters};
+\draw node[text width = 20ex, text centered](tune) at (40ex,-15ex) {Uncertainties};%{Error on the parameters};
 \draw node[text width = 20ex] (nature) at (0ex, 10ex) {Natural variability};
 \draw[->] (nature) to (x);
 \draw[->] (tune) to  (55ex,-7ex);

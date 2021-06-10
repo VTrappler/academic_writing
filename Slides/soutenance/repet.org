@@ -1,0 +1,102 @@
+
+
+* DONE s2: commenter figures ou légende ?: realité-> simplification
+
+* DONE transition 3 <-> 4: ou intervertir ?
+** TODO [#A] on parle plus des simplifications plutot que de la construction du modèle
+
+* DONE s4: Quels paramètres à calibrer
+** DONE flèches computer code
+** DONE erreurs ? paramètres ici pas pertinents; approximation plutot ?
+** DONE calibrer modèle ? oui plutot
+   
+* TODO [#A] s5: dire à l'oral inverse problem
+** TODO on se base sur les obs
+** DONE double flèche M, y 
+
+* DONE s6: qu'est ce qu'il se passe si u incertain?
+** DONE mieux préciser
+
+* DONE s7: refaire figures 
+** DONE hat theta
+** DONE zb
+** TODO préciser u, composantes de marée
+** DONE enfoncer le clou ?
+
+* TODO s11: refaire référence, u, theta ?
+
+  
+* DONE s12: fleche double sens
+** DONE u sim U bof (real)
+
+* TODO s14: remettre objectif en tete
+** TODO espace ~ ref
+
+
+* DONE s16: déf uspace dans s12
+** TODO [#B] changer couleurs, ajouter légende
+** TODO [#B] le vert le plus long
+
+* DONE s17-18: ajouter figure 2x2, Gamma_\alpha  
+
+* DONE [#B] s18
+** DONE level of robustness avant, plutot ok comme ça ?
+
+* TODO [#B] s22: pas rentrer dans les détails, mais quand même en parler
+** DONE m_Z: rajouter dans figure
+
+* DONE s23-
+
+* TODO s23 - 24: -> course of action slide
+** TODO qu'est ce qu'il faut calculer ?:
+*** TODO J*, mais aussi J;J^*
+*** TODO plan ?
+**** TODO rappeler techniques d'enrichissement de plan
+*** TODO bonne approx de J >0 
+**** TODO assurer >0 (PEI)
+**** TODO faire les approx delta, Xi
+**** TODO aIMSE
+**** TODO stratégie alternative: batch avec delta_{alpha}
+
+* TODO 1 strat pour calculer J^*
+
+* DONE s25: couleur points cond minimum = couleur pred
+** DONE revoir toutes les couleurs
+
+* TODO Calculer condi mini avec PEI
+  
+* TODO [#B] s26: discours
+** TODO couleurs !
+
+* TODO On joue sur alpha ou p ?
+** TODO recalling ?
+
+* DONE s29: kappa underbrace depuis le début
+** DONE phi non: plutot delta alpha
+
+
+* DONE s31:remettre déroulé
+
+* DONE s32: refaire
+
+* DONE s31
+
+* DONE J fonction analytique
+ 
+* DONE s34: 
+* DONE entre 34, 35: explication du modèle avec M, y, taub
+* TODO s36: citer l. gilquin
+** TODO erreur de modèle introduite avec la réduction de dimension
+
+* DONE s37: commencer par definition de u
+** DONE BC
+** DONE aléatoire epistemiques
+   
+* TODO s38: 
+
+* TODO s39: introduire section-> travail préliminaire sur la faisabilité.
+** TODO parler de cout de calcul: budget, evals des m_
+
+* TODO conclu
+** TODO erreur en prédiction ?
+** TODO random simulator bof ?

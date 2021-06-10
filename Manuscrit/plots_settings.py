@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 import sys
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+# import cartopy.crs as ccrs
+# import cartopy.feature as cfeature
+# from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import matplotlib.ticker as mticker
 # -> Manuscrit 415.41025
 # -> Notes 418.25368
@@ -55,77 +55,77 @@ col_3quarter = get_figsize(wf=.75)
 colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
 
-def add_all_decorations(ax):
-    lonmin = -9.
-    lonmax = 1.
-    latmin = 43.
-    latmax = 51.
+# def add_all_decorations(ax):
+#     lonmin = -9.
+#     lonmax = 1.
+#     latmin = 43.
+#     latmax = 51.
 
-    ax.set_extent([lonmin, lonmax, latmin, latmax], ccrs.PlateCarree())
-    ax.add_feature(cfeature.LAND.with_scale('10m'), zorder=100, edgecolor='k')
-    ax.add_feature(cfeature.COASTLINE.with_scale('10m'), zorder=101)
-    ax.add_feature(cfeature.RIVERS.with_scale('10m'), zorder=101)
-    ax.add_feature(cfeature.BORDERS.with_scale('10m'), linestyle=':', zorder=102)
-    ax.coastlines(resolution='50m')
-    ax.set_ylim([43, 51])
-    gl = ax.gridlines(alpha=0.1, draw_labels=True)
-    gl.xlabels_top = False
-    gl.ylabels_right = False
-    gl.xlocator = mticker.FixedLocator([-10, -8, -6, -4, -2, 0, 2])
-    gl.ylocator = mticker.FixedLocator([42, 44, 46, 48, 50, 52])
-    gl.xformatter = LONGITUDE_FORMATTER
-    gl.yformatter = LATITUDE_FORMATTER
-    gl.xlabel_style = {'size': 6}
-    gl.ylabel_style = {'size': 6}
-    ax.set_aspect(1)
-
-
-def add_colorbar_subplot(mappable, format):
-    from mpl_toolkits.axes_grid1 import make_axes_locatable
-    # if im is None:
-    last_axes = plt.gca()
-    ax = mappable.axes
-    fig = ax.figure
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    cbar = fig.colorbar(mappable, cax=cax, format=format)
-    plt.sca(last_axes)
-    return cbar
+#     ax.set_extent([lonmin, lonmax, latmin, latmax], ccrs.PlateCarree())
+#     ax.add_feature(cfeature.LAND.with_scale('10m'), zorder=100, edgecolor='k')
+#     ax.add_feature(cfeature.COASTLINE.with_scale('10m'), zorder=101)
+#     ax.add_feature(cfeature.RIVERS.with_scale('10m'), zorder=101)
+#     ax.add_feature(cfeature.BORDERS.with_scale('10m'), linestyle=':', zorder=102)
+#     ax.coastlines(resolution='50m')
+#     ax.set_ylim([43, 51])
+#     gl = ax.gridlines(alpha=0.1, draw_labels=True)
+#     gl.xlabels_top = False
+#     gl.ylabels_right = False
+#     gl.xlocator = mticker.FixedLocator([-10, -8, -6, -4, -2, 0, 2])
+#     gl.ylocator = mticker.FixedLocator([42, 44, 46, 48, 50, 52])
+#     gl.xformatter = LONGITUDE_FORMATTER
+#     gl.yformatter = LATITUDE_FORMATTER
+#     gl.xlabel_style = {'size': 6}
+#     gl.ylabel_style = {'size': 6}
+#     ax.set_aspect(1)
 
 
-def get_resize_event_function(ax, cbar_ax):
-    """
-    Returns a function to automatically resize the colorbar
-    for cartopy plots
+# def add_colorbar_subplot(mappable, format):
+#     from mpl_toolkits.axes_grid1 import make_axes_locatable
+#     # if im is None:
+#     last_axes = plt.gca()
+#     ax = mappable.axes
+#     fig = ax.figure
+#     divider = make_axes_locatable(ax)
+#     cax = divider.append_axes("right", size="5%", pad=0.05)
+#     cbar = fig.colorbar(mappable, cax=cax, format=format)
+#     plt.sca(last_axes)
+#     return cbar
+
+
+# def get_resize_event_function(ax, cbar_ax):
+#     """
+#     Returns a function to automatically resize the colorbar
+#     for cartopy plots
     
-    Parameters
-    ----------
-    ax : axis
-    cbar_ax : colorbar axis
+#     Parameters
+#     ----------
+#     ax : axis
+#     cbar_ax : colorbar axis
     
-    Example
-    -------
-        import cartopy.crs as ccrs
-        import matplotlib.pyplot as plt
+#     Example
+#     -------
+#         import cartopy.crs as ccrs
+#         import matplotlib.pyplot as plt
     
-        fig, ax = plt.subplots(figsize=(10,5), subplot_kw={'projection': ccrs.PlateCarree()})
-        cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
+#         fig, ax = plt.subplots(figsize=(10,5), subplot_kw={'projection': ccrs.PlateCarree()})
+#         cbar_ax = fig.add_axes([0, 0, 0.1, 0.1])
         
-        [... your code generating a scalar mappable ...]
+#         [... your code generating a scalar mappable ...]
     
-        resize_colorbar = get_resize_event_function(ax, cbar_ax)
-        fig.canvas.mpl_connect('resize_event', resize_colorbar)
+#         resize_colorbar = get_resize_event_function(ax, cbar_ax)
+#         fig.canvas.mpl_connect('resize_event', resize_colorbar)
     
-    Credits
-    -------
-    Solution by pelson at http://stackoverflow.com/a/30077745/512111
-    """
-    def resize_colorbar(event):
-        plt.draw()
-        posn = ax.get_position()
-        cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0,
-                              0.02, posn.height])
-    return resize_colorbar
+#     Credits
+#     -------
+#     Solution by pelson at http://stackoverflow.com/a/30077745/512111
+#     """
+#     def resize_colorbar(event):
+#         plt.draw()
+#         posn = ax.get_position()
+#         cbar_ax.set_position([posn.x0 + posn.width + 0.01, posn.y0,
+#                               0.02, posn.height])
+#     return resize_colorbar
 
 
 

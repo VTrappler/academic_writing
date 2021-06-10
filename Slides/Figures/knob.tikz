@@ -1,0 +1,12 @@
+﻿\begin{tikzpicture}
+ \foreach \x [count=\p] in {0,...,23} {
+     \node (\p) at (-\x*15:2) {};
+      \draw[line width=1pt] (\x*15:2*1.05) -- (\x*15:2*1.15);};
+
+      \foreach \x [count=\p] in {0,...,5} {
+   %     \draw (-\x*60:2.4) node {\p};
+  %      \draw (-30-\x*60:2.4) node {$\bar{\p}$};
+}; 
+    \draw (1) arc (0:360:2);% circle
+	\draw (0,0) -- (1.14, 1.14/2);
+\end{tikzpicture}

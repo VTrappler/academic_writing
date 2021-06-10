@@ -41,7 +41,7 @@
 \draw[->] (input) -- (code);
 % \draw[->] (envir) -- (code);
 \draw[->] (code) -- (output);
-\draw[->] (output) -- (obs) ;
+\draw[<->] (output) -- (obs) ;
 \draw[->] (inv) -|(input) ;
 \draw[->] (obs) -- (inv);
 \end{tikzpicture}

@@ -19,5 +19,5 @@
 \draw[->] (code) -- (output);
 \draw[->] (inv) -|(input) ;
 \draw[->] (obs) -- (inv);
-\draw[->] (output) -- (obs);
+\draw[<->] (output) -- (obs);
 \end{tikzpicture}
