@@ -209,49 +209,13 @@
 \end{center}
 \end{frame}
 
-    % A telling
-    % recent example is the propagation of a well-known virus.
 
-    
-    % As you cannot take into account and track the behaviour of every
-    % single person, a lot of things have to simplified.
-    % Based on those imperfect, yet simpler representations,
-    % representation, we can then simulate natural phenomena, and
-    % forecast them
-
-% \begin{frame}{Parametrization}
-
-%   \begin{itemize}
-%     \item Physical parameters, which represent some physical properties
-%     that influence the model. 
-%   \item Additional parameters, introduced for numerical reasons
-%   \end{itemize}
-
-%   % Does reducing the error on the parameters leads to the compensation
-%   % of the unaccounted natural variability of the physical processes ?
-
-  
-%   \pnote{During the whole process of the modelling of a physical
-%     system, that is from the observationf of a natural phenomenon, to
-%     the simulation using numerical methods, we introduce
-%     uncertainties.  Those uncertainties take the form of errors
-%     introduced by the simplifications, discretizations and
-%     parametrizations needed to represent things numerically.
-
-%     In the end, we have a set of parameters, that we need to
-%     calibrate, but during this phase of calibration, how can we be
-%     sure that we try to act only the error due to the parametrization,
-%     and are not compensating errors coming from others sources.}
-  
-% \end{frame}
-
-\begin{frame}{Modelling of the bottom friction}
+\begin{frame}{Modelling of the ocean, bottom friction}
   \pnote{We are going to take for instance the modelling of the ocean.
 
     First thing first, most numerical models are usually based
     on a subdivision of the ocean into cells, which interacts with
     each others. Those cells have a size in the order of the kilometer.
-
     
     At the bottom of the ocean, the different types of soil and
     sediments have an influence on the circulation of the water at the
@@ -261,20 +225,21 @@
     scale much smaller than the scale of the mesh provided for the
     simulation.
 
-
     All in all, instead of modelling individually each rock or
     asperity, we can introduce a parameter, which will quantify for
     each cell the effect of the friction.
   }
   % A lot of choices/simplifications are required to construct models, which depends on
   % the scale we wish to represent: 
-  \begin{block}{Example: the bottom friction}
+  \begin{block}{Example: modelling of the ocean}
     \begin{itemize}
     \item Ocean domain discretized
-    \item Bottom of the ocean is not completely smooth
-    \item Energy is dissipated through turbulences because of the asperities
-    \item The water current at the surface is affected
-    \item The friction is taken into account at a cell level
+    \item External tidal forcing
+    \item Energy is dissipated through turbulences caused by the asperities at the bottom
+      \begin{itemize}
+      \item The water currents at the surface are affected
+      \item The friction is taken into account at a cell level
+    \end{itemize}
     \end{itemize}
   \end{block}
   \begin{center}
@@ -290,9 +255,10 @@
     Some of those parameters cannot be chosen, as their value may
     come from real observations, measured physical properties, or
     other environmental conditions.
-    
-    Now, the question, is how to choose the value of the remaining
-    parameters, so that the model, the simulations are accurate enough    ?
+
+    Some other need to be tuned accordingly.  Now, the question, is
+    how to choose the value of those remaining parameters, so that the
+    model, the simulations are accurate enough ?
 
   }
   \begin{center}
@@ -322,8 +288,11 @@
     classical setting of inverse problem.
 
     The parameter we want to calibrate, to control is called the control
-    parameter theta The other parameters, that we do not have much
-    control are called the environmental variables, which are considered fixed, and known.
+    parameter theta
+
+    The other parameters, that we do not have much control are called
+    the environmental variables, which are considered fixed, and
+    known.
 
     our numerical model, M can be seen as an operator, taking as
     inputs theta and u, and outputs an observable quantity, for
@@ -368,14 +337,10 @@
 
     However, this estimation depends on the value of the environmental
     parameter chosen initially.  Now, what happens if this parameter
-    changes ? or if the value of the environmental parameter is not
-    good with respect to the observations
-
+    changes ? 
     The minimisation procedure is supposed to correct the
     error on theta but will it try to compensate too much ? }
-  % We have
-  % $\yobs = \mathcal{M}(\kk_{\mathrm{obs}},\uu_{\mathrm{obs}})$ with
-  % $\uu_{\mathrm{obs}} = \uu$
+
   Let $\uu \in \Uspace$, assumed fixed and known
   \begin{block}{Objective function}
     We define $J$ as the squared difference between the output of the
@@ -408,14 +373,14 @@
 \begin{frame}{An example: Misspecification of $u$ }
   \pnote{ We are going to illustrate this issue, with the calibration
     problem of the bottom friction in a model of the north atlantic
-    ocean. This setting will be detailed later, but we can already see
-    that the optimal value found does indeed depend on u.
+    ocean. This setting will be detailed later, but we can see how the optimal value depends on the environmental parameter:
+    
+    Some regions are left unaffected, especially in the bay of biscay,
+    but some other vary directly with the environmental parameter.
 
-    Some regions are left unaffected, but some other vary directly
-    with the environmental parameter.
-
-    So now the question that arise, is that how to select a value of
-    the control parameter, such that it is quite close to the reality, even when u changes? }
+    So now the question is, how to select a value of the control
+    parameter, such that it is quite close to the reality, even when u
+    changes? }
   
   Minimization of $\kk\mapsto J\left(\kk,\uu\right)$, for
   different $\uu$, which parametrizes some boundary conditions:  $\uu=\only<1>{(0.0, 0.0)}%
@@ -447,10 +412,21 @@
 \end{frame}
 
 \begin{frame}{A definition of robustness ?}
-  \pnote{This leads to the notion of robustness, so an estimate will
-    be considered robust if the objective function gives good
+  \pnote{This is how we are going to define robustness: an estimate
+    will be considered robust if the objective function gives good
     performances when u varies
-  }
+
+    
+    In this presentation we are going to see how this notion of
+    robustness can be translated quantitatively, especially by
+    introducing notions of regret.
+
+    As we are going to see, such robust estimates can become expensive
+    to compute. We will then introduce methods based on gaussian
+    processes, in order to make computations tractable
+
+    Finally, we are going to apply some of those methods to the
+    calibration of an academic model of the ocean, based on CROCO}
   \begin{block}{Robustness}
     $\hat{\kk}$ can be considered ``robust'' if $J(\hat{\kk}, \uu)$
     gives ``good enough'' performances when $\uu$ varies
@@ -489,7 +465,7 @@
 
 \section{Robustness in calibration}
 \begin{frame}{Different types of uncertainties}
-    \pnote{ We evoked earlier that the
+    \pnote{We evoked earlier that the
     uncertainty on theta or on u is not the same, and we can make a
     rough distinction between two types:
 
@@ -505,6 +481,7 @@
     Our goal, is then to be able to reduce the epistemic uncertainty
     on the value of theta, while taking into account the aleatoric
     uncertainty.}
+  
   \begin{block}{Epistemic or aleatoric
       uncertainties?~\citep{walker_defining_2003}}
     \begin{itemize}
@@ -517,7 +494,7 @@
 
   \begin{itemize}
   \item $\kk$: Control parameter, needs to be tuned
-  \item $\uu$: Environmental variable: subject to natural variability
+  \item $\uu$: Environmental variable, subject to natural variability
   \end{itemize}
   
   Our goal is to take into account the aleatoric uncertainties (=the
@@ -525,10 +502,20 @@
   estimation of the control parameter (=reduction of the epistemic uncertainties).
 \end{frame}
 
-\begin{frame}[t]{Aleatoric uncertainties as a random variable}
+\begin{frame}[t]{Aleatoric uncertainty as a random variable}
+  \pnote{The aleatoric uncertainty present in the environmental
+    variable will be modelled using a random variable.
+
+    The distribution of this random variable, written using an
+    uppercase letter U is assumed to be known.
+    The lowercase u is a sample, a realization of this random variable
+
+    In this case, we can consider that the output of the model is a
+    random variable.
+  }
   \begin{itemize}
   \item $\UU$: random variable of known distribution, with support $\Uspace$
-  \item    $\uu$ is a sample of $\UU$ 
+  \item $\uu$ is a sample of $\UU$ 
   \end{itemize}
   \vfill \only<1>{
     \begin{center}
@@ -540,13 +527,15 @@
       \input{../Figures/comp_code_unc_inv.pgf}%
     \end{center}
   } \vfill
-
-
-  \pnote{The aleatoric uncertainty is modelled by assuming that u is a
-    random variable with known distribution }
 \end{frame}
 
 \begin{frame}{The objective function as a random variable}
+  \pnote{I'd like to point out that the numerical model is still
+    completely deterministic: the choice and sampling of lowercase u
+    is still up to the user.
+
+    But in terms of random variable, we will now have to consider that
+    the objective function is a random variable, indexed by theta }
   \begin{itemize}
   \item The computer code is \textit{still} deterministic, and takes $\kk$ and $\uu$
     as inputs (from the user):
@@ -560,10 +549,6 @@
     \end{equation*}
   \end{itemize}
 
-\pnote{ In our study, the model is completely deterministic, so we can
-  control its inputs The cost function, becomes then a function of two
-  theta and u. We still wish to minimise with respect to theta, but
-  what can we do for u ?  }
 \end{frame}
 
 
@@ -571,21 +556,31 @@
 
 % \subsection{Definitions of robustness}
 \begin{frame}{Robust objectives of the objective function}
-  \pnote{ I'm going to present very quickly some estimates that can be
-    considered robust, but will focus mainly on the last one.  First
-    we can think about minimising in the worst case sense. This
-    usually leads to overly conservative estimates as we are
-    maximizing over the whole space U. We can also think about
-    minimising the moments, such as the mean or the variance, or even
-    combine them in a multiobjective setting by looking for the pareto
-    front.
+  \pnote{I'm going to present very quickly some estimates that can be
+    considered robust.
 
+    First we can think about minimising the objective function in the
+    worst case sense. This usually leads to overly conservative
+    estimates as we are maximizing over the whole space U.
 
-    Every choice of environmental variable gives a distinct situation
-    The aspect we are going to focus on is based on the regret, so it
-    implies a comparison with the best performance attainable for each
-    u.  }
-We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good performances''
+    Due to the fact that the objective function can be considered as a
+    random variable, we can also think about minimising the moments,
+    such as the mean value. Or by looking for the pareto front in
+    order to get a good compromise between mean and variance of the
+    objective function.
+
+    Finally, we can also look to minimize some well-chosen quantile of
+    the objective function.
+
+    In this presentation, we are going to focus on a specific idea,
+    based on the regret:
+
+    Every choice of environmental variable gives a
+    distinct situation The aspect we are going to focus on is based on
+    the regret, so it implies a comparison with the best performance
+    attainable for each u.  }
+  We are looking for $\hat{\kk}$, such
+  that $J(\hat{\kk}, \UU)$ gives ``good performances''
 
   \begin{itemize}
     % \item Global Optimum: $ \min_{(\kk,\uu)} J(\uu,\kk)$
@@ -609,11 +604,27 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \end{frame}
 
 \begin{frame}{The notion of relative-regret}
-  \pnote{ }
+  \pnote{For each choice of u, the environmental variable, we have a
+    different calibration problem. Once the optimisation is performed,
+    we have an optimal value Jstar, and an estimate theta star.
+
+    But in the end, we want a single value of theta, which is good
+    even when u varies, so we are going to compare the performances,
+    so the value of the objective function when theta is set to the optimal value given u, so Jstar
+
+    So we are going to introduce the relative-regret, which is defined
+    by ratio of the objective function, divided by the conditional
+    minimum Jstar. So when the regret is large, there is a lot of
+    deviations from the optimal value.
+
+    Based on this idea, we can introduce a notion of acceptability by
+    using a threshold, alpha.  So a pair of points is considered
+    acceptable at a level alpha, if the relative regret is less than
+    alpha.}
   
   Given $\uu\in\Uspace$, how well can we calibrate the model ?
   \begin{itemize}
-  \item The best performance is $\min_{\kk\in\Kspace} J(\kk, \uu) = J^*(\uu)$
+  \item The best performance is $\min_{\kk\in\Kspace} J(\kk, \uu) = J^*(\uu)>0$
   \item How does $J^*(\uu)$ compare to $J(\kk, \uu)$ ?
   \item What is the cost of choosing $\kk$ instead of $\kk^*(\uu)=\argmin_{\kk} J(\kk, \uu)$ ?
   \end{itemize}
@@ -627,54 +638,41 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
   }
 \end{frame}
 
-% \begin{frame}{Introducing the regret}%
-
-
-%   Given $\uu \sim \UU$, the optimal value is $J^*(\uu)$, attained at
-%   $\kk^*(\uu) = \argmin_{\kk\in\Kspace} J(\kk,\uu)$.  \pause
-%   % \begin{columns}
-%   %   \begin{column}{0.6\textwidth}
-
-  
-%   The minimizer can be seen as a random variable:
-%   \begin{equation*}
-%     \kk^*(\UU) = \argmin_{\kk\in\Kspace} J(\kk,\alert<1>{\UU})
-%   \end{equation*}
-%   $\longrightarrow$ estimate its density (how often is the value $\kk$
-%   a minimizer)
-%   \begin{align*}
-%     p_{\kk^*}(\kk) &= "\Prob_{\UU}\left[J(\kk,\UU)= J^*(\UU) \right]"
-%   \end{align*}
-%   \pause In order to take into account values \alert{nearly} optimal
-
-%   $\longrightarrow$ relaxation of the equality with
-%   $\alpha> 1$:
-%   \begin{equation*}
-%     \Gamma_{\alpha}(\kk) = \Prob_{\UU}\left[J(\kk,\UU) \leq \alpha J^*(\UU) \right]
-%   \end{equation*}
-% \end{frame}
-
  
 \begin{frame}{Construction of regions of acceptability}
-  \pnote{ What does it look like on a concrete example. We have the
-    plot of a cost function, where theta is the x axis, and u is on
-    the y axis.
+  \pnote{For an illustration purpose, we are going to see what does it
+    look like on an analytical function J, which is strictly positive.
+    On the x axis, we have the control parameter, on the y axis, the environmental parameter.
+    
+    So for a given u, so for an horizontal slice of this figure, we
+    can optimize the objective function, this leads to Jstar, the
+    conditional minimum, and theta star, the conditional minimiser.
 
-    As said earlier, for each horizontal cross section, so for u
-    fixed, we compute the minimiser, theta star of u.
+    By doing so for all the other values of the environmental
+    paramter, we can get visualize the set of all conditional
+    minimisers.
 
-    We can then compute the whole set of the conditional minimisers
+    We now introduce the threshold, alpha, and define the region of
+    alpha acceptability.  So within the yellow lines, we are
+    acceptable at a level alpha, since the objective function is less
+    than alpha times Jstar.
 
-    Now, we set alpha: inside the yellow lines, we are between the
-    minimum and alpha times the minimum
+    We want to see how often each single value theta is
+    acceptable, so we are going to measure the set of acceptable value
+    with respect to the probability distribution of U, this is the
+    green line.
 
-    Finally, we construct and measure for each theta the probability
-    to be within this acceptable region.  Great, now we just have to
-    know how to choose
-    alpha. % Recalling that Gamma here is a probability, we can set levels of interests, such as 1, 0.9 or 0.95 for instance, and take the smallest alpha such that there is a value k where gamma of alpha and k reaches this level, similarly to a quantile.
-  }
-  \scalebox{0.5}{%
-    $J(\kk, \uu) = \frac{1}{51.95}\left[\left(x_2 - \frac{5.1}{4\pi^2}x_1^2 + \frac{5}{\pi}x_1-6\right)^2 + (10 - \frac{10}{8\pi})\cos(x_1) - 44.81\right] + 2,\quad  x_1 = 15\kk-5,\quad x_2 = 15\uu$}\vspace{-.5cm}
+    Finally, that is how Gamma alpha is defined: this represent the
+    probabiltiy to be acceptable at a level alpha, or in other words,
+    the probability that the relative-regret is less than alpha.  This
+    can be seen as a measure of robustness, so we want this green line
+    to be as long as possible.
+  } \scalebox{0.5}{%
+    Analytical objective function
+    $J(\kk, \uu) = \frac{1}{51.95}\left[\left(x_2 -
+        \frac{5.1}{4\pi^2}x_1^2 + \frac{5}{\pi}x_1-6\right)^2 + (10 -
+      \frac{10}{8\pi})\cos(x_1) - 44.81\right] + 2,\quad x_1 =
+    15\kk-5,\quad x_2 = 15\uu$}\vspace{-.5cm}
   \begin{columns}
     \begin{column}{0.45\textwidth}
       \vspace{0.5cm}
@@ -714,22 +712,25 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 
 
 \begin{frame}{Regret-based estimates}
-  \pnote{Great so now we have Gamma(theta) which is the probability
-    that theta gives a cost alpha acceptable If we have an idea of a
-    threshold we don't want to exceed, so if alpha is known we can
-    maximize the probability of being alpha acceptable
+  \pnote{ This is how we can define the relative regret estimates, as
+    maximizers of Gamma alpha, so this family is indexed by the
+    threshold alpha. This lead to the publication of an article.
 
-    Or, on the other hand, as gamma is a probability, we can look for
-    the smallest relaxation, where the probability of acceptability
-    reaches a certain confidence 1-eta.
+    For a member of this family, we have then some more information on
+    its robustness:
 
-    We can then define the family of relative-regret estimators, which
-    are the maximizers of such a probability of being alpha
-    acceptable.  Depending on the approach, we can nudge toward
-    optimal performances with small alpha, or risk adverse preference,
-    by setting a bigger relaxation.}%
-  $\Gamma_{\alpha}(\kk)=\Prob_{\UU}[J(\kk, \UU) \leq \alpha J^*(\UU)]=\Prob_{\UU}[\frac{J(\kk, \UU)}{J^*(\UU)} \leq \alpha]$
+    alpha represents the range of variation of the
+    objective function relatively to the conditional optimum
+
+    p, the maximal value of Gamma alpha, is the probability with which
+    we stay within this range
+  }%
+  
   \begin{block}{Relative-regret family of estimators \citep{trappler_robust_2020}}
+    Let $J > 0$ \quad  $\Gamma_{\alpha}(\kk)=\Prob_{\UU}[J(\kk, \UU) \leq \alpha
+    J^*(\UU)]=\Prob_{\UU}[\frac{J(\kk, \UU)}{J^*(\UU)} \leq \alpha]$
+    
+    Relative-regret family of estimators:
     \begin{equation}
       \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
     \end{equation}
@@ -743,6 +744,20 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \end{frame}
 
 \begin{frame}{Conservative or optimistic estimate}
+  \pnote{ The choice of alpha, or of p is up to the user:
+
+    if alpha is chosen small, so close to 1, we are not allowing much
+    deviation from the conditional minimisers, and as a consequence,
+    the probability for being within this acceptable region is lower
+
+    On the other hand, if we choose alpha to be large, the acceptable
+    region is large as well, so it is easier to reach higher
+    probabilities of being acceptable.
+
+    The alternative is to set a target probability $p$, and to adjust
+    the threshold alpha, so that the maximum reached is indeed p
+
+  }
   \begin{columns}
     \begin{column}{0.5\textwidth}
   \begin{center}
@@ -760,14 +775,19 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \end{columns}
 \end{frame}
 
-\begin{frame}{Relation between $\alpha$, $p$ as optimisation problems}
+\begin{frame}{Relative-regret estimations as optimisation problems}
+  \pnote{To summarize, we have two courses of action
 
-  % \begin{block}{Relative-regret family}
-  %   \begin{equation}
-  %     \left\{ \hat{\kk} \mid \hat{\kk} = \argmax_{\kk \in \Kspace} \Gamma_{\alpha}(\kk), \alpha>1 \right\}
-  %   \end{equation}
-  %   $\alpha$ can be chosen
-  % \end{block}
+    The first, where we choose a threshold alpha. To get an estimate, we have to maximize a probability, the probability of being alpha acceptable
+
+    The other one, where we choose a target probability p requires to
+    find the smallest value of alpha, such that the target is
+    reached. So it can be considered as the minimization of a quantile
+    of order p of a specific random variable
+
+    As we could see the relative regret estimates require the
+    optimization of specific statistical quantites, which can be
+    expensive in practice}
   \begin{itemize}
  \item If $\alpha$ known, \alert<1>{maximize the probability that $\kk$ gives
     acceptable values}:
@@ -815,6 +835,8 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \end{frame}
 
 \begin{frame}{Surrogates and cost function}
+  \pnote{We choose Gaussian Process regression as a metamodel, as it
+    can replace cheaply the computer code}
   Given a set comprising points and their evaluations
   $\mathcal{X} = \{(x_i,J(x_i))\}_{1 \leq i \leq n}$ (\textit{training set}), we can construct
   an \alert{approximation} of the expensive function $J$
@@ -826,11 +848,7 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
     ($\sim$ plug-in approach)
   \item It can be adapted for sequential strategies
   \end{itemize}
-}  % \item Polynomial Chaos
-  %   Expansion~\cite{xiu_wiener--askey_2002,sudret_polynomial_2015}
-  % \end{itemize}
-  \pnote{We choose Gaussian Process regression as a metamodel, as it
-    can replace cheaply the computer code}
+}
 \end{frame}
 
 \begin{frame}{Gaussian Process Regression}
@@ -981,7 +999,7 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
     \Gamma_{\alpha}(\kk)&= \Prob_{\UU}\big[\underbrace{J(\kk, \uu) \leq \alpha J^*(\UU)}_{\text{approximation ?}} \big] \\
                         &= \Prob_{\UU}\bigg[ \underbrace{\frac{J(\kk, \UU)}{J^*(\UU)}}_{\text{approximation ?}} \leq \alpha\bigg]
   \end{align}
-  \begin{block}{GP formulation}
+  \begin{block}{GP formulation of the difference and of the ratio}
     \begin{itemize}
   \item $\Delta_{\alpha} = Z - \alpha Z^*$ is a GP
     \begin{itemize}
@@ -1006,7 +1024,8 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
   \end{equation}
   \end{block}
   
-  After having chosen \emph{and evaluated} the next point $x_{+}$, we want the $\mathsf{IMSE}$ to be as small as possible
+  After having chosen \emph{and evaluated} the next point $x_{+}$, we
+  want the $\mathsf{IMSE}$ to be as small as possible
   \begin{equation}
     \min_{x_{+}} \overbrace{\onslide<3->{\Ex_{Z(x_+)}\bigg[}\mathsf{IMSE}\left(\mathcal{X}_n \cup \{(x_{+}, \only<1>{\underbrace{J(x_{+})}_{\text{unknown}}} \only<2->{\underbrace{Z(x_+)}_{\text{r.v.}}})\}\right) \onslide<3->{\bigg]}}^{\kappa} \onslide<3>{= \min_{x_+} \kappa(x_{+})}
   \end{equation}
@@ -1020,9 +1039,13 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \end{center}
 \end{column}
 \begin{column}{0.5\textwidth}
-  $\rightarrow$ Explore the whole input space
-  $\Xspace=\Kspace \times \Uspace$, but intensification also near the
-  conditional minimisers
+  \begin{itemize}
+  \item Exploration of the whole input space
+    $\Xspace=\Kspace \times \Uspace$, but intensification also near
+    the conditional minimisers
+\item only 1 point added at a time
+\item[$\rightarrow$] Adding multiple points every iteration ? 
+\end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
@@ -1030,8 +1053,10 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
 \begin{frame}{Sampling-based methods: AK-MCS}%
   \begin{columns}
     \begin{column}{0.5\textwidth}
-       Given $\mathbb{M} \subset \Xspace$, margin of uncertainty
-    \begin{block}{Selection of a batch of $K$ points and update of the design}
+      \vfill
+      Example: Improve estimation of set $\{m_{\Delta_{\alpha}} < 0\} = \{m_Z - \alpha m_{Z^*} < 0\}$
+      \begin{block}{Selection of a batch of $K$ points and update of
+          the design~\citep{dubourg_reliability-based_2011}}
       \begin{itemize}
       \item<2-> Sample points according to the sampling density $g$
       \item<3-> Cluster the samples into $K$ clusters (KMeans)
@@ -1044,7 +1069,7 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
     \end{column}
     \begin{column}{0.5\textwidth}
       \vfill
-      Example: estimation of the set $\{\Delta_{\alpha} < 0\}$:
+      Given $\mathbb{M} \subset \Xspace$, margin of uncertainty
       $g(x) =
       \left\{\begin{array}{l}
               1 \text{ if } x\in \mathbb{M} \\
@@ -1079,7 +1104,7 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
                                            &\approx \Prob_{\UU}\left[m_{\Xi}(\kk,\UU) \leq \log\alpha \right]
     \end{align}
     Outer probability approximated using Monte-Carlo since
-    $m_{\Delta_\alpha}$ and $m_\Xi$ are cheaper to evaluate than $J$
+    $m_{\Delta_\alpha}$ and $m_\Xi$ are cheaper to evaluate than $J$, and optimized
   \end{block}
 \end{frame}
 
@@ -1089,9 +1114,9 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
   \begin{columns}
     \begin{column}{0.50\textwidth}
      {
-      \textbf{C}oastal and \textbf{R}egional \textbf{O}cean \textbf{CO}mmunity model
+      \textbf{C}oastal and \textbf{R}egional \textbf{O}cean \textbf{CO}mmunity model (here in a 2D configuration)
       \begin{itemize}
-      \item Solves the Shallow Water equations
+      \item Solves the shallow-water equations
       \item Grid resolution of 1/\ang{14} (\SI{5.5}{\kilo\metre})
       \item \num{15684} cells located in the ocean
       \item[$\rightarrow$] Academic toy problem
@@ -1105,20 +1130,20 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
   \end{columns}
 \end{frame}
 
-\begin{frame}{The Shallow water equations}
-  $\zeta$ sea-water height, $\mathbf{v}$ velocity vector
+\begin{frame}{The shallow-water equations}
+  $\zeta$: sea-water height, $\mathbf{v}$: velocity vector
   \begin{equation}
     \mathcal{M}: \left\{
   \begin{array}{rcl}
-    \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{x} \cdot \nabla) \mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} & = & -g \nabla H + \frac{{\color{brewsuperdark}\bm{\tau}_b}}{\rho H} + F \\
+    \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \nabla) \mathbf{v} + 2 \bm{\Omega} \wedge \mathbf{v} & = & -g \nabla H + \frac{{\color{brewsuperdark}\bm{\tau}_b}}{\rho H} + F \\
     \frac{\partial \zeta}{\partial t} + \nabla \left(H \cdot \mathbf{v} \right) & = & 0 \\
-    \zeta & = & \alert{\mathsf{BC}(\uu)} \text{ at the boundary}
+    \zeta & = & \alert{\mathsf{BC}(\uu)} \text{ at the open boundaries}
   \end{array}
   \right.
 \end{equation}
 \begin{itemize}
 \item ${\color{brewsuperdark} \bm{\tau}_b = \bm{\tau}_b(\kk)}$: bottom shear stress $\rightarrow$ depends on the control parameter $\kk$
-\item $\alert{\mathsf{BC}(\uu)}$: tidal boundary conditions $ \rightarrow$ depends on the environmental variable $\uu$ 
+\item $\alert{\mathsf{BC}(\uu)}$: tidal boundary conditions $ \rightarrow$ subject to aleatoric uncertainties ($\uu$) 
 \end{itemize}
 \begin{block}{Model and objective function}
 \begin{itemize}
@@ -1134,24 +1159,24 @@ We are looking for $\hat{\kk}$, such that $J(\hat{\kk}, \UU)$ gives ``good perfo
   \begin{block}{Quadratic friction coefficient}
     Let $\bm{\tau}_b$ be the shear stress at the bottom, and $v_b$ the velocity vector at the bottom
     \begin{equation}
-    \bm{\tau}_b = -C_d \|v_b \| v_b, \quad\text{ with }\quad C_d = \left(\frac{\kappa}{\log\left(\frac{H}{\alert{z_b}}\right) - 1 }\right)^2
+    \bm{\tau}_b = -C_d \|v_b \| v_b, \quad\text{ with }\quad C_d = \left(\frac{k}{\log\left(\frac{H}{\alert{z_b}}\right) - 1 }\right)^2
   \end{equation}
   and we define the control parameter as $\alert{\kk = \log z_b}$
 \end{block}
 \begin{itemize}
-\item We assume that the friction is uniform and constant for each of
-    the sediment type
-\item The effect on the water circulation (through $\bm{\tau}_b$) depends
-  also on the water height $H$
-\item $\kk^{\mathsf{truth}}$: one specific value for each sediment type
+\item We assume that $\kk$ is uniform and constant for each type of sediment
+\item $\kk^{\mathsf{truth}}$: constructed using the 6 types of sediments present 
 \end{itemize}
-Due to the water height, influence of each sediment type is not the same $\Rightarrow$ Sensitivity analysis
+Due to the water height $H$, influence of each sediment type depends
+on how deep it is
+
+$\Rightarrow$ Sensitivity analysis
 \end{frame}
 
 \begin{frame}{Sensitivity analysis on the friction associated with the sediments}
   Global Sensitivity Analysis with Sobol'
   indices~\citep{sobol_global_2001,sobol_sensitivity_1993}: quantify
-  the influence of each input variable on $J$
+  the influence of each input variable on $J$ (computed using \cite{gilquin_making_2019})
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \inputpgf[\textwidth]{\manupath Chapter5/img/SA_sediments_slides.pgf}
@@ -1181,17 +1206,18 @@ Due to the water height, influence of each sediment type is not the same $\Right
   \item We assume that $\UU \sim \mathcal{U}\left(\Uspace\right)$, with $\Uspace = [0,1]^2$
 
 
-    \begin{block}{Recap of the problem}
+    \begin{block}{Summary of the problem}
       \begin{itemize}
       \item $\kk = (\kk^{(1)}, \kk^{(2)}, \kk^{(3)})\in \Kspace \subset \mathbb{R}^3$
       \item $\uu \in \Uspace=[0, 1]^2$
       \item $\UU \sim \mathcal{U}\left(\Uspace\right)$
-      \end{itemize}
-      \begin{itemize}
-      \item $\kk^{\mathsf{truth}}\in\mathbb{R}^6 \neq \Kspace$
-      \item $\uu^{\mathsf{truth}} = (0.5, 0.5)$
-      \item $y=\mathcal{M}(\kk^{\mathsf{truth}}, \uu^{\mathsf{truth}})$
       \item $J(\kk, \uu) = \|\mathcal{M}(\kk, \uu) - y\|^2$
+        \begin{itemize}
+        \item  $y=\mathcal{M}(\kk^{\mathsf{truth}}, \uu^{\mathsf{truth}})$
+      \item $\kk^{\mathsf{truth}}\in\mathbb{R}^6 \neq \Kspace \Rightarrow$ The
+        model is not able to replicate the observations: $J>0$
+      \item $\uu^{\mathsf{truth}} = (0.5, 0.5)$
+      \end{itemize}
       \end{itemize}
     \end{block}
 \end{itemize}
@@ -1221,7 +1247,7 @@ $\rightarrow$ Compensation of errors due to the dimension reduction
   With this preliminary analysis, we can choose $\alpha$
   \begin{itemize}
   \item we set $\alpha=1.3$: with which probability can we stay within 30\% of the optimal value ?
-  \item we enrich the design by looking to reduce globally the IMSE using $\kappa$
+  \item we enriched the design by looking to reduce globally the IMSE using $\kappa$
   \end{itemize}
   \begin{center}
     \begin{tabular}{rllll}
@@ -1252,7 +1278,7 @@ $\rightarrow$ Compensation of errors due to the dimension reduction
     
   \item Each iteration for the reduction of the IMSE requires
   \begin{itemize}
-  \item Evaluation of an integral of dimension $1 + \dim (\Kspace \times \Uspace)$
+  \item Evaluations of an integral of dimension $1 + \dim (\Kspace \times \Uspace)$
   \item Optimization of this integral in a space of dimension $\dim \Kspace$
   \item[$\rightarrow$] Dependent on the ability to compute $m_{Z^*}$, $m_{\Delta_{\alpha}}$, $\sigma^2_{\Delta_{\alpha}}$
    \item[$\rightarrow$] As is, limits severely the possibility of increased dimension
@@ -1367,15 +1393,15 @@ $\rightarrow$ Compensation of errors due to the dimension reduction
       \item[$\rightarrow$] 2-stages methods
       \item[$\rightarrow$] Focus computational effort for optimization
       \end{itemize}
+    \item Include gradient information in the procedures ?
     \end{itemize}
   \end{block}
 
   \begin{block}{Perspectives}
     \begin{itemize}
+    \item Discrepancy between $J^*(\UU)$ and $J(\hat{\kk},\UU)$ in terms of r.v.\
     \item Study of CROCO with a more complex configuration
     \item Study and compare robust estimates in predictions
-    \item Discrepancy between $J^*(\UU)$ and $J(\hat{\kk},\UU)$ in terms of r.v.
-    \item Include gradient information in the procedures ?
   \end{itemize}
   \end{block}
 \end{frame}
@@ -1408,22 +1434,6 @@ $\rightarrow$ Compensation of errors due to the dimension reduction
 \end{frame}
 
 \begin{frame}{Modelling of $J(\kk, \uu) - \alpha J^*(\uu)$ using $\Delta_{\alpha}$}
-  \pnote{What about the estimation of the probability of being alpha
-    acceptable ?  As it is a linear combination of GP, we still have a
-    Gaussian distribution at the end, and we can rewrite the
-    probability of being acceptable as a probability of failure of the
-    resulting GP, that we could consider to estimate using common
-    techniques, level set, contour estimation.
-
-    One interesting thing is in the decomposition of the variance of
-    Delta alpha: two main sources of uncertainties are present: the
-    uncertainty on the true value of the function at theta,u; and the
-    true value of the minimizer.}
-  % \begin{itemize}
-  % \item Optimization of the $1-\eta$ quantile of $J/J^*$, or
-  %   $J - J^*$
-  %   \cite{razaaly_quantile-based_2020,quagliarella_optimization_2014}
-  % \end{itemize}
   Let
   $Z \sim \GP\left(m_Z; C_Z\right) \text{ on } \Kspace \times \Uspace$, constructed using $\left\{\left(\kk_i,\uu_i), J(\kk_i, \uu_i)\right)\right\}$
 
