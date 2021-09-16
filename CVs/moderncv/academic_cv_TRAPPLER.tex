@@ -55,12 +55,20 @@
 %----------------------------------------------------------------------------------------
 %	NAME AND CONTACT INFORMATION SECTION
 %----------------------------------------------------------------------------------------
+\makeatletter
+\NewDocumentCommand{\mysubsection}{sm}{%
+  \par\addvspace{1ex}%
+  \phantomsection{}% reset the anchor for hyperrefs
+  \addcontentsline{toc}{subsection}{#2}%
+  {\hspace{2.6cm}\strut\raggedleft\raisebox{\baseletterheight}{\color{color1}\rule{0.5\hintscolumnwidth}{0.5ex}}\quad}{\strut\subsectionstyle{#2}}%
+  \par\nobreak\addvspace{.5ex}\@afterheading}% to avoid a pagebreak after the heading
+\makeatother
 
 \firstname{Victor} % Your first name
 \familyname{Trappler} % Your last name
 
 % All information in this block is optional, comment out any lines you don't need
-\title{PhD Student in the AIRSEA team} % \newline Robust estimation of parameter}
+\title{PhD, looking for a postdoc or researcher position} % \newline Robust estimation of parameter}
 \address{7 rue Louis Le Cardonnel}{38100 Grenoble, France}
 \mobile{(+33) 6 45 75 14 68}
 \email{victor.trappler@univ-grenoble-alpes.fr}
@@ -103,13 +111,13 @@
 \makecvtitle% Print the CV title
 
 \section{Research interests}
-I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (Inria), under the supervision of Arthur Vidard, Élise Arnaud, and Laurent Debreu.\@ My research interests revolve mainly around \textbf{Uncertainty Quantification}, and \textbf{Inverse Problems}. More specifically, I am interested in Robust Optimization and Optimization under Uncertainties (OUU), in the context of the \textbf{estimation of parameters under uncertainties}.
+I recently got my PhD at Grenoble-Alpes University in the AIRSEA team (Inria), under the supervision of Arthur Vidard, Élise Arnaud, and Laurent Debreu.\@ My research interests revolve mainly around \textbf{Uncertainty Quantification}, and \textbf{Inverse Problems}. More specifically, I am interested in Robust Optimization and Optimization under Uncertainties (OUU).
 %----------------------------------------------------------------------------------------
 %	EDUCATION SECTION
 %----------------------------------------------------------------------------------------
 \section{Education}
 
-\cventry{2017--2021 (Expected)}{PhD Student}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties \\ \textit{Abstract}: Classical methods of parameter estimation usually imply the minimisation of an objective function, that overlooks the role of uncertain parameters. Strategies taking into account these uncertainties need to be defined \\
+\cventry{2017--2021}{PhD Student}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties \\ \textit{Abstract}: Classical methods of parameter estimation usually imply the minimisation of an objective function, that overlooks the role of uncertain parameters. Strategies taking into account these uncertainties need to be defined \\
 \textit{Keywords}: Parameter Estimation; Optimisation under Uncertainties; Data Assimilation \\
   \textit{Advisors}: A. Vidard, É. Arnaud, L. Debreu}
 \cventry{2015--2017}{MSc Mathematical Modelling and Computation}{Danmarks Tekniske Universitet}{Kgs. Lyngby}{Denmark}{\textit{Focus points}: Applied mathematical analysis, Dynamical Systems, Scientific Computing, Statistical modelling, Stochastic simulations}  % Arguments not required can be left empty
@@ -121,7 +129,7 @@ I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (In
 %----------------------------------------------------------------------------------------
 
 \section{Experience}
-\subsection{Internships/Master thesis}
+\mysubsection{{Internships/Master thesis}}
 \cventry{2017}{Master Thesis}{AIRSEA, Inria/LJK}{Grenoble}{France}{\textit{Title}: Parameter control in the presence of uncertainties: Robust estimation of bottom friction\\ \textit{Advisors}: Uffe Høgsbro Thygesen (DTU), Élise Arnaud, Arthur Vidard, Laurent Debreu (Inria)}
 
 %------------------------------------------------
@@ -130,8 +138,8 @@ I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (In
 
 %------------------------------------------------
 
-\subsection{Teaching experience}
-
+\mysubsection{Teaching experience}
+ \cventry{2017--2020}{Research and Teaching Label}{Grenoble-Alpes University}{}{}{Specific doctoral training for students wanting to pursue an academic career, mostly on specific teaching methods and reflexions on higher education}
 \cventry{2017--2019}{Teaching assistant}{Grenoble-Alpes University}{}{}{Lectures in calculus, algebra, and computer lab sessions in statistics for undergraduates students. Teaching time adding up to \emph{138h}:
   \begin{itemize}
   \item L2 STA301: 90h of lab work on statistics using the R language
@@ -139,7 +147,7 @@ I am currently a PhD student of Grenoble-Alpes University in the AIRSEA team (In
   \item L1 MAT104: 28h of lectures and exercise sessions on geometry and algebra
   \end{itemize}
   }
- \cventry{2017--2020}{Research and Teaching Label}{Grenoble-Alpes University}{}{}{Specific doctoral training for students wanting to pursue an academic career, mostly on specific teaching methods and reflexions on higher education}
+
 
 
  % \section{Publications and preprints}

@@ -3,8 +3,11 @@
 #+email: victor.trappler@univ-grenoble-alpes.fr
 #+OPTIONS: toc:nil
 #+LaTeX_HEADER: \usepackage[margin=3cm]{geometry}
-#+LaTeX_HEADER: :results output silent :headers '("\\usepackage{tikz}")
-This portfolio has been made in the context of the Research and
+
+#+Latex: \parindent=20pt
+# #+LaTeX_HEADER: :results output silent :headers '("\\usepackage{tikz}")
+
+This portfolio has been written in the context of the Research and
 Teaching label of the [[https://doctorat.univ-grenoble-alpes.fr/fr/pendant-la-these/la-formation-durant-la-these/parcours-labels/label-res-recherche-et-enseignement-superieur-577252.htm][Université Grenoble Alpes]], often shortened as
 *RES label* in french.
 
@@ -20,39 +23,57 @@ L2 (first and second year students at the university), and are
 summarized in the table below. A more precise feedback on those
 courses will be introduced later.
 
-|----------------+-------------------------------------------------------------+-------|
-| Term           | Formation name                                              | Hours |
-|----------------+-------------------------------------------------------------+-------|
-| Sep.-Dec. 2017 | Statistical Methods for Biology. L2 Biology                 |    36 |
-| Jan.-May 2018  | Calculus and Computations. L1 Maths, CompSci and Humanities |    20 |
-| Sep.-Dec. 2018 | Statistical Methods for Biology. L2 Biology                 |    36 |
-| Sep.-Dec. 2018 | Geometry and Algebra. L1 Physics, Chem., Meca., Maths       |    28 |
-| Sep.-Dec. 2018 | Statistical Methods for Biology. L2 Biology                 |    18 |
-|----------------+-------------------------------------------------------------+-------|
-|                | Total                                                       |   138 |                                                             |       |
+# |----------------+-------------------------------------------------------------+-------|
+# | Term           | Formation name                                              | Hours |
+# |----------------+-------------------------------------------------------------+-------|
+# | Sep.-Dec. 2017 | Statistical Methods for Biology. L2 Biology                 |    36 |
+# | Jan.-May 2018  | Calculus and Computations. L1 Maths, CompSci and Humanities |    20 |
+# | Sep.-Dec. 2018 | Statistical Methods for Biology. L2 Biology                 |    36 |
+# | Sep.-Dec. 2018 | Geometry and Algebra. L1 Physics, Chem., Meca., Maths       |    28 |
+# | Sep.-Dec. 2018 | Statistical Methods for Biology. L2 Biology                 |    18 |
+# |----------------+-------------------------------------------------------------+-------|
+# |                | Total                                                       |   138 |
 
+#+CAPTION: Repartition of the hours of teaching
+|-------------------------------------------------------------+---------+-------------|
+| Formation name                                              | Abbrev. | Total Hours |
+|-------------------------------------------------------------+---------+-------------|
+| Statistical Methods for Biology. L2 Biology                 | STA301  |          90 |
+| Calculus and Computations. L1 Maths, CompSci and Humanities | MIASHS  |          20 |
+| Geometry and Algebra. L1 Physics, Chem., Meca., Maths       | MAT104  |          28 |
+|-------------------------------------------------------------+---------+-------------|
+| Total                                                       |         |         138 |
 
-As shown in the table above, all my teaching has been about
-mathematics and statistics. In addition to the courses, I participated
+As shown in the table above, all my teachings have been about
+mathematics or statistics. In addition to the courses, I participated
 in different doctoral training, directly linked to the teaching
 methods.
 
+#+CAPTION: Attended Doctoral trainings 
 |---------------------------------------------------------+-------|
-| Training                                                | Hours |
+| Training related to teaching                            | Hours |
 |---------------------------------------------------------+-------|
 | Teaching and Dominations                                |    18 |
 | An introduction to the teacher-researcher job (Autrans) |    21 |
 | Dealing with different behaviours in the classroom      |    21 |
 |---------------------------------------------------------+-------|
+| Other trainings                                         | Hours |
+|---------------------------------------------------------+-------|
+| AIP Summer School                                       |    15 |
+| ETICS2019 Research school                               |    27 |
+| MODNUMOA                                                |    28 |
+| PhD and Career orientation                              |    12 |
+| Valorization of scientific programming                  |     6 |
+|---------------------------------------------------------+-------|
 
 In this portfolio, I will first discuss the role of the
-teacher/lecturer at the university from my personal
-experience. Afterward, I will describe more precisally
+teacher/lecturer in higher-education from my personal
+experience. Afterward, I will comment on some aspects of teaching I
+encountered.
 
 * Teaching from a personal point of view
-
+  <<sec:teaching>>
 ** Teaching ?
-
   What does it mean to teach students ? For me, the definition would
 take this form:
 
@@ -68,15 +89,14 @@ definition highlights two different objectives, often linked:
     academic interest, and prepare them for their future career, in
     academia, the private sector or other.
   
-    
 In that sense, I judge important the fact that the course material
 could/should aim at developing core competences, and intuition as
 well.
 
 ** My own experience as a student
 One particular fact about my own experience, is that before enrolling
-as a PhD student at the UGA, I have never been part of the classical
-french university. After my Baccalauréat, I spent two years in CPGE,
+as a PhD student at the UGA, I have never been attended a "classical
+french university". After my Baccalauréat, I spent two years in CPGE,
 then two years in an "École d'Ingénieurs" (ECL). Afterward, to complete my
 engineering degree, I enrolled for a double-degree at DTU (Danmarks
 Tekniske Universitet) in Denmark. Those three different establishments
@@ -90,7 +110,7 @@ carried three different teaching methods:
  of the curriculum, especially with the regular oral interrogation
  sessions, each student could get quickly a feedback on its work and
  its progression. Keeping the same teachers for the whole year also
- means that students could adapt to the different teaching methods.
+ meant that students could adapt to the different teaching methods.
 
 
  In engineering school, the teachings are much more specialized,
@@ -106,15 +126,15 @@ carried three different teaching methods:
 
  Finally, in Denmark, the organisation was slightly different. Most of
  the courses were scheduled in blocks of four hours, where the first
- two were dedicated to lectures, and the remaining was dedicated to an
- exercise session. During those sessions, the students were in fact
- almost completely autonomous, but could require help from the
- lecturer or from the teaching assistants at any point, if needed. I
- noticed that this autonomy helped some students, that could leave the
- class early if they felt like it, or could engage with the teacher or
- TA in some discussions. Those discussions felt very gratifying, as we
- could directly clarify some points in the lectures, or discuss some
- related topics.
+ two were dedicated to lectures, and the remaining hours were
+ dedicated to an exercise session. During those sessions, the students
+ were in fact almost completely autonomous, but could ask for help
+ from the lecturer or from the teaching assistants at any point, if
+ needed. I noticed that this autonomy helped some students, as they
+ could leave the class early if they felt like it, or could engage
+ with the teacher or TA in some discussions. Those discussions felt
+ very gratifying, as we could directly clarify some points in the
+ lectures, or discuss some related topics.
 ** Some observations drawn from these experiences
 
 From these experiences, I gathered that the engagement of the students
@@ -129,22 +149,76 @@ misunderstood, or if some topics raise the curiosity of some students,
 that could help motivate them.
 
 
-From a student point of view, regular feedback from the teacher can
+From a student point of view, regular feedbacks from the teacher can
 help to see if they are on track to pass the course, and if the
 teacher takes into account those feedbacks, it can help improve the
 teaching experience for everyone involved.
 
-* 
+* Lectures, autonomy and confidence
 As said earlier, I was a TA in some courses for exercises and lab
 sessions. For one of those courses, it was an exercise session and a
 lecture combined. All of those were with groups of approximately 30
-students.
+students. 
+** Developing an intuition
+During those classes I tried to engage with students, by providing
+regular feedbacks, and develop what I call "mathematical intuition".
+This intuition takes several form, but I wanted the students to
+understand exactly what was expected of them, as soon as they read the
+question. Then, they would be able to use the appropriate mathematical
+tools, in order to prove or compute what they had imagined before.
+
+I tried to work on this by asking first opinions about questions:
+  + "What do you think of this question ?"
+  + "What do we want mathematically ?"
+  + "What different tools do you think we could use ?"
+
+For binary questions, I would sometimes ask the class to quickly vote
+by show of hands, in order to see if some points were widely
+understood or not, and ask the students for justifications. 
+
+My goal was to highlight the mathematical reasoning required to be
+able to pass the class: "What do we want, what do we need, what do we
+have". I think by doing so, I could also create a class environment
+where students were not shamed for not answering correctly.
+
+However, I also found out that the first question I mentioned before:
+"What do we want", was sometimes harder to find than expected.
+
+** Reading indications
+
+I encountered a recurrent issue with the students, where they would
+not read the questions, or the indication in their entirety, and miss
+some crucial hints.  They would then answer only the first part of the
+question, or not use the key element given.
+
+ In order to measure this, and mostly for awareness, I put a *special*
+indication in some test, to see how many students would read and do it.
+Fig. ref:fig:header shows the header of this test given during
+class. During the distribution of the exam sheet, I reminded the
+students to read carefully all the indications.
+
+#+CAPTION: Header of a test
+#+NAME: fig:header
+[[./header.png]]
+
+ Overall, less than half of the students did underline their last
+name, as asked. This allowed me primarly to emphasize the fact that
+despite what the students were saying, they did not read carefully the
+indications. I would then refer to this little experiment often when
+giving out exercises, or giving some advice for the final exam.
 
 ** Feedback on lectures
 For my teaching in MAT104, where I was doing lectures and exercises
 session (4h per week), I gave a feedback sheet at around midterm,
-which is displayed Fig.ref:questionnaire
-On ref:feedback_results is shown the repartition of answers: 
+which is displayed Fig. ref:fig:questionnaire.
+
+
+ #+CAPTION: Example of feedback sheet given in MAT104
+ #+NAME:   fig:questionnaire
+ [[./questionnaire_mat104.png]]
+
+
+On Fig. ref:fig:feedback_results is shown the repartition of answers.
 Among other results, a few can be singled out:
  + About a third of students felt that the lectures were going too fast (Q1)
  + For Q5, it seems that most of the students felt comfortable asking
@@ -153,33 +227,208 @@ Among other results, a few can be singled out:
  + Also, about a third of the students did not seem confident for the
    rest of the term in this course.
 
- #+CAPTION: Example of feedback sheet given in MAT104
- #+NAME:   questionnaire
- [[./questionnaire_mat104.png]]
-
-#+ATTR_LATEX: :float wrap :width 0.45\textwidth :placement {l}{0.5\textwidth}
+# #+ATTR_LATEX: :width 0.45\textwidth :placement {l}{0.5\textwidth}
+# #+ATTR_LATEX: :float wrap :width 0.45\textwidth :placement {l}{0.5\textwidth}
 #+CAPTION: Results of the feedback sheet
-#+NAME: feedback_results
+#+NAME: fig:feedback_results
  [[./results_questionnaire.png]]
 
+Based on those answers, we can understand that the students declared
+to be comfortable in class, in the sense where they felt at ease to
+express their questions and concerns. However, it appeared that they
+had a problem with regards to the pace of the lectures, and more
+precisely, their perception of the requirements in order to pass the
+class.
+
+ Part of this perception can be explained by the fact that for most of
+students this course is the first math class after high-school, hence
+the heterogenous level, vocabulary and notions mastered.
 
 ** Optional exercises
 
+In order to overcome this, I offered facultative exercises, that would
+not be corrected in class. Instead, I would correct them individually,
+when they were sent by e-mail or on paper.
+
+ Some were clearly labelled as "exam-like", while the others would
+ range from "pure application from the lectures" to "more theoretical
+ aspects and further knowledge". I felt however that the students who
+ were handing out those optional exercises were the students that felt
+ not confortable enough in their abilities, but were able to pass the
+ class. Students who had more difficulties were not doing optional
+ exercises.
 
 ** Optional "Discussion session"
+One of the most interesting "concepts" I had the chance to see in
+Denmark, was those "open discussion sessions", where TA would be
+available to answer students questions.  I had the possibility to do
+this for two classes: MAT104 and MIASHS.
 
-* Portfolio: Label RES
-** Définition de preuve
-+ se baser sur les référentiels
-+ Trace: marque laissée par une action
-+ Preuve: Traces + Commentaire
-  + questionnaires MAT104
-  + exercices facultatifs
-  + correction des partiels
-  + séance question/réponse (élèves d'autres groupes sont venus)
-  
+For both of those classes, I advertised it as an *optional* session,
+so that students who felt comfortable did not have to come.  First, we
+listed the items in the curriculum which would be discussed, specific
+lecture points, typical exercises. The reduced number of the students
+and the more informal setting allow then to insist more on the
+difficulties encountered. I found the students to be relieved at the
+end of those sessions, as their concerns were adressed directly.
+
+** Conclusion
+
+All in all, I thought that the balance between finishing in time the
+curriculums and providing a good support to the students is quite hard
+in practice.  
+
+I think that the optional exercises and sessions were very helpful to
+the students: they would allow students to ask questions freely,
+especially since the sessions were optional. For an optional Q&A
+session in MIASHS, I had even students from other groups that came. I
+also think that this informal setting helps in order to create a great
+learning environment, and reassure students who did not felt
+confident with the material.
+
+* Lab work and inequalities
+
+  I had the opportunity to follow some doctoral trainings, which were
+  focused on inequalities and discrimination. Some of those aspects
+  appeared for instance in STA301, which consisted in computer lab
+  sessions focusing on the programming language R, and its use for
+  statistics.
+** Organisation of the lab sessions
+Each week, the lab exercise sheet is uploaded, and the
+students have to complete them. At the same time, the correction of
+the exercises of the previous week were uploaded. 
+
+Students would be in pairs, and on weeks 4 and 9 (out of 12), a
+mini-test of 10 minutes was given with basic questions upon the use of
+R. On week 5, the students had a graded lab session, meaning that they
+had to write a report on the exercises given this week, with the code
+executed, relevant plots and relevant comments. Finally, on the last
+session, each student takes a 30 minutes exam.  For all of those, all
+materials were available to the students (lecture notes, personal
+documentation, previously uploaded code...) and except for the last
+exam, all work is done by pairs.
+
+The students are then required to be quite autonomous, as I would not
+verify their work if they did not call me (except when students would
+want to leave early).
+
+ Occasionally, when the focus of the session was
+more theoretical, I would give a short recap of the notions that they
+should have seen during lectures.  To put is shortly, two different
+skills were developed in these sessions:
+ + How to be able to conduct simple statistical analysis
+ + How to use the R programming language to conduct those analysis
+
+Of course, if students went in the session not knowing at all the
+points covered during the lectures, they would have a hard time doing
+the exercises, leading to being resigned, or letting their partner do
+most of the work.  On the other hand, some students would declare at
+the first session that "computer science is not for them", and would
+give up quite quickly.
+
+** Tech-related skills
+
+*** Access to a personal computer and reproducibility
+    This course requires the use of a computer, with a R
+    interpreter. The computers available in the classroom come with
+    Rstudio installed, an IDE for R. Students did not have to come to
+    class with their personal computer.  Due to this, to work on this
+    course, students would have to read their own comments on what
+    they have done previously, read the correction provided each week,
+    or use the free access computers in the university buildings.  As
+    a result, students would rarely work outside of the sessions, and
+    many were unable to reproduce the results outside of the
+    classroom.
+
+    This would pose a problem for the graded lab session, as they were
+    supposed to solve the different problems using R, and write a
+    single-sheet report on those, and providing relevant plots, R
+    commands and results. During these sessions, I insisted that the
+    writing and formatting of the report should be kept as homework,
+    while the statistical analysis per say should be done in class.
+
+    This instruction was not always followed, and some pairs would not
+    have finished with R at the end of the session.  Often, they would
+    then use the results of other pairs in order to finish their
+    reports
+
+    This lead to some reports showing good commands, but bad
+    results. Syntaxically wrong commands, but good results.  I suspect
+    some students to have copied the good results, but not the right
+    command.
+
+*** Programming skills
+    I could also notice a strong disparity between students who had
+    some prior programming skills, or at least a certain experience
+    with computers (the use of absolute/relative filepath especially).
+    Without any prior exposition to programming, some of its logic can
+    appear confusing, especially with R, that I personally find
+    sometimes counterintuitive. Moreover, similarly to most of
+    programming languages, the command are defined in english, and
+    being proficient in english is a clear advantage.
+
+    One example of this was the loading of data. The data to be
+    analyzed was provided as .csv files, which were to be loaded into
+    Rstudio. The instructions on the exercise sheets were to use
+    relative paths, within a Rstudio project framework. Most students
+    have not been able to load data consistently, and required my help
+    every single time, even during the final exam. I wrote a
+    cheatsheet in order to help students load data into Rstudio, as
+    displayed Fig. ref:fig:loading_data_R.
+
+** Communication skills
+   As mentioned before, a report was asked for one of the
+   sessions. This was a great exercise in order to synthesize what
+   they should have learned. I covered before the issue of personal
+   computers and reproducibility of the results. One other aspect was
+   the writing of this report, in french. In statistics, the wording
+   of questions is crucial, as a single comma, can lead to a
+   misinterpretations, or ill-defined statistical tests. On the other
+   hand being able to explain clearly statistical results is also
+   tricky, for the same reasons.
+
+   Some students who were not completely bilingual in french would
+   sometimes be confused by the very specific wordings, and struggle
+   to explain clearly their results. During the corrections, I tried
+   then to not penalize too much possible misinsterpretation, and
+   focus more on the reasoning provided by the students.
+   
+* Global overview and conclusion
+  During my PhD, I had the opportunity to teach some classes, with
+  different settings: lab sessions, lectures, exercises sessions.
+  This allowed me to understand a new aspect of higher-education, and
+  compare it to my previous experiences. It allowed me to have a
+  reflexion on my teaching, especially through two angles:
+   + the pedagogical aspect
+   + the effect of inequalities among students
+
+To circle back to the definition of teaching I defined section
+[[sec:teaching]], I tried to focus on providing the students the
+*relevant* learning materials, and to smooth out the technical
+difficulties in the case of computer sessions.  I also focused on the
+availability of resources, by being available to correct optional
+exercises, or for optional Q&A sessions.
+
+I also tried to develop the "mathematical intuition", by providing
+first simple examples, or by favourising "hand-wavy" explanations
+before dwelling into more grounded computations. 
+
+Finally, I took particular care to prevent socio-economic inequalities
+to affect the courses, by providing extra help to students in order
+for them to focus more on statistical concepts than the pure
+programming part of the course.
+
+I only focused on some specific parts of my teaching experience, and a
+lot more could also be imagined. However, as a PhD student, there is
+some pressure to cover "at all cost" the whole curriculum, and some
+pedagogical aspects are often overlooked. Moreover, the precarious
+nature of teaching in the University renders some pedagogical
+reflexion hard to put into place.
 
 
+#+Latex: \appendix
+ #+CAPTION: Cheatsheet for loading data in R
+ #+NAME: fig:loading_data_R
+ [[/home/victor/Enseignement/STA301/load_data_R.png]]
 
-*  Research aspect
-** Conferences
+
