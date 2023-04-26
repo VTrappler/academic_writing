@@ -1,0 +1,15 @@
+    \begin{tikzpicture}[node distance = 1cm, thick]% 
+        \node (1) {$x$};
+        \node (S) [right=of 1] {$S(x)$};
+        \node (Spr) [right=of S] {$S'(x)$};
+        \node (LMP) [right=of Spr] {$\text{LMP}(S(x), S'(x))$};
+        \draw[->] (1) -- node [midway,above] {$\text{NN}_1$} (S);
+        \draw[->] (S) -- node [midway,above] {$\text{NN}_2$} (Spr);
+        \draw[->] (Spr) -- node [midway,above] {} (LMP);
+        \draw[->] (S) to [bend right] node [midway,below] {} (LMP);
+        \node (mid) [right=of LMP] {};
+        \node (training) [above right=of mid] {$\|H_{\text{LMP}} - G^TG \|^2$};
+        \node (inference) [below right=of mid] {$H^{-1}_{\text{LMP}}$};
+        \draw[->] (LMP) -- node [midway, above] {training} (training);
+        \draw[->] (LMP) -- node [midway, below] {inference} (inference);
+    \end{tikzpicture}%

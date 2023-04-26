@@ -28,6 +28,7 @@
 \pgfsetmiterjoin%
 \definecolor{currentfill}{rgb}{1.000000,1.000000,1.000000}%
 \pgfsetfillcolor{currentfill}%
+\pgfsetfillopacity{0.9}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{1.000000,1.000000,1.000000}%
 \pgfsetstrokecolor{currentstroke}%
@@ -3835,3 +3836,6 @@
 \pgfsetfillcolor{textcolor}%
 \pgftext[x=0.889357in,y=2.916309in,left,base,rotate=272.414205]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle \pi_A\)=0.975}%
 \end{pgfscope}%
+\end{pgfpicture}%
+\makeatother%
+\endgroup%

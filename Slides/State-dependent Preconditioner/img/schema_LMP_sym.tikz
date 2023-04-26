@@ -1,0 +1,20 @@
+    \begin{tikzpicture}[node distance = .7cm, thick]% 
+        \node (1) {$x$};
+        \node (mid) [right=of 1] {};
+        \node (S) [above right=of mid] {$S(x)$};
+        \node (L) [below right=of mid] {$L(x)$};
+        \draw[->] (1) -- node [midway,above] {\includegraphics[scale=0.05]{nn.png}} (S);
+        \draw[->] (1) -- node [midway,below] {\includegraphics[scale=0.05]{nn.png}} (L);
+        \node (Spr) [right=of L] {$S'(x) = \left(I_n + L(x)L(x)^T\right)S(x)$};
+        \draw[->] (L) -- (Spr);
+        \node (LMP) [above right= of Spr] {$\text{LMP}(S(x), S'(x))$};
+        \draw[->] (Spr) -| node [midway,above] {} (LMP);
+        \draw[->] (S) -| node [midway,above] {} (LMP);
+        \draw[->] (S) -| node [midway,above] {} (Spr);
+        \node (mid) [right=of LMP] {};
+        \node (training) [above right=of mid] {$\|H_{\text{LMP}} - G^TG \|^2$};
+        \node (inference) [below right=of mid] {$H^{-1}_{\text{LMP}}$};
+        \draw[->] (LMP) -- node [midway, above] {training} (training);
+        \draw[->] (LMP) -- node [midway, below] {inference} (inference);
+        
+\end{tikzpicture}%

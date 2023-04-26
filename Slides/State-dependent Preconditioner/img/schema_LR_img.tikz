@@ -1,0 +1,12 @@
+    \begin{tikzpicture}[node distance = 1cm, thick]% 
+        \node (1) {$x$};
+        \node (S) [right=of 1] {$S(x)$};
+        \node (LowRank) [right=of S] {$\text{LowRank}(S(x))$};
+        \draw[->] (1) -- node [midway,above] {\includegraphics[scale=0.05]{nn.png}} (S);
+        \draw[->] (S) -- node [midway,above] {} (LowRank);
+        \node (mid) [right=of LowRank] {};
+        \node (training) [above right=of mid] {$\|H_{\text{LR}} - G^TG \|^2$};
+        \node (inference) [below right=of mid] {$H^{-1}_{\text{LR}}$};
+        \draw[->] (LowRank) -- node [midway, above] {training} (training);
+        \draw[->] (LowRank) -- node [midway, below] {inference} (inference);
+    \end{tikzpicture}%

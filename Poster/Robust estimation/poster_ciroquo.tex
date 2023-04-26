@@ -1,0 +1,523 @@
+\documentclass{beamer}
+ % \usetheme{metropolis}
+% \usetheme{confposter}
+\usepackage[orientation=portrait, size=a1, scale=1.7]{beamerposter}
+% \usepackage[scale=1.7,size=a1]{beamerposter}
+\setlength{\paperwidth}{33.1in}
+\setlength{\paperheight}{23.4in}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{exscale}
+\usepackage{amsmath}
+\usepackage{amsfonts}                                                                               
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{wrapfig}
+\usepackage{bbm}
+\usepackage{subfig}
+\usepackage{fix-cm}    
+\usepackage{multicol}
+\usepackage{pgfplots}       
+\usepackage[absolute,overlay]{textpos}
+
+\definecolor{blkcol}{HTML}{E1E1EA}
+\definecolor{blkcol2}{RGB}{209, 224, 224}
+\definecolor{palered}{HTML}{FFD8D8}
+\definecolor{darkprimcol}{HTML}{455A64}
+\definecolor{lightprimcol}{HTML}{CFD8DC}
+\definecolor{primcol}{HTML}{607D8B}
+\definecolor{accentcol}{HTML}{448AFF}
+\definecolor{primarytxt}{HTML}{212121}
+\definecolor{secondtxt}{HTML}{757575}
+\definecolor{dividertxt}{HTML}{BDBDBD}
+\definecolor{bll}{HTML}{355C7D}
+\definecolor{mist}{HTML}{90AFC5}
+\definecolor{autumn}{HTML}{763626}
+
+% \setbeamercolor{block title}{bg = blkcol}
+\setbeamercolor{block body}{bg = mist!10}
+\setbeamercolor{block body alerted}{bg = palered!50}
+\setbeamercolor{block title}{bg = bll, fg = white}
+% \setbeamercolor{block body}{bg = lightprimcol}
+% \setbeamercolor{block body alerted}{bg = accentcol!50}
+\setbeamercolor{bibliography item}{fg=bll}
+\setbeamercolor*{bibliography entry title}{fg=bll}
+\setbeamercolor*{bibliography entry author}{fg=bll}
+\setbeamercolor*{bibliography entry location}{fg=bll}
+\setbeamercolor*{bibliography entry note}{fg=bll}
+
+\addtobeamertemplate{block begin}{\vskip +\smallskipamount}{} 
+\addtobeamertemplate{block end}{}{\vskip +\bigskipamount}
+\setbeamerfont{itemize/enumerate body}{}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\footnotesize}
+\graphicspath{{../Slides/Figures/}}
+
+\makeatletter
+\newcommand\HUGE{\@setfontsize\Huge{80}{70}}
+\makeatother    
+%----------------------------------
+\newlength{\sepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\newlength{\thirdcolwid}
+\newlength{\sndcolwid}
+\newlength{\leftmar}
+\newlength{\centercol}
+\setlength{\paperwidth}{36in} % A0 width: 46.8in
+\setlength{\paperheight}{48in} % A0 height: 33.1in
+\setlength{\leftmar}{0.035 \paperwidth}
+% \setlength{\sepwid}{0.005 \paperwidth} % Separation width (white space) between columns
+\setlength{\sepwid}{0.012 \paperwidth} % Separation width (white space) between columns
+
+\setlength{\onecolwid}{0.22\paperwidth} % Width of one column
+\setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
+\setlength{\threecolwid}{0.708\paperwidth} % Width of three columns
+\setlength{\topmargin}{-.4in} % Reduce the top margin size
+\setlength{\thirdcolwid}{.301\paperwidth}
+\setlength{\sndcolwid}{.4555\paperwidth}
+\setlength{\centercol}{0.93\paperwidth}
+%------------------------------------
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Prob}{\mathbb{P}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Cov}{\textsf{Cov}}
+
+\newcommand{\tra}{\mathrm{tr}}
+\newcommand{\yobs}{\bm{y}_{\mathrm{obs}}}
+\newcommand{\kest}{\hat{\bm{k}}}
+\DeclareMathOperator*{\KL}{\textsf{KL}}
+
+
+\setbeamertemplate{headline}{
+ \leavevmode
+  \begin{columns}
+   % \begin{column}{.01\linewidth}
+   % \end{column}
+   \begin{column}{1.1\linewidth}
+     \vskip1cm
+     \begin{center}
+      \usebeamercolor{title in headline}{\color{fg}{\HUGE \inserttitle} \\[2ex]}
+    \usebeamercolor{author in headline}{\color{fg}{\Huge \insertauthor }\\[1ex]}
+    \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}\\[0.1ex]}
+  \end{center}
+
+    % \vskip0.5cm
+   \end{column}
+   \begin{column}{.15\linewidth}
+     \includegraphics{INRIA_SCIENTIFIQUE_UK_CMJN} \\
+     \includegraphics{ljk}
+   \end{column}
+   \vspace{1cm}
+  \end{columns}
+ \vspace{0.2in}
+ \hspace{0.5in}\begin{beamercolorbox}[wd=47in,colsep=0.15cm]{cboxb}\end{beamercolorbox}
+ \vspace{-0.2in}
+}
+
+\title{Parameter control in the presence of uncertainties} 
+\author{ \textbf{Victor Trappler},\\ {\Large Élise Arnaud, Laurent Debreu, Arthur Vidard} \\[.5ex]
+  {\large \texttt{victor.trappler@univ-grenoble-alpes.fr}}}
+\institute{\large AIRSEA Research team (Inria) -- Laboratoire Jean Kuntzmann \\[2ex]
+% \textsc{Workshop on Sensitivity Analysis and Data Assimilation in
+%   Meteorology and Oceanography, Aveiro, Portugal 2018} }
+\textsc{$7^{\mathrm{th}}$ PHD Day, ED MSTII, Grenoble 2018} }
+% \titlegraphic{\includegraphics[scale=2]{INRIA_SCIENTIFIQUE_UK_CMJN}
+% \includegraphics[scale=1]{ljk}}
+
+
+\date{}
+
+\begin{document}
+
+\begin{frame}[t]
+% \maketitle
+% \noindent\rule{\paperwidth}{1.5pt}
+  \begin{columns}[t]
+    \begin{column}{\leftmar}\end{column}
+    \begin{column}{\centercol}
+
+      
+            {\Large How can one calibrate a numerical model so that it performs reasonably well for different random operating conditions ?
+}
+     \large       
+    \begin{alertblock}{Objectives}
+      % Complex subgrid phenomena have to be parametrized in numerical models, and those values have to be properly estimated. This task is further complicated by the presence of uncertainties modelled by random variable. The calibrated value of the parameter is directly dependent on uncertainties.
+
+      % Strategies taking into account those uncertainties are to be defined and applied on an academic model of a coastal area, in order to find an optimal value in a robust sense. 
+    \begin{itemize}
+    \item Define suitable \alert{definitions of robustness} in the field of computer code calibration
+    \item Develop \alert{efficient} techniques and algorithms in order to estimate those parameters
+    \item Deal with the high-dimension of the parameter spaces: \alert{Dimension reduction }
+    \end{itemize}
+  \end{alertblock}
+\end{column}
+\end{columns}
+\vspace{0.2in}
+\begin{columns}[t] % The whole poster consists of three major columns, the second of which is split into two columns twice - the [t] option aligns each column's content to the top
+
+\begin{column}{\leftmar}\end{column} % Empty spacer column
+
+\begin{column}{\sndcolwid} % The first column
+
+  \begin{block}{Background: estimation of the bottom friction in a shallow water model}
+    % {\large Computer model: 2 inputs}
+    %  \begin{itemize} 
+    % \item $\bm{k}\in\mathcal{K}$: the control/decision parameter
+    % \item $\bm{u}\in\mathcal{U}$: the uncertain variable representing the environmental conditions
+    % \end{itemize}  
+    \begin{figure}[!h]
+      \centering
+      \resizebox{.85\linewidth}{!}{\input{./hauteureau.tikz}}
+    \end{figure}
+    The calibration problem is to be able to find a value of $\bm{k}\in\mathcal{K}$ denoted $\kest$ that matches the best the observations $\yobs$  \nocite{bayarri_framework_2007}
+. We define a loss function, that is the misfit between the observations to the model. 
+
+    
+% \input{./inverse_problem.tikz} 
+    \begin{equation*}
+     % \tag{Cost function}
+  J(\bm{k}) = \frac12 \|M(\bm{k}) - \yobs \|_{\bm\Sigma^{-1}}^2 
+\end{equation*}
+and we have to perform the following minimisation problem, usually with the help of the adjoint method \nocite{tarantola_inverse_2005}
+\begin{equation*}
+  \kest = \argmin_{\bm{k}\in\mathcal{K}} J(\bm{k})
+\end{equation*}
+  \end{block}
+\begin{block}{Stochastic Inverse Problem}
+  % \resizebox{\linewidth}{!}{\input{./hauteureau.tikz}}
+
+
+Now, $\bm{u}\in \mathcal{U} \sim \bm{U} \text{ of density } p_U$
+and $\yobs = M(\bm{k}_{\mathrm{ref}}, \bm{u}_{\mathrm{ref}})$
+% \newline
+
+% \resizebox{.8\linewidth}{!}{\input{./inverse_problem_rnd.tikz}}
+% \framebox{\resizebox{0.5\linewidth}{!}{\input{./inverse_problem_rnd.tikz}}}
+    \begin{figure}[!h]
+  \centering
+  {\input{./inverse_problem_rnd.tikz}}
+\end{figure}
+
+The loss function is now
+\begin{equation*}
+  \underbrace{J(\bm{k},\alert{\bm{U}}) = \frac12 \|M(\bm{k},\alert{\bm{U}}) - \yobs \|_{\bm\Sigma^{-1}}^2}_{\text{Random variable}}
+\end{equation*}
+
+\begin{itemize}
+\item What criteria to use to ``optimize'' in a sense $J$ ?
+\item Evaluating $J$ is time consuming. How to deal with a limited budget of evaluations ?
+\end{itemize}
+% \begin{itemize}
+% \item Risk/Utility approach \cite{lehman_designing_2004}: minimize a statistical moment of $J(\bm{k},\bm{U})$:
+%   \begin{equation*}
+%     \min_{\bm{k}} \Ex_U[J(\bm{k},\bm{U})] \quad  \min_{\bm{k}} \Var_U[J(\bm{k},\bm{U})]
+%   \end{equation*}
+% \item Bayesian approach \cite{tarantola_inverse_2005}, $J$ is linked to the joint likelihood of $\bm{k}$ and $\bm{u}$ by:
+%   \begin{equation*}
+%     p_{Y|K,U}(y|\bm{k},\bm{u}) \propto \exp\left[-J(\bm{k},\bm{u}) \right]
+%   \end{equation*}
+% \end{itemize}
+\end{block}
+\begin{block}{Which criterion to choose ? \nocite{lehman_designing_2004}}
+  \begin{itemize}
+  \item Global minimum
+    \begin{align*}
+      (\bm{k}^*,\bm{u}^*) = \argmin_{(\bm{k},\bm{u})} J(\bm{k},\bm{u})\quad \text{ and } \quad  \kest_{\mathrm{global}} = \bm{k}^*
+    \end{align*}
+  \item Assuming that the environmental variables have little influence:
+    \begin{align*}
+    J_{\Ex}(\bm{k}) = J(\bm{k}, \Ex[\bm U]) \quad \text{ and } \quad \kest_{\Ex} = \argmin_{\bm{k}} J_{\Ex}(\bm{k}) \tag{Classical methods}
+    \end{align*}
+$\longrightarrow$ Those approaches are not robust: inherent variability of $\bm{U}$ not taken into account \\[1.3ex]
+  \item Consider the \alert{worst-case scenario} \nocite{wald_statistical_1945}
+    \begin{align*}
+      J_{\mathrm{w}}(\bm{k}) = \max_{\bm{u}\in\mathcal{U}} J(\bm{k},\bm{u}) \quad \text{ and } \quad \kest_{\mathrm{wc}} = \argmin_{\bm{k}} J_{\mathrm{w}}(\bm{k})      \tag{Explorative EGO}
+    \end{align*}
+    \item The solution gives \alert{good results on average}:
+  \begin{align*}
+    \mu(\bm{k}) = \Ex_U[J(\bm{k},\bm{U})]\quad \text{ and }  \quad  \kest_{\mu} = \argmin_{\bm{k}}  \mu(\bm{k}) \tag{Iterative EGO}
+  \end{align*}
+
+ \item The estimate gives \alert{steady results}:
+  \begin{align*}
+    \sigma^2(\bm{k}) = \Var_U[J(\bm{k},\bm{U})] \quad\text{ and } \quad \kest_{\sigma^2} = \argmin_{\bm{k}} \sigma^2(\bm{k}) \tag{PCE gradient}
+  \end{align*}
+
+  % \begin{align*} 
+  %   \kest_{\mu} &= \argmin_{\bm{k}}  \mu(\bm{k}) \\
+  %   \kest_{\sigma^2} &= \argmin_{\bm{k}} \sigma^2(\bm{k})
+                         %     \end{align*}
+ 
+  \item \alert{Compromise} between Mean and Variance $\to$ multiobjective optimization problem:
+  \begin{align*}
+    \text{Pareto front of } (\mu(\bm{k}),\sigma^2(\bm{k})) \tag{Layered kriging}
+  \end{align*}
+\item\alert{Probability of being below threshold $T\in \mathbb{R}$} : Reliability analysis
+  \begin{align*}
+    R_T(\bm{k}) =  \Prob\left[J(\bm{k},\bm{U}) \leq T\right], \quad \kest_{R_T} = \argmax R_T(\bm{k}) \tag{GP simulations}
+  \end{align*}
+
+
+  
+\item We define $T_{\alpha}(\bm{U}) = \alpha \min_{\bm{k}} J(\bm{k},\bm{U})$, for $\alpha \geq 1$, and $R_\alpha = R_{T_{\alpha}}$
+
+ Distribution of minimizers: $T_{\min} = T_1(\bm{U})  = \min_{\bm{k}} J(\bm{k},\bm{U})$
+  \begin{align*}
+    R_{\min}(\bm{k}) = \Prob\left[J(\bm{k},\bm{U}) \leq T_{\min}\right] = \Prob\left[\bm{k} = \argmin_{\tilde{\bm{k}}} J(\tilde{\bm{k}},\bm{U}) \right] \tag{Estimation and maximization of density}
+  \end{align*}
+
+% By increasing gradually $\alpha$ until $\exists ! \bm{k}$ such that $R_{\alpha}(\bm{k}) = 1$, the $\bm{k}$ obtained is the estimate of the worst-case scenario.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+\begin{column}{\sndcolwid} % Begin a  column which is two columns wide (column 2)
+ 
+
+
+%
+  \begin{block}{2D Illustration} 
+ %    Include beliefs upon $\bm{K}$ and $\bm{U}$ through priors:
+% Bayes' theorem
+%   \begin{align*}
+%     p_{K,U|Y}(\bm{k},\bm{u}|\yobs) &\propto p_U(\bm{u}) p_K(\bm{k}) \overbrace{p_{Y|K,U}(y|\bm{k},\bm{u})}^{\exp(-J(\bm{k},\bm{u}))} \\
+%                                    &\propto p_U(\bm{u})  \underbrace{\alert{p_{K|Y,U}(\bm{k}|\yobs,\bm{u})}}_{ = f(\bm{k},\bm{u}) }
+%   \end{align*}
+
+  
+  
+  
+  % Let us then define a family of densities: \begin{align*}\{\bm{k} \mapsto p_{K|Y,U}(\bm{k}|\yobs,\bm{u}) = f(\bm{k},\bm{u}), \bm{u} \in \mathcal{U}\}\end{align*}
+  % and that yield the following estimates
+% \begin{itemize}
+% \item $\begin{aligned}[t]\kest_{\mathrm{MMAP}}  &= \argmax p_{K|Y}(\bm{k}|\yobs)\end{aligned}$
+% \item $\begin{aligned}[t]\kest_{\sigma} = \argmin_{\bm{k}} \Var_U[p_{K|Y,U}(\bm{k}|\yobs,\bm{u})]\end{aligned}$
+% \item $\begin{aligned}[t]\kest_{\mathrm{wc}} = \argmax_{\bm{k}} \{ \min_{\bm{u}}p_{K|Y,U}(\bm{k}|\yobs,\bm{u}) \}\end{aligned} $
+% \item Given a threshold $T$, study the probability of exceedance $p_{K_T}(\bm{k}) = \Prob\left[p_{K|Y,U}(\bm{k}|\yobs,\bm{U})\geq T \right]$
+% \item Special case: $T = \max_{\bm{k}} p_{K|Y,U}(\bm{k}|\yobs,\bm{U})$.
+
+
+%   Study $\bm{K}_{\argmax} = \argmax_{\bm{k}} p_{K|Y,U}(\bm{k}|\yobs,\bm{U})$, a random variable
+% \item $p_{\argmax}(\bm{k}) = \Ex_U\left[ \mathbbm{1}_{\{p(\bm{k}|\yobs,\bm{U})>p(\tilde{\bm{k}}|\yobs,\bm{U}),\forall \tilde{\bm{k}}\}}\right]$
+% \end{itemize}
+
+% \begin{itemize}
+% \item $\begin{aligned}[t]\kest_{\mathrm{MMAP}}  &= \argmax p_{K|Y}(\bm{k}|\yobs)\\ &= \argmax \int f(\bm{k},\bm{u}) p_U(\bm{u})\,\mathrm{d}\bm{u}\end{aligned}$
+% \item $\begin{aligned}[t]\kest_{\sigma} = \argmin_{\bm{k}} \Var_U[f(\bm{k},\bm{u})]\end{aligned}$
+% \item $\begin{aligned}[t]\kest_{\mathrm{wc}} = \argmax_{\bm{k}} \{ \min_{\bm{u}}f(\bm{k},\bm{u}) \}\end{aligned} $
+% \item Given a threshold $T$, study the probability of exceedance $p_{K_T}(\bm{k}) = \Prob\left[f(\bm{k},\bm{U})\geq T \right]$
+% \item Special case: $T_{\max}(\bm{U}) = \max_{\bm{k}} f(\bm{k},\bm{U})$.
+
+
+%   Study $\bm{K}_{\argmax} = \argmax_{\bm{k}} p_{K|Y,U}(\bm{k}|\yobs,\bm{U})$, a random variable
+% % \item $p_{\argmax}(\bm{k}) = \Ex_U\left[ \mathbbm{1}_{\{p(\bm{k}|\yobs,\bm{U})>p(\tilde{\bm{k}}|\yobs,\bm{U}),\forall \tilde{\bm{k}}\}}\right]$
+% \end{itemize}
+
+% \begin{figure}[!h]
+%       \centering
+%       \includegraphics[width = .95\linewidth]{MMAP_minvariance}
+%       \caption{Family of densities, and estimates obtained in $\dim \mathcal K$ = 1}
+%     \end{figure}
+
+    \begin{figure}[!h]
+      \centering
+      \includegraphics[width = .85\linewidth]{surface_transp_vert}
+    \end{figure}
+  \end{block}
+
+  
+ 
+%----------------------------------------------------------------------------------------
+
+% \begin{block}{Methods}
+%   \begin{itemize}
+%   \item \alert{MCMC based methods} to sample from the posterior distribution $p_{K,U|Y}(\bm{k},\bm{u}|\yobs)$, and/or marginalize
+%     \begin{itemize}
+%     \item State Augmentation for Marginal Estimation (SAME) \cite{doucet_marginal_2002} to get $\kest_{\mathrm{MMAP}}$
+%     \item Hamiltonian/Langevin Monte Carlo: Improve convergence of MCMC via the information brought by the gradient of the posterior.
+%     \end{itemize}
+%   \item Estimation of \alert{$\bm{K}_{\argmax}$}
+%     \begin{itemize}
+%     \item Need for efficient optimization (importance of the gradient)
+%     \item Kernel Density Estimation
+%     \item Clustering/ Mode-seeking algorithms
+%     \end{itemize}
+
+%   \item Metamodelling
+% \begin{itemize}
+%   \item Build surrogate model cheap to evaluate
+%   \item Lead to adaptative sampling strategies
+%   \end{itemize}
+%   \end{itemize}
+% \end{block}
+
+\begin{block}{General methods}
+  % \begin{itemize}
+  % \item Design of experiment: Being able to explore/sample efficiently the input space
+  %   \begin{itemize}
+  %   \item Space filling designs, LHS.
+  %   \end{itemize}
+  % \item Adjoint method: Gradient of the cost function is obtained relatively cheaply
+  % \item Surrogate modelling
+  %   \begin{itemize}
+  %   \item Kriging (Gaussian Process regression)
+  %   \item Polynomial Chaos Expansion
+  %   \end{itemize}
+  % \item Adaptative sampling strategies applied for optimization
+  %   \begin{itemize}
+  %   \item SUR (Stepwise Uncertainty Reduction) strategies: EGO, IAGO
+  %   \end{itemize}
+  % \item Bayesian inference: $J(\bm{k},\bm{u}) = \text{-log likelihood}$
+  %   \begin{itemize}
+  %   \item Joint/marginal posterior distribution, by use of prior over $\bm{U}$ and $\bm{K}$
+  %   \item Markov chain based methods (MCMC, Hamiltonian MC,\dots)
+  %   \end{itemize}
+  % \end{itemize}
+
+  \begin{itemize}\large
+
+  \item Design of Experiment
+    \begin{itemize}
+    \item Efficient exploration of the input space: LHS, space filling designs
+    \end{itemize}
+    % \begin{wrapfigure}{r}{.1\linewidth}
+    %   \includegraphics[scale = 1]{LHSsample}
+    % \end{wrapfigure}
+  \item Statistical/Probabilistic aspects
+    \begin{itemize}
+    \item Bayesian/Frequentist approach: Markov-chain based methods, study of the posterior distribution
+    \item Choice of prior on $\bm{K}$ to take into account specific information on spatial variation of the friction
+    \item Marginalization with respect to $\bm{U}$
+    \end{itemize}
+  \item Surrogate modelling
+    \begin{itemize}
+    \item Kriging (Gaussian Process Regression)
+    \item Polynomial Chaos Expansion
+    \end{itemize}
+  \item Optimization
+    \begin{itemize}
+    \item Adjoint method provides the gradient of the cost function $\rightarrow$ Adapt principles of gradient descent on specific objectives
+    \item Adaptative sampling: based on surrogate, choose the next point to be evaluated based on a specific criterion: EGO, IAGO and more general \emph{Stepwise Uncertainty Reduction} strategies \nocite{jones_efficient_1998}
+    \end{itemize}
+  \end{itemize}
+\end{block}
+% % ----------------------
+% ------------------------------------------------------------
+
+\begin{block}{Conclusion and perspectives}
+  \begin{itemize}
+  \item Several objectives can be defined, often concurrent
+  \item Choice of criterion of robustness is application-dependent
+  % \item Use of \alert{Surrogate Models} ?
+  \item Scalability of methods in high dimension ? Need to perform \alert{Dimension reduction} on $\mathcal{K}$ and  $\mathcal{U}$
+  \end{itemize}
+\end{block}
+
+%----------------------------------------------------------------------------------------
+
+
+
+\end{column} % End of column 2
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+%----------------------------------------------------------------------------------------
+%	MATHEMATICAL SECTION
+%----------------------------------------------------------------------------------------
+% \begin{column}{\thirdcolwid} % Column 3
+
+
+% %------------------------------------------------------------------------------------
+% \begin{block}{Avoid MCMC by studying $\bm{K}_{\argmax}$}
+%   \begin{itemize}
+%   \item Sample $\bm{u}^{(i)}$ from $\bm{U}$ of density $p_U$.
+%   \item Using adjoint method, 
+%     \begin{equation*}
+%       \bm{k}_{\argmax}^{(i)} = \argmax p_{K|Y,U}(\bm{k}|\yobs, \bm{u}^{(i)})
+%     \end{equation*}
+%   \item Once the set of samples $(\bm{k}_{\argmax}^{(i)})$ is sufficient
+%     \begin{itemize}
+%     \item Either KDE and perform a direct optimization on the estimate
+%     \item Either perform Clustering analysis
+%     \end{itemize}
+%   \end{itemize}
+% \end{block}
+% %----------------------------------------------------------------------------------------
+% %----------------------------------------------------------------------------------------
+
+% %----------------------------------------------------------------------------------------
+% %	RESULTS
+% %----------------------------------------------------------------------------------------
+
+% \begin{block}{Results}
+
+% \begin{figure}
+% \includegraphics[width=0.8\linewidth]{pair_plot_4d_centered}
+% \end{figure}
+
+% % \begin{figure}[!h]
+% %   \centering
+% % \includegraphics[width=0.85\linewidth]{estimate_centered}
+% % \end{figure}
+% \begin{figure}[!h]
+%   \centering
+% \includegraphics[width=0.85\linewidth]{estimate_Am_Pm}
+% \end{figure}
+
+% % \vspace{2ex}
+% % \begin{tabular}{l l l}
+% % \toprule
+% % \textbf{Treatments} & \textbf{Res. 1} & \textbf{Res. 2}\\
+% % \midrule
+% % Treatment 1 & 0.0003262 & 0.562 \\
+% % Treatment 2 & 0.0015681 & 0.910 \\
+% % Treatment 3 & 0.0009271 & 0.296 \\
+% % \bottomrule
+% % \end{tabular}
+% % \caption{Table caption}
+% % \end{table}
+
+% \end{block}
+
+
+% %----------------------------------------------------------------------------------------
+% \end{column} % End of the second column
+
+\begin{column}{\leftmar}
+\end{column} % Empty spacer column
+
+
+
+\end{columns}
+\vspace{2ex}
+\begin{columns}
+
+  \begin{column}{\leftmar}
+  \end{column} % Empty spacer column
+{\scriptsize
+  \begin{column}{\centercol}
+    \begin{block}{References}
+      \begin{multicols}{5} 
+        \bibliographystyle{unsrt} 
+        \bibliography{../Documents/bibzotero}
+      \end{multicols}
+     
+      
+      % \end{columns}
+    \end{block}
+  \end{column}
+  }
+  \begin{column}{\leftmar}
+  \end{column} % Empty spacer column
+  
+\end{columns}
+\vfill
+\end{frame}
+\end{document}
